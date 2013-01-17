@@ -1,0 +1,3 @@
+﻿{{#view Ember.Button target="controller" action="createChatroom"}}
+  Start your own Chatroom and invite some friends
+{{/view}}
