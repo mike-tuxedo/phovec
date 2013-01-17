@@ -60,7 +60,7 @@
       <input type="text" id="invitationAddress" />
       <h3>Message</h3>
       <input type="text" id="invitationMessage" />
-      {{#view Ember.Button target="controller" action="sendInvitation"}}
+      {{#view Ember.Button target="App.router.chatroomController" action="sendInvitation"}}
         send Invitation
       {{/view}}
     </form>
