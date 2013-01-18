@@ -20,15 +20,95 @@
   <![endif]-->
 </head>
 <body>
+  
+  <!-- app view -->
+  
   <script type="text/x-handlebars" data-template-name="application">
-    <h1>Hello from Ember.js</h1>
+  
+    <header>Header</header>
+    <h1>Video/Audio Communication Plattform</h1>
+    
+    {{outlet}}
+    
+    <footer>Footer</footer>
+    
   </script>
-
+  
+  
+  <!-- views -->
+  
+  <script type="text/x-handlebars" data-template-name="startpage">
+    <a href="#/chatroom/new" onclick="App.router.transitionTo('chatroom')">Create new Chatroom</a>
+  </script>
+  
+  <script type="text/x-handlebars" data-template-name="chatroom">
+    <!-- plus button -->
+    {{#view Ember.Button target="controller" action="showInvitationForm"}}
+        '+' 
+    {{/view}}
+    
+    <div id="messageBox"></div>
+    
+    <!-- cancel button -->
+    <a href="#/" onclick="App.router.transitionTo('index')">Cancel Chatroom</a>
+    
+  </script>
+  
+  <script type="text/x-handlebars" data-template-name="invitation">
+    <form>
+      <h3>Address</h3>
+      <input type="text" id="invitationAddress" />
+      <h3>Message</h3>
+      <input type="text" id="invitationMessage" />
+      {{#view Ember.Button target="App.router.chatroomController" action="sendInvitation"}}
+        send Invitation
+      {{/view}}
+    </form>
+  </script>
+  
+  <script type="text/x-handlebars" data-template-name="box">
+    
+  </script>
+  
+  
   <!-- The missing protocol means that it will match the current protocol, either http or https. If running locally, we use the local jQuery. -->
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
   <script>window.jQuery || document.write('<script src="js/libs/jquery-1.7.2.min.js"><\/script>')</script>
   <script src="js/libs/handlebars-1.0.0.beta.6.js"></script>
   <script src="js/libs/ember-1.0.0-pre.2.min.js"></script>
+  
+  <!-- App Object -->
+  
   <script src="js/app.js"></script>
+
+  <!-- views -->
+  
+  <script src="js/views/application.js"></script>
+  <script src="js/views/startpage.js"></script>
+  <script src="js/views/chatroom.js"></script>
+  <script src="js/views/box.js"></script>
+  <script src="js/views/invitation.js"></script>
+  
+  <!-- models -->
+  
+  <script src="js/models/user.js"></script>
+  <script src="js/models/chatroom.js"></script>
+  <script src="js/models/box.js"></script>
+  
+  <!-- controllers -->
+  
+  <script src="js/controllers/application.js"></script>
+  <script src="js/controllers/startpage.js"></script>
+  <script src="js/controllers/chatroom.js"></script>
+  <script src="js/controllers/box.js"></script>
+  
+  <!-- router -->
+  
+  <script src="js/router.js"></script>
+  
+  <!-- init app -->
+  
+  <script src="js/main.js"></script>
+  
 </body>
 </html>
