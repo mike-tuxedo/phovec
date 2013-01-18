@@ -5,5 +5,5 @@ clientWebSocket.onopen = function(){
 };
 
 clientWebSocket.onmessage = function(e){
-  
+  console.log(e);
 };
