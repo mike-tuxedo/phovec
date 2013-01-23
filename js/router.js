@@ -15,6 +15,7 @@
       
         if( location.hash.length == 51 ){ // example: "#/chatroom/f037cbc3eafcf7c1cfbe2ddc19fcdbf15f836f73"
           App.router.startpageController.setUpChatroom();
+          
         }
         
       },

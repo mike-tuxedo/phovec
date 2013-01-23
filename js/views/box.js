@@ -1,3 +1,4 @@
 ﻿App.BoxView = Ember.View.extend({
-  templateName : 'box'
+  templateName : 'box',
+  videoBoxId: null
 });

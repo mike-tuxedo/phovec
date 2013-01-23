@@ -11,8 +11,29 @@
     var address = $('#invitationAddress').val();
     var message = $('#invitationMessage').val();
     
-    console.log(address + ' '+message);
-    
+  },
+  
+  createNumberOfWebSockets : function(number){
+    for(var w=0; w < number; w++)
+      webRTCSockets.push( new webkitRTCPeerConnection({ "iceServers": [{ "url": "stun:provserver.televolution.net" },{ "url": "stun:stun1.voiceeclipse.net" }] }) );
+  },
+  
+  createNumberOfVideoTags : function(number,ids){
+    for(var w=0; w < number; w++){
+      App.router.chatroomController.createVideoBox(ids.toString() + w.toString());
+    }
+  },
+  
+  createVideoBox: function(id){
+    var view = App.BoxView.create();
+    view.set('videoBoxId',id);
+    view.appendTo('#videoboxes');
+  },
+  
+  addStreamToVideoTag: function(id){
+    navigator.getUserMedia({video: true, audio:true}, function(localMediaStream) {      
+      $('#'+id).attr('src', webkitURL.createObjectURL(localMediaStream));
+    });
   }
   
 });

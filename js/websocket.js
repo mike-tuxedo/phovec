@@ -16,15 +16,27 @@
       userID = message.userID;
       
       if(message.numberOfGuests){ // not 0 then there are other guests
-        App.router.startpageController.createNumberOfWebSockets(message.numberOfGuests);
+        App.router.chatroomController.createNumberOfWebSockets(message.numberOfGuests);
+        App.router.chatroomController.createNumberOfVideoTags(message.numberOfGuests,'userVideoBox');
+        App.router.chatroomController.addStreamToVideoTag('userVideoBox0');
       }
       else{ // I'm the first and so the host
+        
+        webRTCSockets.push( new webkitRTCPeerConnection({ "iceServers": [{ "url": "stun:provserver.televolution.net" },{ "url": "stun:stun1.voiceeclipse.net" }] }) );
         
         var chatroomUrl = '/chatroom/' + chatroomHash;
         App.router.startpageController.redirectClientToChatroom(chatroomUrl);
         
-        webRTCSockets.push( new webkitRTCPeerConnection({ "iceServers": [{ "url": "stun:provserver.televolution.net" },{ "url": "stun:stun1.voiceeclipse.net" }] }) );
-        
+        setTimeout(
+          function(){ // no idee why App.router is not available the first milliseconds
+            
+            var myVideoTagId = 'myVideoBox';
+            App.router.chatroomController.createVideoBox(myVideoTagId);
+            App.router.chatroomController.addStreamToVideoTag(myVideoTagId);
+          
+          },
+          500
+        );
         
       }
     }

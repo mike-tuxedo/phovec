@@ -41,6 +41,7 @@
     <a href="#" {{action "setUpChatroom" target="App.router.startpageController"}}>Create new Chatroom</a>
   </script>
   
+  
   <script type="text/x-handlebars" data-template-name="chatroom">
     <!-- plus button -->
     {{#view Ember.Button target="controller" action="showInvitationForm"}}
@@ -49,10 +50,12 @@
     
     <div id="messageBox"></div>
     
+    <div id="videoboxes"></div>
     <!-- cancel button -->
     <a href="#/" onclick="App.router.transitionTo('index')">Cancel Chatroom</a>
     
   </script>
+  
   
   <script type="text/x-handlebars" data-template-name="invitation">
     <form>
@@ -66,8 +69,9 @@
     </form>
   </script>
   
+  
   <script type="text/x-handlebars" data-template-name="box">
-    <video id="myVideoBox" width="250" height="250"></video>
+    <video {{bindAttr id="view.videoBoxId"}} width="250" height="250" autoplay></video>
   </script>
   
   

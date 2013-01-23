@@ -1,3 +1,1 @@
-﻿App.BoxController = Ember.Controller.extend({
-  
-});
+﻿//App.BoxController = Ember.Controller.extend();
