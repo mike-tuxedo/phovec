@@ -12,7 +12,7 @@
     chatroom: Ember.Route.extend({
       route: '/chatroom/:hash',
       enter: function ( router ){
-        router.chatroomController.createChatroom();
+        //router.chatroomController.createChatroom();
       },
       connectOutlets:  function(router, context){
         router.get('applicationController').connectOutlet('chatroom');
