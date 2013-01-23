@@ -38,7 +38,7 @@
   <!-- views -->
   
   <script type="text/x-handlebars" data-template-name="startpage">
-    <a href="#/chatroom/new" onclick="App.router.transitionTo('chatroom')">Create new Chatroom</a>
+    <a href="#" {{action "createChatroom" target="App.router.chatroomController"}}>Create new Chatroom</a>
   </script>
   
   <script type="text/x-handlebars" data-template-name="chatroom">

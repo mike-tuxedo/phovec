@@ -1,9 +1,6 @@
 ﻿var clientWebSocket = new WebSocket('ws://37.200.99.34:9005');
 
-clientWebSocket.onopen = function(){
-  clientWebSocket.send(JSON.stringify({ init: true, url: location.href })); // inform server whether you are host or guest of chatroom
-  
-};
+clientWebSocket.onopen = function(){};
 
 clientWebSocket.onmessage = function(e){
   
@@ -18,7 +15,16 @@ clientWebSocket.onmessage = function(e){
       createNumberOfWebSockets(message.numberOfGuests);
     }
     else{ // I'm the first and so the host
+      /*
+      var chatroom = App.Chatroom.create();
+      chatroom.set('id', (Math.random() * 10000));
+      chatroom.set('url', (location.href + '/' + chatroom.get('id')) );
+      this.set('chatroom', chatroom);
+    */
+      var chatroomUrl = '/chatroom/' + chatroomHash;
+      redirectClientToChatroom(chatroomUrl);
       webRTCSockets.push( new webkitRTCPeerConnection({ "iceServers": [{ "url": "stun:provserver.televolution.net" },{ "url": "stun:stun1.voiceeclipse.net" }] }) );
+    
     }
   }
   
