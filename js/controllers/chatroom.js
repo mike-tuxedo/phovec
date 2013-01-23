@@ -1,18 +1,5 @@
 ﻿App.ChatroomController = Ember.Controller.extend({
 
-  chatroomEntered :false,
-  
-  sendInitMessagesToServer: function(){
-  
-    setTimeout(
-      function(){
-        clientWebSocket.send(JSON.stringify({ init: true, url: location.href })); // inform server whether you are host or guest of chatroom
-      },
-      500
-    );
-    
-  },
-  
   showInvitationForm: function(){
     var view = App.InvitationView.create();
     view.appendTo('#messageBox');
