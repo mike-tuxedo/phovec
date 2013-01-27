@@ -94,12 +94,11 @@ body{
   right: 0;
 }
 
+/*
+Header style for Menü and some other things on the top
+*/
 header{
-
-}
-
-#_content{
-
+height: 50px;
 }
 
 #_infoButton{
@@ -115,21 +114,46 @@ header{
   background: #303743;
 }
 
-a{
+a, a:visited{
   color: #dfdfdf;
   font-weight: bold;
   font-size: 20px;
   text-decoration: none;
 }
 
+a:hover{
+  color: #e0dfeb;
+  font-weight: bold;
+  font-size: 20px;
+  text-decoration: none;
+}
+
 ._link{
-  
   position: relative;
   margin-left: 20px;
   top: 10px;
 }
 
+/*
+Content style
+*/
+#_content{
+  text-align: center;
+  min-height: 500px;
+  left: 0px;
+  right: 0px;
+}
 
+
+/*
+Footer style
+*/
+footer{
+  height: 50px;
+  margin-bottom: 0px;
+
+  background: rgba(0,0,0,0.5);
+}
 
 
 
