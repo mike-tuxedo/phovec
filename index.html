@@ -25,11 +25,15 @@
   
   <script type="text/x-handlebars" data-template-name="application">
   
-    <header>Header</header>
-    <h1>Video/Audio Communication Plattform</h1>
-    
-    {{outlet}}
-    
+    <header>
+      <div id="_infoButton"><a class="_link" href="#">i</a></div>
+    </header>
+
+    <div id="_content">
+      <h1>Video/Audio Communication Plattform</h1>
+      {{outlet}}
+    </div>
+
     <footer>Footer</footer>
     
   </script>
