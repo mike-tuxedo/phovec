@@ -26,11 +26,12 @@
   <script type="text/x-handlebars" data-template-name="application">
   
     <header>
-      <div id="_infoButton"><a class="_link" href="#">i</a></div>
+      <a href=""><div id="_infoButton"><a class="_link" href="#"></a></div></a>
     </header>
 
     <div id="_content">
-      <h1>Video/Audio Communication Plattform</h1>
+      <h1>Hier kannst du mit deinen Freunden Videochatten!</h1>
+      <p>Einfach auf Start klicken und du bist in einem Chatraum, von wo aus du deine Freunde einladen kannst.</p>
       {{outlet}}
     </div>
 
@@ -42,7 +43,7 @@
   <!-- views -->
   
   <script type="text/x-handlebars" data-template-name="startpage">
-    <a href="#" {{action "setUpChatroom" target="App.router.startpageController"}}>Create new Chatroom</a>
+    <div id="_startButton"><a href="#" {{action "setUpChatroom" target="App.router.startpageController"}}>START</a></div>
   </script>
   
   
