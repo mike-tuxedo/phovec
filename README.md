@@ -1,6 +1,4 @@
 phovec
 ======
 
-WebRTC Audio/Video Chatapp
-
-push to development ...
+WebRTC Audio/Video Chatapp on heavy development state
