@@ -82,6 +82,9 @@ var WebRTC = {
       destinationHash: UserInformations.remoteUserId,
       sdp: description
     });
+  },
+  close: function(){
+    this.peerConnection.close();
   }
 };
 
@@ -138,6 +141,10 @@ var SignalingChannel = {
     console.log("WebSocket: SEND " + message);
     //TODO: stringify necessary?
     this.webSocket.send(JSON.stringify(message));
+  },
+  close: function(){
+    this.webSocket.onclose = function () {};
+    this.webSocket.close();
   }
 };
 
@@ -172,6 +179,13 @@ var LocalMedia = {
     $('#local-stream').get(0).pause();
     $('#local-stream').attr('src', null);
   }
+};
+
+//reset everything when the site gets closed
+window.onbeforeunload = function(){
+  LocalMedia.stop();
+  SignalingChannel.close();
+  WebRTC.close();
 };
 
 WebRTC.init();
