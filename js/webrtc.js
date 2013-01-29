@@ -38,7 +38,7 @@ var WebRTC = {
         chatroomHash: UserInformations.roomHash,
         userHash: UserInformations.userId,
         destinationHash: UserInformations.remoteUserId,
-        ice: description
+        ice: description.candidate
       });
     };
     //Gets called when a remote stream arrives
@@ -46,6 +46,10 @@ var WebRTC = {
       console.log("WebRTC: NEW STREAM ARRIVED");
       $('#remote-stream').attr('src', URL.createObjectURL(remote.stream));
     };
+    
+    this.peerConnection.onconnecting = function(){};
+    this.peerConnection.onopen = function(){};
+    this.peerConnection.onremovestream = function(){};
   },
   call: function() {
     var loop = setInterval(function() {
@@ -68,7 +72,9 @@ var WebRTC = {
     console.log("WebRTC: TAKEOFF");
     //the own session description has to be compatible to the remote session description
     //so createAnswer needs the remote session description also for creating the local description
-    this.peerConnection.createAnswer(peerConnection.remoteDescription, gotDescription);
+    
+    console.log("WEBRTC: TakeOff");
+    this.peerConnection.createAnswer(this.gotDescription);
   },
   //this function is used from createAnswer and createOffer
   //because both have the an session description for local purpose as result
@@ -105,31 +111,61 @@ var SignalingChannel = {
     };
     this.webSocket.onmessage = function(message) {
       console.log("WebSocket: ONMESSAGE (from WebSocketServer)");
-      message = JSON.parse(message);
-      switch(message.subject) {
+      console.log(message);
+      
+      try{
+        data = JSON.parse(message.data);
+      }catch(e){
+        console.log("couldn't parse message from server");
+      }
+      
+      switch(data.subject) {
         case "init":
-          roomHash = message.chatroom;
-          userId = message.userId;
+          if(data.error){
+            //TODO: Implemend forwarding to other site
+            alert("room full and error happend!");
+            return;
+          }
+          console.log("INIT SERVER -> CLIENT");
+          UserInformations.roomHash = data.chatroomHash;
+          UserInformations.userId = data.userHash;
           
-          var url = "http://37.200.99.34/webrtc.html#" + roomHash;
-          $('#url').text(url);
+          //only get the other participant, but only when there is already one
+          if(data.guestIds[0]){
+            UserInformations.remoteUserId = data.guestIds[0].id; 
+          }
+          
+          var url = "http://37.200.99.34/webrtc.html#" + UserInformations.roomHash;
+          $('#url').text("ROOMHASH " + url);
+          $('#id').text("OWN USER ID " + UserInformations.userId);
           location.href = url;
           break;
         case "sdp":
-          WebRTC.peerConnection.setRemoteDescription(new RTCSessionDescription(message.sdp));
+          WebRTC.peerConnection.setRemoteDescription(new RTCSessionDescription(data.sdp));
           WebRTC.takeOff();
           break;
         case "ice":
-          WebRTC.peerConnection.addIceCandidate(new RTCIceCandidate(message.candidate));
+          console.log("PARSED ICE DATA:");
+          console.log(data.ice);
+          
+          if(data.ice){
+            WebRTC.peerConnection.addIceCandidate(new RTCIceCandidate(data.ice));
+          }
+          else{
+            console.log("ICE MESSAGE NOT SET");
+          }
+
           break;
         case "participant-join":
-          remoteUserId = message.newUserHash;
+          UserInformations.remoteUserId = data.newUserHash;
+          console.log("WEBRTC: Participant-Join " + UserInformations.remoteUserId);
           WebRTC.call();
           break;
         case "participant-leave":
           //close everything and reset
           break;
         default:
+          console.log()
           break;
       };
     };
@@ -169,7 +205,8 @@ var LocalMedia = {
     $('#local-stream').attr('src', URL.createObjectURL(localStream));
   },
   onError: function(error) {
-    console.log("LocalMedia: ERROR " + error);
+    console.log("LocalMedia: ERROR");
+    console.log(error);
   },
   start: function() {
     //request audio and video from your own hardware
@@ -193,10 +230,8 @@ window.onbeforeunload = function() {
 };
 
 window.onload = function(){
-  console.log("onload");
-  console.log(location.href.indexOf('html') + " " + (location.href.length-4));
   if(location.href.indexOf('html') == (location.href.length-4)){
-    console.log("forward to url with #");
+    console.log("Window ONLOAD | Forward to URL with #");
     location.href = location.href + "#";
   }
 }
