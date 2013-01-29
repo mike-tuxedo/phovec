@@ -3,9 +3,15 @@
  */
 PeerConnection = (webkitRTCPeerConnection || mozRTCPeerConnection);
 navigator.getMedia = (navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia);
-var roomHash = "";
-var userId = "";
-var remoteUserId = "";
+
+/**
+ * Informations room and remote- and localuser
+ */
+var UserInformations = {
+  roomHash: null,
+  userId: null,
+  remoteUserId: null  
+};
 
 //TODO: PeerConnection später für MultiUser mit remoteUserId verbinden
 
@@ -23,15 +29,15 @@ var WebRTC = {
   peerConnection: new PeerConnection(this.configuration),
   amountIceMessages: 0,
   init: function() {
-    //gets ice messages from stun server?
-    this.peerConnection.onicecandidate = function(message) {
-      console.log("WebRTC: NEW ICE MESSAGE FROM STUN" + " | At second: " + new Date().getSeconds() + " | Number: " + ++WebRTC.amountIceMessages);
+    //gets ice messages from stun server
+    this.peerConnection.onicecandidate = function(description) {
+      console.log("WebRTC: NEW ICE MESSAGE FROM STUN" + " | At second: " + new Date().getSeconds() + " | Number: " + (++WebRTC.amountIceMessages));
 
       SignalingChannel.send({
         subject: "ice",
-        chatroomHash: roomHash,
-        userHash: userId,
-        destinationHash: remoteUserId,
+        chatroomHash: UserInformations.roomHash,
+        userHash: UserInformations.userId,
+        destinationHash: UserInformations.remoteUserId,
         ice: description
       });
     };
@@ -71,9 +77,9 @@ var WebRTC = {
     WebRTC.peerConnection.setLocalDescription(description);
     SignalingChannel.send({
       subject: "sdp",
-      chatroomHash: roomHash,
-      userHash: userId,
-      destinationHash: remoteUserId,
+      chatroomHash: UserInformations.roomHash,
+      userHash: UserInformations.userId,
+      destinationHash: UserInformations.remoteUserId,
       sdp: description
     });
   }
