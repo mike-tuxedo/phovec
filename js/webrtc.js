@@ -10,7 +10,7 @@ navigator.getMedia = (navigator.getUserMedia || navigator.webkitGetUserMedia || 
 var UserInformations = {
   roomHash: null,
   userId: null,
-  remoteUserId: null  
+  remoteUserId: null
 };
 
 //TODO: PeerConnection später für MultiUser mit remoteUserId verbinden
@@ -83,7 +83,7 @@ var WebRTC = {
       sdp: description
     });
   },
-  close: function(){
+  close: function() {
     this.peerConnection.close();
   }
 };
@@ -110,7 +110,10 @@ var SignalingChannel = {
         case "init":
           roomHash = message.chatroom;
           userId = message.userId;
-          //guestIds = message.guestIds;
+          
+          var url = "http://37.200.99.34/webrtc.html#" + roomHash;
+          $('#url').text(url);
+          location.href = url;
           break;
         case "sdp":
           WebRTC.peerConnection.setRemoteDescription(new RTCSessionDescription(message.sdp));
@@ -142,8 +145,9 @@ var SignalingChannel = {
     //TODO: stringify necessary?
     this.webSocket.send(JSON.stringify(message));
   },
-  close: function(){
-    this.webSocket.onclose = function () {};
+  close: function() {
+    this.webSocket.onclose = function() {
+    };
     this.webSocket.close();
   }
 };
@@ -182,13 +186,22 @@ var LocalMedia = {
 };
 
 //reset everything when the site gets closed
-window.onbeforeunload = function(){
+window.onbeforeunload = function() {
   LocalMedia.stop();
   SignalingChannel.close();
   WebRTC.close();
 };
 
+window.onload = function(){
+  console.log("onload");
+  console.log(location.href.indexOf('html') + " " + (location.href.length-4));
+  if(location.href.indexOf('html') == (location.href.length-4)){
+    console.log("forward to url with #");
+    location.href = location.href + "#";
+  }
+}
+
 WebRTC.init();
 SignalingChannel.init();
 
-LocalMedia.start();
+LocalMedia.start(); 
