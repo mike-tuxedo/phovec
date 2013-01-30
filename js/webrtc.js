@@ -43,43 +43,86 @@ var WebRTC = {
     };
     //Gets called when a remote stream arrives
     this.peerConnection.onaddstream = function(remote) {
-      console.log("WebRTC: NEW STREAM ARRIVED");
+      console.log("WebRTC: NEW REMOTE STREAM ARRIVED");
       $('#remote-stream').attr('src', URL.createObjectURL(remote.stream));
     };
-    
-    this.peerConnection.onconnecting = function(){};
-    this.peerConnection.onopen = function(){};
-    this.peerConnection.onremovestream = function(){};
-  },
-  call: function() {
-    var loop = setInterval(function() {
-      var localStream = LocalMedia.getStream();
 
-      if (localStream == null) {
-        console.log("var localStream = " + localStream);
-        return;
-      } else {
-        clearInterval(loop);
+    //so the getmedia is absolute a stand alone module
+    //sendStream adds the local stream for the other remote peer
+    window.addEventListener("localmedia:available", this.handleLocalMedia);
+    window.addEventListener("signalingchannel:sdp", this.handleSdp);
+    window.addEventListener("signalingchannel:ice", this.handleIce);
+    window.addEventListener("signalingchannel:participant", this.handleParticipant);
 
-        WebRTC.peerConnection.addStream(localStream);
-        console.log("WebRTC: CREATEOFFER");
-        //when the callback gotDescription gets called, then there is passed an session description
-        WebRTC.peerConnection.createOffer(WebRTC.gotDescription);
-      }
-    }, 1500);
+    this.peerConnection.onconnecting = function() {
+    };
+    this.peerConnection.onopen = function() {
+    };
+    this.peerConnection.onremovestream = function() {
+    };
   },
-  takeOff: function() {
-    console.log("WebRTC: TAKEOFF");
-    //the own session description has to be compatible to the remote session description
-    //so createAnswer needs the remote session description also for creating the local description
-    
-    console.log("WEBRTC: TakeOff");
-    this.peerConnection.createAnswer(this.gotDescription);
+  handleLocalMedia: function(event) {
+    //... currently row 72 and 92 checks every second if there is already a stream and attach it
+    //TODO: Check why there must already be a stream on peerConnection before etablish the connection
+  },
+  handleSdp: function(event) {
+    WebRTC.peerConnection.setRemoteDescription(new RTCSessionDescription(event.detail.sdp));
+    if (!WebRTC.peerConnection.localDescription) {
+
+      var loop = setInterval(function() {
+        var localStream = LocalMedia.getStream();
+
+        if (localStream == null) {
+          return;
+        } else {
+          clearInterval(loop);
+          WebRTC.peerConnection.addStream(localStream);
+          WebRTC.peerConnection.createAnswer(WebRTC.gotDescription);
+        }
+      }, 1000);
+
+    }
+  },
+  handleIce: function(event) {
+    WebRTC.peerConnection.addIceCandidate(new RTCIceCandidate(event.detail.ice));
+  },
+  handleParticipant: function(event) {
+    switch (event.detail.message) {
+      case "join":
+        var loop = setInterval(function() {
+          var localStream = LocalMedia.getStream();
+
+          if (localStream == null) {
+            return;
+          } else {
+            clearInterval(loop);
+            WebRTC.peerConnection.addStream(localStream);
+            WebRTC.peerConnection.createOffer(WebRTC.gotDescription);
+          }
+        }, 1000);
+        break;
+      default:
+        break;
+    }
+  },
+  sendStream: function() {
+    console.log("WebRTC: Stream gets added");
+    WebRTC.peerConnection.addStream(LocalMedia.getStream());
+  },
+  connectToPeer: function() {
+    if (WebRTC.peerConnection.remoteDescription && !WebRTC.peerConnection.localDescription) {
+      this.peerConnection.createAnswer(this.gotDescription);
+    } else if (!WebRTC.peerConnection.remoteDescription && !WebRTC.peerConnection.localDescription) {
+      this.peerConnection.createOffer(this.gotDescription);
+    } else {
+      //WebRTC: NO OFFER or ANSWER needed because remote and local description are set
+      return;
+    }
   },
   //this function is used from createAnswer and createOffer
   //because both have the an session description for local purpose as result
   gotDescription: function(description) {
-    console.log("WebRTC: GOTDESCRIPTION " + description);
+    console.log("WebRTC: GOT DESCRIPTION");
     WebRTC.peerConnection.setLocalDescription(description);
     SignalingChannel.send({
       subject: "sdp",
@@ -110,62 +153,70 @@ var SignalingChannel = {
       });
     };
     this.webSocket.onmessage = function(message) {
-      console.log("WebSocket: ONMESSAGE (from WebSocketServer)");
-      console.log(message);
-      
-      try{
+      try {
         data = JSON.parse(message.data);
-      }catch(e){
-        console.log("couldn't parse message from server");
+      } catch(e) {
+        console.log("WebSocket: Unparsable message from server");
       }
-      
+
       switch(data.subject) {
         case "init":
-          if(data.error){
+          if (data.error) {
             //TODO: Implemend forwarding to other site
-            alert("room full and error happend!");
+            alert("WebSocket: Room full and error happend!");
             return;
           }
-          console.log("INIT SERVER -> CLIENT");
+          console.log("WebSocket: INIT SERVER -> CLIENT");
           UserInformations.roomHash = data.chatroomHash;
           UserInformations.userId = data.userHash;
-          
+
           //only get the other participant, but only when there is already one
-          if(data.guestIds[0]){
-            UserInformations.remoteUserId = data.guestIds[0].id; 
+          if (data.guestIds[0]) {
+            UserInformations.remoteUserId = data.guestIds[0].id;
           }
-          
+
           var url = "http://37.200.99.34/webrtc.html#" + UserInformations.roomHash;
           $('#url').text("ROOMHASH " + url);
           $('#id').text("OWN USER ID " + UserInformations.userId);
           location.href = url;
           break;
         case "sdp":
-          WebRTC.peerConnection.setRemoteDescription(new RTCSessionDescription(data.sdp));
-          WebRTC.takeOff();
+          console.log('WebSocket: SDP arrived');
+          window.dispatchEvent(new CustomEvent("signalingchannel:sdp", {
+            detail: {
+              sdp: data.sdp
+            }
+          }));
           break;
         case "ice":
-          console.log("PARSED ICE DATA:");
-          console.log(data.ice);
-          
-          if(data.ice){
-            WebRTC.peerConnection.addIceCandidate(new RTCIceCandidate(data.ice));
-          }
-          else{
-            console.log("ICE MESSAGE NOT SET");
+          if (data.ice) {
+            console.log("WebSocket: ICE arrived:");
+            
+            window.dispatchEvent(new CustomEvent("signalingchannel:ice", {
+              detail: {
+                ice: data.ice
+              }
+            }));
+          } else {
+            console.log("WebSocket: ICE not usable");
           }
 
           break;
         case "participant-join":
           UserInformations.remoteUserId = data.newUserHash;
-          console.log("WEBRTC: Participant-Join " + UserInformations.remoteUserId);
-          WebRTC.call();
+          console.log("WebSocket: Participant-Join " + UserInformations.remoteUserId);
+          
+          window.dispatchEvent(new CustomEvent("signalingchannel:participant", {
+            detail: {
+              message: "join"
+            }
+          }));
           break;
         case "participant-leave":
-          //close everything and reset
+          //close and reset everything
           break;
         default:
-          console.log()
+          console.log("WebSocket: Unknown subject in message!");
           break;
       };
     };
@@ -200,8 +251,8 @@ var LocalMedia = {
     return this.localStream;
   },
   onSuccess: function(localStream) {
-    console.log("LocalMedia: SUCCESS");
     LocalMedia.setStream(localStream);
+    window.dispatchEvent(new CustomEvent("localmedia:available"));
     $('#local-stream').attr('src', URL.createObjectURL(localStream));
   },
   onError: function(error) {
@@ -228,9 +279,10 @@ window.onbeforeunload = function() {
   SignalingChannel.close();
   WebRTC.close();
 };
-
-window.onload = function(){
-  if(location.href.indexOf('html') == (location.href.length-4)){
+ 
+//forward user with no hash-link to the site with a #
+window.onload = function() {
+  if (location.href.indexOf('html') == (location.href.length - 4)) {
     console.log("Window ONLOAD | Forward to URL with #");
     location.href = location.href + "#";
   }
@@ -239,4 +291,4 @@ window.onload = function(){
 WebRTC.init();
 SignalingChannel.init();
 
-LocalMedia.start(); 
+LocalMedia.start();
