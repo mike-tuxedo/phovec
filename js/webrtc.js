@@ -148,6 +148,12 @@ var WebRTC = {
 
 /**
  * Signaling Channel - Connection Setup (SDP/ICE)
+ * 
+ * Vorschlag mike:
+ * nachdem der Signalingvorgang, gestartet wird (werden sollte) sobald der user 
+ * den Raum betritt sprich die Seite ansurft, ist das eigentlich eine Funktion die der User dann verwendet
+ * um sich mit den anderen bekannt zu machen. Somit gehört das für mich zum User und damit in den UserController.
+ * 
  */
 var SignalingChannel = {
   webSocket: null,
@@ -251,6 +257,10 @@ var SignalingChannel = {
 /**
  * Local Media Stream
  * emberJS: Part of chatroom-controller OR single media controller (maybe the best way)
+ * 
+ * Vorschlag mike:
+ * der lokale stream repräsentiert eigentlich den user selbst, also auch ein userfunktion im usercontroller.
+ * wäre es nicht LocalMedia sonder nur Media und somit für lokal und remotestreams zuständig, wäre es dem Room zugehörig.
  */
 var LocalMedia = {
   localStream: null,
