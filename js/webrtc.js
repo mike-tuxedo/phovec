@@ -1,7 +1,7 @@
 /**
  * Variables with cross browser compatibility
  */
-PeerConnection = (webkitRTCPeerConnection || mozRTCPeerConnection);
+PeerConnection = (webkitRTCPeerConnection || mozRTCPeerConnection || webkitDeprecatedPeerConnection);
 navigator.getMedia = (navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia);
 
 /**
@@ -144,7 +144,7 @@ var SignalingChannel = {
   webSocket: null,
   init: function() {
     var self = this;
-    this.webSocket = new WebSocket('ws://37.200.99.34:9005');
+    this.webSocket = new WebSocket('ws://37.200.99.34:49152');
     this.webSocket.onopen = function() {
       console.log("WebSocket: ONOPEN");
       self.send({
