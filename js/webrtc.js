@@ -6,6 +6,7 @@ navigator.getMedia = (navigator.getUserMedia || navigator.webkitGetUserMedia || 
 
 /**
  * Informations room and remote- and localuser
+ * emberJS: Room and user model
  */
 var UserInformations = {
   roomHash: null,
@@ -17,6 +18,7 @@ var UserInformations = {
 
 /**
  * Web Real Time Communication
+ * ember.JS: Controller or extern js 
  */
 var WebRTC = {
   configuration: {
@@ -241,6 +243,7 @@ var SignalingChannel = {
 
 /**
  * Local Media Stream
+ * emberJS: Part of chatroom-controller OR single media controller (maybe the best way)
  */
 var LocalMedia = {
   localStream: null,
