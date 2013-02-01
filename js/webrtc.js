@@ -7,6 +7,13 @@ navigator.getMedia = (navigator.getUserMedia || navigator.webkitGetUserMedia || 
 /**
  * Informations room and remote- and localuser
  * emberJS: Room and user model
+ * Vorschlag mike, Variablen umbenennen...
+ * 		UserInformations zu Room (Wird ein Chatroom-Objekt)
+ * 		userId zu mainUserId
+ * 		remoteUserId zu remoteUserIds
+ * ...dann würde ich noch box.js wegwerfen, da jede box eigentlich auch ein user ist ...doppelt gemoppelt. Die Idee dahinter ist mir klar, find aber das ist overengineering 
+ * Also gibts dann nur ein Chatroomobjekt => Room, mit mehreren Userobjekten.
+ * Das Chatroommodel muss dafür noch etwas angepasst werden.  ...HokusPokus Schwubsdiwubs, erste integration in emberJS ;)
  */
 var UserInformations = {
   roomHash: null,
