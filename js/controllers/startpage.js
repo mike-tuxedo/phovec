@@ -1,7 +1,7 @@
 ﻿App.StartpageController = Ember.Controller.extend({
   
   setUpChatroom : function(){
-    setUpWebSocket();
+
   },
   
   redirectClientToChatroom : function(urlPart){
