@@ -39,7 +39,7 @@
       {{outlet}}
     </div>
 
-    <footer>Footer</footer>
+    <footer>Copyright by F.J.Brünner, L.Wanko, M.Tiefenthaler and the University of Applied Sciences in Salzburg</footer>
     
   </script>
   
@@ -47,9 +47,13 @@
   <!-- views -->
   
   <script type="text/x-handlebars" data-template-name="startpage">
-    <div id="_startButton"><a href="#" {{action "setUpChatroom" target="App.router.startpageController"}}>START</a></div>
+
+    		<a href="#" {{action "setUpChatroom" target="App.router.startpageController"}}>
+    			<div id="_startButton"></div>
+    		</a>
+    
    // toolbox zum testen, soll dann nur mehr im chatroomtemplate sein
-   <div id="_tooltip">Ihr Browser fragt sie ob er Zugriff auf ihre Kamera bekommt. Um Videochatten zu können musst du das mit <strong>allow</strong> bestätigen!</div><div id="_tooltipArrow"></div>
+   <div id="_tooltip">Dein Browser fragt dich ob er Zugriff auf deine Webcam bekommt. Um Videochatten zu können musst du das mit <strong>allow</strong> bestätigen!</div><div id="_tooltipArrow"></div>
   </script>
   
   

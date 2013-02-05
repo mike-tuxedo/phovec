@@ -24,7 +24,7 @@ height: 50px;
   border-bottom-right-radius: 50px;
   border-right: 8px solid #e0dfeb;
   border-bottom: 8px solid #e0dfeb;
-  box-shadow: 0px 0px 15px #444444;
+  box-shadow: 0px 0px 5px #444444;
 
   background: #303743;
   background-image: url('../img/info.png');
@@ -34,7 +34,7 @@ height: 50px;
 }
 
 #_infoButton:hover{
-  background: #e0dfeb;
+  background: #546075;
   background-image: url('../img/info.png');
   background-size: 40%;
   background-repeat: no-repeat;
@@ -49,7 +49,7 @@ a, a:visited{
 }
 
 a:hover{
-  color: #e0dfeb;
+  color: #546075;
   font-weight: bold;
   font-size: 20px;
   text-decoration: none;
@@ -75,37 +75,42 @@ Content style
 }
 
 #_content p{
-  font-size: 30px;
+  font-size: 25px;
+  text-shadow: 1px 1px 0px #C0C0C0;
 }
 
 #_content h1{
-  font-size: 40px;
+  font-size: 30px;
+  text-shadow: 1px 1px 0px #C0C0C0;
 }
 
 #_startInfo{
   position: absolute;
   width: 700px;
-  margin-top: 10%;
+  margin-top: 50px;
   margin-left: 50%;
   left: -350px;
 }
 
-#_startButton a{
-  font-size: 50px;
-}
-
+/*
+Startbutton
+*/
 #_startButton{
   position: absolute;
   width: 380px;
   height: 100px;
-  text-align: center;
-  padding-top: 20px;
 
   background-image: url('../img/startbutton.png');
+  background-size: 100% 100%;
   background-repeat: no-repeat;
-  margin-top: 40%;
+  margin-top: 50%;
+  top: -50px;
   margin-left: 50%;
   left: -200px;
+}
+
+#_startButton:hover{
+  background-image: url('../img/startbutton_hover.png');
 }
 
 /*
@@ -114,8 +119,9 @@ Footer style
 footer{
   position: absolute;
   width: 100%;
-  height: 50px;
   bottom: 0px;
+  padding: 5px;
 
-  background: rgba(0,0,0,0.5);
+  background: #C0C0C0;
+  color: #303743;
 }
