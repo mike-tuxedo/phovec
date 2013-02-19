@@ -20,6 +20,14 @@ if (navigator.getUserMedia) {
 
 /**
  * Informations room and remote- and localuser
+ * emberJS: Room and user model
+ * Vorschlag mike, Variablen umbenennen...
+ * 		UserInformations zu Room (Wird ein Chatroom-Objekt)
+ * 		userId zu mainUserId
+ * 		remoteUserId zu remoteUserIds
+ * ...dann würde ich noch box.js wegwerfen, da jede box eigentlich auch ein user ist ...doppelt gemoppelt. Die Idee dahinter ist mir klar, find aber das ist overengineering 
+ * Also gibts dann nur ein Chatroomobjekt => Room, mit mehreren Userobjekten.
+ * Das Chatroommodel muss dafür noch etwas angepasst werden.  ...HokusPokus Schwubsdiwubs, erste integration in emberJS ;)
  */
 var UserInformations = {
   roomHash: null,
@@ -31,6 +39,7 @@ var UserInformations = {
 
 /**
  * Web Real Time Communication
+ * ember.JS: Controller or extern js 
  */
 var WebRTC = {
   configuration: {
@@ -153,6 +162,12 @@ var WebRTC = {
 
 /**
  * Signaling Channel - Connection Setup (SDP/ICE)
+ * 
+ * Vorschlag mike:
+ * nachdem der Signalingvorgang, gestartet wird (werden sollte) sobald der user 
+ * den Raum betritt sprich die Seite ansurft, ist das eigentlich eine Funktion die der User dann verwendet
+ * um sich mit den anderen bekannt zu machen. Somit gehört das für mich zum User und damit in den UserController.
+ * 
  */
 var SignalingChannel = {
   webSocket: null,
@@ -255,6 +270,11 @@ var SignalingChannel = {
 
 /**
  * Local Media Stream
+ * emberJS: Part of chatroom-controller OR single media controller (maybe the best way)
+ * 
+ * Vorschlag mike:
+ * der lokale stream repräsentiert eigentlich den user selbst, also auch ein userfunktion im usercontroller.
+ * wäre es nicht LocalMedia sonder nur Media und somit für lokal und remotestreams zuständig, wäre es dem Room zugehörig.
  */
 var LocalMedia = {
   localStream: null,
