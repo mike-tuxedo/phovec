@@ -1,5 +1,4 @@
-
-body{
+body {
   background-image: url('../img/background.jpg');
   top: 0;
   bottom: 0;
@@ -8,15 +7,14 @@ body{
 }
 
 /*
-Header style for Menü and some other things on the top
-*/
-header{
-height: 50px;
+ Header style for Menü and some other things on the top
+ */
+header {
+  height: 50px;
 }
 
-#_infoButton{
+#_infoButton {
   display: block;
-
   left: 0px;
   right: 0px;
   width: 50px;
@@ -24,8 +22,8 @@ height: 50px;
   border-bottom-right-radius: 50px;
   border-right: 8px solid #e0dfeb;
   border-bottom: 8px solid #e0dfeb;
-  box-shadow: 0px 0px 5px #444444;
 
+  box-shadow: 0px 0px 15px #444444;
   background: #303743;
   background-image: url('../img/info.png');
   background-size: 40%;
@@ -33,29 +31,31 @@ height: 50px;
   background-position: 10px;
 }
 
-#_infoButton:hover{
-  background: #546075;
+
+#_infoButton:hover {
+  background: #e0dfeb;
   background-image: url('../img/info.png');
   background-size: 40%;
   background-repeat: no-repeat;
   background-position: 10px;
 }
 
-a, a:visited{
+a, a:visited {
   color: #dfdfdf;
   font-weight: bold;
   font-size: 20px;
   text-decoration: none;
 }
 
-a:hover{
-  color: #546075;
+
+a:hover {
+  color: #e0dfeb;
   font-weight: bold;
   font-size: 20px;
   text-decoration: none;
 }
 
-._link{
+._link {
   display: block;
   position: relative;
   margin-left: 0px;
@@ -65,26 +65,25 @@ a:hover{
 }
 
 /*
-Content style
-*/
-#_content{
+ Content style
+ */
+#_content {
   text-align: center;
   min-height: 500px;
   left: 0px;
   right: 0px;
 }
 
-#_content p{
-  font-size: 25px;
-  text-shadow: 1px 1px 0px #C0C0C0;
-}
 
-#_content h1{
+#_content p {
   font-size: 30px;
-  text-shadow: 1px 1px 0px #C0C0C0;
 }
 
-#_startInfo{
+#_content h1 {
+  font-size: 40px;
+}
+
+#_startInfo {
   position: absolute;
   width: 700px;
   margin-top: 50px;
@@ -92,14 +91,17 @@ Content style
   left: -350px;
 }
 
-/*
-Startbutton
-*/
-#_startButton{
+
+#_startButton a {
+  font-size: 50px;
+}
+
+#_startButton {
   position: absolute;
   width: 380px;
   height: 100px;
-
+  text-align: center;
+  padding-top: 20px;
   background-image: url('../img/startbutton.png');
   background-size: 100% 100%;
   background-repeat: no-repeat;
@@ -114,14 +116,11 @@ Startbutton
 }
 
 /*
-Footer style
-*/
-footer{
+ Footer style
+ */
+footer {
   position: absolute;
   width: 100%;
   bottom: 0px;
-  padding: 5px;
-
-  background: #C0C0C0;
-  color: #303743;
+  background: rgba(0,0,0,0.5);
 }
