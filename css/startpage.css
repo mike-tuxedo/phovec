@@ -1,5 +1,4 @@
-
-body{
+body {
   background-image: url('../img/background.jpg');
   top: 0;
   bottom: 0;
@@ -8,15 +7,14 @@ body{
 }
 
 /*
-Header style for Menü and some other things on the top
-*/
-header{
-height: 50px;
+ Header style for Menü and some other things on the top
+ */
+header {
+  height: 50px;
 }
 
-#_infoButton{
+#_infoButton {
   display: block;
-
   left: 0px;
   right: 0px;
   width: 50px;
@@ -25,7 +23,6 @@ height: 50px;
   border-right: 8px solid #e0dfeb;
   border-bottom: 8px solid #e0dfeb;
   box-shadow: 0px 0px 15px #444444;
-
   background: #303743;
   background-image: url('../img/info.png');
   background-size: 40%;
@@ -33,7 +30,7 @@ height: 50px;
   background-position: 10px;
 }
 
-#_infoButton:hover{
+#_infoButton:hover {
   background: #e0dfeb;
   background-image: url('../img/info.png');
   background-size: 40%;
@@ -41,21 +38,21 @@ height: 50px;
   background-position: 10px;
 }
 
-a, a:visited{
+a, a:visited {
   color: #dfdfdf;
   font-weight: bold;
   font-size: 20px;
   text-decoration: none;
 }
 
-a:hover{
+a:hover {
   color: #e0dfeb;
   font-weight: bold;
   font-size: 20px;
   text-decoration: none;
 }
 
-._link{
+._link {
   display: block;
   position: relative;
   margin-left: 0px;
@@ -65,24 +62,24 @@ a:hover{
 }
 
 /*
-Content style
-*/
-#_content{
+ Content style
+ */
+#_content {
   text-align: center;
   min-height: 500px;
   left: 0px;
   right: 0px;
 }
 
-#_content p{
+#_content p {
   font-size: 30px;
 }
 
-#_content h1{
+#_content h1 {
   font-size: 40px;
 }
 
-#_startInfo{
+#_startInfo {
   position: absolute;
   width: 700px;
   margin-top: 10%;
@@ -90,17 +87,16 @@ Content style
   left: -350px;
 }
 
-#_startButton a{
+#_startButton a {
   font-size: 50px;
 }
 
-#_startButton{
+#_startButton {
   position: absolute;
   width: 380px;
   height: 100px;
   text-align: center;
   padding-top: 20px;
-
   background-image: url('../img/startbutton.png');
   background-repeat: no-repeat;
   margin-top: 40%;
@@ -109,13 +105,12 @@ Content style
 }
 
 /*
-Footer style
-*/
-footer{
+ Footer style
+ */
+footer {
   position: absolute;
   width: 100%;
   height: 50px;
   bottom: 0px;
-
   background: rgba(0,0,0,0.5);
 }
