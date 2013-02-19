@@ -1,8 +1,22 @@
 /**
  * Variables with cross browser compatibility
  */
-PeerConnection = (webkitRTCPeerConnection || mozRTCPeerConnection || webkitDeprecatedPeerConnection);
-navigator.getMedia = (navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia);
+
+if (webkitRTCPeerConnection) {
+  PeerConnection = webkitRTCPeerConnection;
+} else if (mozRTCPeerConnection) {
+  PeerConnection = mozRTCPeerConnection;
+}
+
+if (navigator.getUserMedia) {
+  navigator.getMedia = navigator.getUserMedia;
+} else if (navigator.webkitGetUserMedia) {
+  navigator.getMedia = navigator.webkitGetUserMedia;
+} else if (navigator.mozGetUserMedia) {
+  navigator.getMedia = navigator.mozGetUserMedia;
+} else if (navigator.msGetUserMedia) {
+  navigator.getMedia = navigator.msGetUserMedia;
+}
 
 /**
  * Informations room and remote- and localuser
@@ -54,12 +68,12 @@ var WebRTC = {
     window.addEventListener("signalingchannel:ice", this.handleIce);
     window.addEventListener("signalingchannel:participant", this.handleParticipant);
 
-    this.peerConnection.onconnecting = function() {
-    };
-    this.peerConnection.onopen = function() {
-    };
-    this.peerConnection.onremovestream = function() {
-    };
+    /*this.peerConnection.onconnecting = function() {
+     };
+     this.peerConnection.onopen = function() {
+     };
+     this.peerConnection.onremovestream = function() {
+     };*/
   },
   handleLocalMedia: function(event) {
     //... currently row 72 and 92 checks every second if there is already a stream and attach it
@@ -191,7 +205,7 @@ var SignalingChannel = {
         case "ice":
           if (data.ice) {
             console.log("WebSocket: ICE arrived:");
-            
+
             window.dispatchEvent(new CustomEvent("signalingchannel:ice", {
               detail: {
                 ice: data.ice
@@ -205,7 +219,7 @@ var SignalingChannel = {
         case "participant-join":
           UserInformations.remoteUserId = data.newUserHash;
           console.log("WebSocket: Participant-Join " + UserInformations.remoteUserId);
-          
+
           window.dispatchEvent(new CustomEvent("signalingchannel:participant", {
             detail: {
               message: "join"
@@ -251,8 +265,10 @@ var LocalMedia = {
     return this.localStream;
   },
   onSuccess: function(localStream) {
+    console.log()
     LocalMedia.setStream(localStream);
     window.dispatchEvent(new CustomEvent("localmedia:available"));
+
     $('#local-stream').attr('src', URL.createObjectURL(localStream));
   },
   onError: function(error) {
@@ -279,7 +295,7 @@ window.onbeforeunload = function() {
   SignalingChannel.close();
   WebRTC.close();
 };
- 
+
 //forward user with no hash-link to the site with a #
 window.onload = function() {
   if (location.href.indexOf('html') == (location.href.length - 4)) {
