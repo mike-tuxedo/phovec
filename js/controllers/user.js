@@ -1,10 +1,10 @@
 ﻿App.UserController = Ember.ObjectController.extend({
   localStream: null,
   setLocalStream: function(stream) {
-    User.set('localStream', stream);
+    this.set('localStream', stream);
   },
   getLocalStream: function() {
-    return User.get('localStream');
+    return this.get('localStream');
   },
   onGetMediaSuccess: function(stream) {
     this.setLocalStream(stream);
