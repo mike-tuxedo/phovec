@@ -26,7 +26,6 @@ App.AboutRoute = Ember.Route.extend({
 App.RoomIndexRoute = Ember.Route.extend({
   setupController: function(controller, model){
     controller.set('content', App.Room);
-    console.log(model);
   }
 });
 App.RoomHangupRoute = Ember.Route.extend({

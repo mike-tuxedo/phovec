@@ -29,17 +29,17 @@
     <h1>Hi! Hier kannst du mit Freunden Videochatten.</h1>
     <p>Einfach auf Start klicken und du bist in einem Chatraum, von wo aus du deine Freunde einladen kannst.</p>
     </div>
-     {{#linkTo "room"}}<div id="startButtonImage"></div>{{/linkTo}}
+    {{#linkTo "room"}}<div id="startButtonImage"></div>{{/linkTo}}
   </script>
 
   <script type="text/x-handlebars" data-template-name="room">
     <header>
-      {{#linkTo "about"}}<div id="infoButton"></div>{{/linkTo}}
-      {{#linkTo "room.hangup"}}<div>Auflegen</div>{{/linkTo}}
+    {{#linkTo "about"}}<div id="infoButton"></div>{{/linkTo}}
+    {{#linkTo "room.hangup"}}<div>Auflegen</div>{{/linkTo}}
     </header>
     <label for="local-stream">that's me</label>
     <video id="local-stream" autoplay>local</video>
-    
+
     <!--<div id="_tooltip">Ihr Browser fragt sie ob er Zugriff auf ihre Kamera bekommt. Um Videochatten zu können musst du das mit <strong>allow</strong> bestätigen!</div><div id="_tooltipArrow"></div>
     <div id="messageBox"></div>-->
 
@@ -50,7 +50,10 @@
     <header>
     {{#linkTo "index"}}<div id="infoButton"></div>{{/linkTo}}
     </header>
-    About
+    <div>Das ist ein Projekt, welches im Rahmen des Qualifikationsprojektes 3 an der Fachhochschule Salzburg
+    im Schwerpunkt Web + Communities realisiert wird. Mit der innovativen Technik WebRTC werden wir den Benützern
+    dieser Web-Applikation ermöglichen Multi-Video-Konferenzen kostenlos ohne einer Installation von Plugin zuführen.
+    <br><br>Team<ul><li>Michael Tiefenthaler</li><li>Franz Josef Brünner</li><li>Lukas Wanko</li></ul></div>
   </script>
 
   <script type="text/x-handlebars" data-template-name="invitation">
@@ -108,18 +111,5 @@
   <!-- init app -->
 
   <script src="js/main.js"></script>
-
-  <script type="text/javascript">
-    var tooltipValue;
-
-    $("#_tooltip").click(function() {
-      alert('test');
-    });
-
-    $("#_tooltip").mouseover(function() {
-      tooltipValue = $(this).value;
-      $(this).value('Klicken um Fenster zu schließen');
-    });
-  </script>
 </body>
 </html>

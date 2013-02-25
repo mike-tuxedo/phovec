@@ -30,6 +30,7 @@ if (navigator.getUserMedia) {
  * Also gibts dann nur ein Chatroomobjekt => Room, mit mehreren Userobjekten.
  * Das Chatroommodel muss dafür noch etwas angepasst werden.  ...HokusPokus Schwubsdiwubs, erste integration in emberJS ;)
  */
+
 var UserInformations = {
   roomHash: null,
   userId: null,
