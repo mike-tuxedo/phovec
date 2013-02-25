@@ -1,5 +1,5 @@
 ﻿App.Room = Ember.Object.extend({
-  url: '',
+  url: 'room/' + this.get('id'),
   id : 345,
   boxes : [],
   numberOfBoxes: 0,
