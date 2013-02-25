@@ -2,17 +2,17 @@
 	init:function(){
 		if (typeof webkitRTCPeerConnection != "undefined") {
 		  PeerConnection = webkitRTCPeerConnection;
-		} else if (mozRTCPeerConnection != "undefined") {
+		} else if (typeof mozRTCPeerConnection != "undefined") {
 		  PeerConnection = mozRTCPeerConnection;
 		}
 		
-		if (navigator.getUserMedia != "undefined") {
+		if (typeof navigator.getUserMedia != "undefined") {
 		  navigator.getMedia = navigator.getUserMedia;
-		} else if (navigator.webkitGetUserMedia != "undefined") {
+		} else if (typeof navigator.webkitGetUserMedia != "undefined") {
 		  navigator.getMedia = navigator.webkitGetUserMedia;
-		} else if (navigator.mozGetUserMedia != "undefined") {
+		} else if (typeof navigator.mozGetUserMedia != "undefined") {
 		  navigator.getMedia = navigator.mozGetUserMedia;
-		} else if (navigator.msGetUserMedia != "undefined") {
+		} else if (typeof navigator.msGetUserMedia != "undefined") {
 		  navigator.getMedia = navigator.msGetUserMedia;
 		}
 	}	
