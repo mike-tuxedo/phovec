@@ -11,6 +11,9 @@ App.Router.map(function() {
   });
   this.resource("room", function() {
     this.route("hangup");
+    this.route("conference", {
+      path: ":hash"
+    })
   });
   this.route("invitation", {
     path: "/invitation"
@@ -24,8 +27,8 @@ App.AboutRoute = Ember.Route.extend({
 
 });
 App.RoomIndexRoute = Ember.Route.extend({
-  setupController: function(controller, model){
-    controller.set('content', App.Room);
+  setupController: function(controller, model) {
+    controller.set('content', model);
   }
 });
 App.RoomHangupRoute = Ember.Route.extend({
@@ -33,4 +36,4 @@ App.RoomHangupRoute = Ember.Route.extend({
 });
 App.InivitationRoute = Ember.Route.extend({
 
-}); 
+});
