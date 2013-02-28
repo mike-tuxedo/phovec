@@ -1,4 +1,5 @@
-//index template			
+//index template
+		
 document.write('<script type="text/x-handlebars" data-template-name="index">\
 					<header>\
 				    	{{#linkTo "about"}}<div id="infoButton"></div>{{/linkTo}}\
@@ -52,4 +53,3 @@ document.write('<script type="text/x-handlebars" data-template-name="invitation"
 document.write('<script type="text/x-handlebars" data-template-name="box">\
 					<video {{bindAttr id="view.videoBoxId"}} width="250" height="250" autoplay></video>\
 				</script>');
-				
