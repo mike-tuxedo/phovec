@@ -1,118 +1,210 @@
 var WebRTC = {
-  configuration: {
-    "iceServers": [{
-      "url": "stun:provserver.televolution.net"
-    }, {
-      "url": "stun:stun1.voiceeclipse.net"
-    }]
-  },
-  peerConnection: new PeerConnection(this.configuration),
-  amountIceMessages: 0,
   init: function() {
-    //gets ice messages from stun server
-    this.peerConnection.onicecandidate = function(description) {
-      console.log("WebRTC: NEW ICE MESSAGE FROM STUN" + " | At second: " + new Date().getSeconds() + " | Number: " + (++WebRTC.amountIceMessages));
+    window.addEventListener("localmedia:available", this.handleLocalMedia);
+    window.addEventListener("signalingchannel:init", this.handleSignalingInit);
+    window.addEventListener("signalingchannel:sdp", this.handleSignalingSdp);
+    window.addEventListener("signalingchannel:ice", this.handleSignalingIce);
+    window.addEventListener("signalingchannel:participant", this.handleSignalingParticipant);
+
+    /**
+     * Create local user
+     */
+    var user = {
+      name: undefined,
+      id: undefined,
+      roomHash: undefined,
+      peerConnection: undefined,
+      stream: undefined,
+      channel: undefined,
+      type: "local"
+    };
+    WebRTC.users.push(user);
+  },
+  users: [],
+  handleLocalMedia: function(event) {
+    var user = WebRTC.getLocalUser();
+    user.stream = event.detail.stream;
+  },
+  handleSignalingInit: function(event) {
+    console.log("HANDLE INIT USERS");
+    var data = event.detail;
+
+    /**
+     * Change local user
+     */
+    var user = WebRTC.getLocalUser();
+    user.id = data.userId;
+    user.roomHash = data.roomHash;
+    $('#videoboxes #local').attr("id", data.userId);
+    console.log("RoomHash: " + data.roomHash);
+
+    /**
+     * Create remote users
+     */
+    for (var i = 0; i < data.guestIds.length; i++) {
+      WebRTC.createRemoteUser(data.roomHash, data.userId, data.guestIds[i].id)
+    }
+  },
+  amountIceMessages: 0,
+  createRemoteUser: function(roomHash, userId, remoteUserId) {
+    console.log("CREATE REMOTE USER");
+    var peerConnection = new PeerConnection({
+      "iceServers": [{
+        "url": "stun:provserver.televolution.net"
+      }, {
+        "url": "stun:stun1.voiceeclipse.net"
+      }]
+    }, {
+      optional: [{
+        RtpDataChannels: true
+      }]
+    });
+
+    peerConnection.onicecandidate = function(description) {
+      console.log("PEERCONNECTION: NEW ICE MESSAGE FROM STUN" + " | At second: " + new Date().getSeconds() + " | Number: " + (++WebRTC.amountIceMessages));
 
       SignalingChannel.send({
         subject: "ice",
-        chatroomHash: UserInformations.roomHash,
-        userHash: UserInformations.userId,
-        destinationHash: UserInformations.remoteUserId,
+        chatroomHash: roomHash,
+        userHash: userId,
+        destinationHash: remoteUserId,
         ice: description.candidate
       });
     };
-    //Gets called when a remote stream arrives
-    this.peerConnection.onaddstream = function(remote) {
+
+    peerConnection.onaddstream = function(remote) {
       console.log("WebRTC: NEW REMOTE STREAM ARRIVED");
-      $('#remote-stream').attr('src', URL.createObjectURL(remote.stream));
+      $('#' + remoteUserId).attr('src', URL.createObjectURL(remote.stream));
     };
 
-    //so the getmedia is absolute a stand alone module
-    //sendStream adds the local stream for the other remote peer
-    window.addEventListener("localmedia:available", this.handleLocalMedia);
-    window.addEventListener("signalingchannel:sdp", this.handleSdp);
-    window.addEventListener("signalingchannel:ice", this.handleIce);
-    window.addEventListener("signalingchannel:participant", this.handleParticipant);
+    var channel = peerConnection.createDataChannel('RTCDataChannel', {
+      reliable: false
+    });
+    channel.onmessage = function(event) {
+      console.log(event.data);
+    };
+    channel.onopen = function(event) {
+      channel.send('RTCDataChannel opened.');
+    };
+    channel.onclose = function(event) {
+      console.log('RTCDataChannel closed.');
+    };
+    channel.onerror = function(event) {
+      console.error(event);
+    };
+    peerConnection.ondatachannel = function() {
+      console.log('peerConnection.ondatachannel event fired.');
+    };
 
-    /*this.peerConnection.onconnecting = function() {
-     };
-     this.peerConnection.onopen = function() {
-     };
-     this.peerConnection.onremovestream = function() {
-     };*/
-  },
-  handleLocalMedia: function(event) {
-    //... currently row 72 and 92 checks every second if there is already a stream and attach it
-    //TODO: Check why there must already be a stream on peerConnection before etablish the connection
-  },
-  handleSdp: function(event) {
-    WebRTC.peerConnection.setRemoteDescription(new RTCSessionDescription(event.detail.sdp));
-    if (!WebRTC.peerConnection.localDescription) {
+    var user = {
+      name: undefined,
+      id: remoteUserId,
+      roomHash: roomHash,
+      peerConnection: peerConnection,
+      stream: undefined,
+      channel: channel,
+      type: "remote"
+    };
 
+    console.log(user);
+
+    $('#videoboxes').append("<div class='user' id='" + remoteUserId + "'><label>Name</label><video autoplay></video></div>");
+    WebRTC.users.push(user);
+  },
+  getRemoteUser: function(id) {
+    for (var i = 0; i < WebRTC.users.length; i++) {
+      if (WebRTC.users[i].id === id && WebRTC.users[i].type === "remote") {
+        return WebRTC.users[i];
+      }
+    }
+  },
+  removeRemoteUser: function(id) {
+    //TODO
+  },
+  getLocalUser: function(id) {
+    for (var i = 0; i < WebRTC.users.length; i++) {
+      if (WebRTC.users[i].type === "local") {
+        return WebRTC.users[i];
+      }
+    }
+  },
+  handleSignalingSdp: function(event) {
+    console.log("HANDLE REMOTE SDP");
+    var data = event.detail;
+    var userRemote = WebRTC.getRemoteUser(data.userId);
+    var userLocal = WebRTC.getLocalUser();
+
+    userRemote.peerConnection.setRemoteDescription(new RTCSessionDescription(data.sdp));
+    if (!userRemote.peerConnection.localDescription) {
       var loop = setInterval(function() {
-        var localStream = LocalMedia.getStream();
-
-        if (localStream == null) {
+        if (userLocal.stream === undefined) {
           return;
         } else {
           clearInterval(loop);
-          WebRTC.peerConnection.addStream(localStream);
-          WebRTC.peerConnection.createAnswer(WebRTC.gotDescription);
+          userRemote.peerConnection.addStream(userLocal.stream);
+          userRemote.peerConnection.createAnswer(function(description) {
+            userRemote.peerConnection.setLocalDescription(description);
+            SignalingChannel.send({
+              subject: "sdp",
+              chatroomHash: userLocal.roomHash,
+              userHash: userLocal.id,
+              destinationHash: userRemote.id,
+              sdp: description
+            });
+          });
         }
       }, 1000);
-
     }
   },
-  handleIce: function(event) {
-    WebRTC.peerConnection.addIceCandidate(new RTCIceCandidate(event.detail.ice));
+  handleSignalingIce: function(event) {
+    console.log("HANDLE REMOTE ICE");
+    var user = WebRTC.getRemoteUser(event.detail.userId)
+    user.peerConnection.addIceCandidate(new RTCIceCandidate(event.detail.ice));
   },
-  handleParticipant: function(event) {
-    switch (event.detail.message) {
+  handleSignalingParticipant: function(event) {
+    console.log("HANDLE REMOTE PARTICIPANT");
+    var data = event.detail;
+    switch (data.message) {
       case "join":
-        var loop = setInterval(function() {
-          var localStream = LocalMedia.getStream();
+        var userLocal = WebRTC.getLocalUser();
 
-          if (localStream == null) {
+        WebRTC.createRemoteUser(data.roomHash, userLocal.id, data.userId);
+        var userRemote = WebRTC.getRemoteUser(data.userId);
+
+        var loop = setInterval(function() {
+          if (userLocal.stream === undefined) {
             return;
           } else {
             clearInterval(loop);
-            WebRTC.peerConnection.addStream(localStream);
-            WebRTC.peerConnection.createOffer(WebRTC.gotDescription);
+            userRemote.peerConnection.addStream(userLocal.stream);
+            userRemote.peerConnection.createOffer(function(description) {
+              userRemote.peerConnection.setLocalDescription(description);
+              SignalingChannel.send({
+                subject: "sdp",
+                chatroomHash: userLocal.roomHash,
+                userHash: userLocal.id,
+                destinationHash: userRemote.id,
+                sdp: description
+              });
+            });
           }
         }, 1000);
         break;
+      case "leave":
+        WebRTC.removeRemoteUser(data.userId);
+        break;
       default:
+        console.log("Undefined participant message");
         break;
     }
   },
-  sendStream: function() {
-    console.log("WebRTC: Stream gets added");
-    WebRTC.peerConnection.addStream(LocalMedia.getStream());
-  },
-  connectToPeer: function() {
-    if (WebRTC.peerConnection.remoteDescription && !WebRTC.peerConnection.localDescription) {
-      this.peerConnection.createAnswer(this.gotDescription);
-    } else if (!WebRTC.peerConnection.remoteDescription && !WebRTC.peerConnection.localDescription) {
-      this.peerConnection.createOffer(this.gotDescription);
-    } else {
-      //WebRTC: NO OFFER or ANSWER needed because remote and local description are set
-      return;
-    }
-  },
-  //this function is used from createAnswer and createOffer
-  //because both have the an session description for local purpose as result
-  gotDescription: function(description) {
-    console.log("WebRTC: GOT DESCRIPTION");
-    WebRTC.peerConnection.setLocalDescription(description);
-    SignalingChannel.send({
-      subject: "sdp",
-      chatroomHash: UserInformations.roomHash,
-      userHash: UserInformations.userId,
-      destinationHash: UserInformations.remoteUserId,
-      sdp: description
-    });
-  },
   close: function() {
-    this.peerConnection.close();
+    for (var i = 0; i < WebRTC.users.length; i++) {
+      if (WebRTC.users[i].type === "local") {
+        WebRTC.users.peerConnection.close();
+      }
+    }
   }
 };
+
+WebRTC.init();

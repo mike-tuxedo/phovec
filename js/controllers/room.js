@@ -19,5 +19,7 @@
     App.Controller = {};
     App.Controller.user = App.UserController.create();
     App.Controller.user.startGetMedia();
+    
+    SignalingChannel.init();
   }
 }); 

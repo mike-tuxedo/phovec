@@ -3,6 +3,6 @@
   id: null,
   stream: null,
   peerConnection: null,
-  // 'local' or 'remote'
+  // should only be set to 'local' or 'remote'
   type: null
 });

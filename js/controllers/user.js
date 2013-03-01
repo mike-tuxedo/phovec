@@ -1,8 +1,6 @@
 ﻿App.UserController = Ember.ObjectController.extend({
   users: [],
   init: function() {
-    console.log("init usercontroller");
-
     var user = App.User.create({
       type: "local"
     });
@@ -26,8 +24,21 @@
   },
   onGetMediaSuccess: function(stream) {
     App.Controller.user.setLocalStream(stream);
-    window.dispatchEvent(new CustomEvent("localmedia:available"));
-    $("#local-stream").attr("src", URL.createObjectURL(stream));
+    window.dispatchEvent(new CustomEvent("localmedia:available", {
+      detail: {
+        stream: stream
+      }
+    }));
+
+    if ( typeof webkitURL != "undefined") {
+      document.getElementById('videoboxes').getElementsByTagName('div')[0].getElementsByTagName('video')[0].src = webkitURL.createObjectURL(stream);
+    } else if ( typeof URL != "undefined") {
+      document.getElementById('videoboxes').getElementsByTagName('div')[0].getElementsByTagName('video')[0].src = URL.createObjectURL(stream);
+    } else {
+      document.getElementById('videoboxes').getElementsByTagName('div')[0].getElementsByTagName('video')[0].mozSrcObject = stream;
+    }
+
+    document.getElementById('videoboxes').getElementsByTagName('div')[0].getElementsByTagName('video')[0].play();
   },
   onGetMediaError: function(error) {
     console.log("LocalMedia: ERROR");

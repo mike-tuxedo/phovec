@@ -8,18 +8,12 @@
 </head>
 <body>
 
-  <!-- app view -->
-
   <script type="text/x-handlebars" data-template-name="application">
     <div id="content">
     {{outlet}}
     </div>
-
-    <footer>Copyright by F.J.Brünner, L.Wanko, M.Tiefenthaler and the University of Applied Sciences in Salzburg</footer>
-
+    <!--<footer>Copyright by F.J. Brünner, L. Wanko, M. Tiefenthaler and the University of Applied Sciences in Salzburg</footer>-->
   </script>
-
-  <!-- views -->
 
   <script type="text/x-handlebars" data-template-name="index">
     <header>
@@ -33,17 +27,12 @@
   </script>
 
   <script type="text/x-handlebars" data-template-name="room">
-    <header>
-    {{#linkTo "about"}}<div id="infoButton"></div>{{/linkTo}}
-    {{#linkTo "room.hangup"}}<div>Auflegen</div>{{/linkTo}}
-    </header>
-    <label for="local-stream">that's me</label>
-    <video id="local-stream" autoplay>local</video>
-
-    <!--<div id="_tooltip">Ihr Browser fragt sie ob er Zugriff auf ihre Kamera bekommt. Um Videochatten zu können musst du das mit <strong>allow</strong> bestätigen!</div><div id="_tooltipArrow"></div>
-    <div id="messageBox"></div>-->
-
-    <div id="videoboxes"></div>
+    <div id="videoboxes">
+    <div class="user" id="local">
+    <label>Name</label>
+    <video autoplay></video>
+    </div>
+    </div>
   </script>
 
   <script type="text/x-handlebars" data-template-name="about">
@@ -56,59 +45,37 @@
     <br><br>Team<ul><li>Michael Tiefenthaler</li><li>Franz Josef Brünner</li><li>Lukas Wanko</li></ul></div>
   </script>
 
-  <script type="text/x-handlebars" data-template-name="invitation">
-    <form>
-    <h3>Address</h3>
-    <input type="text" id="invitationAddress" />
-    <h3>Message</h3>
-    <input type="text" id="invitationMessage" />
-    {{#view Ember.Button target="App.router.chatroomController" action="sendInvitation"}}
-    send Invitation
-    {{/view}}
-    </form>
-  </script>
-
-  <script type="text/x-handlebars" data-template-name="box">
-    <video {{bindAttr id="view.videoBoxId"}} width="250" height="250" autoplay></video>
-  </script>
-
   <!-- libs -->
-
-  <script src="http://code.jquery.com/jquery-latest.min.js"></script>
-  <script>
-    window.jQuery || document.write('<script src="js/libs/jquery.js"><\/script>')
-  </script>
-
+  <script src="js/libs/jquery.js"></script>
   <script src="js/libs/handlebars-1.0.0-rc.3.js"></script>
   <script src="js/libs/ember-1.0.0-rc.1.js"></script>
 
-  <!-- app Object -->
+  <!-- helper -->
+  <script src="js/helpers/webrtc.js"></script>
+  <script src="js/helpers/signaling.js"></script>
 
+  <!-- app -->
   <script src="js/app.js"></script>
 
   <!-- views -->
-
   <script src="js/views/index.js"></script>
   <script src="js/views/room.js"></script>
   <script src="js/views/invitation.js"></script>
 
   <!-- models -->
-
   <script src="js/models/user.js"></script>
   <script src="js/models/room.js"></script>
 
   <!-- controllers -->
-
   <script src="js/controllers/index.js"></script>
   <script src="js/controllers/room.js"></script>
   <script src="js/controllers/user.js"></script>
 
   <!-- router -->
-
   <script src="js/router.js"></script>
 
-  <!-- init app -->
-
+  <!-- app -->
   <script src="js/main.js"></script>
+
 </body>
 </html>
