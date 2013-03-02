@@ -15,7 +15,6 @@ var WebRTC = {
       roomHash: undefined,
       peerConnection: undefined,
       stream: undefined,
-      channel: undefined,
       type: "local"
     };
     WebRTC.users.push(user);
@@ -26,7 +25,6 @@ var WebRTC = {
     user.stream = event.detail.stream;
   },
   handleSignalingInit: function(event) {
-    console.log("HANDLE INIT USERS");
     var data = event.detail;
 
     /**
@@ -36,7 +34,7 @@ var WebRTC = {
     user.id = data.userId;
     user.roomHash = data.roomHash;
     $('#videoboxes #local').attr("id", data.userId);
-    console.log("RoomHash: " + data.roomHash);
+    console.log("roomHash " + data.roomHash);
 
     /**
      * Create remote users
@@ -47,7 +45,7 @@ var WebRTC = {
   },
   amountIceMessages: 0,
   createRemoteUser: function(roomHash, userId, remoteUserId) {
-    console.log("CREATE REMOTE USER");
+
     var peerConnection = new PeerConnection({
       "iceServers": [{
         "url": "stun:provserver.televolution.net"
@@ -73,28 +71,29 @@ var WebRTC = {
     };
 
     peerConnection.onaddstream = function(remote) {
+      console.log(remote);
       console.log("WebRTC: NEW REMOTE STREAM ARRIVED");
-      $('#' + remoteUserId).attr('src', URL.createObjectURL(remote.stream));
+      $('#' + remoteUserId + ' video').attr('src', URL.createObjectURL(remote.stream));
     };
 
-    var channel = peerConnection.createDataChannel('RTCDataChannel', {
-      reliable: false
-    });
-    channel.onmessage = function(event) {
-      console.log(event.data);
-    };
-    channel.onopen = function(event) {
-      channel.send('RTCDataChannel opened.');
-    };
-    channel.onclose = function(event) {
-      console.log('RTCDataChannel closed.');
-    };
-    channel.onerror = function(event) {
-      console.error(event);
-    };
-    peerConnection.ondatachannel = function() {
-      console.log('peerConnection.ondatachannel event fired.');
-    };
+    /*var channel = peerConnection.createDataChannel('RTCDataChannel', {
+     reliable: false
+     });
+     channel.onmessage = function(event) {
+     console.log(event.data);
+     };
+     channel.onopen = function(event) {
+     channel.send('RTCDataChannel opened.');
+     };
+     channel.onclose = function(event) {
+     console.log('RTCDataChannel closed.');
+     };
+     channel.onerror = function(event) {
+     console.error(event);
+     };
+     peerConnection.ondatachannel = function() {
+     console.log('peerConnection.ondatachannel event fired.');
+     };*/
 
     var user = {
       name: undefined,
@@ -102,11 +101,8 @@ var WebRTC = {
       roomHash: roomHash,
       peerConnection: peerConnection,
       stream: undefined,
-      channel: channel,
       type: "remote"
     };
-
-    console.log(user);
 
     $('#videoboxes').append("<div class='user' id='" + remoteUserId + "'><label>Name</label><video autoplay></video></div>");
     WebRTC.users.push(user);
@@ -129,6 +125,7 @@ var WebRTC = {
     }
   },
   handleSignalingSdp: function(event) {
+
     console.log("HANDLE REMOTE SDP");
     var data = event.detail;
     var userRemote = WebRTC.getRemoteUser(data.userId);
@@ -141,6 +138,7 @@ var WebRTC = {
           return;
         } else {
           clearInterval(loop);
+
           userRemote.peerConnection.addStream(userLocal.stream);
           userRemote.peerConnection.createAnswer(function(description) {
             userRemote.peerConnection.setLocalDescription(description);

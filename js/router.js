@@ -9,10 +9,10 @@ App.Router.map(function() {
   this.route("about", {
     path: "/about"
   });
-  this.resource("room", function() {
-    this.route(":id");
+    this.resource('room', {
+    path: '/room'
   });
   this.route("invitation", {
     path: "/invitation"
   });
-});
+}); 

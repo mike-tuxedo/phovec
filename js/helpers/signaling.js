@@ -1,14 +1,21 @@
 ﻿var SignalingChannel = {
   webSocket: null,
+  initDone: false,
   init: function() {
+
     var self = this;
-    this.webSocket = new WebSocket('ws://37.200.99.34:49152');
+    this.webSocket = new WebSocket('ws://www.nucular-bacon.com:49152');
     this.webSocket.onopen = function() {
       console.log("SignalingChannel: ONOPEN");
-      SignalingChannel.send({
+
+      //Bug fix, don't call room controller twice via ember js bug!
+      var roomHash = prompt("Raumname:", "");
+      var roomLink = roomHash ? location.href + "/" + roomHash : location.href;
+      
+      this.send(JSON.stringify({
         subject: "init",
-        url: location.href
-      });
+        url: roomLink
+      }));
     };
     this.webSocket.onmessage = function(message) {
       try {
@@ -20,10 +27,10 @@
       switch(data.subject) {
         case "init":
           window.dispatchEvent(new CustomEvent("signalingchannel:init", {
-            detail: { 
-              roomHash: data.chatroomHash, 
-              userId: data.userHash, 
-              guestIds: data.guestIds, 
+            detail: {
+              roomHash: data.chatroomHash,
+              userId: data.userHash,
+              guestIds: data.guestIds,
               error: data.error
             }
           }));
@@ -81,11 +88,11 @@
     };
   },
   send: function(message) {
-    //TODO: stringify necessary?
     SignalingChannel.webSocket.send(JSON.stringify(message));
   },
   close: function() {
-    this.SignalingChannel.onclose = function() {};
+    this.SignalingChannel.onclose = function() {
+    };
     this.SignalingChannel.close();
   }
 };

@@ -1,4 +1,5 @@
 ﻿App.RoomController = Ember.ObjectController.extend({
+  initDone: false,
   init: function() {
     if ( typeof webkitRTCPeerConnection != "undefined") {
       PeerConnection = webkitRTCPeerConnection;
@@ -15,11 +16,10 @@
     } else if ( typeof navigator.msGetUserMedia != "undefined") {
       navigator.getMedia = navigator.msGetUserMedia;
     }
-    
+
     App.Controller = {};
     App.Controller.user = App.UserController.create();
     App.Controller.user.startGetMedia();
-    
     SignalingChannel.init();
   }
-}); 
+});
