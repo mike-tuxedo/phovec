@@ -11,7 +11,7 @@
       //Bug fix, don't call room controller twice via ember js bug!
       var roomHash = prompt("Raumname:", "");
       var roomLink = roomHash ? location.href + "/" + roomHash : location.href;
-      
+
       this.send(JSON.stringify({
         subject: "init",
         url: roomLink
@@ -91,8 +91,8 @@
     SignalingChannel.webSocket.send(JSON.stringify(message));
   },
   close: function() {
-    this.SignalingChannel.onclose = function() {
+    this.webSocket.onclose = function() {
     };
-    this.SignalingChannel.close();
+    this.webSocket.close();
   }
 };
