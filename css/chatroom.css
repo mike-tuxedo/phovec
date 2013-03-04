@@ -54,3 +54,19 @@
   background: #CCCCCC;
 }
 
+#hangupButton{
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  width: 50px;
+  height: 50px;
+  border-bottom-left-radius: 50px;
+  border-left: 8px solid #e0dfeb;
+  border-bottom: 8px solid #e0dfeb;
+  box-shadow: 0px 0px 15px #444444;
+  background: #303743;
+  background-image: url('../img/info.png');
+  background-size: 40%;
+  background-repeat: no-repeat;
+  background-position: 10px;
+}
