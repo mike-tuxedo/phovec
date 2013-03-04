@@ -8,8 +8,8 @@ App.Router.map(function() {
   this.route("about", {
     path: "/about"
   });
-  this.resource('room', {
-    path: '/room'
+  this.resource('room', function(){
+    this.route("hangup");
   });
   this.route("invitation", {
     path: "/invitation"

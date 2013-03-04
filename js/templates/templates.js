@@ -15,14 +15,15 @@ document.write('<script type="text/x-handlebars" data-template-name="index">\
 document.write('<script type="text/x-handlebars" data-template-name="room">\
 				    <header>\
 					    {{#linkTo "about"}}<div id="infoButton"></div>{{/linkTo}}\
-					    {{#linkTo "room.hangup"}}<div>Auflegen</div>{{/linkTo}}\
+					    {{#linkTo "room.hangup"}}<div id="hangupButton">Auflegen</div>{{/linkTo}}\
 				    </header>\
-				    <label for="local-stream">thats me</label>\
-				    <video id="local-stream" autoplay>local</video>\
-				    <!--<div id="_tooltip">Ihr Browser fragt sie ob er Zugriff auf ihre Kamera bekommt. Um Videochatten zu können musst du das mit <strong>allow</strong> bestätigen!</div><div id="_tooltipArrow"></div>\
-				    <div id="messageBox"></div>-->\
-				    <div id="videoboxes"></div>\
-				</script>');
+            <div id="videoboxes">\
+            <div class="user" id="local">\
+            <label>Name</label>\
+            <video autoplay></video>\
+            </div>\
+            </div>\
+				  </script>');
 
 
 //about template
