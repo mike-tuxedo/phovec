@@ -5,6 +5,14 @@ var WebRTC = {
     window.addEventListener("signalingchannel:sdp", this.handleSignalingSdp);
     window.addEventListener("signalingchannel:ice", this.handleSignalingIce);
     window.addEventListener("signalingchannel:participant", this.handleSignalingParticipant);
+  },
+  users: [],
+  handleLocalMedia: function(event) {
+    var user = WebRTC.getLocalUser();
+    user.stream = event.detail.stream;
+  },
+  handleSignalingInit: function(event) {
+    var data = event.detail;
 
     /**
      * Create local user
@@ -18,14 +26,6 @@ var WebRTC = {
       type: "local"
     };
     WebRTC.users.push(user);
-  },
-  users: [],
-  handleLocalMedia: function(event) {
-    var user = WebRTC.getLocalUser();
-    user.stream = event.detail.stream;
-  },
-  handleSignalingInit: function(event) {
-    var data = event.detail;
 
     /**
      * Change local user
@@ -115,7 +115,16 @@ var WebRTC = {
     }
   },
   removeRemoteUser: function(id) {
-    //TODO
+    for (var i = 0; i < WebRTC.users.length; i++) {
+      if (WebRTC.users[i].id === id) {
+        var user = WebRTC.users[i];
+        user.peerConnection.close();
+        $('#' + user.id).remove();
+        user = null;
+
+        WebRTC.users.splice(i, 1);
+      }
+    }
   },
   getLocalUser: function(id) {
     for (var i = 0; i < WebRTC.users.length; i++) {
@@ -160,7 +169,6 @@ var WebRTC = {
     user.peerConnection.addIceCandidate(new RTCIceCandidate(event.detail.ice));
   },
   handleSignalingParticipant: function(event) {
-    console.log("HANDLE REMOTE PARTICIPANT");
     var data = event.detail;
     switch (data.message) {
       case "join":
@@ -196,12 +204,23 @@ var WebRTC = {
         break;
     }
   },
-  close: function() {
+  hangup: function() {
     for (var i = 0; i < WebRTC.users.length; i++) {
-      if (WebRTC.users[i].type === "local") {
-        WebRTC.users.peerConnection.close();
+      if (WebRTC.users[i].type === "remote") {
+        WebRTC.users[i].peerConnection.close();
       }
     }
+
+    var userLocal = WebRTC.getLocalUser();
+    if (userLocal === undefined) {
+      return;
+    }
+
+    if (userLocal.stream !== undefined) {
+      userLocal.stream.stop();
+    }
+
+    WebRTC.users = [];
   }
 };
 

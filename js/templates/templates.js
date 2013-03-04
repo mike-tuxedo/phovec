@@ -15,7 +15,7 @@ document.write('<script type="text/x-handlebars" data-template-name="index">\
 document.write('<script type="text/x-handlebars" data-template-name="room">\
 				    <header>\
 					    {{#linkTo "about"}}<div id="infoButton"></div>{{/linkTo}}\
-					    {{#linkTo "room.hangup"}}<div id="hangupButton">Auflegen</div>{{/linkTo}}\
+					    {{#linkTo "hangup"}}<div id="hangupButton">Auflegen</div>{{/linkTo}}\
 				    </header>\
             <div id="videoboxes">\
             <div class="user" id="local">\
@@ -54,3 +54,12 @@ document.write('<script type="text/x-handlebars" data-template-name="invitation"
 document.write('<script type="text/x-handlebars" data-template-name="box">\
 					<video {{bindAttr id="view.videoBoxId"}} width="250" height="250" autoplay></video>\
 				</script>');
+
+//box template
+document.write('<script type="text/x-handlebars" data-template-name="hangup">\
+        <header>\
+            {{#linkTo "about"}}<div id="infoButton"></div>{{/linkTo}}\
+        </header>\
+        <p>Vielen Dank für die Nutzung von Phovec!</p>\
+        {{#linkTo "room"}}<div id="startButtonImage"></div>{{/linkTo}}\
+      </script>');
