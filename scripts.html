@@ -2,7 +2,7 @@
  
   <script type="text/x-handlebars" data-template-name="index">
     <header>
-    {{#linkTo "about"}}<div id="infoButton"></div>{{/linkTo}}
+      <div >{{#linkTo "about" id="infoButton"}}{{/linkTo}}</div>
     </header>
     <div id="startInfo">
     <h1>Hi! Hier kannst du mit Freunden Videochatten.</h1>
@@ -12,6 +12,10 @@
   </script>
 
   <script type="text/x-handlebars" data-template-name="room">
+    <header>
+      <div>{{#linkTo "about" id="infoButton"}}{{/linkTo}}</div>
+      <div>{{#linkTo "hangup" id="hangupButton"}}{{/linkTo}}</div>
+    </header>
     <div id="videoboxes">
     <div class="user" id="local">
     <label>Name</label>
@@ -22,7 +26,7 @@
 
   <script type="text/x-handlebars" data-template-name="about">
     <header>
-    {{#linkTo "index"}}<div id="infoButton"></div>{{/linkTo}}
+      <div>{{#linkTo "about" id="infoButton"}}{{/linkTo}}</div>
     </header>
     <div>Das ist ein Projekt, welches im Rahmen des Qualifikationsprojektes 3 an der Fachhochschule Salzburg
     im Schwerpunkt Web + Communities realisiert wird. Mit der innovativen Technik WebRTC werden wir den Benützern
