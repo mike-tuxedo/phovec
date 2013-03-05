@@ -2,7 +2,7 @@
  
   <script type="text/x-handlebars" data-template-name="index">
     <header>
-      <div >{{#linkTo "about" id="infoButton"}}{{/linkTo}}</div>
+      {{#linkTo "about" id="infoButton"}}{{/linkTo}}
     </header>
     <div id="startInfo">
     <h1>Hi! Hier kannst du mit Freunden Videochatten.</h1>
@@ -13,8 +13,8 @@
 
   <script type="text/x-handlebars" data-template-name="room">
     <header>
-      <div>{{#linkTo "about" id="infoButton"}}{{/linkTo}}</div>
-      <div>{{#linkTo "hangup" id="hangupButton"}}{{/linkTo}}</div>
+      {{#linkTo "about" id="infoButton"}}{{/linkTo}}
+      {{#linkTo "hangup" id="hangupButton"}}{{/linkTo}}
     </header>
     <div id="videoboxes">
     <div class="user" id="local">
@@ -26,12 +26,24 @@
 
   <script type="text/x-handlebars" data-template-name="about">
     <header>
-      <div>{{#linkTo "about" id="infoButton"}}{{/linkTo}}</div>
+      {{#linkTo "index" id="backButton"}}{{/linkTo}}
     </header>
-    <div>Das ist ein Projekt, welches im Rahmen des Qualifikationsprojektes 3 an der Fachhochschule Salzburg
-    im Schwerpunkt Web + Communities realisiert wird. Mit der innovativen Technik WebRTC werden wir den Benützern
-    dieser Web-Applikation ermöglichen Multi-Video-Konferenzen kostenlos ohne einer Installation von Plugin zuführen.
-    <br><br>Team<ul><li>Michael Tiefenthaler</li><li>Franz Josef Brünner</li><li>Lukas Wanko</li></ul></div>
+    <div id="aboutInfo">
+      <h1>Projekt</h1>
+      <p>Das ist ein Projekt, welches im Rahmen des Qualifikationsprojektes 3 an der Fachhochschule Salzburg
+      im Schwerpunkt Web + Communities realisiert wird. Mit der innovativen Technik WebRTC werden wir den Benützern
+      dieser Web-Applikation ermöglichen Multi-Video-Konferenzen kostenlos ohne der Installation eines Plugin zu führen.
+      <br><br><h1>Team</h1><ul><li>Michael Tiefenthaler</li><li>Franz Josef Brünner</li><li>Lukas Wanko</li></ul></p>
+    </div>
+  </script>
+  
+  <script type="text/x-handlebars" data-template-name="hangup">
+    <header>
+      {{#linkTo "index" id="infoButton"}}{{/linkTo}}
+    </header>
+    <h2>Danke das du Phovec benutzt hast. <br /> Du darfst gerne jederzeit wieder kommen!</h2>
+    <br />
+    {{#linkTo "room" }}<div id="startButtonImage"></div>{{/linkTo}}
   </script>
 
   <!-- libs -->
