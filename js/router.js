@@ -40,22 +40,33 @@ App.RoomRoute = Ember.Route.extend({
     SignalingChannel.init();
     
     App.Controller.auth = App.AuthController.create();
-    App.Controller.auth.set('FB', FB);
     
-    FB.getLoginStatus(function(response) {
-      if (response.status === 'connected') {
+    var setFB = function(){
+    
+      App.Controller.auth.set('FB', FB);
       
-        console.log('fb logged in');
+      FB.getLoginStatus(function(response) {
+        if (response.status === 'connected') {
         
-        App.Controller.auth.set('fb_logged_in', true); // do not show fb-login button
-        App.Controller.auth.setupFBInfo(); // and show fb-username and fb-friendlist
-        
-      } else if (response.status === 'not_authorized') {
-        console.log('not_authorized');
-      } else {
-        console.log('not_logged_in');
-      }
-    });
+          console.log('fb logged in');
+          
+          App.Controller.auth.set('fb_logged_in', true); // do not show fb-login button
+          App.Controller.auth.setupFBInfo(); // and show fb-username and fb-friendlist
+          
+        } else if (response.status === 'not_authorized') {
+          console.log('not_authorized');
+        } else {
+          console.log('not_logged_in');
+        }
+      });
+      
+    };
+    
+    if(!FB){
+      setTimeout(1000,setFB);
+    }
+    else
+      setFB();
     
   }
 });
