@@ -30,7 +30,7 @@
       }
     }));
 
-    if ( typeof webkitURL != "undefined") {
+    if ( typeof webkitURL !== "undefined") {
       document.getElementById('videoboxes').getElementsByTagName('div')[0].getElementsByTagName('video')[0].src = webkitURL.createObjectURL(stream);
     } else if ( typeof URL != "undefined") {
       document.getElementById('videoboxes').getElementsByTagName('div')[0].getElementsByTagName('video')[0].src = URL.createObjectURL(stream);
