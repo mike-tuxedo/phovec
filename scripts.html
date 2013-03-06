@@ -4,17 +4,19 @@
     <header>
       {{#linkTo "about" id="infoButton"}}{{/linkTo}}
     </header>
+  
     <div id="startInfo">
     <h1>Hi! Hier kannst du mit Freunden Videochatten.</h1>
     <p>Einfach auf Start klicken und du bist in einem Chatraum, von wo aus du deine Freunde einladen kannst.</p>
     </div>
     {{#linkTo "room"}}<div id="startButtonImage"></div>{{/linkTo}}
   </script>
-
+  
   <script type="text/x-handlebars" data-template-name="room">
     <header>
       {{#linkTo "about" id="infoButton"}}{{/linkTo}}
       {{#linkTo "hangup" id="hangupButton"}}{{/linkTo}}
+      {{ partial 'auth' }}
     </header>
     <div id="infoField">Für den Videochat musst du den Zugriff auf die Kamera und dein Mikrofon erlauben!</div>
     <div id="videoboxes">
@@ -46,7 +48,20 @@
     <br />
     {{#linkTo "room" }}<div id="startButtonImage"></div>{{/linkTo}}
   </script>
-
+  
+  <script type="text/x-handlebars" data-template-name="_auth">
+    <div id="fb-root"></div>
+    {{#unless App.Controller.auth.fb_logged_in }}
+      <a {{action "fbLogin" target="App.Controller.auth"}}>Facebook-Login</a>
+    {{/unless}}
+    
+    {{#if App.Controller.auth.fb_logged_in }}
+      <a {{action "fbLogout" target="App.Controller.auth"}}>Facebook-Logout</a>
+    {{/if}}
+    <h2 id="fbUserInfo"></h2>
+    <div id="fbFriends"></div>
+  </script>
+  
   <!-- libs -->
   <script src="js/libs/jquery.js"></script>
   <script src="js/libs/handlebars-1.0.0-rc.3.js"></script>
@@ -71,8 +86,12 @@
   <!-- controllers -->
   <script src="js/controllers/index.js"></script>
   <script src="js/controllers/user.js"></script>
-
+  <script src="js/controllers/auth.js"></script>
+  
   <!-- router -->
   <script src="js/router.js"></script>
-
+  
+  <!-- Facebook-Instance -->
+  <script src="js/facebook-loader.js"></script>
+  
   <script src="js/main.js"></script>
