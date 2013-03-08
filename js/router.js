@@ -38,7 +38,7 @@ App.RoomRoute = Ember.Route.extend({
     App.Controller.user = App.UserController.create();
     App.Controller.user.startGetMedia();
     SignalingChannel.init();
-    
+
     App.Controller.auth = App.AuthController.create();
     
     var setFB = function(){
