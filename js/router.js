@@ -63,7 +63,7 @@ App.RoomRoute = Ember.Route.extend({
     };
     
     if(!window.FB){
-      setTimeout(1000,setFB);
+      setTimeout(100,setFB);
     }
     else
       setFB();
