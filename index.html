@@ -70,11 +70,11 @@
   <script type="text/x-handlebars" data-template-name="_auth">
     <div id="fb-root"></div>
     {{#unless App.Controller.auth.fb_logged_in }}
-      <a {{action "fbLogin" target="App.Controller.auth"}}>Facebook-Login</a>
+      <a {{action "fbLogin" target="App.Controller.auth" }} id="facebookButton" class="socialButtons"></a>
     {{/unless}}
     
     {{#if App.Controller.auth.fb_logged_in }}
-      <a {{action "fbLogout" target="App.Controller.auth"}}>Facebook-Logout</a>
+      <a {{action "fbLogout" target="App.Controller.auth"}} id="facebookButton" class="socialButtons"></a>
     {{/if}}
     <h2 id="fbUserInfo"></h2>
     <div id="fbFriends"></div>

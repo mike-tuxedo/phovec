@@ -17,10 +17,32 @@
 
 #socialSidebar{
   position: absolute;
+  border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
+  box-shadow: 0px 0px 15px #444444;
+  
   right: 0px;
   top: 75px;
   height: 500px;
-  width: 200px;
+  width: 180px;
+  background: #e0dfeb;
+}
+
+.socialButtons{
+  cursor: pointer;
+  width: 60px;
+  height: 60px;
+}
+
+.socialButtons:hover{
+  opacity: 0.8;
+}
+
+#facebookButton{
+  display: block;
+  background-image: url('../img/facebookbutton.jpg');
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
 }
 
 #videoboxes {
