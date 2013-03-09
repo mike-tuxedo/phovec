@@ -1,17 +1,13 @@
 ﻿App.AuthController = Ember.ObjectController.extend({
   templateName: '_auth',
   init : function(){
-    console.log('auth init called');
     App.Controller.auth = this;
   },
-  id: -1,
-  FB: null,
-  FB_User_Info: null,
+  FB: null, // FB Instance of facebook-loader
+  
   fb_logged_in : false,
   
   fbLogin : function(){
-    
-    this.set('fb_logged_in',true);
     
     var controller = this;
     
@@ -20,6 +16,7 @@
     FB.login(function(response) {
       if (response.authResponse) {
         console.log('login in successfully', response);
+        controller.set('fb_logged_in',true);
         
         controller.setupFBInfo();
         
@@ -84,7 +81,7 @@
    
     FB.ui(msg,function(response) {
       
-      if (response.success) {
+      if (response && response.success) {
         alert('Facebook-Message was sent.');
       } else {
         alert('Facebook-Message was not sent.');

@@ -34,7 +34,7 @@
     <header>
       {{#linkTo "about" id="infoButton"}}{{/linkTo}}
       {{#linkTo "hangup" id="hangupButton"}}{{/linkTo}}
-     <!-- {{ partial 'auth' }} -->
+      {{ partial 'auth' }}
     </header>
     <!-- <div id="infoField">Für den Videochat musst du den Zugriff auf die Kamera und dein Mikrofon erlauben!</div> -->
     <div id="videoboxes">
@@ -83,7 +83,10 @@
   <!-- scripts -->
   <script src="http://code.jquery.com/jquery-latest.min.js"></script>
   <script> window.jQuery || document.write('<script src="js/libs/jquery.js"><\/script>')</script>
-
+  
+  <!-- Facebook-Instance -->
+  <script src="js/facebook-loader.js"></script>
+  
   <!-- <script src="scriptLoader.js"></script> -->
   
   <!-- libs -->
@@ -115,9 +118,6 @@
   <script src="js/router.js"></script>
   
   <script src="js/main.js"></script>
-  
-  <!-- Facebook-Instance -->
-  <script src="js/facebook-loader.js"></script>
   
 </body>
 </html>
