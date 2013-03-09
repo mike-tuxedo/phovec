@@ -34,7 +34,6 @@
     <header>
       {{#linkTo "about" id="infoButton"}}{{/linkTo}}
       {{#linkTo "hangup" id="hangupButton"}}{{/linkTo}}
-      {{ partial 'auth' }}
     </header>
     <!-- <div id="infoField">Für den Videochat musst du den Zugriff auf die Kamera und dein Mikrofon erlauben!</div> -->
     <div id="videoboxes">
@@ -43,6 +42,7 @@
     <video id="video" autoplay></video>
     </div>
     </div>
+    <div id="socialSidebar">{{ partial 'auth' }}</div>
   </script>
 
   <script type="text/x-handlebars" data-template-name="about">

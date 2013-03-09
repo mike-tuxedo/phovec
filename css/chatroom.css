@@ -15,8 +15,12 @@
   font-weight: bold;
 }
 
-#video{
-
+#socialSidebar{
+  position: absolute;
+  right: 0px;
+  top: 75px;
+  height: 500px;
+  width: 200px;
 }
 
 #videoboxes {
