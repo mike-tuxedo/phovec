@@ -23,7 +23,7 @@
   
   right: 0px;
   top: 75px;
-  height: 500px;
+  height: 80%;
   width: 180px;
   background: #e0dfeb;
 }
@@ -38,9 +38,9 @@
   opacity: 0.8;
 }
 
-#facebookButton{
+.facebookButton{
   display: block;
-  background-image: url('../img/facebookbutton.jpg');
+  background-image: url('../img/facebookbutton.png');
   background-size: 100% 100%;
   background-repeat: no-repeat;
 }
@@ -56,7 +56,7 @@
 
 #videoboxes .user {
   width: 300px;
-  height: 300px;
+  height: 235px;
   margin: 10px;
   float: left;
 }
@@ -75,7 +75,7 @@
 #videoboxes video {
   border: 1px solid #ddd;
   width: 300px;
-  height: 295px;
+  height: 230px;
   background: #999;
 }
 
