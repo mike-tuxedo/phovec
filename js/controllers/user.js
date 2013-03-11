@@ -48,7 +48,7 @@
     console.log(error);
     
     /* check if user likes to do a textchat or not */
-    if(confirm('Nach dem du keinen Zugriff auf Kamera und Mikrofon erlaubst, kannst du nur einen Textchat führen! Ist das was du OK?')) {
+    if(confirm('Nach dem du keinen Zugriff auf Kamera und Mikrofon erlaubst, kannst du nur einen Textchat führen! Ist das OK?')) {
       $('#infoField').fadeOut();
       $('#blackFilter').fadeOut();
     }
