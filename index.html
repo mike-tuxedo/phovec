@@ -11,6 +11,7 @@
 <body>
 
   <script type="text/x-handlebars" data-template-name="application">
+    <div id="blackFilter"></div>
     <div id="content">
     {{outlet}}
     </div>
@@ -35,7 +36,10 @@
       {{#linkTo "about" id="infoButton"}}{{/linkTo}}
       {{#linkTo "hangup" id="hangupButton"}}{{/linkTo}}
     </header>
-    <!-- <div id="infoField">Für den Videochat musst du den Zugriff auf die Kamera und dein Mikrofon erlauben!</div> -->
+    <div id="infoField">
+      <p>Du musst deinem Browser Zugriff auf Kamera & Mikrofon erlauben!</p><br/>
+      <p>Verwendest du den Chromebrowser, dann schau dazu doch mal auf den oberen Rand ;)</p>
+    </div>
     <div id="videoboxes">
     <div class="user" id="local">
     <label>Name</label>
@@ -76,6 +80,8 @@
     {{#if App.Controller.auth.fb_logged_in }}
       <a {{action "fbLogout" target="App.Controller.auth"}} class="socialButtons facebookButton"></a>
     {{/if}}
+    <a class="socialButtons googleButton"></a>
+    <a class="socialButtons twitterButton"></a>
     <h2 id="fbUserInfo"></h2>
     <div id="fbFriends"></div>
   </script> 

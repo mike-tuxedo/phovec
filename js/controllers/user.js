@@ -39,10 +39,23 @@
     }
 
     document.getElementById('videoboxes').getElementsByTagName('div')[0].getElementsByTagName('video')[0].play();
+    /* after user allows camera and mic, we disable the infobox and the black overlayfilter*/
+    $('#infoField').fadeOut();
+    $('#blackFilter').fadeOut();
   },
   onGetMediaError: function(error) {
     console.log("LocalMedia: ERROR");
     console.log(error);
+    
+    /* check if user likes to do a textchat or not */
+    if(confirm('Nach dem du keinen Zugriff auf Kamera und Mikrofon erlaubst, kannst du nur einen Textchat führen! Ist das was du OK?')) {
+      $('#infoField').fadeOut();
+      $('#blackFilter').fadeOut();
+    }
+    else {
+      console.log('************ein redirect muss noch implementiert werden***********');
+      alert('Zurück auf die Startseite ...');
+    }
   },
   startGetMedia: function() {
     //request audio and video from your own hardware
