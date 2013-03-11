@@ -1,123 +1,124 @@
 <!DOCTYPE html>
-<html xmlns:fb="http://www.facebook.com/2008/fbml">
-<head>
-  <meta content="text/html;charset=UTF-8" http-equiv="content-type">
-  <title>Phovec</title>
-  <link rel='icon' href='img/favicon.png' type='image/png'/>
-  <link rel="stylesheet" href="css/startpage.css">
-  <link rel="stylesheet" href="css/chatroom.css">
-  <link rel="stylesheet" href="css/style.css">
-</head>
-<body>
+<html>
+  <head>
+    <meta content="text/html;charset=UTF-8" http-equiv="content-type">
+    <title>Phovec</title>
+    <link rel='icon' href='img/favicon.png' type='image/png'/>
+    <link rel="stylesheet" href="css/startpage.css">
+    <link rel="stylesheet" href="css/chatroom.css">
+    <link rel="stylesheet" href="css/style.css">
+  </head>
+  <body>
 
-  <script type="text/x-handlebars" data-template-name="application">
-    <div id="content">
-    {{outlet}}
-    </div>
-    <!--<footer>Copyright by F.J. Brünner, L. Wanko, M. Tiefenthaler and the University of Applied Sciences in Salzburg</footer>-->
-  </script>
+    <script type="text/x-handlebars" data-template-name="application">
+      <div id="content">
+      {{outlet}}
+      </div>
+      <!--<footer>Copyright by F.J. Brünner, L. Wanko, M. Tiefenthaler and the University of Applied Sciences in Salzburg</footer>-->
+    </script>
 
-  <!-- templates -->
-  <script type="text/x-handlebars" data-template-name="index">
-    <header>
+    <!-- templates -->
+    <script type="text/x-handlebars" data-template-name="index">
+      <header>
       {{#linkTo "about" id="infoButton"}}{{/linkTo}}
-    </header>
-  
-    <div id="startInfo">
-    <h1>Hi! Hier kannst du mit Freunden Videochatten.</h1>
-    <p>Einfach auf Start klicken und du bist in einem Chatraum, von wo aus du deine Freunde einladen kannst.</p>
-    </div>
-    {{#linkTo "room"}}<div id="startButtonImage"></div>{{/linkTo}}
-  </script>
-  
-  <script type="text/x-handlebars" data-template-name="room">
-    <header>
+      </header>
+
+      <div id="startInfo">
+      <h1>Hi! Hier kannst du mit Freunden Videochatten.</h1>
+      <p>Einfach auf Start klicken und du bist in einem Chatraum, von wo aus du deine Freunde einladen kannst.</p>
+      </div>
+      {{#linkTo "room"}}<div id="startButtonImage"></div>{{/linkTo}}
+    </script>
+
+    <script type="text/x-handlebars" data-template-name="room">
+      <header>
       {{#linkTo "about" id="infoButton"}}{{/linkTo}}
       {{#linkTo "hangup" id="hangupButton"}}{{/linkTo}}
-    </header>
-    <!-- <div id="infoField">Für den Videochat musst du den Zugriff auf die Kamera und dein Mikrofon erlauben!</div> -->
-    <div id="videoboxes">
-    <div class="user" id="local">
-    <label>Name</label>
-    <video id="video" autoplay></video>
-    </div>
-    </div>
-    <div id="socialSidebar">{{ partial 'auth' }}</div>
-  </script>
+      <input type="file" multiple="multiple"/>
+      </header>
 
-  <script type="text/x-handlebars" data-template-name="about">
-    <header>
+      <div id="videoboxes">
+      <div class="user" id="local">
+      <span class="name" id="local_name">Name</span>
+      <video autoplay></video>
+      </div>
+      </div>
+      <!--<div id="socialSidebar">{{ partial 'auth' }}</div>-->
+    </script>
+
+    <script type="text/x-handlebars" data-template-name="about">
+      <header>
       {{#linkTo "index" id="backButton"}}{{/linkTo}}
-    </header>
-    <div id="aboutInfo">
+      </header>
+      <div id="aboutInfo">
       <h1>Projekt</h1>
       <p>Das ist ein Projekt, welches im Rahmen des Qualifikationsprojektes 3 an der Fachhochschule Salzburg
       im Schwerpunkt Web + Communities realisiert wird. Mit der innovativen Technik WebRTC werden wir den Benützern
       dieser Web-Applikation ermöglichen Multi-Video-Konferenzen kostenlos ohne der Installation eines Plugin zu führen.
       <br><br><h1>Team</h1><ul><li>Michael Tiefenthaler</li><li>Franz Josef Brünner</li><li>Lukas Wanko</li></ul></p>
-    </div>
-  </script>
+      </div>
+    </script>
 
- <script type="text/x-handlebars" data-template-name="hangup">
-    <header>
+    <script type="text/x-handlebars" data-template-name="hangup">
+      <header>
       {{#linkTo "about" id="infoButton"}}{{/linkTo}}
-    </header>
-    <h2>Danke das du Phovec benutzt hast. <br /> Du darfst gerne jederzeit wieder kommen!</h2>
-    <br />
-    {{#linkTo "room" }}<div id="startButtonImage"></div>{{/linkTo}}
-  </script>  
-  
-  <script type="text/x-handlebars" data-template-name="_auth">
-    <div id="fb-root"></div>
-    {{#unless App.Controller.auth.fb_logged_in }}
+      </header>
+      <h2>Danke das du Phovec benutzt hast. <br /> Du darfst gerne jederzeit wieder kommen!</h2>
+      <br />
+      {{#linkTo "room" }}<div id="startButtonImage"></div>{{/linkTo}}
+    </script>
+
+    <script type="text/x-handlebars" data-template-name="_auth">
+      <div id="fb-root"></div>
+      {{#unless App.Controller.auth.fb_logged_in }}
       <a {{action "fbLogin" target="App.Controller.auth" }} id="facebookButton" class="socialButtons"></a>
-    {{/unless}}
-    
-    {{#if App.Controller.auth.fb_logged_in }}
+      {{/unless}}
+
+      {{#if App.Controller.auth.fb_logged_in }}
       <a {{action "fbLogout" target="App.Controller.auth"}} id="facebookButton" class="socialButtons"></a>
-    {{/if}}
-    <h2 id="fbUserInfo"></h2>
-    <div id="fbFriends"></div>
-  </script> 
-  
-  <!-- scripts -->
-  <script src="http://code.jquery.com/jquery-latest.min.js"></script>
-  <script> window.jQuery || document.write('<script src="js/libs/jquery.js"><\/script>')</script>
-  
-  <!-- Facebook-Instance -->
-  <script src="js/facebook-loader.js"></script>
-  
-  <!-- <script src="scriptLoader.js"></script> -->
-  
-  <!-- libs -->
-  <script src="js/libs/handlebars-1.0.0-rc.3.js"></script>
-  <script src="js/libs/ember-1.0.0-rc.1.js"></script>
+      {{/if}}
+      <h2 id="fbUserInfo"></h2>
+      <div id="fbFriends"></div>
+    </script>
 
-  <!-- helper -->
-  <script src="js/helpers/webrtc.js"></script>
-  <script src="js/helpers/signaling.js"></script>
+    <!-- scripts -->
+    <script src="http://code.jquery.com/jquery-latest.min.js"></script>
+    <script>
+      window.jQuery || document.write('<script src="js/libs/jquery.js"><\/script>')
+    </script>
 
-  <!-- app -->
-  <script src="js/app.js"></script>
+    <!-- Facebook-Instance -->
+    <script src="js/facebook-loader.js"></script>
 
-  <!-- views -->
-  <script src="js/views/index.js"></script>
-  <script src="js/views/room.js"></script>
-  <script src="js/views/invitation.js"></script>
+    <!-- libs -->
+    <script src="js/libs/handlebars-1.0.0-rc.3.js"></script>
+    <script src="js/libs/ember-1.0.0-rc.1.js"></script>
 
-  <!-- models -->
-  <script src="js/models/user.js"></script>
-  <script src="js/models/room.js"></script>
+    <!-- helper -->
+    <script src="js/helpers/webrtc.js"></script>
+    <script src="js/helpers/signaling.js"></script>
 
-  <!-- controllers -->
-  <script src="js/controllers/index.js"></script>
-  <script src="js/controllers/user.js"></script>
-  <script src="js/controllers/auth.js"></script>
+    <!-- app -->
+    <script src="js/app.js"></script>
 
-  <!-- router -->
-  <script src="js/router.js"></script>
-  
-  <script src="js/main.js"></script>
-  
-</body>
+    <!-- views -->
+    <script src="js/views/index.js"></script>
+    <script src="js/views/room.js"></script>
+    <script src="js/views/invitation.js"></script>
+
+    <!-- models -->
+    <script src="js/models/user.js"></script>
+    <script src="js/models/room.js"></script>
+
+    <!-- controllers -->
+    <script src="js/controllers/index.js"></script>
+    <script src="js/controllers/user.js"></script>
+    <script src="js/controllers/auth.js"></script>
+
+    <!-- router -->
+    <script src="js/router.js"></script>
+
+    <script src="js/main.js"></script>
+
+  </body>
 </html>

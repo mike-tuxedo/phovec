@@ -120,7 +120,7 @@ a:hover {
  */
 footer {
 	position: absolute;
-	//width: 100%;
+	width: 100%;
 	bottom: 0px;
 	background: rgba(0,0,0,0.5);
 }
