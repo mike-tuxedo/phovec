@@ -7,6 +7,27 @@ body {
 	background-repeat: no-repeat;
 	background-size: 100%;
 	width: 100%;
+	overflow-x: hidden;
+	overflow-y: hidden;
+}
+
+/* Font style */
+#content p {
+  font-size: 30px;
+}
+
+#content li {
+  font-size: 22px;
+}
+
+#content h1 {
+  font-size: 40px;
+}
+
+#infoField p{
+  font-size: 16px;
+  font-weight: bold;
+  color: white;
 }
 
 /*
@@ -76,18 +97,6 @@ a:hover {
 	min-height: 500px;
 	left: 0px;
 	right: 0px;
-}
-
-#content p {
-	font-size: 30px;
-}
-
-#content li {
-  font-size: 22px;
-}
-
-#content h1 {
-	font-size: 40px;
 }
 
 #startInfo {
