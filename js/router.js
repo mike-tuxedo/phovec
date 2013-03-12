@@ -35,39 +35,48 @@ App.RoomRoute = Ember.Route.extend({
       navigator.getMedia = navigator.msGetUserMedia;
     }
 
+    App.Controller = {};
     App.Controller.user = App.UserController.create();
     App.Controller.user.startGetMedia();
     SignalingChannel.init();
 
     App.Controller.auth = App.AuthController.create();
-    
-    var setFB = function(){
-    
+
+    var setFB = function() {
+
       App.Controller.auth.set('FB', FB);
-      
+
       FB.getLoginStatus(function(response) {
         if (response.status === 'connected') {
-        
+
           console.log('fb logged in');
-          
-          App.Controller.auth.set('fb_logged_in', true); // do not show fb-login button
-          App.Controller.auth.setupFBInfo(); // and show fb-username and fb-friendlist
-          
+
+          App.Controller.auth.set('fb_logged_in', true);
+          // do not show fb-login button
+          App.Controller.auth.setupFBInfo();
+          // and show fb-username and fb-friendlist
+
         } else if (response.status === 'not_authorized') {
           console.log('not_authorized');
         } else {
           console.log('not_logged_in');
         }
       });
-      
+
     };
-    
-    if(!window.FB){
+
+    if(!window.FB)
       setTimeout(50,setFB);
-    }
-    else
+    else 
       setFB();
     
+
+    /*set a black background to let the user focus on the infofield an add a event for get info and background away*/
+    $('#blackFilter').css('display', 'block');
+    
+    $(window).click(function() {
+      $('#infoField').css('text-shadow', '0px 0px 20px #fff');
+    });
   }
 });
 

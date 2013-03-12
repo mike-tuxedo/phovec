@@ -1,7 +1,33 @@
+html{
+  width: 100%;  
+}
+
 body {
 	background-image: url('../img/background.jpg');
 	background-repeat: no-repeat;
 	background-size: 100%;
+	width: 100%;
+	overflow-x: hidden;
+	overflow-y: hidden;
+}
+
+/* Font style */
+#content p {
+  font-size: 30px;
+}
+
+#content li {
+  font-size: 22px;
+}
+
+#content h1 {
+  font-size: 40px;
+}
+
+#infoField p{
+  font-size: 16px;
+  font-weight: bold;
+  color: white;
 }
 
 /*
@@ -73,18 +99,6 @@ a:hover {
 	right: 0px;
 }
 
-#content p {
-	font-size: 30px;
-}
-
-#content li {
-  font-size: 22px;
-}
-
-#content h1 {
-	font-size: 40px;
-}
-
 #startInfo {
 	max-width: 700px;
 	min-width: 350px;
@@ -115,7 +129,7 @@ a:hover {
  */
 footer {
 	position: absolute;
-	//width: 100%;
+	width: 100%;
 	bottom: 0px;
 	background: rgba(0,0,0,0.5);
 }

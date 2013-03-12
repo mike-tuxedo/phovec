@@ -1,66 +1,70 @@
 <!DOCTYPE html>
-<html xmlns:fb="http://www.facebook.com/2008/fbml">
-<head>
-  <meta content="text/html;charset=UTF-8" http-equiv="content-type">
-  <title>Phovec</title>
-  <link rel='icon' href='img/favicon.png' type='image/png'/>
-  <link rel="stylesheet" href="css/startpage.css">
-  <link rel="stylesheet" href="css/chatroom.css">
-  <link rel="stylesheet" href="css/style.css">
-</head>
-<body>
 
-  <script type="text/x-handlebars" data-template-name="application">
-    <div id="content">
-    {{outlet}}
-    </div>
-    <!--<footer>Copyright by F.J. Brünner, L. Wanko, M. Tiefenthaler and the University of Applied Sciences in Salzburg</footer>-->
-  </script>
+<html>
+  <head>
+    <meta content="text/html;charset=UTF-8" http-equiv="content-type">
+    <title>Phovec</title>
+    <link rel='icon' href='img/favicon.png' type='image/png'/>
+    <link rel="stylesheet" href="css/startpage.css">
+    <link rel="stylesheet" href="css/chatroom.css">
+    <link rel="stylesheet" href="css/style.css">
+  </head>
+  <body>
 
-  <!-- templates -->
-  <script type="text/x-handlebars" data-template-name="index">
-    <header>
+    <script type="text/x-handlebars" data-template-name="application">
+      <div id="content">
+      {{outlet}}
+      </div>
+      <!--<footer>Copyright by F.J. Brünner, L. Wanko, M. Tiefenthaler and the University of Applied Sciences in Salzburg</footer>-->
+    </script>
+
+    <!-- templates -->
+    <script type="text/x-handlebars" data-template-name="index">
+      <header>
       {{#linkTo "about" id="infoButton"}}{{/linkTo}}
-    </header>
-  
-    <div id="startInfo">
-    <h1>Hi! Hier kannst du mit Freunden Videochatten.</h1>
-    <p>Einfach auf Start klicken und du bist in einem Chatraum, von wo aus du deine Freunde einladen kannst.</p>
-    </div>
-    {{#linkTo "room"}}<div id="startButtonImage"></div>{{/linkTo}}
-  </script>
-  
-  <script type="text/x-handlebars" data-template-name="room">
-    <header>
+      </header>
+
+      <div id="startInfo">
+      <h1>Hi! Hier kannst du mit Freunden Videochatten.</h1>
+      <p>Einfach auf Start klicken und du bist in einem Chatraum, von wo aus du deine Freunde einladen kannst.</p>
+      </div>
+      {{#linkTo "room"}}<div id="startButtonImage"></div>{{/linkTo}}
+    </script>
+
+    <script type="text/x-handlebars" data-template-name="room">
+      <header>
       {{#linkTo "about" id="infoButton"}}{{/linkTo}}
       {{#linkTo "hangup" id="hangupButton"}}{{/linkTo}}
-      {{ partial 'auth' }}
-    </header>
-    <!-- <div id="infoField">Für den Videochat musst du den Zugriff auf die Kamera und dein Mikrofon erlauben!</div> -->
-    <div id="videoboxes">
-    <div class="user" id="local">
-    <label>Name</label>
-    <video id="video" autoplay></video>
-    </div>
-    </div>
+      </header>
+      <div id="infoField">
+        <p>Du musst deinem Browser Zugriff auf Kamera & Mikrofon erlauben!</p><br/>
+        <p>Verwendest du den Chromebrowser, dann schau dazu doch mal auf den oberen Rand ;)</p>
+      </div>
+      <div id="videoboxes">
+      <div class="user" id="local">
+      <span class="name" id="local_name">Name</span>
+      <video autoplay></video>
+      </div>
+      </div>
+    <div id="socialSidebar">{{ partial 'auth' }}</div>
   </script>
 
   <script type="text/x-handlebars" data-template-name="about">
     <header>
       {{#linkTo "index" id="backButton"}}{{/linkTo}}
-    </header>
-    <div id="aboutInfo">
+      </header>
+      <div id="aboutInfo">
       <h1>Projekt</h1>
       <p>Das ist ein Projekt, welches im Rahmen des Qualifikationsprojektes 3 an der Fachhochschule Salzburg
       im Schwerpunkt Web + Communities realisiert wird. Mit der innovativen Technik WebRTC werden wir den Benützern
       dieser Web-Applikation ermöglichen Multi-Video-Konferenzen kostenlos ohne der Installation eines Plugin zu führen.
       <br><br><h1>Team</h1><ul><li>Michael Tiefenthaler</li><li>Franz Josef Brünner</li><li>Lukas Wanko</li></ul></p>
-    </div>
-  </script>
+      </div>
+    </script>
 
- <script type="text/x-handlebars" data-template-name="hangup">
+  <script type="text/x-handlebars" data-template-name="hangup">
     <header>
-      {{#linkTo "about" id="infoButton"}}{{/linkTo}}
+    {{#linkTo "about" id="infoButton"}}{{/linkTo}}
     </header>
     <h2>Danke das du Phovec benutzt hast. <br /> Du darfst gerne jederzeit wieder kommen!</h2>
     <br />
@@ -71,13 +75,13 @@
     <div id="fb-root"></div>
     
     {{#unless App.Controller.auth.fb_logged_in }}
-      <a {{action "fbLogin" target="App.Controller.auth"}}>Facebook-Login</a>
+      <a {{action "fbLogin" target="App.Controller.auth" }} class="socialButtons facebookButton"></a>
     {{/unless}}
     
     {{#if App.Controller.auth.fb_logged_in }}
-      <a {{action "fbLogout" target="App.Controller.auth"}}>Facebook-Logout</a>
+      <a {{action "fbLogout" target="App.Controller.auth"}} class="socialButtons facebookButton"></a>
     {{/if}}
-    
+
     {{#unless App.Controller.auth.google_logged_in }}
       <a {{action "googleLogin" target="App.Controller.auth"}}>Google-Login</a>
     {{/unless}}
@@ -86,9 +90,11 @@
       <a {{action "googleLogout" target="App.Controller.auth"}}>Google-Logout</a>
     {{/if}}
     
+    <a class="socialButtons googleButton"></a>
+    <a class="socialButtons twitterButton"></a>
     <h2 id="userInfo"></h2>
-    <img src='' id='account_img'/>
     <div id="friends"></div>
+    
   </script> 
   
   <!-- scripts -->
@@ -129,6 +135,5 @@
   <script src="js/router.js"></script>
   
   <script src="js/main.js"></script>
-  
 </body>
 </html>

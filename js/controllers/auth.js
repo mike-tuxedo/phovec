@@ -1,6 +1,6 @@
 ﻿App.AuthController = Ember.ObjectController.extend({
   templateName: '_auth',
-  init : function(){
+  init: function() {
     App.Controller.auth = this;
     var url = this.get('google_Oauth_URL') + 'scope=' + this.get('google_Scope') + '&client_id=' + this.get('google_CliendtId') + '&redirect_uri=' + this.get('google_Redirekt') + '&response_type=' + this.get('google_Type');
     this.set('google_Request_URL', url);
@@ -9,91 +9,100 @@
   // facebook-auth
   
   FB: null, // FB Instance of facebook-loader
-  
-  fb_logged_in : false,
-  
-  fbLogin : function(){
-    
+
+  fb_logged_in: false,
+
+  fbLogin: function() {
+
     var controller = this;
-    
+
     var FB = this.get('FB');
-    
+
     FB.login(function(response) {
       if (response.authResponse) {
         console.log('login in successfully', response);
-        controller.set('fb_logged_in',true);
-        
+        controller.set('fb_logged_in', true);
+
         controller.setupFBInfo();
-        
+
       } else {
-        console.log('login in failed',response);
+        console.log('login in failed', response);
       }
     });
-    
+
   },
-  fbLogout: function(){
+  fbLogout: function() {
     var FB = this.get('FB');
+    
     FB.logout();
-    
-    this.set('fb_logged_in',false);
-    
+
     $('#userInfo').html('');
     $('#friends').html('');
+  
+    this.set('fb_logged_in', false);
   },
-  setupFBInfo: function(){
-    
+  setupFBInfo: function() {
+
     var controller = this;
-    
-    controller.queryFbAPI('/me',function(response){
+
+    controller.queryFbAPI('/me', function(response) {
       
+      var user_name = response.first_name + ' ' + response.last_name;
       var hello = response.locale === 'de_DE' ? 'Hallo ' : 'Hello ';
+
       document.getElementById('userInfo').innerHTML = '<img src="https://graph.facebook.com/'+ response.id +'/picture" width="100" height="100" /> ' +
         '<p>'+ hello + response.first_name + ' ' + response.last_name + '</p>';
       
-      controller.queryFbAPI('/me/friends',function(response){
-      
-        var friend_list = document.createElement('ul');
-        response.data.forEach(function(friend,index){
-          friend_list.innerHTML += '<li id='+friend.id+' onclick="App.Controller.auth.sendFbUserMessage('+friend.id+')">' +friend.name+ '</li>';
-        });
-        document.getElementById('friends').appendChild(friend_list);
+      controller.queryFbAPI('/me/friends', function(response) {
         
+        if($('ul'))
+          $('ul').remove();
+              
+        var friend_list = document.createElement('ul');
+        
+        response.data.forEach(function(friend, index) {
+          friend_list.innerHTML += '<li id=' + friend.id + ' onclick="App.Controller.user.sendMail({ subject:"mail", from: "phovec@nucular-bacon.com", to:"'+friend.email+'", text:"'+user_name+' möchte dich einladen", html:"<b>'+user_name+' möchte dich einladen</b>"})">' + friend.name + '</li>';
+        });
+
+        document.getElementById('friends').appendChild(friend_list);
+      
+        document.getElementById('fbFriends').appendChild(friend_list);
+
       });
-      
+
     });
-    
+
   },
-  queryFbAPI: function(query, callback){
-  
+  queryFbAPI: function(query, callback) {
+
     var FB = this.get('FB');
-    
+
     FB.api(query, function(response) {
-      
+
       callback(response);
-      
+
     });
-    
+
   },
-  sendFbUserMessage: function(id){
-    
+  sendFbUserMessage: function(id) {
+
     var FB = this.get('FB');
-    
+
     var msg = {};
     msg.to = id;
     msg.method = 'send';
     msg.name = 'Phovec Invitation';
     msg.link = 'http://www.nytimes.com/2011/06/15/arts/people-argue-just-to-win-scholars-assert.html';
-   
-    FB.ui(msg,function(response) {
-      
+
+    FB.ui(msg, function(response) {
+
       if (response && response.success) {
         alert('Facebook-Message was sent.');
       } else {
         alert('Facebook-Message was not sent.');
       }
-      
+
     });
-    
   },
   
   // google-auth
@@ -112,13 +121,14 @@
   googleLogin: function(){
     
     var controller = this;
-    var win = window.open(this.get('google_Request_URL'), "Google-Login", 'width=800, height=600');
+    var win = window.open(this.get('google_Request_URL'), "Google-Login", 'width=400, height=300');
     
     var pollTimer = window.setInterval(function() {
     
-      if (win.document.URL.indexOf( controller.get('google_Redirekt') ) != -1) {
+      if( win.document && win.document.URL.indexOf( controller.get('google_Redirekt') ) != -1 ){
       
         window.clearInterval(pollTimer);
+        
         var url =   win.document.URL;
         acToken =   controller.getUrlAttributes(url, 'access_token');
         tokenType = controller.getUrlAttributes(url, 'token_type');
@@ -126,15 +136,19 @@
         win.close();
 
         controller.checkValidateToken(acToken);
+        
       }
       else
-        console.log('error happend while executing googleLogin',e);
+        console.log('error happend while executing googleLogin');
         
     }, 500);
         
   },
   
   googleLogout: function(){
+    $('#userInfo').html('');
+    $('#friends').html('');
+    
     this.set('google_logged_in',false);
   },
   
@@ -151,25 +165,43 @@
   },
   
   setupGoogleInfo : function() {
+  
     var controller = this;
     $.ajax({
         url: 'https://www.googleapis.com/oauth2/v1/userinfo?access_token=' + acToken,
         data: null,
         success: function(resp) {
-          user    =   resp;
-          controller.getUserContacts();
+          
+          user = resp;
+          
+          controller.getUserContacts(function(entries){
+            
+            if($('ul'))
+              $('ul').remove();
+              
+            var friend_list = document.createElement('ul');
+        
+            entries.forEach(function(friend, index) {
+            
+              friend_list.innerHTML += '<li id=' + (friend.name ? 'noname' : friend.name) + ' onclick="App.Controller.user.sendMail({ subject:\'mail\', from: \'phovec@nucular-bacon.com\', to:\''+friend.email+'\', text:\''+user.name+' möchte dich einladen\', html:\'<b>'+user.name+' möchte dich einladen</b>\'})">' + (friend.name ? friend.name : friend.email) + '</li>';
+              
+            });
+
+            document.getElementById('friends').appendChild(friend_list);
+            
+          });
           
           controller.set('google_logged_in',true);
           
-          $('#userInfo').html('Welcome ' + user.name);
-          $('#account_img').attr('src', user.picture);
+          $('#userInfo').html('Welcome ' + user.name + '<br /><img src=\''+user.picture+"\'/>");
           
         },
         dataType: "jsonp"
     });
+    
   },
   
-  getUserContacts : function() {
+  getUserContacts : function(callback) {
       $.ajax({
           url: 'https://www.google.com/m8/feeds/contacts/default/full?access_token=' + acToken,
           data: null,
@@ -178,11 +210,31 @@
             var xmlDoc = $.parseXML( resp );
             var xml = $( xmlDoc );
             
+            var entries = [];
+            
             xml.find( "entry" ).each(function(index, value){
-              
-                console.log( $(value) );
-                console.log( $(value).find( "gd\\:email" ).attr('address') );
+                
+                var entry = {};
+                
+                $(value).find( "title" ).each(function(index, value){
+                  
+                  if( $(value).text().length > 2 )
+                    entry.name = $(value).text();
+                   
+                });
+                
+                $(value).find( "email" ).each(function(index, value){
+                  
+                  if( $(value).attr('address').length > 2 )
+                    entry.email = $(value).attr('address');
+                    
+                });  
+                
+                entries.push(entry);
+                
             });
+            
+            callback(entries);
             
           },
           dataType: "jsonp"
@@ -199,4 +251,5 @@
       else
           return results[1];
   }
+  
 });
