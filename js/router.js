@@ -71,12 +71,11 @@ App.RoomRoute = Ember.Route.extend({
 
     };
 
-    if (!window.FB) {
-      setTimeout(1000, setFB);
-    } else {
+    if(!window.FB)
+      setTimeout(50,setFB);
+    else 
       setFB();
-    }
-
+    
 
     /*set a black background to let the user focus on the infofield an add a event for get info and background away*/
     $('#blackFilter').css('display', 'block');

@@ -74,6 +74,7 @@
   
   <script type="text/x-handlebars" data-template-name="_auth">
     <div id="fb-root"></div>
+    
     {{#unless App.Controller.auth.fb_logged_in }}
       <a {{action "fbLogin" target="App.Controller.auth" }} class="socialButtons facebookButton"></a>
     {{/unless}}
@@ -81,10 +82,20 @@
     {{#if App.Controller.auth.fb_logged_in }}
       <a {{action "fbLogout" target="App.Controller.auth"}} class="socialButtons facebookButton"></a>
     {{/if}}
+
+    {{#unless App.Controller.auth.google_logged_in }}
+      <a {{action "googleLogin" target="App.Controller.auth"}}>Google-Login</a>
+    {{/unless}}
+    
+    {{#if App.Controller.auth.google_logged_in }}
+      <a {{action "googleLogout" target="App.Controller.auth"}}>Google-Logout</a>
+    {{/if}}
+    
     <a class="socialButtons googleButton"></a>
     <a class="socialButtons twitterButton"></a>
-    <h2 id="fbUserInfo"></h2>
-    <div id="fbFriends"></div>
+    <h2 id="userInfo"></h2>
+    <div id="friends"></div>
+    
   </script> 
   
   <!-- scripts -->
