@@ -17,6 +17,12 @@ App.ApplicationRoute = Ember.Route.extend({
   }
 });
 
+App.IndexRoute = Ember.Route.extend({
+  enter: function(route) {
+    $('#blackFilter').css('display', 'none');
+  }
+}); 
+
 App.RoomRoute = Ember.Route.extend({
   enter: function(router) {
     if ( typeof webkitRTCPeerConnection != "undefined") {
