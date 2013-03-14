@@ -61,12 +61,10 @@
         var friend_list = document.createElement('ul');
         
         response.data.forEach(function(friend, index) {
-          friend_list.innerHTML += '<li id=' + friend.id + ' onclick="App.Controller.user.sendMail({ subject:"mail", from: "phovec@nucular-bacon.com", to:"'+friend.email+'", text:"'+user_name+' möchte dich einladen", html:"<b>'+user_name+' möchte dich einladen</b>"})">' + friend.name + '</li>';
+          friend_list.innerHTML += '<li id="' + friend.id + '" onclick="App.Controller.user.sendMail({ subject:\'mail\', from:\'phovec@nucular-bacon.com\', to:\''+friend.email+'\', text:\''+user_name+' möchte dich einladen\', html:\'<b>'+user_name+' möchte dich einladen</b>\'})">' + friend.name + '</li>';
         });
 
         document.getElementById('friends').appendChild(friend_list);
-      
-        document.getElementById('fbFriends').appendChild(friend_list);
 
       });
 
