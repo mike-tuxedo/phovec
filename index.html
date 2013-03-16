@@ -42,14 +42,22 @@
         <p>Verwendest du den Chromebrowser, dann schau dazu doch mal auf den oberen Rand ;)</p>
       </div>
       <div id="videoboxes">
-        <div class="user" id="local">
+        {{ partial 'user'}}
+      </div>
+      <div id="socialSidebar">{{ partial 'auth' }}</div>
+      </script>
+
+  <script type="text/x-handlebars" data-template-name="_user">
+        <div class="user" id="local" onmouseenter ="App.Controller.user.mouseIn($(this));" onmouseleave="App.Controller.user.mouseOut($(this));">
           <span class="name" id="local_name">Name</span>
           <video autoplay></video>
+          <div class="videoOptions">
+            <img src="img/muteButton.png" />
+            <img src="img/videoButton.png" />
+          </div>
         </div>
-      </div>
-    <div id="socialSidebar">{{ partial 'auth' }}</div>
   </script>
-
+  
   <script type="text/x-handlebars" data-template-name="about">
     <header>
       {{#linkTo "index" id="backButton"}}{{/linkTo}}
@@ -84,14 +92,13 @@
     {{/if}}
 
     {{#unless App.Controller.auth.google_logged_in }}
-      <a {{action "googleLogin" target="App.Controller.auth"}}>Google-Login</a>
+      <a {{action "googleLogin" target="App.Controller.auth"}} class="socialButtons googleButton"></a>
     {{/unless}}
     
     {{#if App.Controller.auth.google_logged_in }}
-      <a {{action "googleLogout" target="App.Controller.auth"}}>Google-Logout</a>
+      <a {{action "googleLogout" target="App.Controller.auth"}} class="socialButtons googleButton"></a>
     {{/if}}
     
-    <a class="socialButtons googleButton"></a>
     <a class="socialButtons twitterButton"></a>
     <h2 id="userInfo"></h2>
     <div id="friends"></div>
