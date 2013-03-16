@@ -61,12 +61,10 @@
         var friend_list = document.createElement('ul');
         
         response.data.forEach(function(friend, index) {
-          friend_list.innerHTML += '<li id=' + friend.id + ' onclick="App.Controller.user.sendMail({ subject:"mail", from: "phovec@nucular-bacon.com", to:"'+friend.email+'", text:"'+user_name+' möchte dich einladen", html:"<b>'+user_name+' möchte dich einladen</b>"})">' + friend.name + '</li>';
+          friend_list.innerHTML += '<li id="' + friend.id + '" onclick="App.Controller.user.sendMail({ subject:\'mail\', from:\'phovec@nucular-bacon.com\', to:\''+friend.email+'\', text:\''+user_name+' möchte dich einladen\', html:\'<b>'+user_name+' möchte dich einladen</b>\'})">' + friend.name + '</li>';
         });
 
         document.getElementById('friends').appendChild(friend_list);
-      
-        document.getElementById('fbFriends').appendChild(friend_list);
 
       });
 
@@ -110,8 +108,8 @@
   google_Oauth_URL : 'https://accounts.google.com/o/oauth2/auth?',
   google_Valid_URL : 'https://www.googleapis.com/oauth2/v1/tokeninfo?access_token=',
   google_Scope : 'https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email https://www.google.com/m8/feeds/',
-  google_CliendtId : '946841569888.apps.googleusercontent.com',
-  google_Redirekt : 'http://www.multimediatechnology.at/~fhs33078/Sem6/qpt3/emberjs-app/',
+  google_CliendtId : '186949140302.apps.googleusercontent.com',
+  google_Redirekt : 'http://phovec.nucular-bacon.com/',
   google_Logout : 'http://accounts.google.com/Logout',
   google_Type : 'token',
   google_Request_URL : null,
