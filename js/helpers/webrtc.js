@@ -42,17 +42,38 @@ var WebRTC = {
   amountIceMessages: 0,
   createRemoteUser: function(roomHash, userId, remoteUserId) {
 
-    var peerConnection = new PeerConnection({
-      "iceServers": [{
-        "url": "stun:provserver.televolution.net"
+    if (navigator.userAgent.toLowerCase().indexOf('chrome') > -1) {
+      var peerConnection = new PeerConnection({
+        'iceServers'"': [{
+          "url": "stun:provserver.televolution.net"
+        }, {
+          "url": "stun:stun1.voiceeclipse.net"
+        }]
       }, {
-        "url": "stun:stun1.voiceeclipse.net"
-      }]
-    }, {
-      optional: [{
-        RtpDataChannels: true
-      }]
-    });
+        'mandatory': [{
+          'DtlsSrtpKeyAgreement': 'true'
+        }]
+      }, {
+        'optional': [{
+          RtpDataChannels: true
+        }]
+      });
+    } else if (navigator.userAgent.toLowerCase().indexOf('firefox') > -1) {
+      var peerConnection = new PeerConnection({
+        "iceServers": [{
+          "url": "stun:64.62.233.26"
+        }, {
+          "url": "stun:64.24.35.201"
+        }]
+      }, {
+        optional: [{
+          RtpDataChannels: true
+        }]
+      });
+    } else {
+      alert("Bitte benutze Chrome oder Firefox!");
+      return;
+    }
 
     peerConnection.onicecandidate = function(description) {
       SignalingChannel.send({
@@ -79,7 +100,7 @@ var WebRTC = {
       if (event.data.substr(0, 4) == "\\$cn") {
         user.name = event.data.substr(4);
         $('#' + remoteUserId + ' .name').text(user.name);
-      } else if ( typeof event.data == Blob ) {
+      } else if ( typeof event.data == Blob) {
         console.log("BLOB");
         window.requestFileSystem(window.TEMPORARY, 1024 * 1024, function(fs) {
           var file = event.data;
@@ -173,6 +194,8 @@ var WebRTC = {
     var data = event.detail;
     var userRemote = WebRTC.getRemoteUser(data.userId);
     var userLocal = WebRTC.getLocalUser();
+    
+    console.log(data.sdp);
 
     userRemote.peerConnection.setRemoteDescription(new RTCSessionDescription(data.sdp));
     if (!userRemote.peerConnection.localDescription) {
