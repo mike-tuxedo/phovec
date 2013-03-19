@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html>
   <head>
     <meta content="text/html;charset=UTF-8" http-equiv="content-type">
@@ -12,6 +11,7 @@
   <body>
 
     <script type="text/x-handlebars" data-template-name="application">
+      <div id="blackFilter"></div>
       <div id="content">
       {{outlet}}
       </div>
@@ -37,20 +37,28 @@
       {{#linkTo "hangup" id="hangupButton"}}{{/linkTo}}
       </header>
       <div id="infoField">
-        <p>Du musst deinem Browser Zugriff auf Kamera & Mikrofon erlauben!</p><br/>
-        <p>Verwendest du den Chromebrowser, dann schau dazu doch mal auf den oberen Rand ;)</p>
+      <p>Du musst deinem Browser Zugriff auf Kamera & Mikrofon erlauben!</p><br/>
+      <p>Verwendest du den Chromebrowser, dann schau dazu doch mal auf den oberen Rand ;)</p>
       </div>
       <div id="videoboxes">
-      <div class="user" id="local">
+      {{ partial 'user'}}
+      </div>
+      <div id="socialSidebar">{{ partial 'auth' }}</div>
+    </script>
+
+    <script type="text/x-handlebars" data-template-name="_user">
+      <div class="user" id="local" onmouseenter ="App.Controller.user.mouseIn($(this));" onmouseleave="App.Controller.user.mouseOut($(this));">
       <span class="name" id="local_name">Name</span>
       <video autoplay></video>
+      <div class="videoOptions">
+      <img src="img/muteButton.png" />
+      <img src="img/videoButton.png" />
       </div>
       </div>
-    <div id="socialSidebar">{{ partial 'auth' }}</div>
-  </script>
+    </script>
 
-  <script type="text/x-handlebars" data-template-name="about">
-    <header>
+    <script type="text/x-handlebars" data-template-name="about">
+      <header>
       {{#linkTo "index" id="backButton"}}{{/linkTo}}
       </header>
       <div id="aboutInfo">
@@ -62,67 +70,79 @@
       </div>
     </script>
 
-  <script type="text/x-handlebars" data-template-name="hangup">
-    <header>
-    {{#linkTo "about" id="infoButton"}}{{/linkTo}}
-    </header>
-    <h2>Danke das du Phovec benutzt hast. <br /> Du darfst gerne jederzeit wieder kommen!</h2>
-    <br />
-    {{#linkTo "room" }}<div id="startButtonImage"></div>{{/linkTo}}
-  </script>  
-  
-  <script type="text/x-handlebars" data-template-name="_auth">
-    <div id="fb-root"></div>
-    {{#unless App.Controller.auth.fb_logged_in }}
+    <script type="text/x-handlebars" data-template-name="hangup">
+      <header>
+      {{#linkTo "about" id="infoButton"}}{{/linkTo}}
+      </header>
+      <h2>Danke das du Phovec benutzt hast. <br /> Du darfst gerne jederzeit wieder kommen!</h2>
+      <br />
+      {{#linkTo "room" }}<div id="startButtonImage"></div>{{/linkTo}}
+    </script>
+
+    <script type="text/x-handlebars" data-template-name="_auth">
+      <div id="fb-root"></div>
+
+      {{#unless App.Controller.auth.fb_logged_in }}
       <a {{action "fbLogin" target="App.Controller.auth" }} class="socialButtons facebookButton"></a>
-    {{/unless}}
-    
-    {{#if App.Controller.auth.fb_logged_in }}
+      {{/unless}}
+
+      {{#if App.Controller.auth.fb_logged_in }}
       <a {{action "fbLogout" target="App.Controller.auth"}} class="socialButtons facebookButton"></a>
-    {{/if}}
-    <a class="socialButtons googleButton"></a>
-    <a class="socialButtons twitterButton"></a>
-    <h2 id="fbUserInfo"></h2>
-    <div id="fbFriends"></div>
-  </script> 
-  
-  <!-- scripts -->
-  <script src="http://code.jquery.com/jquery-latest.min.js"></script>
-  <script> window.jQuery || document.write('<script src="js/libs/jquery.js"><\/script>')</script>
-  
-  <!-- Facebook-Instance -->
-  <script src="js/facebook-loader.js"></script>
-  
-  <!-- <script src="scriptLoader.js"></script> -->
-  
-  <!-- libs -->
-  <script src="js/libs/handlebars-1.0.0-rc.3.js"></script>
-  <script src="js/libs/ember-1.0.0-rc.1.js"></script>
+      {{/if}}
 
-  <!-- helper -->
-  <script src="js/helpers/webrtc.js"></script>
-  <script src="js/helpers/signaling.js"></script>
+      {{#unless App.Controller.auth.google_logged_in }}
+      <a {{action "googleLogin" target="App.Controller.auth"}} class="socialButtons googleButton"></a>
+      {{/unless}}
 
-  <!-- app -->
-  <script src="js/app.js"></script>
+      {{#if App.Controller.auth.google_logged_in }}
+      <a {{action "googleLogout" target="App.Controller.auth"}} class="socialButtons googleButton"></a>
+      {{/if}}
 
-  <!-- views -->
-  <script src="js/views/index.js"></script>
-  <script src="js/views/room.js"></script>
-  <script src="js/views/invitation.js"></script>
+      <a class="socialButtons twitterButton"></a>
+      <h2 id="userInfo"></h2>
+      <div id="friends"></div>
 
-  <!-- models -->
-  <script src="js/models/user.js"></script>
-  <script src="js/models/room.js"></script>
+    </script>
 
-  <!-- controllers -->
-  <script src="js/controllers/index.js"></script>
-  <script src="js/controllers/user.js"></script>
-  <script src="js/controllers/auth.js"></script>
+    <!-- scripts -->
+    <script src="http://code.jquery.com/jquery-latest.min.js"></script>
+    <script>
+      window.jQuery || document.write('<script src="js/libs/jquery.js"><\/script>')
+    </script>
 
-  <!-- router -->
-  <script src="js/router.js"></script>
-  
-  <script src="js/main.js"></script>
-</body>
+    <!-- Facebook-Instance -->
+    <script src="js/facebook-loader.js"></script>
+
+    <!-- <script src="scriptLoader.js"></script> -->
+
+    <!-- libs -->
+    <script src="js/libs/handlebars-1.0.0-rc.3.js"></script>
+    <script src="js/libs/ember-1.0.0-rc.1.js"></script>
+
+    <!-- helper -->
+    <script src="js/helpers/webrtc.js"></script>
+    <script src="js/helpers/signaling.js"></script>
+
+    <!-- app -->
+    <script src="js/app.js"></script>
+
+    <!-- views -->
+    <script src="js/views/index.js"></script>
+    <script src="js/views/room.js"></script>
+    <script src="js/views/invitation.js"></script>
+
+    <!-- models -->
+    <script src="js/models/user.js"></script>
+    <script src="js/models/room.js"></script>
+
+    <!-- controllers -->
+    <script src="js/controllers/index.js"></script>
+    <script src="js/controllers/user.js"></script>
+    <script src="js/controllers/auth.js"></script>
+
+    <!-- router -->
+    <script src="js/router.js"></script>
+
+    <script src="js/main.js"></script>
+  </body>
 </html>
