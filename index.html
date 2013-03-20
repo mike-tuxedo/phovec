@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html>
   <head>
     <meta content="text/html;charset=UTF-8" http-equiv="content-type">
@@ -39,8 +38,8 @@
       </header>
       <canvas id="output"></canvas>
       <div id="infoField">
-        <p>Du musst deinem Browser Zugriff auf Kamera & Mikrofon erlauben!</p><br/>
-        <p>Verwendest du den Chromebrowser, dann schau dazu doch mal auf den oberen Rand ;)</p>
+      <p>Du musst deinem Browser Zugriff auf Kamera & Mikrofon erlauben!</p><br/>
+      <p>Verwendest du den Chromebrowser, dann schau dazu doch mal auf den oberen Rand ;)</p>
       </div>
       <div id="videoboxes">
         {{ partial 'user'}}
@@ -51,21 +50,21 @@
         <a {{action "takeOffClothesOfUser" }} class="">Take off Everything</a>
       </div>
       <div id="socialSidebar">{{ partial 'auth' }}</div>
-      </script>
+    </script>
 
-  <script type="text/x-handlebars" data-template-name="_user">
-        <div class="user" id="local" onmouseenter ="App.Controller.user.mouseIn($(this));" onmouseleave="App.Controller.user.mouseOut($(this));">
-          <span class="name" id="local_name">Name</span>
-          <video autoplay></video>
-          <div class="videoOptions">
-            <img src="img/muteButton.png" />
-            <img src="img/videoButton.png" />
-          </div>
-        </div>
-  </script>
-  
-  <script type="text/x-handlebars" data-template-name="about">
-    <header>
+    <script type="text/x-handlebars" data-template-name="_user">
+      <div class="user" id="local" onmouseenter ="App.Controller.user.mouseIn($(this));" onmouseleave="App.Controller.user.mouseOut($(this));">
+      <span class="name" id="local_name">Name</span>
+      <video autoplay></video>
+      <div class="videoOptions">
+      <img src="img/muteButton.png" />
+      <img src="img/videoButton.png" />
+      </div>
+      </div>
+    </script>
+
+    <script type="text/x-handlebars" data-template-name="about">
+      <header>
       {{#linkTo "index" id="backButton"}}{{/linkTo}}
       </header>
       <div id="aboutInfo">
@@ -77,34 +76,34 @@
       </div>
     </script>
 
-  <script type="text/x-handlebars" data-template-name="hangup">
-    <header>
-    {{#linkTo "about" id="infoButton"}}{{/linkTo}}
-    </header>
-    <h2>Danke das du Phovec benutzt hast. <br /> Du darfst gerne jederzeit wieder kommen!</h2>
-    <br />
-    {{#linkTo "room" }}<div id="startButtonImage"></div>{{/linkTo}}
-  </script>  
-  
-  <script type="text/x-handlebars" data-template-name="_auth">
-    <div id="fb-root"></div>
-    
-    {{#unless App.Controller.auth.fb_logged_in }}
-      <a {{action "fbLogin" target="App.Controller.auth" }} class="socialButtons facebookButton"></a>
-    {{/unless}}
-    
-    {{#if App.Controller.auth.fb_logged_in }}
-      <a {{action "fbLogout" target="App.Controller.auth"}} class="socialButtons facebookButton"></a>
-    {{/if}}
+    <script type="text/x-handlebars" data-template-name="hangup">
+      <header>
+      {{#linkTo "about" id="infoButton"}}{{/linkTo}}
+      </header>
+      <h2>Danke das du Phovec benutzt hast. <br /> Du darfst gerne jederzeit wieder kommen!</h2>
+      <br />
+      {{#linkTo "room" }}<div id="startButtonImage"></div>{{/linkTo}}
+    </script>
 
-    {{#unless App.Controller.auth.google_logged_in }}
+    <script type="text/x-handlebars" data-template-name="_auth">
+      <div id="fb-root"></div>
+
+      {{#unless App.Controller.auth.fb_logged_in }}
+      <a {{action "fbLogin" target="App.Controller.auth" }} class="socialButtons facebookButton"></a>
+      {{/unless}}
+
+      {{#if App.Controller.auth.fb_logged_in }}
+      <a {{action "fbLogout" target="App.Controller.auth"}} class="socialButtons facebookButton"></a>
+      {{/if}}
+
+      {{#unless App.Controller.auth.google_logged_in }}
       <a {{action "googleLogin" target="App.Controller.auth"}} class="socialButtons googleButton"></a>
-    {{/unless}}
-    
-    {{#if App.Controller.auth.google_logged_in }}
+      {{/unless}}
+
+      {{#if App.Controller.auth.google_logged_in }}
       <a {{action "googleLogout" target="App.Controller.auth"}} class="socialButtons googleButton"></a>
-    {{/if}}
-    
+      {{/if}}
+      
     <a class="socialButtons twitterButton"></a>
     <h2 id="userInfo"></h2>
     <div id="friends"></div>
@@ -157,4 +156,5 @@
   
   <script src="js/main.js"></script>
 </body>
+
 </html>
