@@ -37,12 +37,18 @@
       {{#linkTo "about" id="infoButton"}}{{/linkTo}}
       {{#linkTo "hangup" id="hangupButton"}}{{/linkTo}}
       </header>
+      <canvas id="output"></canvas>
       <div id="infoField">
         <p>Du musst deinem Browser Zugriff auf Kamera & Mikrofon erlauben!</p><br/>
         <p>Verwendest du den Chromebrowser, dann schau dazu doch mal auf den oberen Rand ;)</p>
       </div>
       <div id="videoboxes">
         {{ partial 'user'}}
+        <a {{action "takeScreenShotFromChatroom" }} class="">Take Screenshot</a>
+        <a {{action "putClassesOnUser" }} class="">Put Classes on</a>
+        <a {{action "putHairOnUser" }} class="">Put Hair on</a>
+        <a {{action "putBeardOnUser" }} class="">Put Beard on</a>
+        <a {{action "takeOffClothesOfUser" }} class="">Take off Everything</a>
       </div>
       <div id="socialSidebar">{{ partial 'auth' }}</div>
       </script>
@@ -110,7 +116,13 @@
   <script> window.jQuery || document.write('<script src="js/libs/jquery.js"><\/script>')</script>
   
   <!-- Facebook-Instance -->
-  <script src="js/facebook-loader.js"></script>
+  <script src="js/libs/facebook-loader.js"></script>
+  
+  <!-- face-detection -->
+  <script src="js/libs/face-detector-loader.js"></script>
+  
+  <!-- screenshot-maker -->
+  <script src="js/build/html2canvas.js"></script>
   
   <!-- <script src="scriptLoader.js"></script> -->
   
@@ -138,7 +150,8 @@
   <script src="js/controllers/index.js"></script>
   <script src="js/controllers/user.js"></script>
   <script src="js/controllers/auth.js"></script>
-
+  <script src="js/controllers/room.js"></script>
+  
   <!-- router -->
   <script src="js/router.js"></script>
   

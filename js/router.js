@@ -25,6 +25,9 @@ App.IndexRoute = Ember.Route.extend({
 
 App.RoomRoute = Ember.Route.extend({
   enter: function(router) {
+    
+    App.Controller.room = App.RoomController.create();
+    
     if ( typeof webkitRTCPeerConnection != "undefined") {
       PeerConnection = webkitRTCPeerConnection;
     } else if ( typeof mozRTCPeerConnection != "undefined") {
@@ -41,21 +44,19 @@ App.RoomRoute = Ember.Route.extend({
       navigator.getMedia = navigator.msGetUserMedia;
     }
 
-    App.Controller = {};
     App.Controller.user = App.UserController.create();
     App.Controller.user.startGetMedia();
     SignalingChannel.init();
 
-    App.Controller.auth = App.AuthController.create();
-
-    var setFB = function() {
-
+    // for setting FB-Instance and face-detector up later
+    var setupAuthController = function() {
+      
+      App.Controller.auth = App.AuthController.create();
+      
       App.Controller.auth.set('FB', FB);
 
       FB.getLoginStatus(function(response) {
         if (response.status === 'connected') {
-
-          console.log('fb logged in');
 
           App.Controller.auth.set('fb_logged_in', true);
           // do not show fb-login button
@@ -68,15 +69,15 @@ App.RoomRoute = Ember.Route.extend({
           console.log('not_logged_in');
         }
       });
-
+      
     };
 
     if(!window.FB)
-      setTimeout(50,setFB);
+      setTimeout(setupAuthController,50);
     else 
-      setFB();
+      setupAuthController();
     
-
+    
     /*set a black background to let the user focus on the infofield an add a event for get info and background away*/
     $('#blackFilter').css('display', 'block');
     
@@ -90,5 +91,6 @@ App.HangupRoute = Ember.Route.extend({
   enter: function(router) {
     WebRTC.hangup();
     SignalingChannel.close();
+    FaceDetector.close();
   }
 });

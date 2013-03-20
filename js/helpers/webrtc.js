@@ -69,7 +69,7 @@ var WebRTC = {
       console.log("WebRTC: NEW REMOTE STREAM ARRIVED");
       $('#' + remoteUserId + ' video').attr('src', URL.createObjectURL(remote.stream));
     };
-
+    /*
     var channel = peerConnection.createDataChannel('RTCDataChannel', {
       reliable: false
     });
@@ -117,14 +117,14 @@ var WebRTC = {
     peerConnection.ondatachannel = function(event) {
       console.log('ondatachannel');
     };
-
+*/
     var user = {
       name: undefined,
       id: remoteUserId,
       roomHash: roomHash,
       peerConnection: peerConnection,
       stream: undefined,
-      channel: channel,
+      //channel: channel,
       type: "remote"
     };
 
@@ -132,7 +132,7 @@ var WebRTC = {
     $('#' + remoteUserId + " form input").keypress(function(e) {
       if (e.which == 13) {
         var input = $(this).val();
-        channel.send(input);
+        //channel.send(input);
 
         var output = new Date().getHours() + ":" + new Date().getMinutes() + " (me) - " + input + "&#13;&#10;";
         $('#' + remoteUserId + " textarea").append(output)

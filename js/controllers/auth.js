@@ -1,7 +1,6 @@
 ﻿App.AuthController = Ember.ObjectController.extend({
-  templateName: '_auth',
+
   init: function() {
-    App.Controller.auth = this;
     var url = this.get('google_Oauth_URL') + 'scope=' + this.get('google_Scope') + '&client_id=' + this.get('google_CliendtId') + '&redirect_uri=' + this.get('google_Redirekt') + '&response_type=' + this.get('google_Type');
     this.set('google_Request_URL', url);
   },
@@ -31,6 +30,7 @@
     });
 
   },
+  
   fbLogout: function() {
     var FB = this.get('FB');
     
@@ -41,6 +41,7 @@
   
     this.set('fb_logged_in', false);
   },
+  
   setupFBInfo: function() {
 
     var controller = this;
@@ -57,13 +58,21 @@
         
         if($('ul'))
           $('ul').remove();
-              
+        
+
+        controller.sortFBEntires(response.data);        
+        
         var friend_list = document.createElement('ul');
         
         response.data.forEach(function(friend, index) {
-          friend_list.innerHTML += '<li id="' + friend.id + '" onclick="App.Controller.user.sendMail({ subject:\'mail\', from:\'phovec@nucular-bacon.com\', to:\''+friend.email+'\', text:\''+user_name+' möchte dich einladen\', html:\'<b>'+user_name+' möchte dich einladen</b>\'})">' + friend.name + '</li>';
-        });
+        
+          friend_list.innerHTML += '<li class="send_fb_message" onclick="App.Controller.auth.sendFbUserMessage(\''+friend.id+'\')"> Send Facebook-Message to ' + friend.name + '</li>'
 
+          if(friend.email)
+            friend_list.innerHTML += '<li class="send_mail" onclick="App.Controller.user.sendMail({ subject:\'mail\', from:\'phovec@nucular-bacon.com\', to:\''+friend.email+'\', text:\''+user_name+' möchte dich einladen\', html:\'<b>'+user_name+' möchte dich einladen</b>\'})"> Send e-mail to ' + friend.name + '</li>';
+        
+        });
+        
         document.getElementById('friends').appendChild(friend_list);
 
       });
@@ -71,6 +80,7 @@
     });
 
   },
+  
   queryFbAPI: function(query, callback) {
 
     var FB = this.get('FB');
@@ -82,6 +92,18 @@
     });
 
   },
+  
+  sortFBEntires : function(entries){
+  
+    for(var next=1; next < entries.length; next++)
+      for(var former=next; former > 0; former--)
+        if( entries[former-1].name > entries[former].name ){
+          var former_entry = entries[former];
+          entries[former] = entries[former-1];
+          entries[former-1] = former_entry;
+        }
+  },
+  
   sendFbUserMessage: function(id) {
 
     var FB = this.get('FB');
@@ -165,6 +187,7 @@
   setupGoogleInfo : function() {
   
     var controller = this;
+    
     $.ajax({
         url: 'https://www.googleapis.com/oauth2/v1/userinfo?access_token=' + acToken,
         data: null,
@@ -200,43 +223,44 @@
   },
   
   getUserContacts : function(callback) {
-      $.ajax({
-          url: 'https://www.google.com/m8/feeds/contacts/default/full?access_token=' + acToken,
-          data: null,
-          success: function(resp) {
-            
-            var xmlDoc = $.parseXML( resp );
-            var xml = $( xmlDoc );
-            
-            var entries = [];
-            
-            xml.find( "entry" ).each(function(index, value){
+    
+    $.ajax({
+        url: 'https://www.google.com/m8/feeds/contacts/default/full?access_token=' + acToken,
+        data: null,
+        success: function(resp) {
+          
+          var xmlDoc = $.parseXML( resp );
+          var xml = $( xmlDoc );
+          
+          var entries = [];
+          
+          xml.find( "entry" ).each(function(index, value){
+              
+              var entry = {};
+              
+              $(value).find( "title" ).each(function(index, value){
                 
-                var entry = {};
+                if( $(value).text().length > 2 )
+                  entry.name = $(value).text();
+                 
+              });
+              
+              $(value).find( "email" ).each(function(index, value){
                 
-                $(value).find( "title" ).each(function(index, value){
+                if( $(value).attr('address').length > 2 )
+                  entry.email = $(value).attr('address');
                   
-                  if( $(value).text().length > 2 )
-                    entry.name = $(value).text();
-                   
-                });
-                
-                $(value).find( "email" ).each(function(index, value){
-                  
-                  if( $(value).attr('address').length > 2 )
-                    entry.email = $(value).attr('address');
-                    
-                });  
-                
-                entries.push(entry);
-                
-            });
-            
-            callback(entries);
-            
-          },
-          dataType: "jsonp"
-      });
+              });  
+              
+              entries.push(entry);
+              
+          });
+          
+          callback(entries);
+          
+        },
+        dataType: "jsonp"
+    });
   },
   
   getUrlAttributes: function(url, name) {
