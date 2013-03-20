@@ -91,6 +91,5 @@ App.HangupRoute = Ember.Route.extend({
   enter: function(router) {
     WebRTC.hangup();
     SignalingChannel.close();
-    FaceDetector.close();
   }
 });
