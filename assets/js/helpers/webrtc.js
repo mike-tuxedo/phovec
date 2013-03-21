@@ -7,12 +7,6 @@ var WebRTC = {
     window.addEventListener("signalingchannel:participant", this.handleSignalingParticipant);
   },
   users: [],
-  SDPContraints: {
-    'mandatory': {
-      'OfferToReceiveAudio': true,
-      'OfferToReceiveVideo': true
-    }
-  },
   handleLocalMedia: function(event) {
     console.log("WebRTC: LOCAL MEDIA AVAILABLE ", event);
 
@@ -71,9 +65,7 @@ var WebRTC = {
           'DtlsSrtpKeyAgreement': 'true'
         }]
       }, {
-        optional: [{
-          RtpDataChannels: true
-        }]
+        optional: []
       });
     } else if (navigator.browser[0] === "Firefox") {
       var peerConnection = new PeerConnection({
@@ -83,9 +75,7 @@ var WebRTC = {
           "url": "stun:stun1.voiceeclipse.net"
         }]
       }, {
-        optional: [{
-          RtpDataChannels: true
-        }]
+        optional: []
       });
     } else {
       alert("Bitte benutze Chrome oder Firefox!");
@@ -247,7 +237,12 @@ var WebRTC = {
               destinationHash: userRemote.id,
               sdp: description
             });
-          }, null, WebRTC.SDPContraints);
+          }, null, {
+            'mandatory': {
+              'OfferToReceiveAudio': true,
+              'OfferToReceiveVideo': true
+            }
+          });
         }
       }, 1000);
     }
@@ -286,6 +281,28 @@ var WebRTC = {
           } else {
             clearInterval(loop);
             userRemote.peerConnection.addStream(userLocal.stream);
+
+            var sdpConstraints = {};
+            if (navigator.browser[0] === "Firefox") {
+              sdpConstraints = {
+                "optional": [],
+                "mandatory": {
+                  'OfferToReceiveAudio': true,
+                  'OfferToReceiveVideo': true,
+                  'MozDontOfferDataChannel': true
+                }
+              };
+            }
+            else if(navigator.browser[0] === "Chrome"){
+              sdpConstraints = {
+                "optional": [],
+                "mandatory": {
+                  'OfferToReceiveAudio': true,
+                  'OfferToReceiveVideo': true
+                }
+              };
+            }
+
             userRemote.peerConnection.createOffer(function(description) {
               console.log("WebRTC: CREATE OFFER CALLBACK ", description);
               userRemote.peerConnection.setLocalDescription(description);
@@ -302,7 +319,7 @@ var WebRTC = {
                 destinationHash: userRemote.id,
                 sdp: description
               });
-            }, null, WebRTC.SDPContraints);
+            }, null, sdpConstraints);
           }
         }, 1000);
         break;
