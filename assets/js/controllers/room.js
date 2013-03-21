@@ -12,17 +12,18 @@
   
     /* starting animated plus */
     //time between a set of animations and the next set of animations (one set are 3 bubbles)
-    var repetitionRate = 2000;
+    var repetitionRate = 4000;
     //duration until a bubble reach his given size
     var duration = 1700;
+    var top = parseInt($('.get_friends').css('margin-top'), 10);
+    console.log(top);
     
-    setTimeout(function(){setInterval(function(){animateGradient($('#gradient1'), duration, 200)}, repetitionRate)}, 0);
-    setTimeout(function(){setInterval(function(){animateGradient($('#gradient2'), duration, 150)}, repetitionRate)}, 200);
-    setTimeout(function(){setInterval(function(){animateGradient($('#gradient3'), duration, 100)}, repetitionRate)}, 400);
+    setTimeout(function(){setInterval(function(){animateGradient($('#gradient1'), duration, 200, top)}, repetitionRate)}, 0);
+    setTimeout(function(){setInterval(function(){animateGradient($('#gradient2'), duration, 150, top)}, repetitionRate)}, 200);
+    setTimeout(function(){setInterval(function(){animateGradient($('#gradient3'), duration, 100, top)}, repetitionRate)}, 400);
   
-    function animateGradient(gradient, duration, size, topMargin){
+    function animateGradient(gradient, duration, size, top){
         var halfSize = size/2;
-        //-moz-transform:translateX(100deg);
   
         gradient.animate({
           opacity: '0',
@@ -31,7 +32,7 @@
           right: '-' + halfSize + 'px',
           borderTopLeftRadius: halfSize + 'px',
           borderBottomLeftRadius: halfSize + 'px',
-          top: '200px'
+          marginTop: (top-halfSize) + 'px'
         },
         duration,
         function(){
@@ -41,7 +42,7 @@
           gradient.css('right','0px');
           gradient.css('borderTopLeftRadius','0px');
           gradient.css('borderBottomLeftRadius','0px');
-          gradient.css('top','100px');
+          gradient.css('marginTop','350px');
         });
       }
   },
