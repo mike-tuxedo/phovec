@@ -1,27 +1,21 @@
 #infoField {
   position: absolute;
-
-   box-shadow: 0px 0px 15px #444;
+  box-shadow: 0px 0px 15px #444;
   -moz-box-shadow: 0px 0px 15px #444444;
   -webkit-box-shadow: 0px 0px 15px #444444;
-
   border-radius: 5px;
-
   width: 300px;
   text-align: center;
   padding: 20px;
   margin-top: 120px;
   margin-left: -170px;
-  left: 50%; 
-
+  left: 50%;
   z-index: 20;
-  
-  
   border-radius: 5px;
   background: #303743;
 }
 
-#blackFilter{
+#blackFilter {
   position: absolute;
   display: none;
   width: 100%;
@@ -39,7 +33,6 @@
   border-bottom-left-radius: 5px;
   box-shadow: 0px 0px 15px #444444;
   padding: 5px;
-  
   right: 0px;
   top: 75px;
   height: 80%;
@@ -58,45 +51,45 @@
   opacity: 0.8;
 }
 
-#userInfo p{
+#userInfo p {
   font-size: 16px;
 }
 
-#userInfo img{
+#userInfo img {
   display: none;
 }
 
-#friends{
+#friends {
   height: 70%;
   overflow-y: scroll;
   overflow-x: hidden;
 }
 
-#friends li{
+#friends li {
   font-size: 13.5px;
   text-align: left;
   cursor: pointer;
 }
 
-#friends li:hover{
+#friends li:hover {
   background: #A0CAE2;
 }
 
-.facebookButton{
+.facebookButton {
   display: block;
   background-image: url('../img/facebookbutton.png');
   background-size: 100% 100%;
   background-repeat: no-repeat;
 }
 
-.googleButton{
+.googleButton {
   display: block;
   background-image: url('../img/googlebutton.png');
   background-size: 100% 100%;
   background-repeat: no-repeat;
 }
 
-.twitterButton{
+.twitterButton {
   display: block;
   background-image: url('../img/twitterbutton.png');
   background-size: 100% 100%;
@@ -105,7 +98,6 @@
 
 #videoboxes {
   display: inline-block;
-
   margin: 25px auto 0px auto;
   padding: 5px;
 }
@@ -122,7 +114,6 @@
   width: 100%;
   padding: 5px 0px 5px 0px;
   background: #e0dfeb;
-  
   box-shadow: inset 1px 1px 5px #444;
   -webkit-box-shadow: inset 1px 1px 5px #444;
 }
@@ -130,7 +121,6 @@
 #videoboxes video {
   width: 100%;
   float: left;
-
   background: #999;
 }
 
@@ -142,7 +132,7 @@
   width: 100%;
 }
 
-.videoOptions{
+.videoOptions {
   border-top-left-radius: 5px;
   border-top-right-radius: 5px;
   //display: none;
@@ -151,17 +141,16 @@
   background: #303743;
   opacity: 0;
   width: 300px;
-  
   z-index: 20;
 }
 
-.videoOptions img{
+.videoOptions img {
   cursor: pointer;
   width: 50px;
   margin-top: 198px;
 }
 
-.videoOptions img:hover{
+.videoOptions img:hover {
   background: #888;
 }
 

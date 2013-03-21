@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html>
   <head>
     <meta content="text/html;charset=UTF-8" http-equiv="content-type">
@@ -16,7 +15,6 @@
       <div id="content">
       {{outlet}}
       </div>
-      <!--<footer>Copyright by F.J. Brünner, L. Wanko, M. Tiefenthaler and the University of Applied Sciences in Salzburg</footer>-->
     </script>
 
     <!-- templates -->
@@ -37,9 +35,10 @@
       {{#linkTo "about" id="infoButton"}}{{/linkTo}}
       {{#linkTo "hangup" id="hangupButton"}}{{/linkTo}}
       </header>
+      <canvas id="output"></canvas>
       <div id="infoField">
-        <p>Du musst deinem Browser Zugriff auf Kamera & Mikrofon erlauben!</p><br/>
-        <p>Verwendest du den Chromebrowser, dann schau dazu doch mal auf den oberen Rand ;)</p>
+      <p>Du musst deinem Browser Zugriff auf Kamera & Mikrofon erlauben!</p><br/>
+      <p>Verwendest du den Chromebrowser, dann schau dazu doch mal auf den oberen Rand ;)</p>
       </div>
       <div id="videoboxes">
         {{#view App.UserView}}
@@ -52,6 +51,11 @@
             <video autoplay></video>
           </div>
           {{/view}}
+          <a {{action "takeScreenShotFromChatroom" }} class="">Take Screenshot</a>
+          <a {{action "putClassesOnUser" }} class="">Put Classes on</a>
+          <a {{action "putHairOnUser" }} class="">Put Hair on</a>
+          <a {{action "putBeardOnUser" }} class="">Put Beard on</a>
+          <a {{action "takeOffClothesOfUser" }} class="">Take off Everything</a>
       </div>
       <div id="socialSidebar">{{ partial 'auth' }}</div>
     </script>
@@ -69,34 +73,34 @@
       </div>
     </script>
 
-  <script type="text/x-handlebars" data-template-name="hangup">
-    <header>
-    {{#linkTo "about" id="infoButton"}}{{/linkTo}}
-    </header>
-    <h2>Danke das du Phovec benutzt hast. <br /> Du darfst gerne jederzeit wieder kommen!</h2>
-    <br />
-    {{#linkTo "room" }}<div id="startButtonImage"></div>{{/linkTo}}
-  </script>  
-  
-  <script type="text/x-handlebars" data-template-name="_auth">
-    <div id="fb-root"></div>
-    
-    {{#unless App.Controller.auth.fb_logged_in }}
-      <a {{action "fbLogin" target="App.Controller.auth" }} class="socialButtons facebookButton"></a>
-    {{/unless}}
-    
-    {{#if App.Controller.auth.fb_logged_in }}
-      <a {{action "fbLogout" target="App.Controller.auth"}} class="socialButtons facebookButton"></a>
-    {{/if}}
+    <script type="text/x-handlebars" data-template-name="hangup">
+      <header>
+      {{#linkTo "about" id="infoButton"}}{{/linkTo}}
+      </header>
+      <h2>Danke das du Phovec benutzt hast. <br /> Du darfst gerne jederzeit wieder kommen!</h2>
+      <br />
+      {{#linkTo "room" }}<div id="startButtonImage"></div>{{/linkTo}}
+    </script>
 
-    {{#unless App.Controller.auth.google_logged_in }}
+    <script type="text/x-handlebars" data-template-name="_auth">
+      <div id="fb-root"></div>
+
+      {{#unless App.Controller.auth.fb_logged_in }}
+      <a {{action "fbLogin" target="App.Controller.auth" }} class="socialButtons facebookButton"></a>
+      {{/unless}}
+
+      {{#if App.Controller.auth.fb_logged_in }}
+      <a {{action "fbLogout" target="App.Controller.auth"}} class="socialButtons facebookButton"></a>
+      {{/if}}
+
+      {{#unless App.Controller.auth.google_logged_in }}
       <a {{action "googleLogin" target="App.Controller.auth"}} class="socialButtons googleButton"></a>
-    {{/unless}}
-    
-    {{#if App.Controller.auth.google_logged_in }}
+      {{/unless}}
+
+      {{#if App.Controller.auth.google_logged_in }}
       <a {{action "googleLogout" target="App.Controller.auth"}} class="socialButtons googleButton"></a>
-    {{/if}}
-    
+      {{/if}}
+      
     <a class="socialButtons twitterButton"></a>
     <h2 id="userInfo"></h2>
     <div id="friends"></div>
@@ -108,7 +112,13 @@
   <script> window.jQuery || document.write('<script src="js/libs/jquery.js"><\/script>')</script>
   
   <!-- Facebook-Instance -->
-  <script src="js/facebook-loader.js"></script>
+  <script src="js/libs/facebook-loader.js"></script>
+  
+  <!-- face-detection -->
+  <script src="js/libs/face-detector-loader.js"></script>
+  
+  <!-- screenshot-maker -->
+  <script src="js/build/html2canvas.js"></script>
   
   <!-- <script src="scriptLoader.js"></script> -->
   
@@ -119,6 +129,7 @@
   <!-- helper -->
   <script src="js/helpers/webrtc.js"></script>
   <script src="js/helpers/signaling.js"></script>
+  <script src="js/helpers/browser.js"></script>
 
   <!-- app -->
   <script src="js/app.js"></script>
@@ -137,7 +148,8 @@
   <script src="js/controllers/index.js"></script>
   <script src="js/controllers/user.js"></script>
   <script src="js/controllers/auth.js"></script>
-
+  <script src="js/controllers/room.js"></script>
+  
   <!-- router -->
   <script src="js/router.js"></script>
   
