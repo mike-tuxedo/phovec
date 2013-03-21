@@ -1,14 +1,12 @@
 ﻿var SignalingChannel = {
   webSocket: null,
-  initDone: false,
   init: function() {
-
     var self = this;
     this.webSocket = new WebSocket('ws://www.nucular-bacon.com:49152');
+
     this.webSocket.onopen = function() {
       console.log("SignalingChannel: ONOPEN");
 
-      //Bug fix, don't call room controller twice via ember js bug!
       var roomHash = prompt("Raumname:", "");
       var roomLink = roomHash ? location.href + "/" + roomHash : location.href;
 
@@ -88,6 +86,7 @@
     };
   },
   send: function(message) {
+    console.log("SignalingChannel: " + message)
     SignalingChannel.webSocket.send(JSON.stringify(message));
   },
   close: function() {
