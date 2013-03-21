@@ -7,9 +7,15 @@ var WebRTC = {
     window.addEventListener("signalingchannel:participant", this.handleSignalingParticipant);
   },
   users: [],
+  SDPContraints: {
+    'mandatory': {
+      'OfferToReceiveAudio': true,
+      'OfferToReceiveVideo': true
+    }
+  },
   handleLocalMedia: function(event) {
-    console.log("WebRTC: LOCAL MEDIA AVAILABLE ", description);
-    
+    console.log("WebRTC: LOCAL MEDIA AVAILABLE ", event);
+
     var user = WebRTC.getLocalUser();
     user = (user === undefined) ? WebRTC.createLocalUser() : user;
     user.stream = event.detail.stream;
@@ -216,7 +222,13 @@ var WebRTC = {
     var userRemote = WebRTC.getRemoteUser(data.userId);
     var userLocal = WebRTC.getLocalUser();
     console.log("WebRTC: SET REMOTE ", event);
-    userRemote.peerConnection.setRemoteDescription(new RTCSessionDescription(data.sdp));
+
+    if (navigator.browser[0] === "Chrome") {
+      userRemote.peerConnection.setRemoteDescription(new RTCSessionDescription(data.sdp));
+    } else if (navigator.browser[0] === "Firefox") {
+      userRemote.peerConnection.setRemoteDescription(new mozRTCSessionDescription(data.sdp));
+    }
+
     if (!userRemote.peerConnection.localDescription) {
       var loop = setInterval(function() {
         if (userLocal.stream === undefined) {
@@ -235,7 +247,7 @@ var WebRTC = {
               destinationHash: userRemote.id,
               sdp: description
             });
-          });
+          }, null, WebRTC.SDPContraints);
         }
       }, 1000);
     }
@@ -250,7 +262,12 @@ var WebRTC = {
   handleSignalingIce: function(event) {
     console.log("WebRTC: HANDLE ICE ", event);
     var user = WebRTC.getRemoteUser(event.detail.userId);
-    user.peerConnection.addIceCandidate(new RTCIceCandidate(event.detail.ice));
+
+    if (navigator.browser[0] === "Chrome") {
+      user.peerConnection.addIceCandidate(new RTCIceCandidate(event.detail.ice));
+    } else if (navigator.browser[0] === "Firefox") {
+      user.peerConnection.addIceCandidate(new mozRTCIceCandidaten(event.detail.ice));
+    }
   },
   handleSignalingParticipant: function(event) {
     console.log("WebRTC: PARTICIPANT ", event);
@@ -285,7 +302,7 @@ var WebRTC = {
                 destinationHash: userRemote.id,
                 sdp: description
               });
-            });
+            }, null, WebRTC.SDPContraints);
           }
         }, 1000);
         break;
