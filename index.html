@@ -42,21 +42,19 @@
         <p>Verwendest du den Chromebrowser, dann schau dazu doch mal auf den oberen Rand ;)</p>
       </div>
       <div id="videoboxes">
-        {{ partial 'user'}}
+        {{#view App.UserView}}
+          <div class="user" id="local">
+            <div class="videoOptions">
+              <img src="img/muteButton.png" />
+              <img src="img/videoButton.png" />
+            </div>
+            <span class="name" id="local_name">Name</span>
+            <video autoplay></video>
+          </div>
+          {{/view}}
       </div>
       <div id="socialSidebar">{{ partial 'auth' }}</div>
-      </script>
-
-  <script type="text/x-handlebars" data-template-name="_user">
-        <div class="user" id="local" onmouseenter ="App.Controller.user.mouseIn($(this));" onmouseleave="App.Controller.user.mouseOut($(this));">
-          <span class="name" id="local_name">Name</span>
-          <video autoplay></video>
-          <div class="videoOptions">
-            <img src="img/muteButton.png" />
-            <img src="img/videoButton.png" />
-          </div>
-        </div>
-  </script>
+    </script>
   
   <script type="text/x-handlebars" data-template-name="about">
     <header>
@@ -129,6 +127,7 @@
   <script src="js/views/index.js"></script>
   <script src="js/views/room.js"></script>
   <script src="js/views/invitation.js"></script>
+  <script src="js/views/user.js"></script>
 
   <!-- models -->
   <script src="js/models/user.js"></script>

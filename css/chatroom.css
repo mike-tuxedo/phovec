@@ -145,10 +145,11 @@
 .videoOptions{
   border-top-left-radius: 5px;
   border-top-right-radius: 5px;
-  display: none;
+  //display: none;
+  //visibility: hidden;
   position: absolute;
   background: #303743;
-  opacity: 0.7;
+  opacity: 0;
   width: 300px;
   
   z-index: 20;
