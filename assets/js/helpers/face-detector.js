@@ -92,13 +92,13 @@
 };
 
 FaceDetector.glasses = new Image();
-FaceDetector.glasses.src = 'img/glasses.png';
+FaceDetector.glasses.src = 'assets/img/glasses.png';
 
 FaceDetector.hair = new Image();
-FaceDetector.hair.src = 'img/hair.png';
+FaceDetector.hair.src = 'assets/img/hair.png';
 
 FaceDetector.beard = new Image();
-FaceDetector.beard.src = 'img/beard.png';
+FaceDetector.beard.src = 'assets/img/beard.png';
 
 // source_id must be a <video>-tag
 // output_id must be a <canvas>-tag
