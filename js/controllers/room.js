@@ -3,7 +3,7 @@
     var controller = this;
     var loop = setInterval(function(){
       
-      if( face_detector_libs_loaded ){
+      if( typeof FaceDetector !== undefined ){
         FaceDetector.init(document.getElementsByTagName('video')[0], document.getElementById('output')); 
         clearInterval(loop);
       }
@@ -45,7 +45,7 @@
         snapshot_worker.postMessage({image_data: (canvas.getContext('2d').getImageData(0,0,canvas.width,canvas.height)), video_num: (video_tags.length) });
         
         snapshot_worker.onmessage = function(e){
-          console.log('e.data',e.data);
+          
           e.data.forEach(function(video_coord,index){
             
             var ctx = canvas.getContext('2d');

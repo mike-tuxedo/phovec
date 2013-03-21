@@ -10,64 +10,80 @@
   </head>
   <body>
 
-    <script type="text/x-handlebars" data-template-name="application">
-      <div id="blackFilter"></div>
-      <div id="content">
-      {{outlet}}
-      </div>
-      <!--<footer>Copyright by F.J. Brünner, L. Wanko, M. Tiefenthaler and the University of Applied Sciences in Salzburg</footer>-->
-    </script>
+  <script type="text/x-handlebars" data-template-name="application">
+    <div id="blackFilter"></div>
+    <div id="content">
+    {{outlet}}
+    </div>
+  </script>
 
-    <!-- templates -->
-    <script type="text/x-handlebars" data-template-name="index">
-      <header>
-      {{#linkTo "about" id="infoButton"}}{{/linkTo}}
-      </header>
+  <!-- templates -->
+  <script type="text/x-handlebars" data-template-name="index">
+    <header>
+    {{#linkTo "about" id="infoButton"}}{{/linkTo}}
+    </header>
 
-      <div id="startInfo">
-      <h1>Hi! Hier kannst du mit Freunden Videochatten.</h1>
-      <p>Einfach auf Start klicken und du bist in einem Chatraum, von wo aus du deine Freunde einladen kannst.</p>
-      </div>
-      {{#linkTo "room"}}<div id="startButtonImage"></div>{{/linkTo}}
-    </script>
+    <div id="startInfo">
+    <h1>Hi! Hier kannst du mit Freunden Videochatten.</h1>
+    <p>Einfach auf Start klicken und du bist in einem Chatraum, von wo aus du deine Freunde einladen kannst.</p>
+    </div>
+    {{#linkTo "room"}}<div id="startButtonImage"></div>{{/linkTo}}
+  </script>
 
-    <script type="text/x-handlebars" data-template-name="room">
-      <header>
-      {{#linkTo "about" id="infoButton"}}{{/linkTo}}
-      {{#linkTo "hangup" id="hangupButton"}}{{/linkTo}}
-      </header>
-      <canvas id="output"></canvas>
-      <div id="infoField">
-      <p>Du musst deinem Browser Zugriff auf Kamera & Mikrofon erlauben!</p><br/>
-      <p>Verwendest du den Chromebrowser, dann schau dazu doch mal auf den oberen Rand ;)</p>
-      </div>
-      <div id="videoboxes">
-        {{ partial 'user'}}
+  <script type="text/x-handlebars" data-template-name="room">
+    <header>
+    {{#linkTo "about" id="infoButton"}}{{/linkTo}}
+    {{#linkTo "hangup" id="hangupButton"}}{{/linkTo}}
+    </header>
+    <canvas id="output"></canvas>
+    <div id="infoField">
+    <p>Du musst deinem Browser Zugriff auf Kamera & Mikrofon erlauben!</p><br/>
+    <p>Verwendest du den Chromebrowser, dann schau dazu doch mal auf den oberen Rand ;)</p>
+    </div>
+    <div id="videoboxes">
+      {{#view App.UserView}}
+        <div class="user" id="local">
+          <div class="videoOptions">
+            <img src="img/muteButton.png" />
+            <img src="img/videoButton.png" />
+          </div>
+          <span class="name" id="local_name">Name</span>
+          <video autoplay></video>
+        </div>
+      {{/view}}
+      <div id="videoEffects">
         <a {{action "takeScreenShotFromChatroom" }} class="">Take Screenshot</a>
         <a {{action "putClassesOnUser" }} class="">Put Classes on</a>
         <a {{action "putHairOnUser" }} class="">Put Hair on</a>
         <a {{action "putBeardOnUser" }} class="">Put Beard on</a>
         <a {{action "takeOffClothesOfUser" }} class="">Take off Everything</a>
       </div>
-      <div id="socialSidebar">{{ partial 'auth' }}</div>
-    </script>
+    </div>
+    
+    <div id="socialSidebar">{{ partial 'auth' }}</div>
+    
+    <!-- Facebook-Instance -->
+    <script type="text/javascript" src="http://connect.facebook.net/en_US/all.js"></script>
+    <script src="js/libs/facebook-sdk-init.js"></script>
 
-    <script type="text/x-handlebars" data-template-name="_user">
-      <div class="user" id="local" onmouseenter ="App.Controller.user.mouseIn($(this));" onmouseleave="App.Controller.user.mouseOut($(this));">
-      <span class="name" id="local_name">Name</span>
-      <div class="videoContainer">
-        <video autoplay></video>
-      </div>
-      <div class="videoOptions">
-      <img src="img/muteButton.png" />
-      <img src="img/videoButton.png" />
-      </div>
-      </div>
-    </script>
+    <!-- face-detection -->
+    <script src="js/libs/request-animation-frame.js"></script>
+    <script src="js/libs/face-detection/ccv.js"></script>
+    <script src="js/libs/face-detection/face.js"></script>
+    <script src="js/helpers/face-detector.js"></script>
+    
+    <!-- screenshot-maker -->
+    <script src="js/libs/html2canvas/html2canvas.min.js"></script>
+    
+    <!-- helper -->
+    <script src="js/helpers/webrtc.js"></script>
+    <script src="js/helpers/signaling.js"></script>
+    
+  </script>
 
-    <script type="text/x-handlebars" data-template-name="about">
+  <script type="text/x-handlebars" data-template-name="about">
       <header>
-      {{#linkTo "index" id="backButton"}}{{/linkTo}}
+        {{#linkTo "index" id="backButton"}}{{/linkTo}}
       </header>
       <div id="aboutInfo">
       <h1>Projekt</h1>
@@ -116,24 +132,12 @@
   <script src="http://code.jquery.com/jquery-latest.min.js"></script>
   <script> window.jQuery || document.write('<script src="js/libs/jquery.js"><\/script>')</script>
   
-  <!-- Facebook-Instance -->
-  <script src="js/libs/facebook-loader.js"></script>
-  
-  <!-- face-detection -->
-  <script src="js/libs/face-detector-loader.js"></script>
-  
-  <!-- screenshot-maker -->
-  <script src="js/build/html2canvas.js"></script>
-  
-  <!-- <script src="scriptLoader.js"></script> -->
-  
   <!-- libs -->
   <script src="js/libs/handlebars-1.0.0-rc.3.js"></script>
   <script src="js/libs/ember-1.0.0-rc.1.js"></script>
 
-  <!-- helper -->
-  <script src="js/helpers/webrtc.js"></script>
-  <script src="js/helpers/signaling.js"></script>
+  <!-- browser compatiblity -->
+  <script src="js/helpers/browser.js"></script>
 
   <!-- app -->
   <script src="js/app.js"></script>
@@ -142,6 +146,7 @@
   <script src="js/views/index.js"></script>
   <script src="js/views/room.js"></script>
   <script src="js/views/invitation.js"></script>
+  <script src="js/views/user.js"></script>
 
   <!-- models -->
   <script src="js/models/user.js"></script>
@@ -158,5 +163,4 @@
   
   <script src="js/main.js"></script>
 </body>
-
 </html>

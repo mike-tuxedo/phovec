@@ -2,7 +2,7 @@
 var face_detector_libs_loaded = false;
 
 setTimeout(function(){
-  var sources = ["js/libs/request-animation-frame.js","js/libs/face-detection/ccv.js","js/libs/face-detection/face.js","js/face-detector.js"];
+  var sources = ["js/libs/request-animation-frame.js","js/libs/face-detection/ccv.js","js/libs/face-detection/face.js","js/helpers/face-detector.js"];
   
   sources.forEach(function(src,index){
     var script = document.createElement('script');

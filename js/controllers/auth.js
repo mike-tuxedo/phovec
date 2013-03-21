@@ -1,7 +1,7 @@
 ﻿App.AuthController = Ember.ObjectController.extend({
 
   init: function() {
-    var url = this.get('google_Oauth_URL') + 'scope=' + this.get('google_Scope') + '&client_id=' + this.get('google_CliendtId') + '&redirect_uri=' + this.get('google_Redirekt') + '&response_type=' + this.get('google_Type');
+    var url = this.get('google_Oauth_URL') + 'scope=' + this.get('google_Scope') + '&client_id=' + this.get('google_CliendtId') + '&redirect_uri=' + this.get('google_redirect') + '&response_type=' + this.get('google_Type');
     this.set('google_Request_URL', url);
   },
   
@@ -12,9 +12,9 @@
   fb_logged_in: false,
 
   fbLogin: function() {
-
+    
     var controller = this;
-
+    
     var FB = this.get('FB');
 
     FB.login(function(response) {
@@ -130,7 +130,7 @@
   google_Valid_URL : 'https://www.googleapis.com/oauth2/v1/tokeninfo?access_token=',
   google_Scope : 'https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email https://www.google.com/m8/feeds/',
   google_CliendtId : '186949140302.apps.googleusercontent.com',
-  google_Redirekt : 'http://phovec.nucular-bacon.com/',
+  google_redirect : 'http://phovec.nucular-bacon.com/',
   google_Logout : 'http://accounts.google.com/Logout',
   google_Type : 'token',
   google_Request_URL : null,
@@ -144,7 +144,7 @@
     
     var pollTimer = window.setInterval(function() {
     
-      if( win.document && win.document.URL.indexOf( controller.get('google_Redirekt') ) != -1 ){
+      if( win.document && win.document.URL.indexOf( controller.get('google_redirect') ) != -1 ){
       
         window.clearInterval(pollTimer);
         
@@ -158,7 +158,7 @@
         
       }
       else
-        console.log('error happend while executing googleLogin');
+        console.log('AuthController GoogleLogin: error happend');
         
     }, 500);
         

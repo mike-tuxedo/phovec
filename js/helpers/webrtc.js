@@ -9,28 +9,32 @@ var WebRTC = {
   users: [],
   handleLocalMedia: function(event) {
     var user = WebRTC.getLocalUser();
+
+    if (user === "undefined") {
+      WebRTC.createLocalUser();
+      user = WebRTC.getLocalUser();
+    }
+
     user.stream = event.detail.stream;
   },
   handleSignalingInit: function(event) {
     var data = event.detail;
 
     /**
-     * Create local user
+     * Modify local user
      */
     var localName = prompt("Nickname:", "Bitte Namen wählen...");
     $('#local_name').text(localName);
     $('#videoboxes #local').attr("id", data.userId);
     console.log("roomHash " + data.roomHash);
 
-    var user = {
-      name: localName,
-      id: data.userId,
-      roomHash: data.roomHash,
-      peerConnection: undefined,
-      stream: undefined,
-      type: "local"
-    };
-    WebRTC.users.push(user);
+    if (user === "undefined") {
+      WebRTC.createLocalUser();
+      var user = WebRTC.getLocalUser();
+      user.name = localName;
+      user.roomHash = data.roomHash;
+      user.id = data.userId;
+    }
 
     /**
      * Create remote users
@@ -40,9 +44,19 @@ var WebRTC = {
     }
   },
   amountIceMessages: 0,
+  createLocalUser: function() {
+    var user = {
+      name: undefined,
+      id: undefined,
+      roomHash: undefined,
+      peerConnection: undefined,
+      stream: undefined,
+      type: "local"
+    };
+    WebRTC.users.push(user);
+  },
   createRemoteUser: function(roomHash, userId, remoteUserId) {
-
-    if (navigator.userAgent.toLowerCase().indexOf('chrome') > -1) {
+    if (navigator.browser[0] === "Chrome") {
       var peerConnection = new PeerConnection({
         'iceServers': [{
           "url": "stun:provserver.televolution.net"
@@ -50,20 +64,20 @@ var WebRTC = {
           "url": "stun:stun1.voiceeclipse.net"
         }]
       }, {
-        'mandatory': [{
+        mandatory: [{
           'DtlsSrtpKeyAgreement': 'true'
         }]
       }, {
-        'optional': [{
+        optional: [{
           RtpDataChannels: true
         }]
       });
-    } else if (navigator.userAgent.toLowerCase().indexOf('firefox') > -1) {
+    } else if (navigator.browser[0] === "Firefox") {
       var peerConnection = new PeerConnection({
         "iceServers": [{
-          "url": "stun:64.62.233.26"
+          "url": "stun:provserver.televolution.net"
         }, {
-          "url": "stun:64.24.35.201"
+          "url": "stun:stun1.voiceeclipse.net"
         }]
       }, {
         optional: [{
@@ -90,54 +104,52 @@ var WebRTC = {
       console.log("WebRTC: NEW REMOTE STREAM ARRIVED");
       $('#' + remoteUserId + ' video').attr('src', URL.createObjectURL(remote.stream));
     };
-    /*
-    var channel = peerConnection.createDataChannel('RTCDataChannel', {
-      reliable: false
-    });
-    channel.onmessage = function(event) {
-      console.log(event)
 
-      if (event.data.substr(0, 4) == "\\$cn") {
-        user.name = event.data.substr(4);
-        $('#' + remoteUserId + ' .name').text(user.name);
-      } else if ( typeof event.data == Blob) {
-        console.log("BLOB");
-        window.requestFileSystem(window.TEMPORARY, 1024 * 1024, function(fs) {
-          var file = event.data;
-          (function(f) {
-            fs.root.getFile(f.name, {
-              create: true,
-              exclusive: true
-            }, function(fileEntry) {
-              fileEntry.createWriter(function(fileWriter) {
-                fileWriter.write(f);
-              }, function() {
-                console.log("ERROR WRITER");
-              });
-            }, function() {
-              console.log("ERROR GETFILE");
-            });
-          })(file);
-        }, function() {
-          console.log("ERROR REQUESTFILESYSTEM");
-        });
-      } else {
-        var output = new Date().getHours() + ":" + new Date().getMinutes() + " (other) - " + event.data + "&#13;&#10;";
-        $('#' + remoteUserId + ' form textarea').append(output);
-      }
-    };
-    channel.onopen = function(event) {
-      channel.send("\\$cn" + WebRTC.getLocalUser().name);
-    };
-    channel.onclose = function(event) {
-      console.log('RTCDataChannel closed.');
-    };
-    channel.onerror = function(event) {
-      console.error(event);
-    };
-    peerConnection.ondatachannel = function(event) {
-      console.log('ondatachannel');
-    };*/
+    /*var channel = peerConnection.createDataChannel('RTCDataChannel');
+     channel.onmessage = function(event) {
+     console.log(event)
+
+     if (event.data.substr(0, 4) == "\\$cn") {
+     user.name = event.data.substr(4);
+     $('#' + remoteUserId + ' .name').text(user.name);
+     } else if ( typeof event.data == Blob) {
+     console.log("BLOB");
+     window.requestFileSystem(window.TEMPORARY, 1024 * 1024, function(fs) {
+     var file = event.data;
+     (function(f) {
+     fs.root.getFile(f.name, {
+     create: true,
+     exclusive: true
+     }, function(fileEntry) {
+     fileEntry.createWriter(function(fileWriter) {
+     fileWriter.write(f);
+     }, function() {
+     console.log("ERROR WRITER");
+     });
+     }, function() {
+     console.log("ERROR GETFILE");
+     });
+     })(file);
+     }, function() {
+     console.log("ERROR REQUESTFILESYSTEM");
+     });
+     } else {
+     var output = new Date().getHours() + ":" + new Date().getMinutes() + " (other) - " + event.data + "&#13;&#10;";
+     $('#' + remoteUserId + ' form textarea').append(output);
+     }
+     };
+     channel.onopen = function(event) {
+     channel.send("\\$cn" + WebRTC.getLocalUser().name);
+     };
+     channel.onclose = function(event) {
+     console.log('RTCDataChannel closed.');
+     };
+     channel.onerror = function(event) {
+     console.error(event);
+     };
+     peerConnection.ondatachannel = function(event) {
+     console.log('ondatachannel');
+     };*/
 
     var user = {
       name: undefined,
@@ -145,7 +157,7 @@ var WebRTC = {
       roomHash: roomHash,
       peerConnection: peerConnection,
       stream: undefined,
-      //channel: channel,
+      channel: undefined/*channel*/,
       type: "remote"
     };
 
@@ -194,7 +206,7 @@ var WebRTC = {
     var data = event.detail;
     var userRemote = WebRTC.getRemoteUser(data.userId);
     var userLocal = WebRTC.getLocalUser();
-    
+
     console.log(data.sdp);
 
     userRemote.peerConnection.setRemoteDescription(new RTCSessionDescription(data.sdp));
@@ -226,6 +238,7 @@ var WebRTC = {
   },
   handleSignalingParticipant: function(event) {
     var data = event.detail;
+    console.log("handleSignalingParticipant");
     switch (data.message) {
       case "join":
         var userLocal = WebRTC.getLocalUser();
@@ -280,4 +293,4 @@ var WebRTC = {
   }
 };
 
-WebRTC.init();
+WebRTC.init(); 
