@@ -15,24 +15,24 @@
 				FaceDetector.backCanvas.height = FaceDetector.video.videoHeight / 4;
 				FaceDetector.backContext = FaceDetector.backCanvas.getContext('2d');
         
-        var image_width = null;
-        var image_height = null;
+        var imageWidth = null;
+        var imageHeight = null;
         
         if(type === 'classes'){
-          image_width = FaceDetector.glasses.width;
-          image_height = FaceDetector.glasses.height;
+          imageWidth = FaceDetector.glasses.width;
+          imageHeight = FaceDetector.glasses.height;
         }  
         else if(type === 'hair'){
-          image_width = FaceDetector.hair.width;
-          image_height = FaceDetector.hair.height;
+          imageWidth = FaceDetector.hair.width;
+          imageHeight = FaceDetector.hair.height;
         }
         else if(type === 'beard'){
-          image_width = FaceDetector.beard.width;
-          image_height = FaceDetector.beard.height;
+          imageWidth = FaceDetector.beard.width;
+          imageHeight = FaceDetector.beard.height;
         }
         
-				var width = image_width / 4 * 0.8;
-			  var height = image_height / 4 * 0.8;
+				var width = imageWidth / 4 * 0.8;
+			  var height = imageHeight / 4 * 0.8;
 			
 				FaceDetector.comp = [{
 					x: (FaceDetector.video.videoWidth / 4 - width) / 2,

@@ -38,25 +38,28 @@
     html2canvas( [ document.body ], {
       onrendered: function(canvas) {
         
-        var video_tags = $('video');
+        var videoTags = $('video');
         
-        var snapshot_worker = new Worker('js/helpers/snapshot_worker.js');
+        var snapshotWorker = new Worker('js/helpers/snapshot_worker.js');
         
-        snapshot_worker.postMessage({image_data: (canvas.getContext('2d').getImageData(0,0,canvas.width,canvas.height)), video_num: (video_tags.length) });
+        snapshotWorker.postMessage({ image_data: (canvas.getContext('2d').getImageData(0,0,canvas.width,canvas.height)), 
+                                     color: '#999999', 
+                                     video_num: (videoTags.length) 
+                                  });
         
-        snapshot_worker.onmessage = function(e){
-          
-          e.data.forEach(function(video_coord,index){
+        snapshotWorker.onmessage = function(e){
+          console.log('',e.data);
+          e.data.forEach(function(videoCoord,index){
             
             var ctx = canvas.getContext('2d');
     
-            for(var v=0; v < video_tags.length; v++){
+            for(var v=0; v < videoTags.length; v++){
               
-              ctx.drawImage( video_tags[v], 
-                             0, 0, video_tags[v].videoWidth, video_tags[v].videoHeight, // s_x, s_y, s_width, s_height
-                             video_coord.start_x, video_coord.start_y, // d_x, d_y
-                             (video_coord.end_x - video_coord.start_x),// d_width, number because of '#999999'-areas
-                             (video_coord.end_y - video_coord.start_y) // d_height, number because of '#999999'-areas
+              ctx.drawImage( videoTags[v], 
+                             0, 0, videoTags[v].videoWidth, videoTags[v].videoHeight, // s_x, s_y, s_width, s_height
+                             videoCoord.startX, videoCoord.startY, // d_x, d_y
+                             (videoCoord.endX - videoCoord.startX),// d_width, number because of '#999999'-areas
+                             (videoCoord.endY - videoCoord.startY) // d_height, number because of '#999999'-areas
                            );
             }
             

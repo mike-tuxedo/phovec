@@ -1,15 +1,10 @@
 ﻿App.AuthController = Ember.ObjectController.extend({
 
-  init: function() {
-    var url = this.get('google_Oauth_URL') + 'scope=' + this.get('google_Scope') + '&client_id=' + this.get('google_CliendtId') + '&redirect_uri=' + this.get('google_redirect') + '&response_type=' + this.get('google_Type');
-    this.set('google_Request_URL', url);
-  },
-  
   // facebook-auth
   
   FB: null, // FB Instance of facebook-loader
 
-  fb_logged_in: false,
+  fbLoggedIn: false,
 
   fbLogin: function() {
     
@@ -20,7 +15,7 @@
     FB.login(function(response) {
       if (response.authResponse) {
       
-        controller.set('fb_logged_in', true);
+        controller.set('fbLoggedIn', true);
         controller.setupFBInfo();
 
       } else {
@@ -38,7 +33,7 @@
     $('#userInfo').html('');
     $('#friends').html('');
   
-    this.set('fb_logged_in', false);
+    this.set('fbLoggedIn', false);
   },
   
   setupFBInfo: function() {
@@ -126,25 +121,29 @@
   
   // google-auth
   
-  google_Oauth_URL : 'https://accounts.google.com/o/oauth2/auth?',
-  google_Valid_URL : 'https://www.googleapis.com/oauth2/v1/tokeninfo?access_token=',
-  google_Scope : 'https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email https://www.google.com/m8/feeds/',
-  google_CliendtId : '186949140302.apps.googleusercontent.com',
-  google_redirect : 'http://phovec.nucular-bacon.com/',
-  google_Logout : 'http://accounts.google.com/Logout',
-  google_Type : 'token',
-  google_Request_URL : null,
+  init: function(){
+    var url = this.get('googleOauthURL') + 'scope=' + this.get('googleScope') + '&client_id=' + this.get('googleCliendtId') + '&redirect_uri=' + this.get('googleRedirect') + '&response_type=' + this.get('googleType');
+    this.set('googleRequestURL', url);
+  },
+  
+  googleOauthURL : 'https://accounts.google.com/o/oauth2/auth?',
+  googleValidURL : 'https://www.googleapis.com/oauth2/v1/tokeninfo?access_token=',
+  googleScope : 'https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email https://www.google.com/m8/feeds/',
+  googleCliendtId : '186949140302.apps.googleusercontent.com',
+  googleRedirect : 'http://phovec.nucular-bacon.com/',
+  googleType : 'token',
+  googleRequestURL : null,
   
   google_logged_in : false,
   
   googleLogin: function(){
     
     var controller = this;
-    var win = window.open(this.get('google_Request_URL'), "Google-Login", 'width=400, height=300');
+    var win = window.open(this.get('googleRequestURL'), "Google-Login", 'width=400, height=300');
     
     var pollTimer = window.setInterval(function() {
     
-      if( win.document && win.document.URL.indexOf( controller.get('google_redirect') ) != -1 ){
+      if( win.document && win.document.URL.indexOf( controller.get('googleRedirect') ) != -1 ){
       
         window.clearInterval(pollTimer);
         
@@ -174,7 +173,7 @@
   checkValidateToken : function(token) {
     var controller = this;
     $.ajax({
-        url: this.get('google_Valid_URL') + token,
+        url: this.get('googleValidURL') + token,
         data: null,
         success: function(responseText){
             controller.setupGoogleInfo();
@@ -263,14 +262,14 @@
   },
   
   getUrlAttributes: function(url, name) {
-      name = name.replace(/[\[]/,"\\\[").replace(/[\]]/,"\\\]");
-      var regexS = "[\\#&]"+name+"=([^&#]*)";
-      var regex = new RegExp( regexS );
-      var results = regex.exec( url );
-      if( results == null )
-          return "";
-      else
-          return results[1];
+    name = name.replace(/[\[]/,"\\\[").replace(/[\]]/,"\\\]");
+    var regexS = "[\\#&]"+name+"=([^&#]*)";
+    var regex = new RegExp( regexS );
+    var results = regex.exec( url );
+    if( results == null )
+      return "";
+    else
+      return results[1];
   }
   
 });
