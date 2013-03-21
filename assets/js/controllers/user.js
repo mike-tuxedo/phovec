@@ -23,6 +23,7 @@
     }
   },
   onGetMediaSuccess: function(stream) {
+
     App.Controller.user.setLocalStream(stream);
     window.dispatchEvent(new CustomEvent("localmedia:available", {
       detail: {
