@@ -209,15 +209,9 @@ var WebRTC = {
     var data = event.detail;
     var userRemote = WebRTC.getRemoteUser(data.userId);
     var userLocal = WebRTC.getLocalUser();
-
-    console.log(data.sdp);
-
     userRemote.peerConnection.setRemoteDescription(new RTCSessionDescription(data.sdp));
-
-    console.log(userRemote.peerConnection.localDescription);
     if (!userRemote.peerConnection.localDescription) {
       var loop = setInterval(function() {
-        console.log("loop");
         if (userLocal.stream === undefined) {
           return;
         } else {
@@ -226,6 +220,14 @@ var WebRTC = {
           userRemote.peerConnection.addStream(userLocal.stream);
           userRemote.peerConnection.createAnswer(function(description) {
             userRemote.peerConnection.setLocalDescription(description);
+
+            if (navigator.browser[0] === "Firefox") {
+              description = WebRTC.modifyDescription(description);
+              console.log("MODIFIED DESCRIPTION");
+            }
+
+            console.log(description);
+
             SignalingChannel.send({
               subject: "sdp",
               chatroomHash: userLocal.roomHash,
@@ -238,8 +240,15 @@ var WebRTC = {
       }, 1000);
     }
   },
+  modifyDescription: function(description) {
+    var sdp = description.sdp;
+    var cryptoLine = "a=crypto:1 AES_CM_128_HMAC_SHA1_80 inline:BAADBAADBAADBAADBAADBAADBAADBAADBAADBAAD";
+    sdp = sdp.replace(/c=/g, cryptoLine + "\nc=");
+    description.sdp = sdp;
+    return description;
+  },
   handleSignalingIce: function(event) {
-    var user = WebRTC.getRemoteUser(event.detail.userId)
+    var user = WebRTC.getRemoteUser(event.detail.userId);
     user.peerConnection.addIceCandidate(new RTCIceCandidate(event.detail.ice));
   },
   handleSignalingParticipant: function(event) {
@@ -260,6 +269,14 @@ var WebRTC = {
             userRemote.peerConnection.addStream(userLocal.stream);
             userRemote.peerConnection.createOffer(function(description) {
               userRemote.peerConnection.setLocalDescription(description);
+
+              if (navigator.browser[0] === "Firefox") {
+                description = WebRTC.modifyDescription(description);
+                console.log("MODIFIED DESCRIPTION");
+              }
+
+              console.log(description);
+
               SignalingChannel.send({
                 subject: "sdp",
                 chatroomHash: userLocal.roomHash,

@@ -29,7 +29,7 @@ if ( typeof navigator.getUserMedia !== "undefined") {
 }
 
 /* Session-Description */
-if ( typeof RTCSessionDescription !== "undefined" ){
+if ( typeof mozRTCSessionDescription !== "undefined" ){
   RTCSessionDescription = mozRTCSessionDescription;
 }
 
