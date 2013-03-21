@@ -9,6 +9,41 @@
       }
       
     },500);
+  
+    /* starting animated plus */
+    //time between a set of animations and the next set of animations (one set are 3 bubbles)
+    var repetitionRate = 2000;
+    //duration until a bubble reach his given size
+    var duration = 1700;
+    
+    setTimeout(function(){setInterval(function(){animateGradient($('#gradient1'), duration, 200)}, repetitionRate)}, 0);
+    setTimeout(function(){setInterval(function(){animateGradient($('#gradient2'), duration, 150)}, repetitionRate)}, 200);
+    setTimeout(function(){setInterval(function(){animateGradient($('#gradient3'), duration, 100)}, repetitionRate)}, 400);
+  
+    function animateGradient(gradient, duration, size, topMargin){
+        var halfSize = size/2;
+        //-moz-transform:translateX(100deg);
+  
+        gradient.animate({
+          opacity: '0',
+          width: size + 'px',
+          height: size + 'px',
+          right: '-' + halfSize + 'px',
+          borderTopLeftRadius: halfSize + 'px',
+          borderBottomLeftRadius: halfSize + 'px',
+          top: '200px'
+        },
+        duration,
+        function(){
+          gradient.css('opacity','0.8');
+          gradient.css('width','0px');
+          gradient.css('height','0px');
+          gradient.css('right','0px');
+          gradient.css('borderTopLeftRadius','0px');
+          gradient.css('borderBottomLeftRadius','0px');
+          gradient.css('top','100px');
+        });
+      }
   },
   putClassesOnUser: function(){
     this.putUserStreamOnDetector('classes');
