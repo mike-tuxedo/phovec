@@ -25,23 +25,17 @@ App.IndexRoute = Ember.Route.extend({
 
 App.RoomRoute = Ember.Route.extend({
   enter: function(router) {
-
-
-    App.Controller = {};
+    App.Controller.room = App.RoomController.create();
     App.Controller.user = App.UserController.create();
     App.Controller.user.startGetMedia();
     SignalingChannel.init();
 
-    App.Controller.auth = App.AuthController.create();
-
-    /*var setFB = function() {
-
+    // for setting FB-Instance and face-detector up later
+    var setupAuthController = function() {
+      App.Controller.auth = App.AuthController.create();
       App.Controller.auth.set('FB', FB);
-
       FB.getLoginStatus(function(response) {
         if (response.status === 'connected') {
-
-          console.log('fb logged in');
 
           App.Controller.auth.set('fb_logged_in', true);
           // do not show fb-login button
@@ -58,9 +52,9 @@ App.RoomRoute = Ember.Route.extend({
     };
 
     if (!window.FB)
-      setTimeout(setFB, 50);
+      setTimeout(setupAuthController, 50);
     else
-      setFB();*/
+      setupAuthController();
 
     /*set a black background to let the user focus on the infofield an add a event for get info and background away*/
     $('#blackFilter').css('display', 'block');

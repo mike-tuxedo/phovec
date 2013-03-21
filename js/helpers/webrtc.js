@@ -165,7 +165,7 @@ var WebRTC = {
     $('#' + remoteUserId + " form input").keypress(function(e) {
       if (e.which == 13) {
         var input = $(this).val();
-        channel.send(input);
+        //channel.send(input);
 
         var output = new Date().getHours() + ":" + new Date().getMinutes() + " (me) - " + input + "&#13;&#10;";
         $('#' + remoteUserId + " textarea").append(output)
@@ -293,4 +293,4 @@ var WebRTC = {
   }
 };
 
-WebRTC.init();
+WebRTC.init(); 
