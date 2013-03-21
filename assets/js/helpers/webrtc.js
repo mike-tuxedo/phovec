@@ -9,12 +9,7 @@ var WebRTC = {
   users: [],
   handleLocalMedia: function(event) {
     var user = WebRTC.getLocalUser();
-
-    if (user === "undefined") {
-      WebRTC.createLocalUser();
-      user = WebRTC.getLocalUser();
-    }
-
+    user = (user === undefined) ? WebRTC.createLocalUser() : user;
     user.stream = event.detail.stream;
   },
   handleSignalingInit: function(event) {
@@ -53,7 +48,9 @@ var WebRTC = {
       stream: undefined,
       type: "local"
     };
+
     WebRTC.users.push(user);
+    return user;
   },
   createRemoteUser: function(roomHash, userId, remoteUserId) {
     if (navigator.browser[0] === "Chrome") {
@@ -293,4 +290,4 @@ var WebRTC = {
   }
 };
 
-WebRTC.init(); 
+WebRTC.init();
