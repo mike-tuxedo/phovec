@@ -19,9 +19,8 @@
 
     FB.login(function(response) {
       if (response.authResponse) {
-        console.log('login in successfully', response);
+      
         controller.set('fb_logged_in', true);
-
         controller.setupFBInfo();
 
       } else {

@@ -2,12 +2,12 @@
   init: function() {
     var controller = this;
     var loop = setInterval(function(){
-      console.log('interval');
+      
       if( face_detector_libs_loaded ){
-        console.log('now');
         FaceDetector.init(document.getElementsByTagName('video')[0], document.getElementById('output')); 
         clearInterval(loop);
       }
+      
     },500);
   },
   putClassesOnUser: function(){
@@ -68,8 +68,10 @@
         };
         
       },
+      taintTest: true,
       allowTaint: true,
-      letterRendering: true
+      letterRendering: true,
+      background: undefined
     });
     
   },

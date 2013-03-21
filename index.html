@@ -55,7 +55,9 @@
     <script type="text/x-handlebars" data-template-name="_user">
       <div class="user" id="local" onmouseenter ="App.Controller.user.mouseIn($(this));" onmouseleave="App.Controller.user.mouseOut($(this));">
       <span class="name" id="local_name">Name</span>
-      <video autoplay></video>
+      <div class="videoContainer">
+        <video autoplay></video>
+      </div>
       <div class="videoOptions">
       <img src="img/muteButton.png" />
       <img src="img/videoButton.png" />
