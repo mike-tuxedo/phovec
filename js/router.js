@@ -21,25 +21,11 @@ App.IndexRoute = Ember.Route.extend({
   enter: function(route) {
     $('#blackFilter').css('display', 'none');
   }
-}); 
+});
 
 App.RoomRoute = Ember.Route.extend({
   enter: function(router) {
-    if ( typeof webkitRTCPeerConnection != "undefined") {
-      PeerConnection = webkitRTCPeerConnection;
-    } else if ( typeof mozRTCPeerConnection != "undefined") {
-      PeerConnection = mozRTCPeerConnection;
-    }
 
-    if ( typeof navigator.getUserMedia != "undefined") {
-      navigator.getMedia = navigator.getUserMedia;
-    } else if ( typeof navigator.webkitGetUserMedia != "undefined") {
-      navigator.getMedia = navigator.webkitGetUserMedia;
-    } else if ( typeof navigator.mozGetUserMedia != "undefined") {
-      navigator.getMedia = navigator.mozGetUserMedia;
-    } else if ( typeof navigator.msGetUserMedia != "undefined") {
-      navigator.getMedia = navigator.msGetUserMedia;
-    }
 
     App.Controller = {};
     App.Controller.user = App.UserController.create();
@@ -48,7 +34,7 @@ App.RoomRoute = Ember.Route.extend({
 
     App.Controller.auth = App.AuthController.create();
 
-    var setFB = function() {
+    /*var setFB = function() {
 
       App.Controller.auth.set('FB', FB);
 
@@ -71,15 +57,14 @@ App.RoomRoute = Ember.Route.extend({
 
     };
 
-    if(!window.FB)
-      setTimeout(50,setFB);
-    else 
-      setFB();
-    
+    if (!window.FB)
+      setTimeout(setFB, 50);
+    else
+      setFB();*/
 
     /*set a black background to let the user focus on the infofield an add a event for get info and background away*/
     $('#blackFilter').css('display', 'block');
-    
+
     $(window).click(function() {
       $('#infoField').css('text-shadow', '0px 0px 20px #fff');
     });
