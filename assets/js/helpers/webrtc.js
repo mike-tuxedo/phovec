@@ -8,6 +8,8 @@ var WebRTC = {
   },
   users: [],
   handleLocalMedia: function(event) {
+    console.log("WebRTC: LOCAL MEDIA AVAILABLE ", description);
+    
     var user = WebRTC.getLocalUser();
     user = (user === undefined) ? WebRTC.createLocalUser() : user;
     user.stream = event.detail.stream;
@@ -85,6 +87,8 @@ var WebRTC = {
     }
 
     peerConnection.onicecandidate = function(description) {
+      console.log("WebRTC: GOT ICE FROM STUN ", description);
+
       SignalingChannel.send({
         subject: "ice",
         chatroomHash: roomHash,
@@ -95,8 +99,8 @@ var WebRTC = {
     };
 
     peerConnection.onaddstream = function(remote) {
-      console.log(remote);
-      console.log("WebRTC: NEW REMOTE STREAM ARRIVED");
+      console.log("WebRTC: STREAM ARRIVED ", remote);
+
       $('#' + remoteUserId + ' video').attr('src', URL.createObjectURL(remote.stream));
 
       if (navigator.browser[0] === "Firefox") {
@@ -206,9 +210,12 @@ var WebRTC = {
     }
   },
   handleSignalingSdp: function(event) {
+    console.log("WebRTC: HANDLE SDP ", event);
+
     var data = event.detail;
     var userRemote = WebRTC.getRemoteUser(data.userId);
     var userLocal = WebRTC.getLocalUser();
+    console.log("WebRTC: SET REMOTE ", event);
     userRemote.peerConnection.setRemoteDescription(new RTCSessionDescription(data.sdp));
     if (!userRemote.peerConnection.localDescription) {
       var loop = setInterval(function() {
@@ -216,18 +223,11 @@ var WebRTC = {
           return;
         } else {
           clearInterval(loop);
-
           userRemote.peerConnection.addStream(userLocal.stream);
           userRemote.peerConnection.createAnswer(function(description) {
+            console.log("WebRTC: CREATE ANSWER CALLBACK ", description);
             userRemote.peerConnection.setLocalDescription(description);
-
-            if (navigator.browser[0] === "Firefox") {
-              description = WebRTC.modifyDescription(description);
-              console.log("MODIFIED DESCRIPTION");
-            }
-
-            console.log(description);
-
+            console.log("WebRTC: SET LOCAL ", description);
             SignalingChannel.send({
               subject: "sdp",
               chatroomHash: userLocal.roomHash,
@@ -248,12 +248,14 @@ var WebRTC = {
     return description;
   },
   handleSignalingIce: function(event) {
+    console.log("WebRTC: HANDLE ICE ", event);
     var user = WebRTC.getRemoteUser(event.detail.userId);
     user.peerConnection.addIceCandidate(new RTCIceCandidate(event.detail.ice));
   },
   handleSignalingParticipant: function(event) {
+    console.log("WebRTC: PARTICIPANT ", event);
+
     var data = event.detail;
-    console.log("handleSignalingParticipant");
     switch (data.message) {
       case "join":
         var userLocal = WebRTC.getLocalUser();
@@ -268,14 +270,13 @@ var WebRTC = {
             clearInterval(loop);
             userRemote.peerConnection.addStream(userLocal.stream);
             userRemote.peerConnection.createOffer(function(description) {
+              console.log("WebRTC: CREATE OFFER CALLBACK ", description);
               userRemote.peerConnection.setLocalDescription(description);
+              console.log("WebRTC: SET LOCAL ", description);
 
               if (navigator.browser[0] === "Firefox") {
                 description = WebRTC.modifyDescription(description);
-                console.log("MODIFIED DESCRIPTION");
               }
-
-              console.log(description);
 
               SignalingChannel.send({
                 subject: "sdp",

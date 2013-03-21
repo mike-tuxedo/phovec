@@ -24,6 +24,7 @@
 
       switch(data.subject) {
         case "init":
+          console.log("SignalingChannel: INIT ", data);
           window.dispatchEvent(new CustomEvent("signalingchannel:init", {
             detail: {
               roomHash: data.chatroomHash,
@@ -34,6 +35,7 @@
           }));
           break;
         case "sdp":
+          console.log("SignalingChannel: SDP ", data);
           window.dispatchEvent(new CustomEvent("signalingchannel:sdp", {
             detail: {
               sdp: data.sdp,
@@ -43,6 +45,7 @@
           }));
           break;
         case "ice":
+          console.log("SignalingChannel: ICE ", data);
           if (data.ice) {
             window.dispatchEvent(new CustomEvent("signalingchannel:ice", {
               detail: {
@@ -52,10 +55,11 @@
               }
             }));
           } else {
-            console.log("SignalingChannel: ICE not usable");
+            //ice not usable
           }
           break;
         case "participant-join":
+          console.log("SignalingChannel: JOIN ", data);
           window.dispatchEvent(new CustomEvent("signalingchannel:participant", {
             detail: {
               message: "join",
@@ -65,6 +69,7 @@
           }));
           break;
         case "participant-leave":
+          console.log("SignalingChannel: LEAVE ", data);
           window.dispatchEvent(new CustomEvent("signalingchannel:participant", {
             detail: {
               message: "leave",
@@ -86,7 +91,7 @@
     };
   },
   send: function(message) {
-    console.log("SignalingChannel: " + message)
+    console.log("SignalingChannel: SEND " + new Date().getTime() + " ", message);
     SignalingChannel.webSocket.send(JSON.stringify(message));
   },
   close: function() {
