@@ -23,7 +23,7 @@ var WebRTC = {
     user.name = localName;
     user.roomHash = data.roomHash;
     user.id = data.userId;
-    
+
     var localName = prompt("Nickname:", "Bitte Namen wählen...");
     $('#local_name').text(localName);
     $('#videoboxes #local').attr("id", data.userId);
@@ -98,17 +98,18 @@ var WebRTC = {
       console.log(remote);
       console.log("WebRTC: NEW REMOTE STREAM ARRIVED");
       $('#' + remoteUserId + ' video').attr('src', URL.createObjectURL(remote.stream));
+
+      if (navigator.browser[0] === "Firefox") {
+        $('#' + remoteUserId + ' video').get(0).play();
+      }
     };
 
     /*var channel = peerConnection.createDataChannel('RTCDataChannel');
      channel.onmessage = function(event) {
-     console.log(event)
-
      if (event.data.substr(0, 4) == "\\$cn") {
      user.name = event.data.substr(4);
      $('#' + remoteUserId + ' .name').text(user.name);
      } else if ( typeof event.data == Blob) {
-     console.log("BLOB");
      window.requestFileSystem(window.TEMPORARY, 1024 * 1024, function(fs) {
      var file = event.data;
      (function(f) {
@@ -129,7 +130,8 @@ var WebRTC = {
      console.log("ERROR REQUESTFILESYSTEM");
      });
      } else {
-     var output = new Date().getHours() + ":" + new Date().getMinutes() + " (other) - " + event.data + "&#13;&#10;";
+     var name = $('#' + remoteUserId + ' .name').text();
+     var output = new Date().getHours() + ":" + new Date().getMinutes() + " (" + name + ") - " + event.data + "&#13;&#10;";
      $('#' + remoteUserId + ' form textarea').append(output);
      }
      };
@@ -160,9 +162,15 @@ var WebRTC = {
     $('#' + remoteUserId + " form input").keypress(function(e) {
       if (e.which == 13) {
         var input = $(this).val();
-        //channel.send(input);
+        channel.send(input);
 
-        var output = new Date().getHours() + ":" + new Date().getMinutes() + " (me) - " + input + "&#13;&#10;";
+        var hours = new Date().getHours()
+        hours = hours < 10 ? "0" + hours : hours;
+
+        var minutes = new Date().getMinutes();
+        minutes = minutes < 10 ? "0" + minutes : minutes;
+
+        var output = hours + ":" + minutes + " (me) - " + input + "&#13;&#10;";
         $('#' + remoteUserId + " textarea").append(output)
 
         $(this).val("");
@@ -205,8 +213,11 @@ var WebRTC = {
     console.log(data.sdp);
 
     userRemote.peerConnection.setRemoteDescription(new RTCSessionDescription(data.sdp));
+
+    console.log(userRemote.peerConnection.localDescription);
     if (!userRemote.peerConnection.localDescription) {
       var loop = setInterval(function() {
+        console.log("loop");
         if (userLocal.stream === undefined) {
           return;
         } else {
