@@ -18,18 +18,16 @@ var WebRTC = {
     /**
      * Modify local user
      */
+    var user = WebRTC.getLocalUser();
+    user = (user === undefined) ? WebRTC.createLocalUser() : user;
+    user.name = localName;
+    user.roomHash = data.roomHash;
+    user.id = data.userId;
+    
     var localName = prompt("Nickname:", "Bitte Namen wählen...");
     $('#local_name').text(localName);
     $('#videoboxes #local').attr("id", data.userId);
     console.log("roomHash " + data.roomHash);
-
-    if (user === "undefined") {
-      WebRTC.createLocalUser();
-      var user = WebRTC.getLocalUser();
-      user.name = localName;
-      user.roomHash = data.roomHash;
-      user.id = data.userId;
-    }
 
     /**
      * Create remote users
