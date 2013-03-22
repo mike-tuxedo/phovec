@@ -40,7 +40,7 @@
         
         var videoTags = $('video');
         
-        var snapshotWorker = new Worker('js/helpers/snapshot_worker.js');
+        var snapshotWorker = new Worker('assets/js/helpers/snapshot_worker.js');
         
         snapshotWorker.postMessage({ image_data: (canvas.getContext('2d').getImageData(0,0,canvas.width,canvas.height)), 
                                      color: '#999999', 
@@ -48,8 +48,8 @@
                                   });
         
         snapshotWorker.onmessage = function(e){
-          console.log('',e.data);
-          e.data.forEach(function(videoCoord,index){
+          
+          e.data.coords.forEach(function(coord,index){
             
             var ctx = canvas.getContext('2d');
     
@@ -57,9 +57,9 @@
               
               ctx.drawImage( videoTags[v], 
                              0, 0, videoTags[v].videoWidth, videoTags[v].videoHeight, // s_x, s_y, s_width, s_height
-                             videoCoord.startX, videoCoord.startY, // d_x, d_y
-                             (videoCoord.endX - videoCoord.startX),// d_width, number because of '#999999'-areas
-                             (videoCoord.endY - videoCoord.startY) // d_height, number because of '#999999'-areas
+                             coord.startX, coord.startY, // d_x, d_y
+                             e.data.cell_width,// d_width, number because of '#999999'-areas
+                             e.data.cell_height // d_height, number because of '#999999'-areas
                            );
             }
             
