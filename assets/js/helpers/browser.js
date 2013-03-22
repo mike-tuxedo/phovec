@@ -28,12 +28,12 @@ if ( typeof navigator.getUserMedia !== "undefined") {
   navigator.getMedia = navigator.msGetUserMedia;
 }
 
-/* Session-Description 
+/* Session-Description */
 if ( typeof mozRTCSessionDescription !== "undefined" ){
   RTCSessionDescription = mozRTCSessionDescription;
 }
 
- Ice-Messages
+/* Ice-Messages */
 if ( typeof mozRTCIceCandidate !== "undefined" ){
   RTCIceCandidate = mozRTCIceCandidate;
-} */
+} 

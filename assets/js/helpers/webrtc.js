@@ -213,11 +213,8 @@ var WebRTC = {
     var userLocal = WebRTC.getLocalUser();
     console.log("WebRTC: SET REMOTE ", event);
 
-    if (navigator.browser[0] === "Chrome") {
-      userRemote.peerConnection.setRemoteDescription(new RTCSessionDescription(data.sdp));
-    } else if (navigator.browser[0] === "Firefox") {
-      userRemote.peerConnection.setRemoteDescription(new mozRTCSessionDescription(data.sdp));
-    }
+    console.log("USERREMOTE: ", userRemote);
+    userRemote.peerConnection.setRemoteDescription(new RTCSessionDescription(data.sdp));
 
     if (!userRemote.peerConnection.localDescription) {
       var loop = setInterval(function() {
@@ -226,6 +223,7 @@ var WebRTC = {
         } else {
           clearInterval(loop);
           userRemote.peerConnection.addStream(userLocal.stream);
+          console.log("ADDED LOCAL STREAM");
           userRemote.peerConnection.createAnswer(function(description) {
             console.log("WebRTC: CREATE ANSWER CALLBACK ", description);
             userRemote.peerConnection.setLocalDescription(description);
@@ -259,9 +257,15 @@ var WebRTC = {
     var user = WebRTC.getRemoteUser(event.detail.userId);
 
     if (navigator.browser[0] === "Chrome") {
-      user.peerConnection.addIceCandidate(new RTCIceCandidate(event.detail.ice));
+      user.peerConnection.addIceCandidate(new RTCIceCandidate({
+        sdpMLineIndex: event.detail.ice.spdMLineIndex,
+        candidate: event.detail.ice.candidate
+      }));
     } else if (navigator.browser[0] === "Firefox") {
-      user.peerConnection.addIceCandidate(new mozRTCIceCandidaten(event.detail.ice));
+      user.peerConnection.addIceCandidate(new mozRTCIceCandidaten({
+        sdpMLineIndex: event.detail.ice.spdMLineIndex,
+        candidate: event.detail.ice.candidate
+      }));
     }
   },
   handleSignalingParticipant: function(event) {
@@ -275,12 +279,15 @@ var WebRTC = {
         WebRTC.createRemoteUser(data.roomHash, userLocal.id, data.userId);
         var userRemote = WebRTC.getRemoteUser(data.userId);
 
+        console.log("USERREMOTE: ", userRemote);
+
         var loop = setInterval(function() {
           if (userLocal.stream === undefined) {
             return;
           } else {
             clearInterval(loop);
             userRemote.peerConnection.addStream(userLocal.stream);
+            console.log("ADDED LOCAL STREAM");
 
             var sdpConstraints = {};
             if (navigator.browser[0] === "Firefox") {
@@ -292,8 +299,7 @@ var WebRTC = {
                   'MozDontOfferDataChannel': true
                 }
               };
-            }
-            else if(navigator.browser[0] === "Chrome"){
+            } else if (navigator.browser[0] === "Chrome") {
               sdpConstraints = {
                 "optional": [],
                 "mandatory": {
