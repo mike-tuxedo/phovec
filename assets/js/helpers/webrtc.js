@@ -8,6 +8,8 @@ var WebRTC = {
   },
   users: [],
   handleLocalMedia: function(event) {
+    console.log("WebRTC: LOCAL MEDIA AVAILABLE ", event);
+
     var user = WebRTC.getLocalUser();
     user = (user === undefined) ? WebRTC.createLocalUser() : user;
     user.stream = event.detail.stream;
@@ -23,7 +25,7 @@ var WebRTC = {
     user.name = localName;
     user.roomHash = data.roomHash;
     user.id = data.userId;
-    
+
     var localName = prompt("Nickname:", "Bitte Namen wählen...");
     $('#local_name').text(localName);
     $('#videoboxes #local').attr("id", data.userId);
@@ -63,9 +65,7 @@ var WebRTC = {
           'DtlsSrtpKeyAgreement': 'true'
         }]
       }, {
-        optional: [{
-          RtpDataChannels: true
-        }]
+        optional: []
       });
     } else if (navigator.browser[0] === "Firefox") {
       var peerConnection = new PeerConnection({
@@ -75,9 +75,7 @@ var WebRTC = {
           "url": "stun:stun1.voiceeclipse.net"
         }]
       }, {
-        optional: [{
-          RtpDataChannels: true
-        }]
+        optional: []
       });
     } else {
       alert("Bitte benutze Chrome oder Firefox!");
@@ -85,6 +83,8 @@ var WebRTC = {
     }
 
     peerConnection.onicecandidate = function(description) {
+      console.log("WebRTC: GOT ICE FROM STUN ", description);
+
       SignalingChannel.send({
         subject: "ice",
         chatroomHash: roomHash,
@@ -95,20 +95,21 @@ var WebRTC = {
     };
 
     peerConnection.onaddstream = function(remote) {
-      console.log(remote);
-      console.log("WebRTC: NEW REMOTE STREAM ARRIVED");
+      console.log("WebRTC: STREAM ARRIVED ", remote);
+
       $('#' + remoteUserId + ' video').attr('src', URL.createObjectURL(remote.stream));
+
+      if (navigator.browser[0] === "Firefox") {
+        $('#' + remoteUserId + ' video').get(0).play();
+      }
     };
 
     /*var channel = peerConnection.createDataChannel('RTCDataChannel');
      channel.onmessage = function(event) {
-     console.log(event)
-
      if (event.data.substr(0, 4) == "\\$cn") {
      user.name = event.data.substr(4);
      $('#' + remoteUserId + ' .name').text(user.name);
      } else if ( typeof event.data == Blob) {
-     console.log("BLOB");
      window.requestFileSystem(window.TEMPORARY, 1024 * 1024, function(fs) {
      var file = event.data;
      (function(f) {
@@ -129,7 +130,8 @@ var WebRTC = {
      console.log("ERROR REQUESTFILESYSTEM");
      });
      } else {
-     var output = new Date().getHours() + ":" + new Date().getMinutes() + " (other) - " + event.data + "&#13;&#10;";
+     var name = $('#' + remoteUserId + ' .name').text();
+     var output = new Date().getHours() + ":" + new Date().getMinutes() + " (" + name + ") - " + event.data + "&#13;&#10;";
      $('#' + remoteUserId + ' form textarea').append(output);
      }
      };
@@ -160,9 +162,15 @@ var WebRTC = {
     $('#' + remoteUserId + " form input").keypress(function(e) {
       if (e.which == 13) {
         var input = $(this).val();
-        //channel.send(input);
+        channel.send(input);
 
-        var output = new Date().getHours() + ":" + new Date().getMinutes() + " (me) - " + input + "&#13;&#10;";
+        var hours = new Date().getHours()
+        hours = hours < 10 ? "0" + hours : hours;
+
+        var minutes = new Date().getMinutes();
+        minutes = minutes < 10 ? "0" + minutes : minutes;
+
+        var output = hours + ":" + minutes + " (me) - " + input + "&#13;&#10;";
         $('#' + remoteUserId + " textarea").append(output)
 
         $(this).val("");
@@ -198,23 +206,28 @@ var WebRTC = {
     }
   },
   handleSignalingSdp: function(event) {
+    console.log("WebRTC: HANDLE SDP ", event);
+
     var data = event.detail;
     var userRemote = WebRTC.getRemoteUser(data.userId);
     var userLocal = WebRTC.getLocalUser();
+    console.log("WebRTC: SET REMOTE ", event);
 
-    console.log(data.sdp);
-
+    console.log("USERREMOTE: ", userRemote);
     userRemote.peerConnection.setRemoteDescription(new RTCSessionDescription(data.sdp));
+
     if (!userRemote.peerConnection.localDescription) {
       var loop = setInterval(function() {
         if (userLocal.stream === undefined) {
           return;
         } else {
           clearInterval(loop);
-
           userRemote.peerConnection.addStream(userLocal.stream);
+          console.log("ADDED LOCAL STREAM");
           userRemote.peerConnection.createAnswer(function(description) {
+            console.log("WebRTC: CREATE ANSWER CALLBACK ", description);
             userRemote.peerConnection.setLocalDescription(description);
+            console.log("WebRTC: SET LOCAL ", description);
             SignalingChannel.send({
               subject: "sdp",
               chatroomHash: userLocal.roomHash,
@@ -222,18 +235,43 @@ var WebRTC = {
               destinationHash: userRemote.id,
               sdp: description
             });
+          }, null, {
+            'mandatory': {
+              'OfferToReceiveAudio': true,
+              'OfferToReceiveVideo': true
+            }
           });
         }
       }, 1000);
     }
   },
+  modifyDescription: function(description) {
+    var sdp = description.sdp;
+    var cryptoLine = "a=crypto:1 AES_CM_128_HMAC_SHA1_80 inline:BAADBAADBAADBAADBAADBAADBAADBAADBAADBAAD";
+    sdp = sdp.replace(/c=/g, cryptoLine + "\nc=");
+    description.sdp = sdp;
+    return description;
+  },
   handleSignalingIce: function(event) {
-    var user = WebRTC.getRemoteUser(event.detail.userId)
-    user.peerConnection.addIceCandidate(new RTCIceCandidate(event.detail.ice));
+    console.log("WebRTC: HANDLE ICE ", event);
+    var user = WebRTC.getRemoteUser(event.detail.userId);
+
+    if (navigator.browser[0] === "Chrome") {
+      user.peerConnection.addIceCandidate(new RTCIceCandidate({
+        sdpMLineIndex: event.detail.ice.spdMLineIndex,
+        candidate: event.detail.ice.candidate
+      }));
+    } else if (navigator.browser[0] === "Firefox") {
+      user.peerConnection.addIceCandidate(new mozRTCIceCandidaten({
+        sdpMLineIndex: event.detail.ice.spdMLineIndex,
+        candidate: event.detail.ice.candidate
+      }));
+    }
   },
   handleSignalingParticipant: function(event) {
+    console.log("WebRTC: PARTICIPANT ", event);
+
     var data = event.detail;
-    console.log("handleSignalingParticipant");
     switch (data.message) {
       case "join":
         var userLocal = WebRTC.getLocalUser();
@@ -241,14 +279,45 @@ var WebRTC = {
         WebRTC.createRemoteUser(data.roomHash, userLocal.id, data.userId);
         var userRemote = WebRTC.getRemoteUser(data.userId);
 
+        console.log("USERREMOTE: ", userRemote);
+
         var loop = setInterval(function() {
           if (userLocal.stream === undefined) {
             return;
           } else {
             clearInterval(loop);
             userRemote.peerConnection.addStream(userLocal.stream);
+            console.log("ADDED LOCAL STREAM");
+
+            var sdpConstraints = {};
+            if (navigator.browser[0] === "Firefox") {
+              sdpConstraints = {
+                "optional": [],
+                "mandatory": {
+                  'OfferToReceiveAudio': true,
+                  'OfferToReceiveVideo': true,
+                  'MozDontOfferDataChannel': true
+                }
+              };
+            } else if (navigator.browser[0] === "Chrome") {
+              sdpConstraints = {
+                "optional": [],
+                "mandatory": {
+                  'OfferToReceiveAudio': true,
+                  'OfferToReceiveVideo': true
+                }
+              };
+            }
+
             userRemote.peerConnection.createOffer(function(description) {
+              console.log("WebRTC: CREATE OFFER CALLBACK ", description);
               userRemote.peerConnection.setLocalDescription(description);
+              console.log("WebRTC: SET LOCAL ", description);
+
+              if (navigator.browser[0] === "Firefox") {
+                description = WebRTC.modifyDescription(description);
+              }
+
               SignalingChannel.send({
                 subject: "sdp",
                 chatroomHash: userLocal.roomHash,
@@ -256,7 +325,7 @@ var WebRTC = {
                 destinationHash: userRemote.id,
                 sdp: description
               });
-            });
+            }, null, sdpConstraints);
           }
         }, 1000);
         break;

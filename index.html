@@ -9,81 +9,91 @@
     <link rel="stylesheet" href="assets/css/style.css">
   </head>
   <body>
+      <!-- animated plus -->
+      <div id="plus_button"></div>
+      <div id="gradient1" class="get_friends"></div>
+      <div id="gradient2" class="get_friends"></div>
+      <div id="gradient3" class="get_friends"></div>
+      
+    <script type="text/x-handlebars" data-template-name="application">
+      <div id="blackFilter"></div>
+      <div id="content">
+      {{outlet}}
+      </div>
+    </script>
 
-  <script type="text/x-handlebars" data-template-name="application">
-    <div id="blackFilter"></div>
-    <div id="content">
-    {{outlet}}
-    </div>
-  </script>
+    <!-- templates -->
+    <script type="text/x-handlebars" data-template-name="index">
+      <header>
+      {{#linkTo "about" id="infoButton"}}{{/linkTo}}
+      </header>
 
-  <!-- templates -->
-  <script type="text/x-handlebars" data-template-name="index">
-    <header>
-    {{#linkTo "about" id="infoButton"}}{{/linkTo}}
-    </header>
+      <div id="startInfo">
+      <h1>Hi! Hier kannst du mit Freunden Videochatten.</h1>
+      <p>Einfach auf Start klicken und du bist in einem Chatraum, von wo aus du deine Freunde einladen kannst.</p>
+      </div>
+      {{#linkTo "room"}}<div id="startButtonImage"></div>{{/linkTo}}
+    </script>
 
-    <div id="startInfo">
-    <h1>Hi! Hier kannst du mit Freunden Videochatten.</h1>
-    <p>Einfach auf Start klicken und du bist in einem Chatraum, von wo aus du deine Freunde einladen kannst.</p>
-    </div>
-    {{#linkTo "room"}}<div id="startButtonImage"></div>{{/linkTo}}
-  </script>
-
-  <script type="text/x-handlebars" data-template-name="room">
-    <header>
-    {{#linkTo "about" id="infoButton"}}{{/linkTo}}
-    {{#linkTo "hangup" id="hangupButton"}}{{/linkTo}}
-    </header>
-    <canvas id="output"></canvas>
-    <div id="infoField">
-    <p>Du musst deinem Browser Zugriff auf Kamera & Mikrofon erlauben!</p><br/>
-    <p>Verwendest du den Chromebrowser, dann schau dazu doch mal auf den oberen Rand ;)</p>
-    </div>
-    <div id="videoboxes">
+    <script type="text/x-handlebars" data-template-name="room">
+      <header>
+      {{#linkTo "about" id="infoButton"}}{{/linkTo}}
+      {{#linkTo "hangup" id="hangupButton"}}{{/linkTo}}
+      </header>
+      <canvas id="output"></canvas>
+      <div id="infoField">
+      <p>Du musst deinem Browser Zugriff auf Kamera & Mikrofon erlauben!</p><br/>
+      <p>Verwendest du den Chromebrowser, dann schau dazu doch mal auf den oberen Rand ;)</p>
+      </div>
+      <div id="videoboxes">
       {{#view App.UserView}}
-        <div class="user" id="local">
-          <div class="videoOptions">
-            <img src="assets/img/muteButton.png" />
-            <img src="assets/img/videoButton.png" />
-          </div>
-          <span class="name" id="local_name">Name</span>
-          <video autoplay></video>
-        </div>
+      <div class="user" id="local">
+      <div class="videoOptions">
+      <img src="assets/img/muteButton.png" />
+      <img src="assets/img/videoButton.png" />
+      </div>
+      <span class="name" id="local_name">Name</span>
+      <video autoplay></video>
+      </div>
       {{/view}}
       <div id="videoEffects">
-        <a {{action "takeScreenShotFromChatroom" }} class="">Take Screenshot</a>
-        <a {{action "putClassesOnUser" }} class="">Put Classes on</a>
-        <a {{action "putHairOnUser" }} class="">Put Hair on</a>
-        <a {{action "putBeardOnUser" }} class="">Put Beard on</a>
-        <a {{action "takeOffClothesOfUser" }} class="">Take off Everything</a>
+      <a {{action "takeScreenShotFromChatroom" }} class="">Take Screenshot</a>
+      <a {{action "putClassesOnUser" }} class="">Put Classes on</a>
+      <a {{action "putHairOnUser" }} class="">Put Hair on</a>
+      <a {{action "putBeardOnUser" }} class="">Put Beard on</a>
+      <a {{action "takeOffClothesOfUser" }} class="">Take off Everything</a>
+      </div>
       </div>
     </div>
     
-    <div id="socialSidebar">{{ partial 'auth' }}</div>
-    
-    <!-- Facebook-Instance -->
-    <script type="text/javascript" src="http://connect.facebook.net/en_US/all.js"></script>
-    <script src="assets/js/libs/facebook-sdk-init.js"></script>
 
-    <!-- face-detection -->
-    <script src="assets/js/libs/request-animation-frame.js"></script>
-    <script src="assets/js/libs/face-detection/ccv.js"></script>
-    <script src="assets/js/libs/face-detection/face.js"></script>
-    <script src="assets/js/helpers/face-detector.js"></script>
-    
-    <!-- screenshot-maker -->
-    <script src="assets/js/libs/html2canvas/html2canvas.min.js"></script>
-    
-    <!-- helper -->
-    <script src="assets/js/helpers/webrtc.js"></script>
-    <script src="assets/js/helpers/signaling.js"></script>
-    
-  </script>
+      <div id="socialSidebar">
+        {{ partial 'auth' }}
+      </div>
 
-  <script type="text/x-handlebars" data-template-name="about">
+
+      <!-- Facebook-Instance -->
+      <script type="text/javascript" src="http://connect.facebook.net/en_US/all.js"></script>
+
+      <script src="assets/js/libs/facebook-sdk-init.js"></script>
+  
+      <!-- face-detection -->
+      <script src="assets/js/libs/request-animation-frame.js"></script>
+      <script src="assets/js/libs/face-detection/ccv.js"></script>
+      <script src="assets/js/libs/face-detection/face.js"></script>
+      <script src="assets/js/helpers/face-detector.js"></script>
+  
+      <!-- screenshot-maker -->
+      <script src="assets/js/libs/html2canvas/html2canvas.min.js"></script>
+  
+      <!-- helper -->
+      <script src="assets/js/helpers/signaling.js"></script>
+
+    </script>
+
+    <script type="text/x-handlebars" data-template-name="about">
       <header>
-        {{#linkTo "index" id="backButton"}}{{/linkTo}}
+      {{#linkTo "index" id="backButton"}}{{/linkTo}}
       </header>
       <div id="aboutInfo">
       <h1>Projekt</h1>
@@ -121,46 +131,51 @@
       {{#if App.Controller.auth.google_logged_in }}
       <a {{action "googleLogout" target="App.Controller.auth"}} class="socialButtons googleButton"></a>
       {{/if}}
-      
-    <a class="socialButtons twitterButton"></a>
-    <h2 id="userInfo"></h2>
-    <div id="friends"></div>
-    
-  </script> 
-  
-  <!-- scripts -->
-  <script src="http://code.jquery.com/jquery-latest.min.js"></script>
-  <script> window.jQuery || document.write('<script src="assets/js/libs/jquery.js"><\/script>')</script>
-  
-  <!-- libs -->
-  <script src="assets/js/libs/handlebars-1.0.0-rc.3.js"></script>
-  <script src="assets/js/libs/ember-1.0.0-rc.1.js"></script>
 
-  <!-- browser compatiblity -->
-  <script src="assets/js/helpers/browser.js"></script>
+      <a class="socialButtons twitterButton"></a>
+      <h2 id="userInfo"></h2>
+      <div id="friends"></div>
 
-  <!-- app -->
-  <script src="assets/js/app.js"></script>
+    </script>
 
-  <!-- views -->
-  <script src="assets/js/views/index.js"></script>
-  <script src="assets/js/views/room.js"></script>
-  <script src="assets/js/views/invitation.js"></script>
-  <script src="assets/js/views/user.js"></script>
+    <!-- scripts -->
+    <script src="http://code.jquery.com/jquery-latest.min.js"></script>
+    <script>
+      window.jQuery || document.write('<script src="assets/js/libs/jquery.js"><\/script>')
+    </script>
 
-  <!-- models -->
-  <script src="assets/js/models/user.js"></script>
-  <script src="assets/js/models/room.js"></script>
+    <!-- libs -->
+    <script src="assets/js/libs/handlebars-1.0.0-rc.3.js"></script>
+    <script src="assets/js/libs/ember-1.0.0-rc.1.js"></script>
 
-  <!-- controllers -->
-  <script src="assets/js/controllers/index.js"></script>
-  <script src="assets/js/controllers/user.js"></script>
-  <script src="assets/js/controllers/auth.js"></script>
-  <script src="assets/js/controllers/room.js"></script>
-  
-  <!-- router -->
-  <script src="assets/js/router.js"></script>
-  
-  <script src="assets/js/main.js"></script>
-</body>
+    <!-- browser compatiblity -->
+    <script src="assets/js/helpers/browser.js"></script>
+
+    <!-- helper -->
+    <script src="assets/js/helpers/webrtc.js"></script>
+
+    <!-- app -->
+    <script src="assets/js/app.js"></script>
+
+    <!-- views -->
+    <script src="assets/js/views/index.js"></script>
+    <script src="assets/js/views/room.js"></script>
+    <script src="assets/js/views/invitation.js"></script>
+    <script src="assets/js/views/user.js"></script>
+
+    <!-- models -->
+    <script src="assets/js/models/user.js"></script>
+    <script src="assets/js/models/room.js"></script>
+
+    <!-- controllers -->
+    <script src="assets/js/controllers/index.js"></script>
+    <script src="assets/js/controllers/user.js"></script>
+    <script src="assets/js/controllers/auth.js"></script>
+    <script src="assets/js/controllers/room.js"></script>
+
+    <!-- router -->
+    <script src="assets/js/router.js"></script>
+
+    <script src="assets/js/main.js"></script>
+  </body>
 </html>

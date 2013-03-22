@@ -27,3 +27,13 @@ if ( typeof navigator.getUserMedia !== "undefined") {
 } else if ( typeof navigator.msGetUserMedia !== "undefined") {
   navigator.getMedia = navigator.msGetUserMedia;
 }
+
+/* Session-Description */
+if ( typeof mozRTCSessionDescription !== "undefined" ){
+  RTCSessionDescription = mozRTCSessionDescription;
+}
+
+/* Ice-Messages */
+if ( typeof mozRTCIceCandidate !== "undefined" ){
+  RTCIceCandidate = mozRTCIceCandidate;
+} 
