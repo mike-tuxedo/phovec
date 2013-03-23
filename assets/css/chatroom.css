@@ -209,3 +209,44 @@
 #hangupButton:hover {
   opacity: 0.8;
 }
+
+#videoEffectsBar{
+  position:relative;
+  z-index:11;
+  margin-top:250px;
+  height:20px;
+  color: #303743;
+  border-bottom-left-radius: 15px;
+  border-bottom-right-radius: 15px;
+  width: 100%;
+  padding: 5px 0px 5px 0px;
+  background: #e0dfeb;
+  background-image: url('../img/arrow_down.png');
+  background-repeat: no-repeat;
+  background-position: 9.8em -0.3em;
+  box-shadow: inset 1px 1px 5px #444;
+  -webkit-box-shadow: inset 1px 1px 5px #444;
+  cursor:pointer;
+}
+
+#videoEffects{
+  position:absolute;
+  z-index:10;
+  display:none;
+  margin-top:25px;
+  height:40px;
+  width: 100%;
+  color: #303743;
+  background: #e0dfeb;
+  border-bottom-left-radius: 15px;
+  border-bottom-right-radius: 15px;
+  box-shadow: inset 1px 0px 0px #444;
+  -webkit-box-shadow: inset 1px 1px 5px #444;
+}
+
+#videoEffects input{
+  float:left;
+  margin-left:5px;
+  width: 40px;
+  height:20px;
+}

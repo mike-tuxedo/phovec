@@ -40,29 +40,32 @@
       {{#linkTo "about" id="infoButton"}}{{/linkTo}}
       {{#linkTo "hangup" id="hangupButton"}}{{/linkTo}}
       </header>
-      <canvas id="output"></canvas>
       <div id="infoField">
-      <p>Du musst deinem Browser Zugriff auf Kamera & Mikrofon erlauben!</p><br/>
-      <p>Verwendest du den Chromebrowser, dann schau dazu doch mal auf den oberen Rand ;)</p>
+        <p>Du musst deinem Browser Zugriff auf Kamera & Mikrofon erlauben!</p><br/>
+        <p>Verwendest du den Chromebrowser, dann schau dazu doch mal auf den oberen Rand ;)</p>
       </div>
       <div id="videoboxes">
-      {{#view App.UserView}}
-      <div class="user" id="local">
-      <div class="videoOptions">
-      <img src="assets/img/muteButton.png" />
-      <img src="assets/img/videoButton.png" />
-      </div>
-      <span class="name" id="local_name">Name</span>
-      <video autoplay></video>
-      </div>
-      {{/view}}
-      <div id="videoEffects">
-      <a {{action "takeScreenShotFromChatroom" }} class="">Take Screenshot</a>
-      <a {{action "putClassesOnUser" }} class="">Put Classes on</a>
-      <a {{action "putHairOnUser" }} class="">Put Hair on</a>
-      <a {{action "putBeardOnUser" }} class="">Put Beard on</a>
-      <a {{action "takeOffClothesOfUser" }} class="">Take off Everything</a>
-      </div>
+        {{#view App.UserView}}
+        <div class="user" id="local">
+          <div class="videoOptions">
+            <img src="assets/img/muteButton.png" />
+            <img src="assets/img/videoButton.png" />
+          </div>
+          <span class="name" id="local_name">Name</span>
+          <video autoplay></video>
+          <canvas id="faceDetectorOutput"></canvas>
+        </div>
+        {{/view}}
+        <div id="videoEffectsBar">
+          <div id="videoEffects">
+            <input type="button" id="snapshotButton" {{action "takeScreenShotFromChatroom" }} class="" value="Take Snapshot"/>
+            <input type="button" id="getSnapshotButton" class="" value="get Snapshot" style="display:none" />
+            <input type="button" {{action "putClassesOnUser" }} class="" value="classes" />
+            <input type="button" {{action "putHairOnUser" }} class="" value="hair" />
+            <input type="button" {{action "putBeardOnUser" }} class="" value="beard"/>
+            <input type="button" id="takeOffClothesButton" {{action "takeOffClothesOfUser" }} class="" value="off" style="display:none" />
+          </div>
+        </div>
       </div>
     </div>
     

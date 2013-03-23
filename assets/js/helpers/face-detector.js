@@ -2,8 +2,14 @@
   closing: false,
   type_to_load: null,
 	getStream: function(stream,type) {
-		FaceDetector.video.addEventListener('canplay', function() {
-			FaceDetector.video.removeEventListener('canplay');
+    
+    if(navigator.browser[0] === 'Firefox')
+      FaceDetector.video.oncanplay = setup;
+    else if(navigator.browser[0] === 'Chrome')
+      FaceDetector.video.addEventListener('canplay',setup,true);
+    
+		function setup() {
+    
 			setTimeout(function() {
         
 				FaceDetector.video.play();
@@ -43,8 +49,10 @@
 			
         FaceDetector.type_to_load = type;
 				FaceDetector.drawToCanvas();
+        FaceDetector.video.style.display = 'none';
 			}, 500);
-		}, true);
+      
+		}
 		
 		var domURL = window.URL || window.webkitURL;
 		FaceDetector.video.src = domURL ? domURL.createObjectURL(stream) : stream;
