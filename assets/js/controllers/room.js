@@ -71,6 +71,7 @@
     FaceDetector.closing = true;
   },
   putUserStreamOnDetector: function(type){
+    $('#videoEffectsBar').css('margin-top','0px');
     $('#takeOffClothesButton').show();
     FaceDetector.closing = false;
     if(WebRTC.users && WebRTC.users[0].stream)
@@ -78,24 +79,37 @@
   },
   takeScreenShotFromChatroom: function(){
     
+    $('#videoEffectsBar').css('margin-top','250px');
     $('#getSnapshotButton').hide();
       
     html2canvas( [ document.getElementById('videoboxes') ], {
       onrendered: function(canvas) {
-      
+        
+        $('#progressSnapshotbar').show();
+        
         var videoTags = $('video');
         
         var snapshotWorker = new Worker('assets/js/helpers/snapshot_worker.js');
         
         snapshotWorker.postMessage({ image_data: (canvas.getContext('2d').getImageData(0,0,canvas.width,canvas.height)), 
                                      color: '#999999', 
-                                     video_num: (videoTags.length) 
+                                     videoNum: (videoTags.length) 
                                   });
         
         snapshotWorker.onmessage = function(e){
           
+          if(e.data.progress){
+            $('#progressSnapshotbar').attr('value',e.data.progress);
+            return;
+          }
+          else{
+            $('#progressSnapshotbar').hide();
+            $('#progressSnapshotbar').attr('value',0);
+          }
+          
           e.data.coords.forEach(function(coord,index){
             console.log('coord',coord);
+            
             var ctx = canvas.getContext('2d');
     
             for(var v=0; v < videoTags.length; v++){
@@ -113,7 +127,7 @@
           $('#getSnapshotButton').show();
           
           $('#getSnapshotButton').click(function(e){
-            var win = window.open(canvas.toDataURL('image/png'), 'Snapshot', ('width='+canvas.width+', height='+canvas.height+',menubar=no,resizable=no,scrollbars=no,status=no') );
+            var win = window.open(canvas.toDataURL('image/png'), 'Snapshot', ('width='+canvas.width+', height='+canvas.height+',menubar=0,resizable=0,scrollbars=0,status=0') );
             $('#snapshotButton').show();
           });
         };

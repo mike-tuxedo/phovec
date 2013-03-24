@@ -30,11 +30,14 @@
         
         snapshotWorker.postMessage({ image_data: (canvas.getContext('2d').getImageData(0,0,canvas.width,canvas.height)), 
                                      color: cellColor, 
-                                     video_num: videoNum 
+                                     videoNum: videoNum 
                                   });
         
         snapshotWorker.onmessage = function(e){
           
+          if(e.data.progress)
+            return;
+            
           e.data.coords.forEach(function(coord,index){
             if(!hasArrayGotCoord(coordArray,coord)){
               coordArray.push(coord);

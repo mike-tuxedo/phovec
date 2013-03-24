@@ -212,7 +212,6 @@
 
 #videoEffectsBar{
   position:relative;
-  z-index:11;
   margin-top:250px;
   height:20px;
   color: #303743;
@@ -230,8 +229,6 @@
 }
 
 #videoEffects{
-  position:absolute;
-  z-index:10;
   display:none;
   margin-top:25px;
   height:40px;
@@ -249,4 +246,9 @@
   margin-left:5px;
   width: 40px;
   height:20px;
+}
+
+#progressSnapshotbar{
+  display:none;
+  margin: 0 auto;
 }

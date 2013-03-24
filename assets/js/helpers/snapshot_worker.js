@@ -18,6 +18,10 @@ var getNewCoordinates = function(imgData, hexColor, formerCoords, cell){ // hexC
         
         startX = x;
         startY = y;
+        
+        if(cell.width){
+          return { startX: startX, startY: startY };
+        }
       }
       // is pixel on the right side of cell
       else if( !cell.width && 
@@ -54,12 +58,13 @@ onmessage = function(event){
   cell.width = null;
   cell.height = null;
   
-  for(var v=0; v < data.video_num; v++){
+  for(var v=0; v < data.videoNum; v++){
     
     var alteredImageData = getNewCoordinates(data.image_data, data.color, videoCoords, cell);
     
     videoCoords.push(alteredImageData);
-      
+    
+    postMessage({ progress: videoCoords.length/data.videoNum });
   }
   
   postMessage({ coords: videoCoords, cellWidth: cell.width, cellHeight: cell.height });
