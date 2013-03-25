@@ -1,7 +1,7 @@
 ﻿window.fbAsyncInit = function() {
 
   FB.init({
-    appId: '133747813468969',
+    appId: '324301331025901',
     channelUrl: 'http://phovec.nucular-bacon.com/#/room',
     status: true,
     cookie: true,

@@ -11,7 +11,7 @@ var getNewCoordinates = function(imgData, hexColor, formerCoords, cell){ // hexC
       var outer_offset_last_pos_x = x > 0 ? (y * imgData.width + (x-1)) * 4 : 0;
       
       // is pixel on the left upper corner of cell
-      if( !startX && !hasArrayGotCoord(formerCoords, { startX: x, startY: y}) && 
+      if( !hasArrayGotCoord(formerCoords, { startX: x, startY: y}) && 
           getHexColor(imgData.data[outer_offset], imgData.data[outer_offset+1], imgData.data[outer_offset+2]) === hexColor &&
           getHexColor(imgData.data[outer_offset-4], imgData.data[outer_offset-3], imgData.data[outer_offset-2]) !== hexColor && 
           getHexColor(imgData.data[outer_offset-(imgData.width*4)], imgData.data[outer_offset-(imgData.width*4)+1], imgData.data[outer_offset-(imgData.width*4)+2]) !== hexColor ){
