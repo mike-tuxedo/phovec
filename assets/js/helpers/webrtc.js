@@ -16,7 +16,11 @@ var WebRTC = {
   },
   handleSignalingInit: function(event) {
     var data = event.detail;
-
+    
+    /* set url according to the room-hash */
+    App.handleURL('room/'+data.roomHash);
+    App.Router.router.replaceURL('/room/'+data.roomHash);
+    
     /**
      * Modify local user
      */
