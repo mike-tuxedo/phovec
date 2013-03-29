@@ -1,10 +1,19 @@
 ﻿App.RoomController = Ember.ObjectController.extend({
   init: function() {
+    
     var controller = this;
+    
     var loop = setInterval(function(){
+      // there are some elements that must be configured during loading chatroom
+      if( typeof FaceDetector !== undefined && $('#faceDetectorOutput')[0] && $('video')[0] && $('#videoEffectsBar') ){
       
-      if( typeof FaceDetector !== undefined ){
-        FaceDetector.init(document.getElementsByTagName('video')[0], document.getElementById('output')); 
+        $('#faceDetectorOutput')[0].style.width = $('video').css('width');
+        $('#faceDetectorOutput')[0].style.height = '225px';
+        
+        FaceDetector.init( $('video')[0], $('#faceDetectorOutput')[0]); 
+        
+        controller.setupVideoEffectBar();
+        
         clearInterval(loop);
       }
       
@@ -56,50 +65,70 @@
     this.putUserStreamOnDetector('beard');
   },
   takeOffClothesOfUser: function(){
-    document.getElementById('output').style.display = 'none';
+    $('video').css('display','inline');
+    $('#faceDetectorOutput')[0].style.display = 'none';
+    $('#takeOffClothesButton').hide();
     FaceDetector.closing = true;
   },
   putUserStreamOnDetector: function(type){
+    $('#videoEffectsBar').css('margin-top','0px');
+    $('#takeOffClothesButton').show();
     FaceDetector.closing = false;
     if(WebRTC.users && WebRTC.users[0].stream)
       FaceDetector.getStream(WebRTC.users[0].stream,type);
   },
   takeScreenShotFromChatroom: function(){
     
-    var controller = this;
-    
-    if($('#snapshotButton'))
-      $('#snapshotButton').remove();
+    $('#videoEffectsBar').css('margin-top','250px');
+    $('#getSnapshotButton').hide();
       
-    html2canvas( [ document.body ], {
+    html2canvas( [ document.getElementById('videoboxes') ], {
       onrendered: function(canvas) {
         
-        var video_tags = $('video');
+        $('#progressSnapshotbar').show();
         
-        var snapshot_worker = new Worker('js/helpers/snapshot_worker.js');
+        var videoTags = $('video');
         
-        snapshot_worker.postMessage({image_data: (canvas.getContext('2d').getImageData(0,0,canvas.width,canvas.height)), video_num: (video_tags.length) });
+        var snapshotWorker = new Worker('assets/js/helpers/snapshot_worker.js');
         
-        snapshot_worker.onmessage = function(e){
+        snapshotWorker.postMessage({ image_data: (canvas.getContext('2d').getImageData(0,0,canvas.width,canvas.height)), 
+                                     color: '#999999', 
+                                     videoNum: (videoTags.length) 
+                                  });
+        
+        snapshotWorker.onmessage = function(e){
           
-          e.data.forEach(function(video_coord,index){
+          if(e.data.progress){
+            $('#progressSnapshotbar').attr('value',e.data.progress);
+            return;
+          }
+          else{
+            $('#progressSnapshotbar').hide();
+            $('#progressSnapshotbar').attr('value',0);
+          }
+          
+          e.data.coords.forEach(function(coord,index){
+            console.log('coord',coord);
             
             var ctx = canvas.getContext('2d');
     
-            for(var v=0; v < video_tags.length; v++){
+            for(var v=0; v < videoTags.length; v++){
               
-              ctx.drawImage( video_tags[v], 
-                             0, 0, video_tags[v].videoWidth, video_tags[v].videoHeight, // s_x, s_y, s_width, s_height
-                             video_coord.start_x, video_coord.start_y, // d_x, d_y
-                             (video_coord.end_x - video_coord.start_x),// d_width, number because of '#999999'-areas
-                             (video_coord.end_y - video_coord.start_y) // d_height, number because of '#999999'-areas
+              ctx.drawImage( videoTags[v], 
+                             0, 0, videoTags[v].videoWidth, videoTags[v].videoHeight, // s_x, s_y, s_width, s_height
+                             coord.startX, coord.startY, // d_x, d_y
+                             e.data.cellWidth,// d_width, number because of '#999999'-areas
+                             e.data.cellHeight // d_height, number because of '#999999'-areas
                            );
             }
             
           });
           
-          controller.createSnapshotButton(function(){
-            var win = window.open(canvas.toDataURL('image/png'), 'Snapshot', ('width='+canvas.width+', height='+canvas.height) );
+          $('#getSnapshotButton').show();
+          
+          $('#getSnapshotButton').click(function(e){
+            var win = window.open(canvas.toDataURL('image/png'), 'Snapshot', ('width='+canvas.width+', height='+canvas.height+',menubar=0,resizable=0,scrollbars=0,status=0') );
+            $('#snapshotButton').show();
           });
         };
         
@@ -107,17 +136,34 @@
       taintTest: true,
       allowTaint: true,
       letterRendering: true,
-      background: undefined
+      background: '#00f'
     });
     
   },
-  createSnapshotButton: function(event_methode){
-    var button = document.createElement('input');
-    button.type = 'button';
-    button.onclick = event_methode;
-    button.value = 'get Snapshot';
-    button.width = '100';
-    button.id = 'snapshotButton';
-    document.body.appendChild(button);
+  setupVideoEffectBar: function(){
+    var isShown = false;
+    console.log('click');
+    $('#videoEffectsBar').click(function() {
+      if(!isShown){
+        
+        $('#videoEffectsBar').css('box-shadow','inset 1px 3px 0px 0px #444');
+        $('#videoEffectsBar').css('border-bottom-left-radius','0px');
+        $('#videoEffectsBar').css('border-bottom-right-radius','0px');
+        
+        $('#videoEffects').slideDown('fast',function(){
+          $('#videoEffects').css('box-shadow','inset 1px 0px 0px 0px #444');
+        });
+        
+        isShown = true;
+      }
+      else{
+        $('#videoEffectsBar').css('box-shadow','inset 1px 1px 5px #444');
+        $('#videoEffectsBar').css('border-bottom-left-radius','15px');
+        $('#videoEffectsBar').css('border-bottom-right-radius','15px');
+        
+        $('#videoEffects').css('display','none');
+        isShown = false;
+      }
+    });
   }
 });

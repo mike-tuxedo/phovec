@@ -1,56 +1,43 @@
 ﻿
-onmessage = function(event){
-  
-  var data = event.data;
-  var video_coords = [];
-  
-  var next_start_x = 0, next_start_y = 0;
-  
-  for(var v=0; v < data.video_num; v++){
+var getNewCoordinates = function(imgData, hexColor, formerCoords, cell){ // hexColor #999999
     
-    var altered_image_data = getCoordinatesForSnapshot(data.image_data, '#999999', next_start_x, next_start_y);
-    
-    video_coords.push(altered_image_data);
-    next_start_x = altered_image_data.end_x + 20;
-    next_start_y = altered_image_data.start_y;
-    
-  }
+  var startX = 0, startY = 0, endX = null;
   
-  postMessage(video_coords);
-  
-};
-
-
-var getCoordinatesForSnapshot = function(imgData,hex_color,start__x,start__y){ // hex_color #999999
+  for (var y=startY; y < imgData.height; y++){
     
-  var start_x = start__x,
-      start_y = start__y,
-      end_x = null,
-      end_y = null;
-  
-  for (var outer_y=start_y; outer_y < imgData.height; outer_y++){
-    
-    for (var outer_x=start_x; outer_x < imgData.width; outer_x++){
+    for (var x=startX; x < imgData.width; x++){
       
-      var outer_offset = (outer_y * imgData.width + outer_x) * 4;
-      var outer_offset_last_pos_x = outer_x > 0 ? (outer_y * imgData.width + (outer_x-1)) * 4 : 0;
+      var outer_offset = (y * imgData.width + x) * 4;
+      var outer_offset_last_pos_x = x > 0 ? (y * imgData.width + (x-1)) * 4 : 0;
       
-      if( !start_x && getHexColor(imgData.data[outer_offset], imgData.data[outer_offset+1], imgData.data[outer_offset+2]) === hex_color ){
-        start_x = outer_x;
-        start_y = outer_y;
+      // is pixel on the left upper corner of cell
+      if( !hasArrayGotCoord(formerCoords, { startX: x, startY: y}) && 
+          getHexColor(imgData.data[outer_offset], imgData.data[outer_offset+1], imgData.data[outer_offset+2]) === hexColor &&
+          getHexColor(imgData.data[outer_offset-4], imgData.data[outer_offset-3], imgData.data[outer_offset-2]) !== hexColor && 
+          getHexColor(imgData.data[outer_offset-(imgData.width*4)], imgData.data[outer_offset-(imgData.width*4)+1], imgData.data[outer_offset-(imgData.width*4)+2]) !== hexColor ){
+        
+        startX = x;
+        startY = y;
+        
+        if(cell.width){
+          return { startX: startX, startY: startY };
+        }
       }
-      // last pixel had got hex_color but current has not so it is last x-end
-      else if( getHexColor(imgData.data[outer_offset], imgData.data[outer_offset+1], imgData.data[outer_offset+2]) !== hex_color &&
-               getHexColor(imgData.data[outer_offset_last_pos_x], imgData.data[outer_offset_last_pos_x+1], imgData.data[outer_offset_last_pos_x+2]) === hex_color ){
+      // is pixel on the right side of cell
+      else if( !cell.width && 
+               getHexColor(imgData.data[outer_offset], imgData.data[outer_offset+1], imgData.data[outer_offset+2]) !== hexColor &&
+               getHexColor(imgData.data[outer_offset_last_pos_x], imgData.data[outer_offset_last_pos_x+1], imgData.data[outer_offset_last_pos_x+2]) === hexColor ){
         
-        if(!end_x)
-          end_x = outer_x;
+        endX = x;
         
-        // pixel under left has'n got hex_color so it is the last y-end
-        if( getHexColor(imgData.data[outer_offset_last_pos_x+(imgData.width*4)-4], imgData.data[outer_offset_last_pos_x+(imgData.width*4)-3], imgData.data[outer_offset_last_pos_x+(imgData.width*4)-2]) !== hex_color ){
+        // is pixel on the right lower corner of cell
+        if( getHexColor(imgData.data[outer_offset_last_pos_x+(imgData.width*4)-4], imgData.data[outer_offset_last_pos_x+(imgData.width*4)-3], imgData.data[outer_offset_last_pos_x+(imgData.width*4)-2]) !== hexColor ){
           
-          end_y = outer_y;
-          return { start_x: (start_x), start_y: (start_y), end_x: (end_x), end_y: (end_y)};
+          if(!cell.width){
+            cell.width = endX - startX;
+            cell.height = y - startY;
+          }
+          
         }
       }
       
@@ -58,8 +45,51 @@ var getCoordinatesForSnapshot = function(imgData,hex_color,start__x,start__y){ /
     
   }
   
+  return { startX: startX, startY: startY };
 };
+
+
+onmessage = function(event){
+  
+  var data = event.data;
+  var videoCoords = [];
+  
+  var cell = {};
+  cell.width = null;
+  cell.height = null;
+  
+  for(var v=0; v < data.videoNum; v++){
+    
+    var alteredImageData = getNewCoordinates(data.image_data, data.color, videoCoords, cell);
+    
+    videoCoords.push(alteredImageData);
+    
+    postMessage({ progress: videoCoords.length/data.videoNum });
+  }
+  
+  postMessage({ coords: videoCoords, cellWidth: cell.width, cellHeight: cell.height });
+  
+};
+
   
 var getHexColor = function(red,green,blue){
-  return '#' + red.toString(16) + green.toString(16) + blue.toString(16);
+  if(red && green && blue)
+    return '#' + red.toString(16) + green.toString(16) + blue.toString(16);
+};
+
+var hasArrayGotCoord = function(array,_coord){
+  
+  var hasGot = false;
+  
+  array.forEach(function(coord,index){
+  
+    if(coord.startX === _coord.startX && coord.startY === _coord.startY)
+      hasGot = true;
+      
+  });
+  
+  if(hasGot)
+    return true;
+  else
+    return false;
 };
