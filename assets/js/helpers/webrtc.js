@@ -15,28 +15,32 @@ var WebRTC = {
     user.stream = event.detail.stream;
   },
   handleSignalingInit: function(event) {
+    console.log("WebRTC: Signaling Init")
     var data = event.detail;
+
+    /**
+     * Create remote users
+     * Have to be before the modification of the local user,
+     * because there could be action with the remote user now
+     */
+    for (var i = 0; i < data.guestIds.length; i++) {
+      WebRTC.createRemoteUser(data.roomHash, data.userId, data.guestIds[i].id)
+    }
 
     /**
      * Modify local user
      */
     var user = WebRTC.getLocalUser();
     user = (user === undefined) ? WebRTC.createLocalUser() : user;
-    user.name = localName;
     user.roomHash = data.roomHash;
     user.id = data.userId;
 
     var localName = prompt("Nickname:", "Bitte Namen wählen...");
+    user.name = localName;
+
     $('#local_name').text(localName);
     $('#videoboxes #local').attr("id", data.userId);
     console.log("roomHash " + data.roomHash);
-
-    /**
-     * Create remote users
-     */
-    for (var i = 0; i < data.guestIds.length; i++) {
-      WebRTC.createRemoteUser(data.roomHash, data.userId, data.guestIds[i].id)
-    }
   },
   amountIceMessages: 0,
   createLocalUser: function() {
@@ -53,29 +57,27 @@ var WebRTC = {
     return user;
   },
   createRemoteUser: function(roomHash, userId, remoteUserId) {
-    if (navigator.browser[0] === "Chrome") {
-      var peerConnection = new PeerConnection({
-        'iceServers': [{
-          "url": "stun:provserver.televolution.net"
-        }, {
-          "url": "stun:stun1.voiceeclipse.net"
-        }]
+    var serverConfigs = {
+      'iceServers': [{
+        "url": "stun:stun.sipgate.net"
       }, {
-        mandatory: [{
+        "url": "stun:stun.internetcalls.com"
+      }, {
+        "url": "stun:provserver.televolution.net"
+      }, {
+        "url": "stun:stun1.voiceeclipse.net"
+      }]
+    };
+
+    if (navigator.browser[0] === "Chrome") {
+      var peerConnection = new PeerConnection(serverConfigs, {
+        'optional': [{
           'DtlsSrtpKeyAgreement': 'true'
         }]
-      }, {
-        optional: []
       });
     } else if (navigator.browser[0] === "Firefox") {
-      var peerConnection = new PeerConnection({
-        "iceServers": [{
-          "url": "stun:provserver.televolution.net"
-        }, {
-          "url": "stun:stun1.voiceeclipse.net"
-        }]
-      }, {
-        optional: []
+      var peerConnection = new PeerConnection(serverConfigs, {
+        'optional': [{}]
       });
     } else {
       alert("Bitte benutze Chrome oder Firefox!");
@@ -213,8 +215,21 @@ var WebRTC = {
     var userLocal = WebRTC.getLocalUser();
     console.log("WebRTC: SET REMOTE ", event);
 
-    console.log("USERREMOTE: ", userRemote);
-    userRemote.peerConnection.setRemoteDescription(new RTCSessionDescription(data.sdp));
+    try {
+      console.log("DEBUG!!!");
+      userRemote.peerConnection.setRemoteDescription(new RTCSessionDescription(data.sdp));
+
+      if (userRemote.peerConnection.remoteDescription === null) {
+        throw "remoteDescription is NULL";
+      }
+    } catch(e) {
+      console.log(e);
+      console.log("USERREMOTE ", userRemote);
+      UserRemote = userRemote;
+      console.log("SDP ", data.sdp);
+      SDP = data.sdp;
+      console.log("RTCSessionDescription ", RTCSessionDescription);
+    }
 
     if (!userRemote.peerConnection.localDescription) {
       var loop = setInterval(function() {
@@ -235,7 +250,9 @@ var WebRTC = {
               destinationHash: userRemote.id,
               sdp: description
             });
-          }, null, {
+          }, function() {
+            console.log("CREATE ANSWER FAILURE CALLBACK");
+          }, {
             'mandatory': {
               'OfferToReceiveAudio': true,
               'OfferToReceiveVideo': true
@@ -325,7 +342,9 @@ var WebRTC = {
                 destinationHash: userRemote.id,
                 sdp: description
               });
-            }, null, sdpConstraints);
+            }, function() {
+              console.log("CREATE OFFER FAILURE CALLBACK");
+            }, sdpConstraints);
           }
         }, 1000);
         break;

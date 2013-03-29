@@ -9,7 +9,7 @@
       }
       
     },500);
-  
+ 
     /* starting animated plus */
     //time between a set of animations and the next set of animations (one set are 3 bubbles)
     var repetitionRate = 4000;
@@ -17,7 +17,7 @@
     var duration = 1700;
     var top = parseInt($('.get_friends').css('margin-top'), 10);
     console.log(top);
-    
+     /*
     setTimeout(function(){setInterval(function(){animateGradient($('#gradient1'), duration, 200, top)}, repetitionRate)}, 0);
     setTimeout(function(){setInterval(function(){animateGradient($('#gradient2'), duration, 150, top)}, repetitionRate)}, 200);
     setTimeout(function(){setInterval(function(){animateGradient($('#gradient3'), duration, 100, top)}, repetitionRate)}, 400);
@@ -44,7 +44,7 @@
           gradient.css('borderBottomLeftRadius','0px');
           gradient.css('marginTop','350px');
         });
-      }
+      }*/
   },
   putClassesOnUser: function(){
     this.putUserStreamOnDetector('classes');
