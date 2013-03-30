@@ -35,7 +35,7 @@
         
         snapshotWorker.onmessage = function(e){
           
-          if(e.data.progress)
+          if(e.data.progress) // there is no need to show a progress-bar in an integration test
             return;
             
           e.data.coords.forEach(function(coord,index){
@@ -45,14 +45,14 @@
           });
           
           console.log('coordArray: ',coordArray);
-          expect(videoNum).toEqual(coordArray.length);
+          expect(videoNum).toEqual(coordArray.length); // there must be as many video-coords as there are video-tags
           
           done = true;
         };
           
       };
       
-      testImage.src = 'lib/testImage.jpg';
+      testImage.src = '../assets/img/testImage.jpg';
       
     });
     
@@ -64,6 +64,7 @@
   
 });
 
+/* help-method for this integration test */
 var hasArrayGotCoord = function(array,_coord){
   
   var hasGot = false;
