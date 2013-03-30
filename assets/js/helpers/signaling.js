@@ -45,7 +45,7 @@
           }));
           break;
         case "ice":
-          console.log("SignalingChannel: ICE ", data);
+          //console.log("SignalingChannel: ICE ", data);
           if (data.ice) {
             window.dispatchEvent(new CustomEvent("signalingchannel:ice", {
               detail: {
@@ -91,7 +91,7 @@
     };
   },
   send: function(message) {
-    console.log("SignalingChannel: SEND " + new Date().getTime() + " ", message);
+    //console.log("SignalingChannel: SEND " + new Date().getTime() + " ", message);
     SignalingChannel.webSocket.send(JSON.stringify(message));
   },
   close: function() {

@@ -19,6 +19,14 @@ var WebRTC = {
     var data = event.detail;
 
     /**
+     * Create local user
+     */
+    var user = WebRTC.getLocalUser();
+    user = (user === undefined) ? WebRTC.createLocalUser() : user;
+    user.roomHash = data.roomHash;
+    user.id = data.userId;
+
+    /**
      * Create remote users
      * Have to be before the modification of the local user,
      * because there could be action with the remote user now
@@ -30,11 +38,6 @@ var WebRTC = {
     /**
      * Modify local user
      */
-    var user = WebRTC.getLocalUser();
-    user = (user === undefined) ? WebRTC.createLocalUser() : user;
-    user.roomHash = data.roomHash;
-    user.id = data.userId;
-
     var localName = prompt("Nickname:", "Bitte Namen wählen...");
     user.name = localName;
 
@@ -85,7 +88,7 @@ var WebRTC = {
     }
 
     peerConnection.onicecandidate = function(description) {
-      console.log("WebRTC: GOT ICE FROM STUN ", description);
+      //console.log("WebRTC: GOT ICE FROM STUN ", description);
 
       SignalingChannel.send({
         subject: "ice",
@@ -217,7 +220,11 @@ var WebRTC = {
 
     try {
       console.log("DEBUG!!!");
-      userRemote.peerConnection.setRemoteDescription(new RTCSessionDescription(data.sdp));
+      userRemote.peerConnection.setRemoteDescription(new RTCSessionDescription(data.sdp), function() {
+        console.log("SUCCESS SET REMOTE");
+      }, function() {
+        onsole.log("FAILURE SET REMOTE");
+      });
 
       if (userRemote.peerConnection.remoteDescription === null) {
         throw "remoteDescription is NULL";
@@ -241,7 +248,11 @@ var WebRTC = {
           console.log("ADDED LOCAL STREAM");
           userRemote.peerConnection.createAnswer(function(description) {
             console.log("WebRTC: CREATE ANSWER CALLBACK ", description);
-            userRemote.peerConnection.setLocalDescription(description);
+            userRemote.peerConnection.setLocalDescription(description, function() {
+              console.log("SUCCESS SET LOCAL");
+            }, function() {
+              onsole.log("FAILURE SET LOCAL");
+            });
             console.log("WebRTC: SET LOCAL ", description);
             SignalingChannel.send({
               subject: "sdp",
@@ -270,7 +281,7 @@ var WebRTC = {
     return description;
   },
   handleSignalingIce: function(event) {
-    console.log("WebRTC: HANDLE ICE ", event);
+    //console.log("WebRTC: HANDLE ICE ", event);
     var user = WebRTC.getRemoteUser(event.detail.userId);
 
     if (navigator.browser[0] === "Chrome") {
@@ -328,7 +339,11 @@ var WebRTC = {
 
             userRemote.peerConnection.createOffer(function(description) {
               console.log("WebRTC: CREATE OFFER CALLBACK ", description);
-              userRemote.peerConnection.setLocalDescription(description);
+              userRemote.peerConnection.setLocalDescription(description, function() {
+                console.log("SUCCESS SET LOCAL");
+              }, function() {
+                onsole.log("FAILURE SET LOCAL");
+              });
               console.log("WebRTC: SET LOCAL ", description);
 
               if (navigator.browser[0] === "Firefox") {
