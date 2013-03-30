@@ -17,7 +17,11 @@ var WebRTC = {
   handleSignalingInit: function(event) {
     console.log("WebRTC: Signaling Init")
     var data = event.detail;
-
+    
+    /* set url according to the room-hash */
+    App.handleURL('room/'+data.roomHash);
+    App.Router.router.replaceURL('/room/'+data.roomHash);
+    
     /**
      * Create local user
      */

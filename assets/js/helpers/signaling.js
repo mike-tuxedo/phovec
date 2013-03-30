@@ -1,18 +1,17 @@
 ﻿var SignalingChannel = {
   webSocket: null,
+  connected : false,
   init: function() {
     var self = this;
     this.webSocket = new WebSocket('ws://www.nucular-bacon.com:49152');
 
     this.webSocket.onopen = function() {
       console.log("SignalingChannel: ONOPEN");
-
-      var roomHash = prompt("Raumname:", "");
-      var roomLink = roomHash ? location.href + "/" + roomHash : location.href;
-
+      self.connected = true;
+      
       this.send(JSON.stringify({
         subject: "init",
-        url: roomLink
+        url: location.href
       }));
     };
     this.webSocket.onmessage = function(message) {
@@ -98,5 +97,8 @@
     this.webSocket.onclose = function() {
     };
     this.webSocket.close();
+  },
+  connectionEstablished: function(){
+    return this.connected;
   }
 };

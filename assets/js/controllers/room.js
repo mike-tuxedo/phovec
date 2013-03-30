@@ -98,6 +98,10 @@
         
         snapshotWorker.onmessage = function(e){
           
+          if(e && !e.data){
+            console.log("RoomController: takeScreenShotFromChatroom error happend",e);
+          }
+          
           if(e.data.progress){
             $('#progressSnapshotbar').attr('value',e.data.progress);
             return;
@@ -108,7 +112,6 @@
           }
           
           e.data.coords.forEach(function(coord,index){
-            console.log('coord',coord);
             
             var ctx = canvas.getContext('2d');
     

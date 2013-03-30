@@ -62,8 +62,7 @@
         
           friend_list.innerHTML += '<li class="send_fb_message" onclick="App.Controller.auth.sendFbUserMessage(\''+friend.id+'\')"> Send Facebook-Message to ' + friend.name + '</li>'
 
-          if(friend.email)
-            friend_list.innerHTML += '<li class="send_mail" onclick="App.Controller.user.sendMail({ subject:\'mail\', from:\'phovec@nucular-bacon.com\', to:\''+friend.email+'\', text:\''+user_name+' möchte dich einladen\', html:\'<b>'+user_name+' möchte dich einladen</b>\'})"> Send e-mail to ' + friend.name + '</li>';
+          friend_list.innerHTML += '<li class="send_mail" onclick="App.Controller.user.sendMail({ subject:\'mail\', from:\'phovec@nucular-bacon.com\', to:\''+friend.id+'@facebook.com\', text:\''+user_name+' möchte dich einladen\', html:\'<b>'+user_name+' möchte dich einladen</b>\'})"> Send e-mail to ' + friend.name + '</li>';
         
         });
         
@@ -141,11 +140,14 @@
     var controller = this;
     var win = window.open(this.get('googleRequestURL'), "Google-Login", 'width=400, height=300');
     
-    var pollTimer = window.setInterval(function() {
+    var timeout = 30000;
+    var timePast = 0;
+    
+    var pollTimer = setInterval(function() {
     
       if( win.document && win.document.URL.indexOf( controller.get('googleRedirect') ) != -1 ){
       
-        window.clearInterval(pollTimer);
+        clearInterval(pollTimer);
         
         var url =   win.document.URL;
         acToken =   controller.getUrlAttributes(url, 'access_token');
@@ -158,7 +160,14 @@
       }
       else
         console.log('AuthController GoogleLogin: error happend');
-        
+      
+      if(timePast > timeout){
+        clearInterval(pollTimer);
+        win.close();
+      }
+      
+      timePast += 500;
+      
     }, 500);
         
   },
