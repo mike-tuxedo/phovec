@@ -1,0 +1,28 @@
+#debugger {
+  width: 320px;
+  height: 200px;
+  position: fixed;
+  z-index: 1000;
+  left: 0px;
+  bottom: 0px;
+  background: rgba(100, 100, 100, 0.75);
+  color: white;
+  padding: 10px;
+  display: none;
+}
+
+#debugger #rtcPeerConnection {
+  width: 100%;
+}
+
+#debugger #rtcPeerConnection div:nth-child(even) {
+  float: right;
+  text-align: center;
+  width: 65%;
+}
+
+#debugger #rtcPeerConnection div:nth-child(odd) {
+  float: left;
+  width: 35%;
+}
+

@@ -7,14 +7,32 @@
     <link rel="stylesheet" href="assets/css/startpage.css">
     <link rel="stylesheet" href="assets/css/chatroom.css">
     <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="assets/css/development_mode.css">
   </head>
   <body>
-      <!-- animated plus -->
-      <div id="plus_button"></div>
-      <div id="gradient1" class="get_friends"></div>
-      <div id="gradient2" class="get_friends"></div>
-      <div id="gradient3" class="get_friends"></div>
-      
+    <!-- debugger content -->
+    <div id="debugger">
+      <h3>RTCPeerConnection Attributes</h3>
+      <div id="rtcPeerConnection">
+        <div>localDescription</div>
+        <div id="localDescription">-</div>
+        <div>remoteDescription</div>
+        <div id="remoteDescription">-</div>
+        <div>signalingState</div>
+        <div id="signalingState">-</div>
+        <div>iceGatheringState</div>
+        <div id="iceGatheringState">-</div>
+        <div>iceConnectionState</div>
+        <div id="iceConnectionState">-</div>
+      </div>
+    </div>
+
+    <!-- animated plus -->
+    <div id="plus_button"></div>
+    <div id="gradient1" class="get_friends"></div>
+    <div id="gradient2" class="get_friends"></div>
+    <div id="gradient3" class="get_friends"></div>
+
     <script type="text/x-handlebars" data-template-name="application">
       <div id="blackFilter"></div>
       <div id="content">
@@ -34,67 +52,61 @@
       </div>
       {{#linkTo "rooms"}}<div id="startButtonImage"></div>{{/linkTo}}
     </script>
-    
+
     <script type="text/x-handlebars" data-template-name="rooms"></script>
-    
+
     <script type="text/x-handlebars" data-template-name="room">
       <header>
       {{#linkTo "about" id="infoButton"}}{{/linkTo}}
       {{#linkTo "hangup" id="hangupButton"}}{{/linkTo}}
       </header>
       <div id="infoField">
-        <p>Du musst deinem Browser Zugriff auf Kamera & Mikrofon erlauben!</p><br/>
-        <p>Verwendest du den Chromebrowser, dann schau dazu doch mal auf den oberen Rand ;)</p>
+      <p>Du musst deinem Browser Zugriff auf Kamera & Mikrofon erlauben!</p><br/>
+      <p>Verwendest du den Chromebrowser, dann schau dazu doch mal auf den oberen Rand ;)</p>
       </div>
       <div id="videoboxes">
-        {{#view App.UserView}}
-        <div class="user" id="local">
-          <div class="videoOptions">
-            <img src="assets/img/muteButton.png" />
-            <img src="assets/img/videoButton.png" />
-          </div>
-          <span class="name" id="local_name">Name</span>
-          <video autoplay></video>
-          <canvas id="faceDetectorOutput"></canvas>
-        </div>
-        {{/view}}
-        <div id="videoEffectsBar">
-          <progress value="0" max="1" id="progressSnapshotbar"></progress>
-          <div id="videoEffects">
-            <input type="button" id="snapshotButton" {{action "takeScreenShotFromChatroom" }} class="" value="Take Snapshot"/>
-            <input type="button" id="getSnapshotButton" class="" value="get Snapshot" style="display:none" />
-            <input type="button" {{action "putClassesOnUser" }} class="" value="classes" />
-            <input type="button" {{action "putHairOnUser" }} class="" value="hair" />
-            <input type="button" {{action "putBeardOnUser" }} class="" value="beard"/>
-            <input type="button" id="takeOffClothesButton" {{action "takeOffClothesOfUser" }} class="" value="off" style="display:none" />
-          </div>
-        </div>
+      {{#view App.UserView}}
+      <div class="user" id="local">
+      <div class="videoOptions">
+      <img src="assets/img/muteButton.png" />
+      <img src="assets/img/videoButton.png" />
       </div>
-    </div>
-    
-
+      <span class="name" id="local_name">Name</span>
+      <video autoplay></video>
+      <canvas id="faceDetectorOutput"></canvas>
+      </div>
+      {{/view}}
+      <div id="videoEffectsBar">
+      <progress value="0" max="1" id="progressSnapshotbar"></progress>
+      <div id="videoEffects">
+      <input type="button" id="snapshotButton" {{action "takeScreenShotFromChatroom" }} class="" value="Take Snapshot"/>
+      <input type="button" id="getSnapshotButton" class="" value="get Snapshot" style="display:none" />
+      <input type="button" {{action "putClassesOnUser" }} class="" value="classes" />
+      <input type="button" {{action "putHairOnUser" }} class="" value="hair" />
+      <input type="button" {{action "putBeardOnUser" }} class="" value="beard"/>
+      <input type="button" id="takeOffClothesButton" {{action "takeOffClothesOfUser" }} class="" value="off" style="display:none" />
+      </div>
+      </div>
+      </div>
       <div id="socialSidebar">
-        {{ partial 'auth' }}
+      {{ partial 'auth' }}
       </div>
-
 
       <!-- Facebook-Instance -->
       <script type="text/javascript" src="http://connect.facebook.net/en_US/all.js"></script>
+    <script src="assets/js/libs/facebook-sdk-init.js"></script>
 
-      <script src="assets/js/libs/facebook-sdk-init.js"></script>
-  
-      <!-- face-detection -->
-      <script src="assets/js/libs/request-animation-frame.js"></script>
-      <script src="assets/js/libs/face-detection/ccv.js"></script>
-      <script src="assets/js/libs/face-detection/face.js"></script>
-      <script src="assets/js/helpers/face-detector.js"></script>
-  
-      <!-- screenshot-maker -->
-      <script src="assets/js/libs/html2canvas/html2canvas.min.js"></script>
-  
-      <!-- helper -->
-      <script src="assets/js/helpers/signaling.js"></script>
+    <!-- face-detection -->
+    <script src="assets/js/libs/request-animation-frame.js"></script>
+    <script src="assets/js/libs/face-detection/ccv.js"></script>
+    <script src="assets/js/libs/face-detection/face.js"></script>
+    <script src="assets/js/helpers/face-detector.js"></script>
 
+    <!-- screenshot-maker -->
+    <script src="assets/js/libs/html2canvas/html2canvas.min.js"></script>
+
+    <!-- helper -->
+    <script src="assets/js/helpers/signaling.js"></script>
     </script>
 
     <script type="text/x-handlebars" data-template-name="about">
@@ -116,7 +128,7 @@
       </header>
       <h2>Danke das du Phovec benutzt hast. <br /> Du darfst gerne jederzeit wieder kommen!</h2>
       <br />
-      {{#linkTo "room" }}<div id="startButtonImage"></div>{{/linkTo}}
+      {{#linkTo "rooms" }}<div id="startButtonImage"></div>{{/linkTo}}
     </script>
 
     <script type="text/x-handlebars" data-template-name="_auth">
@@ -158,6 +170,7 @@
 
     <!-- helper -->
     <script src="assets/js/helpers/webrtc.js"></script>
+    <script src="assets/js/helpers/debugger.js"></script>
 
     <!-- app -->
     <script src="assets/js/app.js"></script>

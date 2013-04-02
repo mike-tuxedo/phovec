@@ -1,30 +1,7 @@
 ﻿App.UserController = Ember.ObjectController.extend({
-  users: [],
   init: function() {
-    var user = App.User.create({
-      type: "local"
-    });
-    this.get("users").push(user);
-  },
-  setLocalStream: function(stream) {
-    var users = this.get("users");
-    for (var i = 0; i < users.length; i++) {
-      if (users[i].get("type") == "local") {
-        return users[i].set("stream", stream);
-      }
-    }
-  },
-  getLocalStream: function() {
-    var users = this.get("users");
-    for (var i = 0; i < users.length; i++) {
-      if (users[i].get("type") == "local") {
-        return users[i].get("stream");
-      }
-    }
   },
   onGetMediaSuccess: function(stream) {
-
-    App.Controller.user.setLocalStream(stream);
     window.dispatchEvent(new CustomEvent("localmedia:available", {
       detail: {
         stream: stream
