@@ -36,7 +36,7 @@
           }));
           break;
         case "sdp":
-          trace("signaling", "SDP", data);
+          //trace("signaling", "SDP", data);
           window.dispatchEvent(new CustomEvent("signalingchannel:sdp", {
             detail: {
               sdp: data.sdp,
@@ -46,7 +46,7 @@
           }));
           break;
         case "ice":
-          trace("signaling", "ICE", data);
+          //trace("signaling", "ICE", data);
           if (data.ice) {
             window.dispatchEvent(new CustomEvent("signalingchannel:ice", {
               detail: {
@@ -60,7 +60,7 @@
           }
           break;
         case "participant-join":
-          trace("signaling", "JOIN", data);
+          //trace("signaling", "JOIN", data);
           window.dispatchEvent(new CustomEvent("signalingchannel:participant", {
             detail: {
               message: "join",
@@ -70,7 +70,7 @@
           }));
           break;
         case "participant-leave":
-          trace("signaling", "LEAVE", data);
+          //trace("signaling", "LEAVE", data);
           window.dispatchEvent(new CustomEvent("signalingchannel:participant", {
             detail: {
               message: "leave",
@@ -93,10 +93,11 @@
     };
   },
   send: function(message) {
-    trace("signaling", "SEND", message);
+    //trace("signaling", "SEND", message);
     SignalingChannel.webSocket.send(JSON.stringify(message));
   },
   close: function() {
+    trace("signaling", "CLOSE", "-");
     if (this.webSocket) {
       this.webSocket.onclose = function() {
       };
