@@ -29,7 +29,6 @@ var WebRTC = {
       if (navigator.browser[0] === "Firefox") {
         $('#' + remoteUserId + ' video').get(0).play();
       }
-
       trace("webrtc", "Remote Stream arrived", event);
     };
     peerConnection.onremovestream = function(event) {
@@ -118,6 +117,26 @@ var WebRTC = {
     trace("webrtc", "Signaling Init", event);
     var data = event.detail;
 
+    /**
+     * If there is an error handle it
+     */
+    if (data.error !== undefined) {
+      switch(data.error) {
+        case "room:full":
+          App.handleURL('full/');
+          App.Router.router.replaceURL('full/');
+          break;
+        case "room:unknown":
+          App.handleURL('unknown');
+          App.Router.router.replaceURL('unknown');
+          break;
+        default:
+          trace("webrtc", "Got unknown error!", event);
+          break;
+      }
+      return;
+    }
+
     /* set url according to the room-hash */
     App.handleURL('room/' + data.roomHash);
     App.Router.router.replaceURL('/room/' + data.roomHash);
@@ -141,12 +160,13 @@ var WebRTC = {
     // Use setTimeout to get an asynchronous answer and don't stop the script
     setTimeout(function(user) {
       var user = Users.getLocalUser();
-      var localName = "Test";//prompt("Nickname:", "Bitte Namen wählen...");
+      var localName = "Test";
+      //prompt("Nickname:", "Bitte Namen wählen...");
       user.name = localName;
 
       $('#local_name').text(localName);
       $('#videoboxes #local').attr("id", data.userId);
-    }, 1);
+    }, 500);
   },
   handleSignalingSdp: function(event) {
     trace("webrtc", "Handle SDP", event);
@@ -249,8 +269,11 @@ var Users = {
       channel: undefined,
       type: "remote"
     };
+
+    setTimeout(function() {
+      $('#videoboxes').append("<div class='user' id='" + remoteUserId + "'><span class='name'>Name</span><video autoplay></video><form action='javascript:void(0);'><textarea rows='4' READONLY></textarea><input placeholder='Nachricht...'/></form></div>");
+    }, 500);
     
-    $('#remoteUsers').append("<div class='user' id='" + remoteUserId + "'><span class='name'>Name</span><video autoplay></video><form action='javascript:void(0);'><textarea rows='4' READONLY></textarea><input placeholder='Nachricht...'/></form></div>");
     Users.users.push(user);
   },
   getLocalUser: function() {

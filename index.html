@@ -52,7 +52,11 @@
       </div>
       {{#linkTo "rooms"}}<div id="startButtonImage"></div>{{/linkTo}}
     </script>
-    
+   
+    <script type="text/x-handlebars" data-template-name="unknown"></script>
+        
+    <script type="text/x-handlebars" data-template-name="full"></script>
+
     <script type="text/x-handlebars" data-template-name="rooms"></script>
 
     <script type="text/x-handlebars" data-template-name="room">
@@ -65,16 +69,17 @@
         <p>Verwendest du den Chromebrowser, dann schau dazu doch mal auf den oberen Rand ;)</p>
       </div>
       <div id="videoboxes">
-        
-        <div class="user" id="local">
-          <div class="videoOptions">
-            <img src="assets/img/muteButton.png" />
-            <img src="assets/img/videoButton.png" />
+        {{#view App.UserView}}
+          <div class="user" id="local">
+            <div class="videoOptions">
+              <img src="assets/img/muteButton.png" />
+              <img src="assets/img/videoButton.png" />
+            </div>
+            <span class="name" id="local_name">Name</span>
+            <video autoplay></video>
+            <canvas id="faceDetectorOutput"></canvas>
           </div>
-          <span class="name" id="local_name">Name</span>
-          <video autoplay></video>
-          <canvas id="faceDetectorOutput"></canvas>
-        </div>
+        {{/view}}
         
         <div id="videoEffectsBar">
           <progress value="0" max="1" id="progressSnapshotbar"></progress>
@@ -89,11 +94,8 @@
         </div>
       </div>
     
-      <div id="remoteUsers">
-      </div>
-    
       <div id="socialSidebar">
-      {{ partial 'auth' }}
+        {{ partial 'auth' }}
       </div>
 
       <!-- Facebook-Instance -->
