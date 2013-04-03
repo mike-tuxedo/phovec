@@ -43,7 +43,6 @@ function trace(file, message, object) {
   var timestamp = formatTime(new Date().getTime());
   console.log(timestamp + "\t" + file + "\t" + message + "\t");
   //console.log("\t\t" + "With data: ", object);
-  //console.log($('#videoboxes .user').get(0), $('#videoboxes .user').get(1));
   WebRTCDebugger.update();
 }
 
