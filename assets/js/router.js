@@ -13,7 +13,8 @@ App.Router.map(function() {
     path: "/room/:roomhash"
   });
   this.route("hangup");
-  this.route("invitation");
+  this.route("unknown");
+  this.route("full");
 });
 
 App.ApplicationRoute = Ember.Route.extend({
