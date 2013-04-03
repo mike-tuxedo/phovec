@@ -123,12 +123,12 @@ var WebRTC = {
     if (data.error !== undefined) {
       switch(data.error) {
         case "room:full":
-          App.handleURL('full');
-          App.Router.router.replaceURL('full');
+          App.handleURL('/full');
+          App.Router.router.replaceURL('/full');
           break;
         case "room:unknown":
-          App.handleURL('unknown');
-          App.Router.router.replaceURL('unknown');
+          App.handleURL('/unknown');
+          App.Router.router.replaceURL('/unknown');
           break;
         default:
           trace("webrtc", "Got unknown error!", event);

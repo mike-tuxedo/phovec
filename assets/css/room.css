@@ -27,7 +27,7 @@
   z-index: 10;
 }
 
-#plus_button{
+#plus_button {
   cursor: pointer;
   position: absolute;
   background: #303743;
@@ -41,7 +41,7 @@
   z-index: 110;
 }
 
-.get_friends{
+.get_friends {
   position: fixed;
   right: -10px;
   margin-top: 350px;
@@ -50,7 +50,6 @@
   border-top-left-radius: 0px;
   border-bottom-left-radius: 0px;
   z-index: 100;
-  
   opacity: 0.8;
   background: #ffffff; /* Old browsers */
   background: -moz-radial-gradient(center, ellipse cover, #ffffff 0%, #3692d8 60%); /* FF3.6+ */
@@ -139,6 +138,8 @@
 
 #videoboxes .user {
   width: 300px;
+  float: left;
+  margin:10px;
 }
 
 #videoboxes .name {
@@ -169,9 +170,9 @@
 
 .videoOptions {
   border-top-left-radius: 5px;
-  border-top-right-radius: 5px;
-  //display: none;
-  //visibility: hidden;
+  border-top-right-radius: 5px;//
+  display: none;//
+  visibility: hidden;
   position: absolute;
   background: #303743;
   opacity: 0;
@@ -210,10 +211,10 @@
   opacity: 0.8;
 }
 
-#videoEffectsBar{
-  position:relative;
-  margin-top:250px;
-  height:20px;
+#videoEffectsBar {
+  position: relative;
+  margin-top: 250px;
+  height: 20px;
   color: #303743;
   border-bottom-left-radius: 15px;
   border-bottom-right-radius: 15px;
@@ -225,13 +226,13 @@
   background-position: 9.8em -0.3em;
   box-shadow: inset 1px 1px 5px #444;
   -webkit-box-shadow: inset 1px 1px 5px #444;
-  cursor:pointer;
+  cursor: pointer;
 }
 
-#videoEffects{
-  display:none;
-  margin-top:25px;
-  height:40px;
+#videoEffects {
+  display: none;
+  margin-top: 25px;
+  height: 40px;
   width: 100%;
   color: #303743;
   background: #e0dfeb;
@@ -241,14 +242,14 @@
   -webkit-box-shadow: inset 1px 1px 5px #444;
 }
 
-#videoEffects input{
-  float:left;
-  margin-left:5px;
+#videoEffects input {
+  float: left;
+  margin-left: 5px;
   width: 40px;
-  height:20px;
+  height: 20px;
 }
 
-#progressSnapshotbar{
-  display:none;
+#progressSnapshotbar {
+  display: none;
   margin: 0 auto;
 }
