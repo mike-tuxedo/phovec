@@ -9,7 +9,7 @@
 
         $('#faceDetectorOutput')[0].style.width = $('video').css('width');
         $('#faceDetectorOutput')[0].style.height = '225px';
-
+        
         FaceDetector.init($('video')[0], $('#faceDetectorOutput')[0]);
 
         controller.setupVideoEffectBar();
@@ -74,8 +74,8 @@
     $('#videoEffectsBar').css('margin-top', '0px');
     $('#takeOffClothesButton').show();
     FaceDetector.closing = false;
-    if (WebRTC.users && WebRTC.users[0].stream)
-      FaceDetector.getStream(WebRTC.users[0].stream, type);
+    if (Users.users && Users.users[0].stream)
+      FaceDetector.getStream(Users.users[0].stream, type);
   },
   takeScreenShotFromChatroom: function() {
 
