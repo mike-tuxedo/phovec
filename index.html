@@ -57,37 +57,41 @@
 
     <script type="text/x-handlebars" data-template-name="room">
       <header>
-      {{#linkTo "about" id="infoButton"}}{{/linkTo}}
-      {{#linkTo "hangup" id="hangupButton"}}{{/linkTo}}
+        {{#linkTo "about" id="infoButton"}}{{/linkTo}}
+        {{#linkTo "hangup" id="hangupButton"}}{{/linkTo}}
       </header>
       <div id="infoField">
-      <p>Du musst deinem Browser Zugriff auf Kamera & Mikrofon erlauben!</p><br/>
-      <p>Verwendest du den Chromebrowser, dann schau dazu doch mal auf den oberen Rand ;)</p>
+        <p>Du musst deinem Browser Zugriff auf Kamera & Mikrofon erlauben!</p><br/>
+        <p>Verwendest du den Chromebrowser, dann schau dazu doch mal auf den oberen Rand ;)</p>
       </div>
       <div id="videoboxes">
-      {{#view App.UserView}}
-      <div class="user" id="local">
-      <div class="videoOptions">
-      <img src="assets/img/muteButton.png" />
-      <img src="assets/img/videoButton.png" />
+        
+        <div class="user" id="local">
+          <div class="videoOptions">
+            <img src="assets/img/muteButton.png" />
+            <img src="assets/img/videoButton.png" />
+          </div>
+          <span class="name" id="local_name">Name</span>
+          <video autoplay></video>
+          <canvas id="faceDetectorOutput"></canvas>
+        </div>
+        
+        <div id="videoEffectsBar">
+          <progress value="0" max="1" id="progressSnapshotbar"></progress>
+          <div id="videoEffects">
+            <input type="button" id="snapshotButton" {{action "takeScreenShotFromChatroom" }} class="" value="Take Snapshot"/>
+            <input type="button" id="getSnapshotButton" class="" value="get Snapshot" style="display:none" />
+            <input type="button" {{action "putClassesOnUser" }} class="" value="classes" />
+            <input type="button" {{action "putHairOnUser" }} class="" value="hair" />
+            <input type="button" {{action "putBeardOnUser" }} class="" value="beard"/>
+            <input type="button" id="takeOffClothesButton" {{action "takeOffClothesOfUser" }} class="" value="off" style="display:none" />
+          </div>
+        </div>
       </div>
-      <span class="name" id="local_name">Name</span>
-      <video autoplay></video>
-      <canvas id="faceDetectorOutput"></canvas>
+    
+      <div id="remoteUsers">
       </div>
-      {{/view}}
-      <div id="videoEffectsBar">
-      <progress value="0" max="1" id="progressSnapshotbar"></progress>
-      <div id="videoEffects">
-      <input type="button" id="snapshotButton" {{action "takeScreenShotFromChatroom" }} class="" value="Take Snapshot"/>
-      <input type="button" id="getSnapshotButton" class="" value="get Snapshot" style="display:none" />
-      <input type="button" {{action "putClassesOnUser" }} class="" value="classes" />
-      <input type="button" {{action "putHairOnUser" }} class="" value="hair" />
-      <input type="button" {{action "putBeardOnUser" }} class="" value="beard"/>
-      <input type="button" id="takeOffClothesButton" {{action "takeOffClothesOfUser" }} class="" value="off" style="display:none" />
-      </div>
-      </div>
-      </div>
+    
       <div id="socialSidebar">
       {{ partial 'auth' }}
       </div>
