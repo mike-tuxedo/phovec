@@ -22,7 +22,7 @@
         trace("signaling", "Unparsable message from server", "-");
         return;
       }
-
+      
       switch(data.subject) {
         case "init":
           trace("signaling", "INIT", data);

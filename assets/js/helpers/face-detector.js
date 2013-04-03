@@ -1,6 +1,6 @@
 ﻿var FaceDetector = {
   closing: false,
-  type_to_load: null,
+  typeToLoad: null,
 	getStream: function(stream,type) {
     
     if(navigator.browser[0] === 'Firefox')
@@ -47,7 +47,7 @@
 					height: height,
 				}];
 			
-        FaceDetector.type_to_load = type;
+        FaceDetector.typeToLoad = type;
 				FaceDetector.drawToCanvas();
         FaceDetector.video.style.display = 'none';
 			}, 500);
@@ -62,7 +62,7 @@
     if(!FaceDetector.closing)
       requestAnimationFrame(FaceDetector.drawToCanvas,type);
     
-    var type = FaceDetector.type_to_load;
+    var type = FaceDetector.typeToLoad;
 		var video = FaceDetector.video;
 	  var ctx = FaceDetector.context;
 	  var backCtx = FaceDetector.backContext;

@@ -67,6 +67,7 @@
     $('video').css('display', 'inline');
     $('#faceDetectorOutput')[0].style.display = 'none';
     $('#takeOffClothesButton').hide();
+    $('#videoEffectsBar').css('margin-top', '250px');
     FaceDetector.closing = true;
   },
   putUserStreamOnDetector: function(type) {
