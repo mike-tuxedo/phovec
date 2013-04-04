@@ -24,19 +24,12 @@
     //setTimeout(function(){setInterval(function(){animate($('#plus_button'), 0.3)}, 500)}, 0);
     //setTimeout(function(){setInterval(function(){animate($('#plus_button'), 1)}, 500)}, 500);
 
-    animate($('#plus_button'), '0 0 50px #44f');
+    plusButtonAnimation = setInterval(function(){animate($('#show_sidebar'));}, 1400);
     
     function animate(item, blur){
-      item.animate({boxShadow: blur});
-      
-      if(blur === '0 0 50px #44f')
-        animate(item, '0 0 0px #44f');
-      else  
-        animate(item, '0 0 50px #44f');
-        
+      item.animate({boxShadow: '0 0 100px #44f'}, 700);
+      item.animate({boxShadow: '0 0 20px #44f'}, 700);
     }
-    
-    
 
     
   },
@@ -151,5 +144,8 @@
         isShown = false;
       }
     });
+  },
+  stopAnimation: function(){
+    clearInterval(plusButtonAnimation);
   }
 });

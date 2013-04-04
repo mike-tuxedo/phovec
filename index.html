@@ -27,12 +27,6 @@
       </div>
     </div>
 
-    <!-- animated plus -->
-    <div id="plus_button"></div>
-    <div id="gradient1" class="get_friends"></div>
-    <div id="gradient2" class="get_friends"></div>
-    <div id="gradient3" class="get_friends"></div>
-
     <script type="text/x-handlebars" data-template-name="application">
       <div id="blackFilter"></div>
       <div id="content">
@@ -93,8 +87,9 @@
           </div>
         </div>
       </div>
-    
-      <div id="socialSidebar">
+      <!-- animated plus -->
+      <input type="button" id="show_sidebar" value="+" {{ action showSidebar target="view" }}/>
+      <div id="social_sidebar">
         {{ partial 'auth' }}
       </div>
 
