@@ -1,30 +1,31 @@
 ﻿var SignalingChannel = {
   webSocket: null,
+  connected: false,
   init: function() {
     var self = this;
     this.webSocket = new WebSocket('ws://www.nucular-bacon.com:49152');
 
     this.webSocket.onopen = function() {
-      console.log("SignalingChannel: ONOPEN");
-
-      var roomHash = prompt("Raumname:", "");
-      var roomLink = roomHash ? location.href + "/" + roomHash : location.href;
+      trace("signaling", "ONOPEN", "-");
+      self.connected = true;
 
       this.send(JSON.stringify({
         subject: "init",
-        url: roomLink
+        url: location.href
       }));
     };
     this.webSocket.onmessage = function(message) {
+      var data = "";
       try {
         data = JSON.parse(message.data);
       } catch(e) {
-        console.log("SignalingChannel: Unparsable message from server");
+        trace("signaling", "Unparsable message from server", "-");
+        return;
       }
-
+      
       switch(data.subject) {
         case "init":
-          console.log("SignalingChannel: INIT ", data);
+          trace("signaling", "INIT", data);
           window.dispatchEvent(new CustomEvent("signalingchannel:init", {
             detail: {
               roomHash: data.chatroomHash,
@@ -35,7 +36,7 @@
           }));
           break;
         case "sdp":
-          console.log("SignalingChannel: SDP ", data);
+          //trace("signaling", "SDP", data);
           window.dispatchEvent(new CustomEvent("signalingchannel:sdp", {
             detail: {
               sdp: data.sdp,
@@ -45,7 +46,7 @@
           }));
           break;
         case "ice":
-          console.log("SignalingChannel: ICE ", data);
+          //trace("signaling", "ICE", data);
           if (data.ice) {
             window.dispatchEvent(new CustomEvent("signalingchannel:ice", {
               detail: {
@@ -59,7 +60,7 @@
           }
           break;
         case "participant-join":
-          console.log("SignalingChannel: JOIN ", data);
+          //trace("signaling", "JOIN", data);
           window.dispatchEvent(new CustomEvent("signalingchannel:participant", {
             detail: {
               message: "join",
@@ -69,7 +70,7 @@
           }));
           break;
         case "participant-leave":
-          console.log("SignalingChannel: LEAVE ", data);
+          //trace("signaling", "LEAVE", data);
           window.dispatchEvent(new CustomEvent("signalingchannel:participant", {
             detail: {
               message: "leave",
@@ -79,24 +80,31 @@
           }));
           break;
         default:
-          console.log("SignalingChannel: Unknown subject in message!");
+          trace("signaling", "Unknown subject in message!", data);
           break;
       };
     };
     this.webSocket.onerror = function(error) {
-      console.log("SignalingChannel: ERROR");
+      trace("signaling", "ERROR", error);
     };
     this.webSocket.onclose = function() {
-      console.log("SignalingChannel: CLOSE");
+      self.connected = false;
+      trace("signaling", "CLOSE", "-");
     };
   },
   send: function(message) {
-    console.log("SignalingChannel: SEND " + new Date().getTime() + " ", message);
+    //trace("signaling", "SEND", message);
     SignalingChannel.webSocket.send(JSON.stringify(message));
   },
   close: function() {
-    this.webSocket.onclose = function() {
-    };
-    this.webSocket.close();
+    trace("signaling", "CLOSE", "-");
+    if (this.webSocket) {
+      this.webSocket.onclose = function() {
+      };
+      this.webSocket.close();
+    }
+  },
+  connectionEstablished: function() {
+    return this.connected;
   }
 };

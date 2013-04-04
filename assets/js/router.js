@@ -6,9 +6,15 @@
 // });
 App.Router.map(function() {
   this.route("about");
-  this.route('room');
+  this.route('rooms', {
+    path: "/room"
+  });
+  this.route('room', {
+    path: "/room/:roomhash"
+  });
   this.route("hangup");
-  this.route("invitation");
+  this.route("unknown");
+  this.route("full");
 });
 
 App.ApplicationRoute = Ember.Route.extend({
@@ -23,17 +29,22 @@ App.IndexRoute = Ember.Route.extend({
   }
 });
 
+App.RoomsRoute = Ember.Route.extend({
+  enter: function(router) {
+    SignalingChannel.init();
+  }
+});
+
 App.RoomRoute = Ember.Route.extend({
   enter: function(router) {
-  
+    if (!SignalingChannel.connected) {
+      SignalingChannel.init();
+    }
+
+    App.Controller.auth = App.AuthController.create();
     App.Controller.room = App.RoomController.create();
-    
     App.Controller.user = App.UserController.create();
     App.Controller.user.startGetMedia();
-    
-    App.Controller.auth = App.AuthController.create();
-    
-    SignalingChannel.init();
 
     /*set a black background to let the user focus on the infofield an add a event for get info and background away*/
     $('#blackFilter').css('display', 'block');

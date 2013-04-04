@@ -1,9 +1,15 @@
 ﻿var FaceDetector = {
   closing: false,
-  type_to_load: null,
+  typeToLoad: null,
 	getStream: function(stream,type) {
-		FaceDetector.video.addEventListener('canplay', function() {
-			FaceDetector.video.removeEventListener('canplay');
+    
+    if(navigator.browser[0] === 'Firefox')
+      FaceDetector.video.oncanplay = setup;
+    else if(navigator.browser[0] === 'Chrome')
+      FaceDetector.video.addEventListener('canplay',setup,true);
+    
+		function setup() {
+    
 			setTimeout(function() {
         
 				FaceDetector.video.play();
@@ -15,24 +21,24 @@
 				FaceDetector.backCanvas.height = FaceDetector.video.videoHeight / 4;
 				FaceDetector.backContext = FaceDetector.backCanvas.getContext('2d');
         
-        var image_width = null;
-        var image_height = null;
+        var imageWidth = null;
+        var imageHeight = null;
         
         if(type === 'classes'){
-          image_width = FaceDetector.glasses.width;
-          image_height = FaceDetector.glasses.height;
+          imageWidth = FaceDetector.glasses.width;
+          imageHeight = FaceDetector.glasses.height;
         }  
         else if(type === 'hair'){
-          image_width = FaceDetector.hair.width;
-          image_height = FaceDetector.hair.height;
+          imageWidth = FaceDetector.hair.width;
+          imageHeight = FaceDetector.hair.height;
         }
         else if(type === 'beard'){
-          image_width = FaceDetector.beard.width;
-          image_height = FaceDetector.beard.height;
+          imageWidth = FaceDetector.beard.width;
+          imageHeight = FaceDetector.beard.height;
         }
         
-				var width = image_width / 4 * 0.8;
-			  var height = image_height / 4 * 0.8;
+				var width = imageWidth / 4 * 0.8;
+			  var height = imageHeight / 4 * 0.8;
 			
 				FaceDetector.comp = [{
 					x: (FaceDetector.video.videoWidth / 4 - width) / 2,
@@ -41,10 +47,12 @@
 					height: height,
 				}];
 			
-        FaceDetector.type_to_load = type;
+        FaceDetector.typeToLoad = type;
 				FaceDetector.drawToCanvas();
+        FaceDetector.video.style.display = 'none';
 			}, 500);
-		}, true);
+      
+		}
 		
 		var domURL = window.URL || window.webkitURL;
 		FaceDetector.video.src = domURL ? domURL.createObjectURL(stream) : stream;
@@ -54,7 +62,7 @@
     if(!FaceDetector.closing)
       requestAnimationFrame(FaceDetector.drawToCanvas,type);
     
-    var type = FaceDetector.type_to_load;
+    var type = FaceDetector.typeToLoad;
 		var video = FaceDetector.video;
 	  var ctx = FaceDetector.context;
 	  var backCtx = FaceDetector.backContext;
