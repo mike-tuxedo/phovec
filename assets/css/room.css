@@ -34,11 +34,13 @@
   border: 8px solid #e0dfeb;
   border-top-left-radius: 50px;
   border-bottom-left-radius: 50px;
+  box-shadow: 0px 0px 1px #fff;
   width: 50px;
   height: 50px;
   right: -34px;
   margin-top: 316px;
   z-index: 110;
+  opacity: 1;
 }
 
 .get_friends {

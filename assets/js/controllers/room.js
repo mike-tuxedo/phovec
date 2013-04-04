@@ -19,40 +19,20 @@
 
     }, 500);
 
-    /* starting animated plus */
-    //time between a set of animations and the next set of animations (one set are 3 bubbles)
-    var repetitionRate = 4000;
-    //duration until a bubble reach his given size
-    var duration = 1700;
-    var top = parseInt($('.get_friends').css('margin-top'), 10);
-    /*
-     setTimeout(function(){setInterval(function(){animateGradient($('#gradient1'), duration, 200, top)}, repetitionRate)}, 0);
-     setTimeout(function(){setInterval(function(){animateGradient($('#gradient2'), duration, 150, top)}, repetitionRate)}, 200);
-     setTimeout(function(){setInterval(function(){animateGradient($('#gradient3'), duration, 100, top)}, repetitionRate)}, 400);
+    console.log('start animation');
+    /* starting animated plus */  
+    //setTimeout(function(){setInterval(function(){animate($('#plus_button'), 0.3)}, 500)}, 0);
+    //setTimeout(function(){setInterval(function(){animate($('#plus_button'), 1)}, 500)}, 500);
 
-     function animateGradient(gradient, duration, size, top){
-     var halfSize = size/2;
+    animate($('#plus_button'), 0);
+    
+    function animate(item, blur){
+      item.animate({boxShadow: '0 0 30px #44f'});
+    }
+    
+    
 
-     gradient.animate({
-     opacity: '0',
-     width: size + 'px',
-     height: size + 'px',
-     right: '-' + halfSize + 'px',
-     borderTopLeftRadius: halfSize + 'px',
-     borderBottomLeftRadius: halfSize + 'px',
-     marginTop: (top-halfSize) + 'px'
-     },
-     duration,
-     function(){
-     gradient.css('opacity','0.8');
-     gradient.css('width','0px');
-     gradient.css('height','0px');
-     gradient.css('right','0px');
-     gradient.css('borderTopLeftRadius','0px');
-     gradient.css('borderBottomLeftRadius','0px');
-     gradient.css('marginTop','350px');
-     });
-     }*/
+    
   },
   putClassesOnUser: function() {
     this.putUserStreamOnDetector('classes');
