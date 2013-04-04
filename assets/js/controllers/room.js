@@ -24,10 +24,16 @@
     //setTimeout(function(){setInterval(function(){animate($('#plus_button'), 0.3)}, 500)}, 0);
     //setTimeout(function(){setInterval(function(){animate($('#plus_button'), 1)}, 500)}, 500);
 
-    animate($('#plus_button'), 0);
+    animate($('#plus_button'), '0 0 50px #44f');
     
     function animate(item, blur){
-      item.animate({boxShadow: '0 0 30px #44f'});
+      item.animate({boxShadow: blur});
+      
+      if(blur === '0 0 50px #44f')
+        animate(item, '0 0 0px #44f');
+      else  
+        animate(item, '0 0 50px #44f');
+        
     }
     
     
