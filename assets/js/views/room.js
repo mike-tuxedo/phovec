@@ -21,5 +21,8 @@
         $('#show_sidebar').val('<');
         this.sidebar = false;
       }
-    }
+  },
+  hideEffects: function(){
+    $('#videoEffects').css('display', 'none');
+  }
 }); 

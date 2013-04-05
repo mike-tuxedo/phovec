@@ -63,28 +63,28 @@
         <p>Verwendest du den Chromebrowser, dann schau dazu doch mal auf den oberen Rand ;)</p>
       </div>
       <div id="videoboxes">
-        {{#view App.UserView}}
+        
           <div class="user" id="local">
-            <div class="videoOptions">
-              <div id="videoEffectsBar">
-                <progress value="0" max="1" id="progressSnapshotbar"></progress>
-                <div id="videoEffects">
-                  <input type="button" id="snapshotButton" {{action "takeScreenShotFromChatroom" }} class="" value="Take Snapshot"/>
-                  <input type="button" id="getSnapshotButton" class="" value="get Snapshot" style="display:none" />
-                  <input type="button" {{action "putClassesOnUser" }} class="" value="classes" />
-                  <input type="button" {{action "putHairOnUser" }} class="" value="hair" />
-                  <input type="button" {{action "putBeardOnUser" }} class="" value="beard"/>
-                  <input type="button" id="takeOffClothesButton" {{action "takeOffClothesOfUser" }} class="" value="off" style="display:none" />
-                </div>
+            {{#view App.UserView}}
+              <div class="videoOptions">
+                <div class="videoOptionsItems">mute</div>
+                <div class="videoOptionsItems">bild mute</div>
+                <div class="videoOptionsItems" {{ action showEffects target="view" }}>effekte</div>
               </div>
-            </div>
+            {{/view}}
+
             <span class="name" id="local_name">Name</span>
             <video autoplay></video>
             <canvas id="faceDetectorOutput"></canvas>
+            <div id="videoEffects" {{ action hideEffects target="view" }}>
+              <input type="button" id="snapshotButton" {{action "takeScreenShotFromChatroom" }} class="" value="Take Snapshot"/>
+              <input type="button" id="getSnapshotButton" class="" value="get Snapshot" style="display:none" />
+              <input type="button" {{action "putClassesOnUser" }} class="" value="classes" />
+              <input type="button" {{action "putHairOnUser" }} class="" value="hair" />
+              <input type="button" {{action "putBeardOnUser" }} class="" value="beard"/>
+              <input type="button" id="takeOffClothesButton" {{action "takeOffClothesOfUser" }} class="" value="off" style="display:none" />
+            </div>
           </div>
-        {{/view}}
-        
-        
       </div>
       <!-- fake inputfield for a second shadow for the plus button -->
       <input id="show_sidebar_shadow"/>

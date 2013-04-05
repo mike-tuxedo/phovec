@@ -48,7 +48,7 @@
     FaceDetector.closing = true;
   },
   putUserStreamOnDetector: function(type) {
-    $('#videoEffectsBar').css('margin-top', '0px');
+    //$('#videoEffectsBar').css('margin-top', '0px');
     $('#takeOffClothesButton').show();
     FaceDetector.closing = false;
     if (Users.users && Users.users[0].stream)
@@ -120,7 +120,7 @@
 
   },
   setupVideoEffectBar: function() {
-    var isShown = false;
+    /*var isShown = false;
     $('#videoEffectsBar').click(function() {
       if (!isShown) {
 
@@ -141,6 +141,6 @@
         $('#videoEffects').css('display', 'none');
         isShown = false;
       }
-    });
+    });*/
   }
 });
