@@ -9,7 +9,7 @@
 
         $('#faceDetectorOutput')[0].style.width = $('video').css('width');
         $('#faceDetectorOutput')[0].style.height = '225px';
-        
+
         FaceDetector.init($('video')[0], $('#faceDetectorOutput')[0]);
 
         controller.setupVideoEffectBar();
