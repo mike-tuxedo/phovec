@@ -18,20 +18,26 @@
       }
 
     }, 500);
+  },
+  animationInterval: 15,
+  animation: function(action){
+    if(action === 'start'){
+      console.log('start animation');
+      
+      /* !!! überschreibt nicht die variable in Zeile 22, WARUM????*/
+      this.set('animationInterval', window.setInterval(function(){animate($('#show_sidebar'));}, 2));
+      console.log('intervalID: ' + this.get('animationInterval'));
 
-    console.log('start animation');
-    /* starting animated plus */  
-    //setTimeout(function(){setInterval(function(){animate($('#plus_button'), 0.3)}, 500)}, 0);
-    //setTimeout(function(){setInterval(function(){animate($('#plus_button'), 1)}, 500)}, 500);
-
-    plusButtonAnimation = setInterval(function(){animate($('#show_sidebar'));}, 1400);
-    
-    function animate(item, blur){
-      item.animate({boxShadow: '0 0 100px #44f'}, 700);
-      item.animate({boxShadow: '0 0 20px #44f'}, 700);
+      function animate(item){
+        item.animate({boxShadow: '0 0 100px #44f'}, 700);
+        item.animate({boxShadow: '0 0 20px #44f'}, 700);
+      }      
     }
-
-    
+    else{
+      console.log('intervalID: ' + this.get('animationInterval'));
+      window.clearInterval(this.get('animationInterval'));
+      console.log('animation should stop!');
+    }
   },
   putClassesOnUser: function() {
     this.putUserStreamOnDetector('classes');
@@ -144,8 +150,5 @@
         isShown = false;
       }
     });
-  },
-  stopAnimation: function(){
-    clearInterval(plusButtonAnimation);
   }
 });
