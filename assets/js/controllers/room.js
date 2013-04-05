@@ -19,26 +19,17 @@
 
     }, 500);
   },
-  animationInterval: 10,
-  animation: function(action){
-    if(action === 'start'){
-      console.log('start animation');
-      
-      /* !!! überschreibt nicht die variable in Zeile 22, WARUM ???? */
-      console.log('intervalID vorher: ' + this.get('animationInterval'));
-      this.set('animationInterval', window.setInterval(function(){animate($('#show_sidebar'));}, 2));
-      console.log('intervalID nachher: ' + this.get('animationInterval'));
+  animation: function(){
+      var interval = setInterval(function(){animate($('#show_sidebar'));}, 1250);
 
       function animate(item){
-        item.animate({boxShadow: '0 0 100px #44f'}, 700);
-        item.animate({boxShadow: '0 0 20px #44f'}, 700);
-      }      
-    }
-    else{
-      console.log('intervalID: ' + this.get('animationInterval'));
-      window.clearInterval(this.get('animationInterval'));
-      console.log('animation should stop!');
-    }
+        if(parseInt(item.css('right')) > -25){
+          clearInterval(interval);
+        }
+        else{
+          item.animate({boxShadow: '0 0 300px rgba(68,68,255,0)'}, 1200, function(){item.css('box-shadow','0 0 0px #44f')});
+        }
+      }
   },
   putClassesOnUser: function() {
     this.putUserStreamOnDetector('classes');

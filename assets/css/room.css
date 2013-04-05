@@ -27,6 +27,22 @@
   z-index: 10;
 }
 
+#show_sidebar_shadow{
+  position: absolute;
+  border-top-left-radius: 50px;
+  border-bottom-left-radius: 50px;
+  border-bottom-right-radius: 50px;
+  border-top-right-radius: 50px;
+  width: 50px;
+  height: 50px;
+  right: -25px;
+  margin-top: 300px;
+  overflow-x: hidden;
+  
+  box-shadow: 0px 0px 15px #444;
+  -webkit-box-shadow: 0px 0px 15px #444;
+}
+
 #show_sidebar {
   cursor: pointer;
   position: absolute;
@@ -35,7 +51,7 @@
   border-bottom-left-radius: 50px;
   border-bottom-right-radius: 50px;
   border-top-right-radius: 50px;
-  box-shadow: 0px 0px 1px #fff;
+
   width: 50px;
   height: 50px;
   right: -25px;
@@ -51,6 +67,7 @@
   opacity: 1;
   overflow-x: hidden;
 }
+
 .get_friends {
   position: fixed;
   right: -10px;
