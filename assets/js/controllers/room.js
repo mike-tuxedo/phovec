@@ -9,7 +9,7 @@
 
         $('#faceDetectorOutput')[0].style.width = $('video').css('width');
         $('#faceDetectorOutput')[0].style.height = '225px';
-        
+
         FaceDetector.init($('video')[0], $('#faceDetectorOutput')[0]);
 
         controller.setupVideoEffectBar();
@@ -20,24 +20,18 @@
     }, 500);
   },
   animationInterval: 10,
-  animation: function(action){
-    if(action === 'start'){
-      console.log('start animation');
-      
-      /* !!! überschreibt nicht die variable in Zeile 22, WARUM ???? */
-      console.log('intervalID vorher: ' + this.get('animationInterval'));
-      this.set('animationInterval', window.setInterval(function(){animate($('#show_sidebar'));}, 2));
-      console.log('intervalID nachher: ' + this.get('animationInterval'));
-
-      function animate(item){
-        item.animate({boxShadow: '0 0 100px #44f'}, 700);
-        item.animate({boxShadow: '0 0 20px #44f'}, 700);
-      }      
-    }
-    else{
-      console.log('intervalID: ' + this.get('animationInterval'));
-      window.clearInterval(this.get('animationInterval'));
-      console.log('animation should stop!');
+  animation: function(action) {
+    if (action === 'start') {
+      window.loop = setInterval(function() {
+        $('#show_sidebar').animate({
+          boxShadow: '0 0 100px #44f'
+        }, 700);
+        $('#show_sidebar').animate({
+          boxShadow: '0 0 20px #44f'
+        }, 700);
+      }, 1400);
+    } else {
+      clearInterval(window.loop);
     }
   },
   putClassesOnUser: function() {
