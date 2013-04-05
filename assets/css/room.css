@@ -44,11 +44,12 @@
   font-family: arial;
   color: #303743;
   z-index: 30;
-  opacity: 0.5;
+  overflow-x: hidden;
 }
 
 #show_sidebar:hover{
   opacity: 1;
+  overflow-x: hidden;
 }
 .get_friends {
   position: fixed;
@@ -68,6 +69,7 @@
   background: -ms-radial-gradient(center, ellipse cover, #ffffff 0%,#3692d8 60%); /* IE10+ */
   background: radial-gradient(ellipse at center, #ffffff 0%,#3692d8 60%); /* W3C */
   filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#3692d8',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
+  overflow-x: hidden;
 }
 
 #social_sidebar {
@@ -81,6 +83,7 @@
   height: 80%;
   width: 180px;
   background: #e0dfeb;
+  overflow-x: hidden;
 }
 
 .socialButtons {
@@ -88,6 +91,7 @@
   width: 60px;
   height: 60px;
   float: left;
+  overflow-x: hidden;
 }
 
 .socialButtons:hover {

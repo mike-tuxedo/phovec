@@ -19,14 +19,15 @@
 
     }, 500);
   },
-  animationInterval: 15,
+  animationInterval: 10,
   animation: function(action){
     if(action === 'start'){
       console.log('start animation');
       
-      /* !!! überschreibt nicht die variable in Zeile 22, WARUM????*/
+      /* !!! überschreibt nicht die variable in Zeile 22, WARUM ???? */
+      console.log('intervalID vorher: ' + this.get('animationInterval'));
       this.set('animationInterval', window.setInterval(function(){animate($('#show_sidebar'));}, 2));
-      console.log('intervalID: ' + this.get('animationInterval'));
+      console.log('intervalID nachher: ' + this.get('animationInterval'));
 
       function animate(item){
         item.animate({boxShadow: '0 0 100px #44f'}, 700);
