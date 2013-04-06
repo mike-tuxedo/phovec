@@ -75,7 +75,7 @@
         });
 
         snapshotWorker.onmessage = function(e) {
-
+          console.log('snapshotWorker: ',e.data);
           if (e && !e.data) {
             console.log("RoomController: takeScreenShotFromChatroom error happend", e);
           }
@@ -89,7 +89,7 @@
           }
 
           e.data.coords.forEach(function(coord, index) {
-
+            
             var ctx = canvas.getContext('2d');
 
             for (var v = 0; v < videoTags.length; v++) {

@@ -69,14 +69,14 @@
               <div class="videoOptions">
                 <div class="videoOptionsItems">mute</div>
                 <div class="videoOptionsItems">bild mute</div>
-                <div class="videoOptionsItems" {{ action showEffects target="view" }}>effekte</div>
+                <div class="videoOptionsItems" {{ action 'showEffects' target="view" }}>effekte</div>
               </div>
             {{/view}}
 
             <span class="name" id="local_name">Name</span>
             <video autoplay></video>
             <canvas id="faceDetectorOutput"></canvas>
-            <div id="videoEffects" {{ action hideEffects target="view" }}>
+            <div id="videoEffects" {{ action 'hideEffects' target="view" }}>
               <input type="button" id="snapshotButton" {{action "takeScreenShotFromChatroom" }} class="" value="Take Snapshot"/>
               <input type="button" id="getSnapshotButton" class="" value="get Snapshot" style="display:none" />
               <input type="button" {{action "putClassesOnUser" }} class="" value="classes" />
@@ -88,7 +88,7 @@
       </div>
       <!-- fake inputfield for a second shadow for the plus button -->
       <input id="show_sidebar_shadow"/>
-      <input type="button" id="show_sidebar" value="< " {{ action showSidebar target="view" }}/>
+      <input type="button" id="show_sidebar" value="< " {{ action 'showSidebar' target="view" }}/>
       <div id="social_sidebar">
         {{ partial 'auth' }}
       </div>

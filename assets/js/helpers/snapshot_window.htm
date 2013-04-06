@@ -6,20 +6,24 @@
 </head>
 
 <body>
-<canvas width="800%" height="800"></canvas>
+<canvas></canvas>
 </body>
 <script>
-  setTimeout(function(){ 
-    
+
+    console.log('window.snapshotImage: ',window.snapshotImage);
     var canvas = document.getElementsByTagName('canvas')[0];
+    canvas.height = window.innerHeight;
+    canvas.width = window.innerWidth;
     
     var img = document.createElement('img');
-    img.src = window.snapshotImage;
     img.width = canvas.width;
     img.height = canvas.height;
     
-    canvas.getContext('2d').drawImage(img,0,0); 
+    img.onload = function(){
+      canvas.getContext('2d').drawImage(img,0,0); 
+    };
     
-  },2000);
+    img.src = window.snapshotImage;
+    
 </script>
 </html>
