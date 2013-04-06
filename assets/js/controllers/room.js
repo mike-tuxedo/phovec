@@ -9,7 +9,7 @@
 
         $('#faceDetectorOutput')[0].style.width = $('video').css('width');
         $('#faceDetectorOutput')[0].style.height = '225px';
-        
+
         FaceDetector.init($('video')[0], $('#faceDetectorOutput')[0]);
 
         controller.setupVideoEffectBar();
@@ -18,41 +18,18 @@
       }
 
     }, 500);
+  },
+  animation: function(){
+      var interval = setInterval(function(){animate($('#show_sidebar'));}, 1250);
 
-    /* starting animated plus */
-    //time between a set of animations and the next set of animations (one set are 3 bubbles)
-    var repetitionRate = 4000;
-    //duration until a bubble reach his given size
-    var duration = 1700;
-    var top = parseInt($('.get_friends').css('margin-top'), 10);
-    /*
-     setTimeout(function(){setInterval(function(){animateGradient($('#gradient1'), duration, 200, top)}, repetitionRate)}, 0);
-     setTimeout(function(){setInterval(function(){animateGradient($('#gradient2'), duration, 150, top)}, repetitionRate)}, 200);
-     setTimeout(function(){setInterval(function(){animateGradient($('#gradient3'), duration, 100, top)}, repetitionRate)}, 400);
-
-     function animateGradient(gradient, duration, size, top){
-     var halfSize = size/2;
-
-     gradient.animate({
-     opacity: '0',
-     width: size + 'px',
-     height: size + 'px',
-     right: '-' + halfSize + 'px',
-     borderTopLeftRadius: halfSize + 'px',
-     borderBottomLeftRadius: halfSize + 'px',
-     marginTop: (top-halfSize) + 'px'
-     },
-     duration,
-     function(){
-     gradient.css('opacity','0.8');
-     gradient.css('width','0px');
-     gradient.css('height','0px');
-     gradient.css('right','0px');
-     gradient.css('borderTopLeftRadius','0px');
-     gradient.css('borderBottomLeftRadius','0px');
-     gradient.css('marginTop','350px');
-     });
-     }*/
+      function animate(item){
+        if(parseInt(item.css('right')) > -25){
+          clearInterval(interval);
+        }
+        else{
+          item.animate({boxShadow: '0 0 300px rgba(68,68,255,0)'}, 1200, function(){item.css('box-shadow','0 0 0px #44f')});
+        }
+      }
   },
   putClassesOnUser: function() {
     this.putUserStreamOnDetector('classes');
@@ -71,7 +48,7 @@
     FaceDetector.closing = true;
   },
   putUserStreamOnDetector: function(type) {
-    $('#videoEffectsBar').css('margin-top', '0px');
+    //$('#videoEffectsBar').css('margin-top', '0px');
     $('#takeOffClothesButton').show();
     FaceDetector.closing = false;
     if (Users.users && Users.users[0].stream)
@@ -146,7 +123,7 @@
 
   },
   setupVideoEffectBar: function() {
-    var isShown = false;
+    /*var isShown = false;
     $('#videoEffectsBar').click(function() {
       if (!isShown) {
 
@@ -167,6 +144,6 @@
         $('#videoEffects').css('display', 'none');
         isShown = false;
       }
-    });
+    });*/
   }
 });

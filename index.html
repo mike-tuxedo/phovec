@@ -27,12 +27,6 @@
       </div>
     </div>
 
-    <!-- animated plus -->
-    <div id="plus_button"></div>
-    <div id="gradient1" class="get_friends"></div>
-    <div id="gradient2" class="get_friends"></div>
-    <div id="gradient3" class="get_friends"></div>
-
     <script type="text/x-handlebars" data-template-name="application">
       <div id="blackFilter"></div>
       <div id="content">
@@ -69,32 +63,33 @@
         <p>Verwendest du den Chromebrowser, dann schau dazu doch mal auf den oberen Rand ;)</p>
       </div>
       <div id="videoboxes">
-        {{#view App.UserView}}
+        
           <div class="user" id="local">
-            <div class="videoOptions">
-              <img src="assets/img/muteButton.png" />
-              <img src="assets/img/videoButton.png" />
-            </div>
+            {{#view App.UserView}}
+              <div class="videoOptions">
+                <div class="videoOptionsItems">mute</div>
+                <div class="videoOptionsItems">bild mute</div>
+                <div class="videoOptionsItems" {{ action showEffects target="view" }}>effekte</div>
+              </div>
+            {{/view}}
+
             <span class="name" id="local_name">Name</span>
             <video autoplay></video>
             <canvas id="faceDetectorOutput"></canvas>
+            <div id="videoEffects" {{ action hideEffects target="view" }}>
+              <input type="button" id="snapshotButton" {{action "takeScreenShotFromChatroom" }} class="" value="Take Snapshot"/>
+              <input type="button" id="getSnapshotButton" class="" value="get Snapshot" style="display:none" />
+              <input type="button" {{action "putClassesOnUser" }} class="" value="classes" />
+              <input type="button" {{action "putHairOnUser" }} class="" value="hair" />
+              <input type="button" {{action "putBeardOnUser" }} class="" value="beard"/>
+              <input type="button" id="takeOffClothesButton" {{action "takeOffClothesOfUser" }} class="" value="off" style="display:none" />
+            </div>
           </div>
-        {{/view}}
-        
-        <div id="videoEffectsBar">
-          <progress value="0" max="1" id="progressSnapshotbar"></progress>
-          <div id="videoEffects">
-            <input type="button" id="snapshotButton" {{action "takeScreenShotFromChatroom" }} class="" value="Take Snapshot"/>
-            <input type="button" id="getSnapshotButton" class="" value="get Snapshot" style="display:none" />
-            <input type="button" {{action "putClassesOnUser" }} class="" value="classes" />
-            <input type="button" {{action "putHairOnUser" }} class="" value="hair" />
-            <input type="button" {{action "putBeardOnUser" }} class="" value="beard"/>
-            <input type="button" id="takeOffClothesButton" {{action "takeOffClothesOfUser" }} class="" value="off" style="display:none" />
-          </div>
-        </div>
       </div>
-    
-      <div id="socialSidebar">
+      <!-- fake inputfield for a second shadow for the plus button -->
+      <input id="show_sidebar_shadow"/>
+      <input type="button" id="show_sidebar" value="< " {{ action showSidebar target="view" }}/>
+      <div id="social_sidebar">
         {{ partial 'auth' }}
       </div>
 
@@ -166,7 +161,8 @@
     <script>
       window.jQuery || document.write('<script src="assets/js/libs/jquery.js"><\/script>')
     </script>
-
+    <script src="assets/js/libs/jquery-animate.min.js"></script>
+    
     <!-- libs -->
     <script src="assets/js/libs/handlebars-1.0.0-rc.3.js"></script>
     <script src="assets/js/libs/ember-1.0.0-rc.1.js"></script>

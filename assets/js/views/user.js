@@ -1,8 +1,12 @@
 App.UserView = Ember.View.extend({
   mouseEnter: function(e){
-                  $(e.target).animate({opacity:"0.5"});
+      $('.videoOptions').css('opacity','0.9');
   },
   mouseLeave: function(e){
-      $(e.target).animate({opacity:"0"});
+      $('.videoOptions').css('opacity','0');
+  },
+  showEffects: function(){
+    $('#videoEffects').css('display', 'block');
+    $('#videoEffects').css('margin-top', '0px');
   }
 });
