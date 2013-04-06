@@ -272,6 +272,13 @@
   height: 20px;
 }
 
+#faceDetectorOutput{
+  width: 100%;
+  float: left;
+  background: #A0A0A0;
+  display:none;
+}
+
 #progressSnapshotbar {
   display: none;
   margin: 0 auto;

@@ -120,7 +120,7 @@ FaceDetector.init = function(source, output) {
 	FaceDetector.canvas.style.display = 'none';
 	FaceDetector.context = FaceDetector.canvas.getContext('2d');
 	
-	FaceDetector.video.loop = FaceDetector.video.muted = true;
+	FaceDetector.video.loop = true;
 	FaceDetector.video.load();
   
 };
