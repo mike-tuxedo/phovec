@@ -1,0 +1,25 @@
+﻿<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Alter Snapshot</title>
+</head>
+
+<body>
+<canvas width="800%" height="800"></canvas>
+</body>
+<script>
+  setTimeout(function(){ 
+    
+    var canvas = document.getElementsByTagName('canvas')[0];
+    
+    var img = document.createElement('img');
+    img.src = window.snapshotImage;
+    img.width = canvas.width;
+    img.height = canvas.height;
+    
+    canvas.getContext('2d').drawImage(img,0,0); 
+    
+  },2000);
+</script>
+</html>
