@@ -129,8 +129,11 @@
           $('#getSnapshotButton').show();
 
           $('#getSnapshotButton').click(function(e) {
-            var win = window.open(canvas.toDataURL('image/png'), 'Snapshot', ('width=' + canvas.width + ', height=' + canvas.height + ',menubar=0,resizable=0,scrollbars=0,status=0'));
+            
+            var win = window.open('./assets/js/helpers/snapshot_window.htm', 'Snapshot', ('width=' + canvas.width + ', height=' + canvas.height + ',menubar=0,resizable=0,scrollbars=0,status=0'));
+            win.snapshotImage = canvas.toDataURL();
             $('#snapshotButton').show();
+            
           });
         };
 
