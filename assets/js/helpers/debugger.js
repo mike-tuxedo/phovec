@@ -9,9 +9,18 @@ var WebRTCDebugger = {
       $('#debugger #signalingState').text(Users.users[1].peerConnection.signalingState);
       $('#debugger #iceGatheringState').text(Users.users[1].peerConnection.iceGatheringState);
       $('#debugger #iceConnectionState').text(Users.users[1].peerConnection.iceConnectionState);
-    }
-    else{
+    } else {
       $('#debugger #localDescription, #debugger #iceConnectionState, #debugger #iceGatheringState, #debugger #signalingState, #debugger #remoteDescription').text("-");
+    }
+
+    if (Users.users[1] !== undefined && Users.users[1].peerConnection !== undefined && Users.users[1].dataChannel !== undefined) {
+      $('#debugger #reliable').text(Users.users[1].dataChannel.reliable);
+      $('#debugger #readyState').text(Users.users[1].dataChannel.readyState);
+      $('#debugger #bufferedAmount').text(Users.users[1].dataChannel.bufferedAmount);
+      $('#debugger #binaryType').text(Users.users[1].dataChannel.binaryType);
+    } else {
+      $('#debugger #reliable, #debugger #readyState, #debugger #bufferedAmount, #debugger #binaryType').text("-");
+
     }
   }
 };

@@ -1,6 +1,6 @@
 #debugger {
   width: 320px;
-  height: 200px;
+  height: 280px;
   position: fixed;
   z-index: 1000;
   left: 0px;
@@ -11,17 +11,17 @@
   display: none;
 }
 
-#debugger #rtcPeerConnection {
+#debugger #rtcPeerConnection, #debugger #rtcDataChannel {
   width: 100%;
 }
 
-#debugger #rtcPeerConnection div:nth-child(even) {
+#debugger #rtcPeerConnection div:nth-child(even), #debugger #rtcDataChannel div:nth-child(even) {
   float: right;
   text-align: center;
   width: 65%;
 }
 
-#debugger #rtcPeerConnection div:nth-child(odd) {
+#debugger #rtcPeerConnection div:nth-child(odd), #debugger #rtcDataChannel div:nth-child(odd) {
   float: left;
   width: 35%;
 }

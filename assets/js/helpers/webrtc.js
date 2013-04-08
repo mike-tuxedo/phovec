@@ -9,6 +9,9 @@ var WebRTC = {
     Users.createLocalUser()
   },
   createPeerConnection: function(roomHash, userId, remoteUserId) {
+    /**
+     * Create PeerConnection
+     */
     var peerConnection = new PeerConnection(RTC_CONFIGURATION, RTC_MEDIA_CONSTRAINTS);
 
     peerConnection.onicecandidate = function(description) {
@@ -47,7 +50,7 @@ var WebRTC = {
             trace("webrtc", "Set local description", description);
             userRemote.peerConnection.setLocalDescription(description, function() {
               trace("webrtc", "Success set local description", event);
-            }, function() {
+            }, function(event) {
               trace("webrtc", "Failure set local description", event);
             });
 
@@ -97,7 +100,35 @@ var WebRTC = {
       WebRTCDebugger.update();
     };
 
-    Users.createRemoteUser(roomHash, remoteUserId, peerConnection);
+    /**
+     * Create DataChannel
+     */
+    /*var dataChannel = peerConnection.createDataChannel('RTCDataChannel', DATACHANNEL_OPTIONS);
+    dataChannel.onmessage = function(event) {
+      if (event.data.substr(0, 4) == "\\$cn") {
+        user.name = event.data.substr(4);
+        $('#' + remoteUserId + ' .name').text(user.name);
+      } else {
+        var name = $('#' + remoteUserId + ' .name').text();
+        var output = new Date().getHours() + ":" + new Date().getMinutes() + " (" + name + ") - " + event.data + "&#13;&#10;";
+        $('#' + remoteUserId + ' form textarea').append(output);
+      }
+    };
+    dataChannel.onopen = function(event) {
+      trace("webrtc", "DataChannel onopen", event);
+      dataChannel.send("\\$cn" + WebRTC.getLocalUser().name);
+    };
+    dataChannel.onclose = function(event) {
+      trace("webrtc", "DataChannel onclose", event);
+    };
+    dataChannel.onerror = function(event) {
+      trace("webrtc", "DataChannel onerror", event);
+    };
+    peerConnection.ondatachannel = function(event) {
+      trace("webrtc", "DataChannel ondatachannel", event);
+    };*/
+
+    Users.createRemoteUser(roomHash, remoteUserId, peerConnection, undefined);
   },
   modifyDescription: function(description) {
     var sdp = description.sdp;
@@ -191,9 +222,9 @@ var WebRTC = {
             userRemote.peerConnection.addStream(userLocal.stream);
             trace("webrtc", "Added local stream to peerConnection", userLocal.stream);
           }
-        }, 1000);
+        }, 500);
       }
-    }, function() {
+    }, function(event) {
       trace("webrtc", "Failure set remote description", event);
     });
   },
@@ -227,7 +258,7 @@ var WebRTC = {
             userRemote.peerConnection.addStream(userLocal.stream);
             trace("webrtc", "Added local stream to peerConnection", userLocal.stream);
           }
-        }, 1000);
+        }, 500);
         break;
       case "leave":
         Users.removeRemoteUser(data.userId);
@@ -251,7 +282,6 @@ var Users = {
       name: undefined,
       id: undefined,
       roomHash: undefined,
-      peerConnection: undefined,
       stream: undefined,
       type: "local"
     };
@@ -259,21 +289,40 @@ var Users = {
     Users.users.push(user);
     return user;
   },
-  createRemoteUser: function(roomHash, remoteUserId, peerConnection) {
+  createRemoteUser: function(roomHash, remoteUserId, peerConnection, dataChannel) {
     var user = {
       name: undefined,
       id: remoteUserId,
       roomHash: roomHash,
       peerConnection: peerConnection,
       stream: undefined,
-      channel: undefined,
+      dataChannel: dataChannel,
       type: "remote"
     };
 
     setTimeout(function() {
       $('#videoboxes').append("<div class='user' id='" + remoteUserId + "'><span class='name'>Name</span><video autoplay></video><form action='javascript:void(0);'><textarea rows='4' READONLY></textarea><input placeholder='Nachricht...'/></form></div>");
+
+      $('#' + remoteUserId + " form input").keypress(function(e) {
+        if (e.which == 13) {
+          var input = $(this).val();
+          dataChannel.send(input);
+
+          var hours = new Date().getHours()
+          hours = hours < 10 ? "0" + hours : hours;
+
+          var minutes = new Date().getMinutes();
+          minutes = minutes < 10 ? "0" + minutes : minutes;
+
+          var output = hours + ":" + minutes + " (me) - " + input + "&#13;&#10;";
+          $('#' + remoteUserId + " textarea").append(output)
+
+          $(this).val("");
+          return false;
+        }
+      });
     }, 500);
-    
+
     Users.users.push(user);
   },
   getLocalUser: function() {
@@ -316,8 +365,8 @@ var Users = {
         if (user.peerConnection !== undefined) {
           user.peerConnection.close();
         }
-        if (user.channel !== undefined) {
-          user.channel.close();
+        if (user.dataChannel !== undefined) {
+          user.dataChannel.close();
         }
 
         $('#' + user.id).remove();
@@ -335,8 +384,8 @@ var Users = {
         if (Users.users[i].peerConnection !== undefined) {
           Users.users[i].peerConnection.close();
         }
-        if (Users.users[i].channel !== undefined) {
-          Users.users[i].channel.close();
+        if (Users.users[i].dataChannel !== undefined) {
+          Users.users[i].dataChannel.close();
         }
       }
     }
