@@ -69,26 +69,13 @@ function formatTime(timestamp) {
   return hours + ":" + minutes + ":" + seconds + ":" + miliseconds;
 }
 
-/* RTC ICE server configuration for PeerConnection */
-RTC_CONFIGURATION = {
-  'iceServers': [{
-    "url": "stun:stun.sipgate.net"
-  }, {
-    "url": "stun:stun.internetcalls.com"
-  }, {
-    "url": "stun:provserver.televolution.net"
-  }, {
-    "url": "stun:stun1.voiceeclipse.net"
-  }]
-};
-
 //TURN SERVER TEST
-/*RTC_CONFIGURATION = {
+RTC_CONFIGURATION = {
   'iceServers': [{
     url: "turn:phovec@nucular-bacon.com",
     credential: "phovec-test"
   }]
-};*/
+};
 
 /* "Media Constraints" for PeerConnection */
 if (navigator.browser[0] === "Chrome") {
