@@ -12,8 +12,9 @@
   <body>
     <!-- debugger content -->
     <div id="debugger">
-      <h3>RTCPeerConnection Attributes</h3>
+      <h1>Debugger</h1><div class="refresh" onclick="WebRTCDebugger.update();"></div>
       <div id="rtcPeerConnection">
+        <h3>RTCPeerConnection Attributes</h3>
         <div>localDescription</div>
         <div id="localDescription">-</div>
         <div>remoteDescription</div>
@@ -25,9 +26,8 @@
         <div>iceConnectionState</div>
         <div id="iceConnectionState">-</div>
       </div>
-      <br>
-      <h3>RTCDataChannel Attributes</h3>
       <div id="rtcDataChannel">
+        <h3>RTCDataChannel Attributes</h3>
         <div>reliable</div>
         <div id="reliable">-</div>
         <div>readyState</div>

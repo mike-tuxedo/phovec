@@ -37,9 +37,7 @@ App.RoomsRoute = Ember.Route.extend({
 
 App.RoomRoute = Ember.Route.extend({
   enter: function(router) {
-    if (!SignalingChannel.connected) {
       SignalingChannel.init();
-    }
 
     App.Controller.auth = App.AuthController.create();
     App.Controller.room = App.RoomController.create();
