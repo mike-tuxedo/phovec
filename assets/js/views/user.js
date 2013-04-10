@@ -8,5 +8,11 @@ App.UserView = Ember.View.extend({
   showEffects: function(){
     $('#videoEffects').css('display', 'block');
     $('#videoEffects').css('margin-top', '0px');
+  },
+  muteAudio: function(){
+    this.get('muteAudio');
+  },
+  hideVideo: function(){
+    this.get('controller').send('hideVideo');
   }
 });

@@ -59,16 +59,16 @@
         {{#linkTo "hangup" id="hangupButton"}}{{/linkTo}}
       </header>
       <div id="infoField">
-        <p>Du musst deinem Browser Zugriff auf Kamera & Mikrofon erlauben!</p><br/>
-        <p>Verwendest du den Chromebrowser, dann schau dazu doch mal auf den oberen Rand ;)</p>
+        <p>Bitte Kamera & Mikrofon im Browser aktivieren!</p><br/>
+        <p>Bei Google-Chrome kannst du das an einer Leiste, die gerade am oberen Rand erschienen ist einstellen.</p>
       </div>
       <div id="videoboxes">
         
           <div class="user" id="local">
             {{#view App.UserView}}
               <div class="videoOptions">
-                <div class="videoOptionsItems">mute</div>
-                <div class="videoOptionsItems">bild mute</div>
+                <div class="videoOptionsItems" {{ action muteAudio target="view" }}>Audio Stumm schalten</div>
+                <div class="videoOptionsItems" {{ action hideVideo target="view" }}>Video deaktivieren</div>
                 <div class="videoOptionsItems" {{ action showEffects target="view" }}>effekte</div>
               </div>
             {{/view}}
@@ -82,7 +82,7 @@
               <input type="button" {{action "putClassesOnUser" }} class="" value="classes" />
               <input type="button" {{action "putHairOnUser" }} class="" value="hair" />
               <input type="button" {{action "putBeardOnUser" }} class="" value="beard"/>
-              <input type="button" id="takeOffClothesButton" {{action "takeOffClothesOfUser" }} class="" value="off" style="display:none" />
+              <input type="button" id="takeOffClothesButton" {{action "takeOffClothesOfUser" }} class="" value="off" />
             </div>
           </div>
       </div>
