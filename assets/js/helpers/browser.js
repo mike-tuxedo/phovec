@@ -70,12 +70,26 @@ function formatTime(timestamp) {
 }
 
 //TURN SERVER TEST
-RTC_CONFIGURATION = {
-  'iceServers': [{
-    url: "turn:phovec@nucular-bacon.com",
-    credential: "phovec-test"
-  }]
-};
+if (navigator.browser[0] === "Chrome") {
+  RTC_CONFIGURATION = {
+    'iceServers': [{
+      url: "turn:phovec@nucular-bacon.com",
+      credential: "phovec-test"
+    }]
+  };
+} else if (navigator.browser[0] === "Firefox") {
+  RTC_CONFIGURATION = {
+    'iceServers': [{
+      "url": "stun:stun.sipgate.net"
+    }, {
+      "url": "stun:stun.internetcalls.com"
+    }, {
+      "url": "stun:provserver.televolution.net"
+    }, {
+      "url": "stun:stun1.voiceeclipse.net"
+    }]
+  };
+}
 
 /* "Media Constraints" for PeerConnection */
 if (navigator.browser[0] === "Chrome") {

@@ -39,59 +39,7 @@ var WebRTC = {
       $('#' + remoteUserId + ' video').attr('src', '');
     };
     peerConnection.onnegotiationneeded = function() {
-      var userRemote = Users.getRemoteUser(remoteUserId);
-      var userLocal = Users.getLocalUser();
-
-      if (userRemote.peerConnection.remoteDescription !== null) {
-        if (userRemote.peerConnection.remoteDescription.type === "offer") {
-          trace("webrtc", "Call createAnswer", "-");
-          userRemote.peerConnection.createAnswer(function(description) {
-            trace("webrtc", "CreateAnswer Callback called", description);
-            trace("webrtc", "Set local description", description);
-            userRemote.peerConnection.setLocalDescription(description, function() {
-              trace("webrtc", "Success set local description", event);
-            }, function(event) {
-              trace("webrtc", "Failure set local description", event);
-            });
-
-            SignalingChannel.send({
-              subject: "sdp",
-              chatroomHash: userLocal.roomHash,
-              userHash: userLocal.id,
-              destinationHash: userRemote.id,
-              sdp: description
-            });
-          }, function() {
-            trace("webrtc", "Failure at calling createAnswer", "-");
-          }, MEDIA_CONSTRAINTS_ANSWER);
-          return;
-        }
-      } else {
-        userRemote.peerConnection.createOffer(function(description) {
-          trace("webrtc", "createOffer Callback called", description);
-
-          trace("webrtc", "Set local description", description);
-          userRemote.peerConnection.setLocalDescription(description, function() {
-            trace("webrtc", "Success set local", description);
-
-            if (navigator.browser[0] === "Firefox") {
-              description = Users.modifyDescription(description);
-            }
-
-            SignalingChannel.send({
-              subject: "sdp",
-              chatroomHash: userLocal.roomHash,
-              userHash: userLocal.id,
-              destinationHash: userRemote.id,
-              sdp: description
-            });
-          }, function() {
-            trace("webrtc", "Failure set local", description);
-          });
-        }, function() {
-          trace("webrtc", "Failure calling createOffer", "-");
-        }, MEDIA_CONSTRAINTS_OFFER);
-      }
+      WebRTC.onNegotationNeeded(remoteUserId);
     };
     peerConnection.onsignalingstatechange = function() {
       WebRTCDebugger.update();
@@ -104,29 +52,29 @@ var WebRTC = {
      * Create DataChannel
      */
     /*var dataChannel = peerConnection.createDataChannel('RTCDataChannel', DATACHANNEL_OPTIONS);
-    dataChannel.onmessage = function(event) {
-      if (event.data.substr(0, 4) == "\\$cn") {
-        user.name = event.data.substr(4);
-        $('#' + remoteUserId + ' .name').text(user.name);
-      } else {
-        var name = $('#' + remoteUserId + ' .name').text();
-        var output = new Date().getHours() + ":" + new Date().getMinutes() + " (" + name + ") - " + event.data + "&#13;&#10;";
-        $('#' + remoteUserId + ' form textarea').append(output);
-      }
-    };
-    dataChannel.onopen = function(event) {
-      trace("webrtc", "DataChannel onopen", event);
-      dataChannel.send("\\$cn" + WebRTC.getLocalUser().name);
-    };
-    dataChannel.onclose = function(event) {
-      trace("webrtc", "DataChannel onclose", event);
-    };
-    dataChannel.onerror = function(event) {
-      trace("webrtc", "DataChannel onerror", event);
-    };
-    peerConnection.ondatachannel = function(event) {
-      trace("webrtc", "DataChannel ondatachannel", event);
-    };*/
+     dataChannel.onmessage = function(event) {
+     if (event.data.substr(0, 4) == "\\$cn") {
+     user.name = event.data.substr(4);
+     $('#' + remoteUserId + ' .name').text(user.name);
+     } else {
+     var name = $('#' + remoteUserId + ' .name').text();
+     var output = new Date().getHours() + ":" + new Date().getMinutes() + " (" + name + ") - " + event.data + "&#13;&#10;";
+     $('#' + remoteUserId + ' form textarea').append(output);
+     }
+     };
+     dataChannel.onopen = function(event) {
+     trace("webrtc", "DataChannel onopen", event);
+     dataChannel.send("\\$cn" + WebRTC.getLocalUser().name);
+     };
+     dataChannel.onclose = function(event) {
+     trace("webrtc", "DataChannel onclose", event);
+     };
+     dataChannel.onerror = function(event) {
+     trace("webrtc", "DataChannel onerror", event);
+     };
+     peerConnection.ondatachannel = function(event) {
+     trace("webrtc", "DataChannel ondatachannel", event);
+     };*/
 
     Users.createRemoteUser(roomHash, remoteUserId, peerConnection, undefined);
   },
@@ -137,7 +85,61 @@ var WebRTC = {
     description.sdp = sdp;
     return description;
   },
+  onNegotationNeeded: function(remoteUserId) {
+    var userRemote = Users.getRemoteUser(remoteUserId);
+    var userLocal = Users.getLocalUser();
 
+    if (userRemote.peerConnection.remoteDescription !== null) {
+      if (userRemote.peerConnection.remoteDescription.type === "offer") {
+        trace("webrtc", "Call createAnswer", "-");
+        userRemote.peerConnection.createAnswer(function(description) {
+          trace("webrtc", "CreateAnswer Callback called", description);
+          trace("webrtc", "Set local description", description);
+          userRemote.peerConnection.setLocalDescription(description, function() {
+            trace("webrtc", "Success set local description", event);
+          }, function(event) {
+            trace("webrtc", "Failure set local description", event);
+          });
+
+          SignalingChannel.send({
+            subject: "sdp",
+            chatroomHash: userLocal.roomHash,
+            userHash: userLocal.id,
+            destinationHash: userRemote.id,
+            sdp: description
+          });
+        }, function() {
+          trace("webrtc", "Failure at calling createAnswer", "-");
+        }, MEDIA_CONSTRAINTS_ANSWER);
+        return;
+      }
+    } else {
+      userRemote.peerConnection.createOffer(function(description) {
+        trace("webrtc", "createOffer Callback called", description);
+
+        trace("webrtc", "Set local description", description);
+        userRemote.peerConnection.setLocalDescription(description, function() {
+          trace("webrtc", "Success set local", description);
+
+          if (navigator.browser[0] === "Firefox") {
+            description = WebRTC.modifyDescription(description);
+          }
+
+          SignalingChannel.send({
+            subject: "sdp",
+            chatroomHash: userLocal.roomHash,
+            userHash: userLocal.id,
+            destinationHash: userRemote.id,
+            sdp: description
+          });
+        }, function() {
+          trace("webrtc", "Failure set local", description);
+        });
+      }, function() {
+        trace("webrtc", "Failure calling createOffer", "-");
+      }, MEDIA_CONSTRAINTS_OFFER);
+    }
+  },
   handleLocalMedia: function(event) {
     trace("webrtc", "Local Media Available", event);
 
@@ -221,6 +223,11 @@ var WebRTC = {
             clearInterval(loop);
             userRemote.peerConnection.addStream(userLocal.stream);
             trace("webrtc", "Added local stream to peerConnection", userLocal.stream);
+
+            //Bugfix because addStream doesn't fire onnegotiationneeded in firefox nightly 23.01a
+            if (navigator.browser[0] === "Firefox") {
+              WebRTC.onNegotationNeeded(data.userId);
+            }
           }
         }, 500);
       }
@@ -257,6 +264,11 @@ var WebRTC = {
             //this will trigger onnegotiationneeded event at the peerConnection
             userRemote.peerConnection.addStream(userLocal.stream);
             trace("webrtc", "Added local stream to peerConnection", userLocal.stream);
+
+            //Bugfix because addStream doesn't fire onnegotiationneeded in firefox nightly 23.01a
+            if (navigator.browser[0] === "Firefox") {
+              WebRTC.onNegotationNeeded(data.userId);
+            }
           }
         }, 500);
         break;
@@ -358,6 +370,7 @@ var Users = {
     }
   },
   removeRemoteUser: function(id) {
+
     for (var i = 0; i < Users.users.length; i++) {
       if (Users.users[i].id === id && Users.users[i].type === "remote") {
         var user = Users.users[i];
