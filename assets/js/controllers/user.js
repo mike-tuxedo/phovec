@@ -49,6 +49,6 @@
   },
   sendMail: function(mail_sett){
     if( mail_sett.from && mail_sett.to && mail_sett.subject && mail_sett.text && mail_sett.html )
-      SignalingChannel.send({ subject: 'mail', chatroomHash: WebRTC.users[0].roomHash, userHash: WebRTC.users[0].id, mail: { from: mail_sett.from, to: mail_sett.to, subject: mail_sett.subject, text: mail_sett.text, html: mail_sett.html } })
+      SignalingChannel.send({ subject: 'mail', chatroomHash: Users.users[0].roomHash, userHash: Users.users[0].id, mail: { from: mail_sett.from, to: mail_sett.to, subject: mail_sett.subject, text: mail_sett.text, html: mail_sett.html } })
   }
 });

@@ -136,19 +136,19 @@
     <script type="text/x-handlebars" data-template-name="_auth">
       <div id="fb-root"></div>
 
-      {{#unless App.Controller.auth.fb_logged_in }}
+      {{# unless App.Controller.auth.fbLoggedIn }}
       <a {{action "fbLogin" target="App.Controller.auth" }} class="socialButtons facebookButton"></a>
       {{/unless}}
 
-      {{#if App.Controller.auth.fb_logged_in }}
+      {{# if App.Controller.auth.fbLoggedIn }}
       <a {{action "fbLogout" target="App.Controller.auth"}} class="socialButtons facebookButton"></a>
       {{/if}}
 
-      {{#unless App.Controller.auth.google_logged_in }}
+      {{# unless App.Controller.auth.googleLoggedIn }}
       <a {{action "googleLogin" target="App.Controller.auth"}} class="socialButtons googleButton"></a>
       {{/unless}}
 
-      {{#if App.Controller.auth.google_logged_in }}
+      {{#if App.Controller.auth.googleLoggedIn }}
       <a {{action "googleLogout" target="App.Controller.auth"}} class="socialButtons googleButton"></a>
       {{/if}}
 
