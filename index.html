@@ -5,7 +5,9 @@
     <title>Phovec</title>
     <link rel='icon' href='assets/img/favicon.png' type='image/png'/>
     <link rel="stylesheet" href="assets/css/startpage.css">
+    <link rel="stylesheet" href="assets/css/about.css">
     <link rel="stylesheet" href="assets/css/room.css">
+    <link rel="stylesheet" href="assets/css/rooms.css">
     <link rel="stylesheet" href="assets/css/style.css">
     <link rel="stylesheet" href="assets/css/development.css">
   </head>
@@ -53,7 +55,7 @@
       </header>
 
       <div id="startInfo">
-      <h1>Hi! Hier kannst du mit Freunden Videochatten.</h1>
+      <h1>Videochat mit Deinen Freunden!</h1><br>
       <p>Einfach auf Start klicken und du bist in einem Chatraum, von wo aus du deine Freunde einladen kannst.</p>
       </div>
       {{#linkTo "rooms"}}<div id="startButtonImage"></div>{{/linkTo}}
@@ -62,12 +64,16 @@
     <script type="text/x-handlebars" data-template-name="unknown">Raum unbekannt!</script>
 
     <script type="text/x-handlebars" data-template-name="full">Voll</script>
+    
+    <script type="text/x-handlebars" data-template-name="error">Fehler! Unser Team kümmert sich bereits darum! Probieren Sie es morgen erneut!</script>
 
-    <script type="text/x-handlebars" data-template-name="rooms"></script>
+    <script type="text/x-handlebars" data-template-name="rooms">
+      <div id="roomsInfo"><p>Bitte warten...<br><br><img src="assets/img/process_bar.gif"></p></div>
+    </script>
 
     <script type="text/x-handlebars" data-template-name="room">
       <header>
-        {{#linkTo "about" id="infoButton"}}{{/linkTo}}
+        {{#linkTo "index" id="backButton"}}{{/linkTo}}
         {{#linkTo "hangup" id="hangupButton"}}{{/linkTo}}
       </header>
       <div id="infoField">
@@ -127,11 +133,44 @@
       {{#linkTo "index" id="backButton"}}{{/linkTo}}
       </header>
       <div id="aboutInfo">
-      <h1>Projekt</h1>
-      <p>Das ist ein Projekt, welches im Rahmen des Qualifikationsprojektes 3 an der Fachhochschule Salzburg
-      im Schwerpunkt Web + Communities realisiert wird. Mit der innovativen Technik WebRTC werden wir den Benützern
-      dieser Web-Applikation ermöglichen Multi-Video-Konferenzen kostenlos ohne der Installation eines Plugin zu führen.
-      <br><br><h1>Team</h1><ul><li>Michael Tiefenthaler</li><li>Franz Josef Brünner</li><li>Lukas Wanko</li></ul></p>
+        <div class="leftColumn">
+          <h1>Information</h1>
+          <p>Das ist ein Projekt, welches im Rahmen des Qualifikationsprojektes 3 an der Fachhochschule Salzburg
+          im Schwerpunkt Web + Communities realisiert wird. Mit der innovativen Technik WebRTC werden wir den Benutzern und Benutzerinnen
+          dieser Web-Applikation ermöglichen, Multi-Video-Konferenzen kostenlos ohne der Installation eines Plugin zu führen.
+          </p>
+          <h1>Techniken</h1>
+          <p>
+            Das Zentrale Element stellt die HTML5-JavaScript-Innovation WebRTC dar. Sie ermöglicht in der Zukunft mit jeden beliebigen Browser, ohne der Installation eines Programms oder zusätzlichen Plugins Audio- und Videokonferenzen zu führen und über einen Chat mit Freunden, Familien und Arbeitskollegen zu kommunizieren.
+            <br><br> Für die Sitzungsherstellung verwenden wir einen Node.JS Server mit MongoDB, welcher Benutzer und Benutzerinnen registriert, untereinander vermittelt und das Erstellen von seperaten Chaträumen ermöglicht.
+            <br><br> Die Strukturierung und den klaren Aufbau erhalten wir durch das JavaScript-Framework Ember.JS, welches ähnlich einem MVC-Framework arbeitet.
+          </p>
+        </div>
+        <div class="rightColumn">
+          <h1>Entwickler</h1>
+          <p>
+            <ul>
+              <li><a href="mailto:mtiefenthaler.mmt-b2010@fh-salzburg.ac.at">Michael Tiefenthaler</a></li>
+              <li><a href="mailto:fbruenner.mmt-b2010@fh-salzburg.ac.at">Franz Josef Brünner</a></li>
+              <li><a href="mailto:lwanko.mmt-b2010@fh-salzburg.ac.at">Lukas Wanko</a></li>
+            </ul>
+          </p>
+          <h1>Repositories</h1>
+          <p>
+            <ul>
+              <li><a href="https://github.com/mike-tuxedo/phovec">Github Client</a></li>
+              <li><a href="https://github.com/mike-tuxedo/Nodejs_P2P-HandshakeServer">Github Server</a></li>
+            </ul>
+          </p>
+          <h1>Anschrift</h1>
+          <p>
+            Fachhochschule Salzburg<br>
+            Studiengang Multimediatechnology<br><br>
+            Urstein Süd 1<br>
+            5020 Salzburg<br>
+            Österreich
+          </p>
+        </div>
       </div>
     </script>
 
@@ -190,6 +229,7 @@
     <script src="assets/js/app.js"></script>
 
     <!-- views -->
+    <script src="assets/js/views/application.js"></script>
     <script src="assets/js/views/index.js"></script>
     <script src="assets/js/views/room.js"></script>
     <script src="assets/js/views/invitation.js"></script>

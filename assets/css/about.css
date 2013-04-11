@@ -1,0 +1,36 @@
+#aboutInfo {
+  margin: 10px auto;
+  background: rgba(255,255,255,0.75);
+  border-radius: 5px;
+  padding: 15px;
+  font-size: 12px;
+  text-align: justify;
+  width: 700px;
+  height: 450px;
+}
+
+#aboutInfo h1 {
+  margin-bottom: 10px;
+}
+
+#aboutInfo p {
+  margin: 10px 0px 10px 0px;
+}
+
+#aboutInfo .leftColumn {
+  width: 66%;
+  float: left;
+  padding: 10px;
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+}
+
+#aboutInfo .rightColumn {
+  width: 33%;
+  float: right;
+  padding: 10px;
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+}

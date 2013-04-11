@@ -1,12 +1,18 @@
 var WebRTC = {
+  initialized: false,
   init: function() {
+    if (this.initialized) {
+      return true;
+    }
+
     window.addEventListener("localmedia:available", this.handleLocalMedia);
     window.addEventListener("signalingchannel:init", this.handleSignalingInit);
     window.addEventListener("signalingchannel:sdp", this.handleSignalingSdp);
     window.addEventListener("signalingchannel:ice", this.handleSignalingIce);
     window.addEventListener("signalingchannel:participant", this.handleSignalingParticipant);
 
-    Users.createLocalUser()
+    Users.createLocalUser();
+    this.initialized = true;
   },
   createPeerConnection: function(roomHash, userId, remoteUserId) {
     /**
@@ -279,11 +285,11 @@ var WebRTC = {
         trace("webrtc", "Undefined participant message", "-");
         break;
     }
-
   },
   hangup: function() {
-    trace("webrtc", "Close all connections", "-");
     Users.reset();
+    this.initialized = false;
+    trace("webrtc", "Reset", "-");
   }
 };
 

@@ -1,8 +1,8 @@
 ﻿var SignalingChannel = {
   webSocket: null,
-  connected: false,
-  init: function() {
-    if (SignalingChannel.connected) {
+  isConnected: false,
+  init: function() {   
+    if (this.isConnected) {
       return;
     }
 
@@ -12,7 +12,7 @@
       this.webSocket = new WebSocket('ws://www.nucular-bacon.com:49152');
       this.webSocket.onopen = function() {
         trace("signaling", "ONOPEN", "-");
-        self.connected = true;
+        self.isConnected = true;
 
         this.send(JSON.stringify({
           subject: "init",
@@ -93,8 +93,11 @@
         trace("signaling", "ERROR", error);
       };
       this.webSocket.onclose = function() {
-        self.connected = false;
+        self.isConnected = false;
         trace("signaling", "CLOSE", "-");
+
+        App.handleURL('/error');
+        App.Router.router.replaceURL('/error');
       };
     } catch(e) {
       trace("signaling", "Server offline", "-");
@@ -105,14 +108,11 @@
     SignalingChannel.webSocket.send(JSON.stringify(message));
   },
   close: function() {
-    trace("signaling", "CLOSE", "-");
-    if (this.webSocket) {
-      this.webSocket.onclose = function() {
-      };
+    if (this.isConnected || this.webSocket) {
+      trace("signaling", "CLOSE", "-");
+      this.webSocket.onclose = function() {};
       this.webSocket.close();
+      this.isConnected = false;
     }
-  },
-  connectionEstablished: function() {
-    return this.connected;
   }
 };
