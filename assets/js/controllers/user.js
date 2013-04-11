@@ -1,5 +1,12 @@
 ﻿App.UserController = Ember.ObjectController.extend({
   init: function() {
+    this.addObserver('usersCounter', function(){
+      console.log('UserController: change userCounter and View');
+      if(this.usersCounter === 1) $('#videoboxes .user').css('width', '600px');
+      else if(this.usersCounter === 2) $('#videoboxes .user').css('width', '450px');
+      else if(this.usersCounter >= 3) $('#videoboxes .user').css('width', '350px');
+      else return false;
+    });
   },
   onGetMediaSuccess: function(stream) {
     window.dispatchEvent(new CustomEvent("localmedia:available", {
@@ -85,5 +92,6 @@
         video: true
       }, this.onGetMediaSuccess, this.onGetMediaError);
     }
-  }
+  },
+  usersCounter: 0
 });

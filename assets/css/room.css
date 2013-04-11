@@ -167,7 +167,7 @@
 }
 
 #videoboxes .user {
-  width: 300px;
+  width: 600px;
   float: left;
   margin:10px;
 }
@@ -184,7 +184,7 @@
   -webkit-box-shadow: inset 1px 1px 5px #444;
 }
 
-#videoboxes video {
+video {
   width: 100%;
   float: left;
   background: #999;
