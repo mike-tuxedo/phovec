@@ -342,6 +342,7 @@ var Users = {
     }, 500);
 
     Users.users.push(user);
+    window.App.Controller.user.set('usersCounter', this.users.length);
   },
   getLocalUser: function() {
     for (var i = 0; i < Users.users.length; i++) {
@@ -390,6 +391,8 @@ var Users = {
 
         $('#' + user.id).remove();
         user = null;
+        
+        window.App.Controller.user.set('usersCounter', this.users.length);
 
         Users.users.splice(i, 1);
         return true;
