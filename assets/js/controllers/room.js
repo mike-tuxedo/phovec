@@ -1,18 +1,13 @@
 ﻿App.RoomController = Ember.ObjectController.extend({
   init: function() {
-
-    var controller = this;
-
     var loop = setInterval(function() {
       // there are some elements that must be configured during loading chatroom
       if ( typeof FaceDetector !== 'undefined' && $('#faceDetectorOutput')[0] && $('video')[0] ) {
-        console.log('face-detector init',$('video')[0]);
+        
         $('#faceDetectorOutput')[0].style.width = $('video').css('width');
         $('#faceDetectorOutput')[0].style.height = '225px';
 
         FaceDetector.init($('video')[0], $('#faceDetectorOutput')[0]);
-
-        controller.setupVideoEffectBar();
 
         clearInterval(loop);
       }
@@ -43,14 +38,16 @@
   takeOffClothesOfUser: function() {
     $('video')[0].style.display = 'inline';
     $('#faceDetectorOutput')[0].style.display = 'none';
-    $('#takeOffClothesButton').hide();
     $('#videoEffectsBar').css('margin-top', '250px');
     FaceDetector.closing = true;
   },
   putUserStreamOnDetector: function(type) {
+<<<<<<< HEAD
     //$('#videoEffectsBar').css('margin-top', '0px');
     $('video')[0].style.display = 'none';
     $('#takeOffClothesButton').show();
+=======
+>>>>>>> 5446f45dec02b3aa8ef28ee41bfdcf5b7b29810b
     FaceDetector.closing = false;
     if (Users.users && Users.users[0].stream)
       FaceDetector.getStream(Users.users[0].stream, type);
@@ -114,6 +111,7 @@
       background: '#00f'
     });
 
+<<<<<<< HEAD
   },
   isFaceDetactorActivated : function() {
     return $('#faceDetectorOutput')[0].style.display === 'inline';
@@ -149,5 +147,7 @@
         isShown = false;
       }
     });*/
+=======
+>>>>>>> 5446f45dec02b3aa8ef28ee41bfdcf5b7b29810b
   }
 });

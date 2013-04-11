@@ -42,7 +42,7 @@ if ( typeof mozRTCIceCandidate !== "undefined") {
 function trace(file, message, object) {
   var timestamp = formatTime(new Date().getTime());
   console.log(timestamp + "\t" + file + "\t" + message + "\t");
-  //console.log("\t\t" + "With data: ", object);
+  console.log("\t\t" + "With data: ", object);
   WebRTCDebugger.update();
 }
 
@@ -69,24 +69,35 @@ function formatTime(timestamp) {
   return hours + ":" + minutes + ":" + seconds + ":" + miliseconds;
 }
 
-/* RTC ICE server configuration for PeerConnection */
-RTC_CONFIGURATION = {
-  'iceServers': [{
-    "url": "stun:stun.sipgate.net"
-  }, {
-    "url": "stun:stun.internetcalls.com"
-  }, {
-    "url": "stun:provserver.televolution.net"
-  }, {
-    "url": "stun:stun1.voiceeclipse.net"
-  }]
-};
+//TURN SERVER TEST
+if (navigator.browser[0] === "Chrome") {
+  RTC_CONFIGURATION = {
+    'iceServers': [{
+      url: "turn:phovec@nucular-bacon.com",
+      credential: "phovec-test"
+    }]
+  };
+} else if (navigator.browser[0] === "Firefox") {
+  RTC_CONFIGURATION = {
+    'iceServers': [{
+      "url": "stun:stun.sipgate.net"
+    }, {
+      "url": "stun:stun.internetcalls.com"
+    }, {
+      "url": "stun:provserver.televolution.net"
+    }, {
+      "url": "stun:stun1.voiceeclipse.net"
+    }]
+  };
+}
 
 /* "Media Constraints" for PeerConnection */
 if (navigator.browser[0] === "Chrome") {
   RTC_MEDIA_CONSTRAINTS = {
     'optional': [{
-      'DtlsSrtpKeyAgreement': 'true'
+      'DtlsSrtpKeyAgreement': true
+    }, {
+      'RtpDataChannels': true
     }]
   };
 } else if (navigator.browser[0] === "Firefox") {
@@ -143,3 +154,15 @@ MEDIA_CONSTRAINTS_ANSWER = {
     'OfferToReceiveVideo': true
   }
 };
+
+/* Settings for DataChannel */
+if (navigator.browser[0] === "Chrome") {
+  DATACHANNEL_OPTIONS = {
+    reliable: false
+  };
+} else {
+  DATACHANNEL_OPTIONS = {
+    reliable: true
+  };
+}
+

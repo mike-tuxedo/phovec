@@ -27,7 +27,7 @@
   z-index: 10;
 }
 
-#show_sidebar_shadow{
+#show_sidebar_shadow {
   position: absolute;
   border-top-left-radius: 50px;
   border-bottom-left-radius: 50px;
@@ -38,7 +38,6 @@
   right: -25px;
   margin-top: 300px;
   overflow-x: hidden;
-  
   box-shadow: 0px 0px 15px #444;
   -webkit-box-shadow: 0px 0px 15px #444;
 }
@@ -51,7 +50,6 @@
   border-bottom-left-radius: 50px;
   border-bottom-right-radius: 50px;
   border-top-right-radius: 50px;
-
   width: 50px;
   height: 50px;
   right: -25px;
@@ -63,7 +61,7 @@
   overflow-x: hidden;
 }
 
-#show_sidebar:hover{
+#show_sidebar:hover {
   opacity: 1;
   overflow-x: hidden;
 }
@@ -167,9 +165,9 @@
 }
 
 #videoboxes .user {
-  width: 300px;
+  width: 600px;
   float: left;
-  margin:10px;
+  margin: 10px;
 }
 
 #videoboxes .name {
@@ -184,7 +182,7 @@
   -webkit-box-shadow: inset 1px 1px 5px #444;
 }
 
-#videoboxes video {
+video {
   width: 100%;
   float: left;
   background: #999;
@@ -204,19 +202,18 @@
   border-top-right-radius: 5px;
   position: absolute;
   background: #fdfdfd;
-  
   width: 300px;
   height: 251px;
   z-index: 20;
 }
 
-.videoOptionsItems{
+.videoOptionsItems {
   width: 50%;
   height: 50%;
   float: left;
 }
 
-.videoOptionsItems:hover{
+.videoOptionsItems:hover {
   cursor: pointer;
   background: #607890;
 }

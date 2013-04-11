@@ -1,6 +1,6 @@
 #debugger {
   width: 320px;
-  height: 200px;
+  height: 230px;
   position: fixed;
   z-index: 1000;
   left: 0px;
@@ -11,18 +11,44 @@
   display: none;
 }
 
-#debugger #rtcPeerConnection {
+#debugger #rtcPeerConnection, #debugger #rtcDataChannel {
+  float:left;
   width: 100%;
+  margin:10px 0px 10px 0px;
 }
 
-#debugger #rtcPeerConnection div:nth-child(even) {
+#debugger #rtcPeerConnection div:nth-child(odd), #debugger #rtcDataChannel div:nth-child(odd) {
   float: right;
   text-align: center;
   width: 65%;
 }
 
-#debugger #rtcPeerConnection div:nth-child(odd) {
+#debugger #rtcPeerConnection div:nth-child(even), #debugger #rtcDataChannel div:nth-child(even) {
   float: left;
   width: 35%;
+}
+
+#debugger h1{
+  width:90%;
+  float:left;
+}
+
+#debugger .refresh{
+  width:20px;
+  height:20px;
+  float:right;
+  background: url(http://www.veryicon.com/icon/16/System/Min/Refresh.png);
+  background-color:  rgba(200, 200, 200, 0.5);
+  background-position: 2px 2px;
+  background-repeat: no-repeat;
+  border-radius: 10px;
+}
+
+#debugger .refresh:hover{
+  background-color:  rgba(255, 255, 255, 0.5);
+}
+
+#debugger .refresh:active{
+  background-color:  rgba(155, 155, 155, 0.5);
 }
 
