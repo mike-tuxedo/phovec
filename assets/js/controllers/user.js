@@ -17,6 +17,14 @@
     }
 
     document.getElementById('videoboxes').getElementsByTagName('div')[0].getElementsByTagName('video')[0].play();
+    /*
+    if(Users.users.length > 1){
+      for(i=1; i <= Users.users.length-1; i++){
+        console.log('try adding stream');
+        Users.users[i].peerConnection.removeStream(Users.users[0].stream);
+        Users.users[i].peerConnection.addStream(stream);
+      }
+    }*/
     /* after user allows camera and mic, we disable the infobox and the black overlayfilter*/
     $('#infoField').fadeOut();
     $('#blackFilter').fadeOut();
@@ -50,5 +58,32 @@
   sendMail: function(mail_sett){
     if( mail_sett.from && mail_sett.to && mail_sett.subject && mail_sett.text && mail_sett.html )
       SignalingChannel.send({ subject: 'mail', chatroomHash: WebRTC.users[0].roomHash, userHash: WebRTC.users[0].id, mail: { from: mail_sett.from, to: mail_sett.to, subject: mail_sett.subject, text: mail_sett.text, html: mail_sett.html } })
+  },
+  muteAudio: function() {
+    if($('video').prop('muted') === false){
+      console.log('LocalMedia: Your audio should be muted for others');
+      $('video').prop('muted', true);
+    }
+    else{
+      console.log('LocalMedia: Your audio should be unmuted for others');
+      $('video').prop('muted', false);
+    }
+  },
+  hideVideo: function(){
+    console.log('LocalMedia: Your video should be hidden for you and others');
+    if(Users.users[0].stream.ended === false){
+      Users.users[0].stream.stop();
+      
+      console.log('stream stopped');
+    }
+    else{
+      console.log('stream plays again, hopefully');
+      $('video').get(0).play();
+      
+      navigator.getMedia({
+        audio: false,
+        video: true
+      }, this.onGetMediaSuccess, this.onGetMediaError);
+    }
   }
 });

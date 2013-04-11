@@ -1,38 +1,30 @@
 ﻿App.RoomController = Ember.ObjectController.extend({
   init: function() {
-
-    var controller = this;
-
     var loop = setInterval(function() {
       // there are some elements that must be configured during loading chatroom
-      if ( typeof FaceDetector !== undefined && $('#faceDetectorOutput')[0] && $('video')[0] && $('#videoEffectsBar')) {
+      if ( typeof FaceDetector !== undefined && $('#faceDetectorOutput')[0] && $('video')[0]) {
 
         $('#faceDetectorOutput')[0].style.width = $('video').css('width');
         $('#faceDetectorOutput')[0].style.height = '225px';
 
         FaceDetector.init($('video')[0], $('#faceDetectorOutput')[0]);
 
-        controller.setupVideoEffectBar();
-
         clearInterval(loop);
       }
 
     }, 500);
   },
-  animationInterval: 10,
-  animation: function(action) {
-    if (action === 'start') {
-      window.loop = setInterval(function() {
-        $('#show_sidebar').animate({
-          boxShadow: '0 0 100px #44f'
-        }, 700);
-        $('#show_sidebar').animate({
-          boxShadow: '0 0 20px #44f'
-        }, 700);
-      }, 1400);
-    } else {
-      clearInterval(window.loop);
-    }
+  animation: function(){
+      var interval = setInterval(function(){animate($('#show_sidebar'));}, 1250);
+
+      function animate(item){
+        if(parseInt(item.css('right')) > -25){
+          clearInterval(interval);
+        }
+        else{
+          item.animate({boxShadow: '0 0 300px rgba(68,68,255,0)'}, 1200, function(){item.css('box-shadow','0 0 0px #44f')});
+        }
+      }
   },
   putClassesOnUser: function() {
     this.putUserStreamOnDetector('classes');
@@ -46,13 +38,10 @@
   takeOffClothesOfUser: function() {
     $('video').css('display', 'inline');
     $('#faceDetectorOutput')[0].style.display = 'none';
-    $('#takeOffClothesButton').hide();
     $('#videoEffectsBar').css('margin-top', '250px');
     FaceDetector.closing = true;
   },
   putUserStreamOnDetector: function(type) {
-    $('#videoEffectsBar').css('margin-top', '0px');
-    $('#takeOffClothesButton').show();
     FaceDetector.closing = false;
     if (Users.users && Users.users[0].stream)
       FaceDetector.getStream(Users.users[0].stream, type);
@@ -121,29 +110,5 @@
       background: '#00f'
     });
 
-  },
-  setupVideoEffectBar: function() {
-    var isShown = false;
-    $('#videoEffectsBar').click(function() {
-      if (!isShown) {
-
-        $('#videoEffectsBar').css('box-shadow', 'inset 1px 3px 0px 0px #444');
-        $('#videoEffectsBar').css('border-bottom-left-radius', '0px');
-        $('#videoEffectsBar').css('border-bottom-right-radius', '0px');
-
-        $('#videoEffects').slideDown('fast', function() {
-          $('#videoEffects').css('box-shadow', 'inset 1px 0px 0px 0px #444');
-        });
-
-        isShown = true;
-      } else {
-        $('#videoEffectsBar').css('box-shadow', 'inset 1px 1px 5px #444');
-        $('#videoEffectsBar').css('border-bottom-left-radius', '15px');
-        $('#videoEffectsBar').css('border-bottom-right-radius', '15px');
-
-        $('#videoEffects').css('display', 'none');
-        isShown = false;
-      }
-    });
   }
 });
