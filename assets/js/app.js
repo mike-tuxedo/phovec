@@ -4,9 +4,7 @@ var App = Ember.Application.create({
   },
   redirectUrlSec: function(route, seconds) {
     var sec = seconds;
-    var countdownInterval = setInterval(function() {
-       console.log(route, sec);
-      
+    var countdownInterval = setInterval(function() {     
       if (sec === 0) {
         clearInterval(countdownInterval);
         App.handleURL(route);

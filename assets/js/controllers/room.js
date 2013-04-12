@@ -14,17 +14,23 @@
 
     }, 500);
   },
-  animation: function(){
-      var interval = setInterval(function(){animate($('#show_sidebar'));}, 3000);
+  animation: function() {
+    var interval = setInterval(function() {
+      animate($('#show_sidebar'));
+    }, 3000);
 
-      function animate(item){
-        if(parseInt(item.css('right')) > -35){
-          clearInterval(interval);
-        }
-        else{
-          item.animate({boxShadow: '0 0 400px rgba(255,0,0,0.5)'}, 3000, function(){item.css('box-shadow','0 0 0px rgba(255,0,0,1)')});
-        }
+    function animate(item) {
+      if (parseInt(item.css('right')) > -35) {
+        clearInterval(interval);
+      } else {
+        item.animate({
+          boxShadow: '0 0 400px rgba(255,0,0,0.5)'
+        }, 3000, function() {
+          item.css('box-shadow', '0 0 0px rgba(255,0,0,1)')
+        });
       }
+    }
+
   },
   putClassesOnUser: function() {
     this.putUserStreamOnDetector('classes');
@@ -109,6 +115,15 @@
       letterRendering: true,
       background: '#00f'
     });
-
+  },
+  kickParticipant: function() {
+    var remoteUserId = $().attr('id');
+    
+    SignalingChannel.send({
+      subject: "participant-kick",
+      chatroomHash: Users.getLocalUser().roomHash,
+      userHash: Users.getLocalUser().id,
+      destinationHash: remoteUserId
+    });
   }
 });
