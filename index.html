@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="assets/css/about.css">
     <link rel="stylesheet" href="assets/css/room.css">
     <link rel="stylesheet" href="assets/css/rooms.css">
+    <link rel="stylesheet" href="assets/css/hangup.css">
     <link rel="stylesheet" href="assets/css/style.css">
     <link rel="stylesheet" href="assets/css/development.css">
   </head>
@@ -17,64 +18,142 @@
       <h1>Debugger</h1><div class="refresh" onclick="WebRTCDebugger.update();"></div>
       <div id="rtcPeerConnection">
         <h3>RTCPeerConnection Attributes</h3>
-        <div>localDescription</div>
-        <div id="localDescription">-</div>
-        <div>remoteDescription</div>
-        <div id="remoteDescription">-</div>
-        <div>signalingState</div>
-        <div id="signalingState">-</div>
-        <div>iceGatheringState</div>
-        <div id="iceGatheringState">-</div>
-        <div>iceConnectionState</div>
-        <div id="iceConnectionState">-</div>
+        <div>
+          localDescription
+        </div>
+        <div id="localDescription">
+          -
+        </div>
+        <div>
+          remoteDescription
+        </div>
+        <div id="remoteDescription">
+          -
+        </div>
+        <div>
+          signalingState
+        </div>
+        <div id="signalingState">
+          -
+        </div>
+        <div>
+          iceGatheringState
+        </div>
+        <div id="iceGatheringState">
+          -
+        </div>
+        <div>
+          iceConnectionState
+        </div>
+        <div id="iceConnectionState">
+          -
+        </div>
       </div>
       <div id="rtcDataChannel">
         <h3>RTCDataChannel Attributes</h3>
-        <div>reliable</div>
-        <div id="reliable">-</div>
-        <div>readyState</div>
-        <div id="readyState">-</div>
-        <div>bufferedAmount</div>
-        <div id="bufferedAmount">-</div>
-        <div>binaryType</div>
-        <div id="binaryType">-</div>
+        <div>
+          reliable
+        </div>
+        <div id="reliable">
+          -
+        </div>
+        <div>
+          readyState
+        </div>
+        <div id="readyState">
+          -
+        </div>
+        <div>
+          bufferedAmount
+        </div>
+        <div id="bufferedAmount">
+          -
+        </div>
+        <div>
+          binaryType
+        </div>
+        <div id="binaryType">
+          -
+        </div>
       </div>
     </div>
 
     <script type="text/x-handlebars" data-template-name="application">
       <div id="blackFilter"></div>
       <div id="content">
-      {{outlet}}
+        {{outlet}}
       </div>
     </script>
 
     <!-- templates -->
     <script type="text/x-handlebars" data-template-name="index">
       <header>
-      {{#linkTo "about" id="infoButton"}}{{/linkTo}}
+        {{#linkTo "about" id="infoButton"}}{{/linkTo}}
       </header>
-
+  
       <div id="startInfo">
-      <h1>Videochat mit Deinen Freunden!</h1><br>
-      <p>Einfach auf Start klicken und du bist in einem Chatraum, von wo aus du deine Freunde einladen kannst.</p>
+        <h1>Videochat mit Deinen Freunden!</h1>
+        <br>
+        <p>
+          Einfach auf Start klicken und du bist in einem Chatraum, von wo aus du deine Freunde einladen kannst.
+        </p>
       </div>
-      {{#linkTo "rooms"}}<div id="startButtonImage"></div>{{/linkTo}}
+      {{#linkTo "rooms"}}
+        <div id="startButtonImage"></div>
+      {{/linkTo}}
     </script>
 
-    <script type="text/x-handlebars" data-template-name="unknown">Raum unbekannt!</script>
+    <script type="text/x-handlebars" data-template-name="room-unknown">
+      <div id="hangupInfo">
+        <div>
+          <h2>Dieser Raum ist uns nicht bekannt!</h2><br>
+          <h2>Eröffne doch Deinen eigenen Raum!</h2>
+          <p>
+            <br>Du wirst in <span class="countdown">5</span> Sekunden zur Startseite geleitet.  
+          <p>
+        </div>
+      </div>
+    </script>
 
-    <script type="text/x-handlebars" data-template-name="full">Voll</script>
-    
-    <script type="text/x-handlebars" data-template-name="error">Fehler! Unser Team kümmert sich bereits darum! Probieren Sie es morgen erneut!</script>
+    <script type="text/x-handlebars" data-template-name="room-full">
+      <div id="hangupInfo">
+        <div>
+          <h2>Dieser Raum ist leider voll!</h2><br>
+          <h2>Eröffne doch Deinen eigenen Raum!</h2>
+          <p>
+            <br>Du wirst in <span class="countdown">5</span> Sekunden zur Startseite geleitet.  
+          <p>
+        </div>
+      </div>
+    </script>
+
+    <script type="text/x-handlebars" data-template-name="error">
+      <div id="hangupInfo">
+        <div>
+          <h2>Es gab einen internen Fehler und unser Entwickler kümmeren sich bereits darum!</h2>
+          <br><h2>Bitte probier es doch später erneut!</h2>
+          <p>
+            <br>Du wirst in <span class="countdown">5</span> Sekunden zur Startseite geleitet.  
+          <p>
+        </div>
+      </div>
+    </script>
 
     <script type="text/x-handlebars" data-template-name="rooms">
-      <div id="roomsInfo"><p>Bitte warten...<br><br><img src="assets/img/process_bar.gif"></p></div>
+      <div id="roomsInfo">
+        <p>
+          Bitte warten...
+          <br>
+          <br>
+          <img src="assets/img/process_bar.gif">
+        </p>
+      </div>
     </script>
 
     <script type="text/x-handlebars" data-template-name="room">
       <header>
         {{#linkTo "index" id="backButton"}}{{/linkTo}}
-        {{#linkTo "hangup" id="hangupButton"}}{{/linkTo}}
+        {{#linkTo "room-hangup" id="hangupButton"}}{{/linkTo}}
       </header>
       
       <div id="infoField">
@@ -82,28 +161,33 @@
         <img id="chrome" src="assets/img/chrome-hinweis-browser.png"/>
       </div>
       <div id="videoboxes">
-        
-          <div class="user" id="local">
-            {{#view App.UserView}}
-              <div class="videoOptions">
-                <div class="videoOptionsItems" {{ action muteAudio target="view" }}>Audio Stumm schalten</div>
-                <div class="videoOptionsItems" {{ action hideVideo target="view" }}>Video deaktivieren</div>
-                <div class="videoOptionsItems" {{ action showEffects target="view" }}>effekte</div>
+        <div class="user" id="local">
+          {{#view App.UserView}}
+            <div class="videoOptions">
+              <div class="videoOptionsItems" {{ action muteAudio target="view" }}>
+                Audio Stumm schalten
               </div>
-            {{/view}}
-
-            <span class="name" id="local_name">Name</span>
-            <video autoplay></video>
-            <canvas id="faceDetectorOutput"></canvas>
-            <div id="videoEffects" {{ action hideEffects target="view" }}>
-              <input type="button" id="snapshotButton" {{action "takeScreenShotFromChatroom" }} class="" value="Take Snapshot"/>
-              <input type="button" id="getSnapshotButton" class="" value="get Snapshot" style="display:none" />
-              <input type="button" {{action "putClassesOnUser" }} class="" value="classes" />
-              <input type="button" {{action "putHairOnUser" }} class="" value="hair" />
-              <input type="button" {{action "putBeardOnUser" }} class="" value="beard"/>
-              <input type="button" id="takeOffClothesButton" {{action "takeOffClothesOfUser" }} class="" value="off" />
+              <div class="videoOptionsItems" {{ action hideVideo target="view" }}>
+                Video deaktivieren
+              </div>
+              <div class="videoOptionsItems" {{ action showEffects target="view" }}>
+                effekte
+              </div>
             </div>
+          {{/view}}
+  
+          <span class="name" id="local_name">Name</span>
+          <video autoplay></video>
+          <canvas id="faceDetectorOutput"></canvas>
+          <div id="videoEffects" {{ action hideEffects target="view" }}>
+            <input type="button" id="snapshotButton" {{action "takeScreenShotFromChatroom" }} class="" value="Take Snapshot"/>
+            <input type="button" id="getSnapshotButton" class="" value="get Snapshot" style="display:none" />
+            <input type="button" {{action "putClassesOnUser" }} class="" value="classes" />
+            <input type="button" {{action "putHairOnUser" }} class="" value="hair" />
+            <input type="button" {{action "putBeardOnUser" }} class="" value="beard"/>
+            <input type="button" id="takeOffClothesButton" {{action "takeOffClothesOfUser" }} class="" value="off" />
           </div>
+        </div>
       </div>
       <!-- fake inputfield for a second shadow for the plus button -->
       <input id="show_sidebar_shadow"/>
@@ -111,101 +195,120 @@
       <div id="social_sidebar">
         {{ partial 'auth' }}
       </div>
-
+  
       <!-- Facebook-Instance -->
       <script type="text/javascript" src="http://connect.facebook.net/en_US/all.js"></script>
       <script src="assets/js/libs/facebook-sdk-init.js"></script>
-
+  
       <!-- face-detection -->
       <script src="assets/js/libs/request-animation-frame.js"></script>
       <script src="assets/js/libs/face-detection/ccv.js"></script>
       <script src="assets/js/libs/face-detection/face.js"></script>
       <script src="assets/js/helpers/face-detector.js"></script>
-
+  
       <!-- screenshot-maker -->
       <script src="assets/js/libs/html2canvas/html2canvas.min.js"></script>
-
-      <!-- helper -->
-      <script src="assets/js/helpers/signaling.js"></script>
     </script>
-
+    
     <script type="text/x-handlebars" data-template-name="about">
       <header>
-      {{#linkTo "index" id="backButton"}}{{/linkTo}}
+        {{#linkTo "index" id="backButton"}}{{/linkTo}}
       </header>
       <div id="aboutInfo">
         <div class="leftColumn">
           <h1>Information</h1>
-          <p>Das ist ein Projekt, welches im Rahmen des Qualifikationsprojektes 3 an der Fachhochschule Salzburg
-          im Schwerpunkt Web + Communities realisiert wird. Mit der innovativen Technik WebRTC werden wir den Benutzern und Benutzerinnen
-          dieser Web-Applikation ermöglichen, Multi-Video-Konferenzen kostenlos ohne der Installation eines Plugin zu führen.
+          <p>
+            Das ist ein Projekt, welches im Rahmen des Qualifikationsprojektes 3 an der Fachhochschule Salzburg
+            im Schwerpunkt Web + Communities realisiert wird. Mit der innovativen Technik WebRTC werden wir den Benutzern und Benutzerinnen
+            dieser Web-Applikation ermöglichen, Multi-Video-Konferenzen kostenlos ohne der Installation eines Plugin zu führen.
           </p>
           <h1>Techniken</h1>
           <p>
             Das Zentrale Element stellt die HTML5-JavaScript-Innovation WebRTC dar. Sie ermöglicht in der Zukunft mit jeden beliebigen Browser, ohne der Installation eines Programms oder zusätzlichen Plugins Audio- und Videokonferenzen zu führen und über einen Chat mit Freunden, Familien und Arbeitskollegen zu kommunizieren.
-            <br><br> Für die Sitzungsherstellung verwenden wir einen Node.JS Server mit MongoDB, welcher Benutzer und Benutzerinnen registriert, untereinander vermittelt und das Erstellen von seperaten Chaträumen ermöglicht.
-            <br><br> Die Strukturierung und den klaren Aufbau erhalten wir durch das JavaScript-Framework Ember.JS, welches ähnlich einem MVC-Framework arbeitet.
+            <br>
+            <br>
+            Für die Sitzungsherstellung verwenden wir einen Node.JS Server mit MongoDB, welcher Benutzer und Benutzerinnen registriert, untereinander vermittelt und das Erstellen von seperaten Chaträumen ermöglicht.
+            <br>
+            <br>
+            Die Strukturierung und den klaren Aufbau erhalten wir durch das JavaScript-Framework Ember.JS, welches ähnlich einem MVC-Framework arbeitet.
           </p>
         </div>
         <div class="rightColumn">
           <h1>Entwickler</h1>
           <p>
             <ul>
-              <li><a href="mailto:mtiefenthaler.mmt-b2010@fh-salzburg.ac.at">Michael Tiefenthaler</a></li>
-              <li><a href="mailto:fbruenner.mmt-b2010@fh-salzburg.ac.at">Franz Josef Brünner</a></li>
-              <li><a href="mailto:lwanko.mmt-b2010@fh-salzburg.ac.at">Lukas Wanko</a></li>
+              <li>
+                <a href="mailto:mtiefenthaler.mmt-b2010@fh-salzburg.ac.at">Michael Tiefenthaler</a>
+              </li>
+              <li>
+                <a href="mailto:fbruenner.mmt-b2010@fh-salzburg.ac.at">Franz Josef Brünner</a>
+              </li>
+              <li>
+                <a href="mailto:lwanko.mmt-b2010@fh-salzburg.ac.at">Lukas Wanko</a>
+              </li>
             </ul>
           </p>
           <h1>Repositories</h1>
           <p>
             <ul>
-              <li><a href="https://github.com/mike-tuxedo/phovec">Github Client</a></li>
-              <li><a href="https://github.com/mike-tuxedo/Nodejs_P2P-HandshakeServer">Github Server</a></li>
+              <li>
+                <a href="https://github.com/mike-tuxedo/phovec">Github Client</a>
+              </li>
+              <li>
+                <a href="https://github.com/mike-tuxedo/Nodejs_P2P-HandshakeServer">Github Server</a>
+              </li>
             </ul>
           </p>
           <h1>Anschrift</h1>
           <p>
-            Fachhochschule Salzburg<br>
-            Studiengang Multimediatechnology<br><br>
-            Urstein Süd 1<br>
-            5020 Salzburg<br>
+            Fachhochschule Salzburg
+            <br>
+            Studiengang Multimediatechnology
+            <br>
+            <br>
+            Urstein Süd 1
+            <br>
+            5020 Salzburg
+            <br>
             Österreich
           </p>
         </div>
       </div>
     </script>
 
-    <script type="text/x-handlebars" data-template-name="hangup">
-      <header>
-      {{#linkTo "about" id="infoButton"}}{{/linkTo}}
-      </header>
-      <h2>Danke das du Phovec benutzt hast. <br /> Du darfst gerne jederzeit wieder kommen!</h2>
-      <br />
-      {{#linkTo "rooms" }}<div id="startButtonImage"></div>{{/linkTo}}
+    <script type="text/x-handlebars" data-template-name="room-hangup">
+      <div id="hangupInfo">
+        <div>
+          <h2>Danke das du Phovec benutzt hast!</h2>
+          <h2>Du darfst gerne jederzeit wieder kommen!</h2>
+          <p>
+            <br>Du wirst in <span class="countdown">5</span> Sekunden zur Startseite geleitet.  
+          <p>
+        </div>
+      </div>
     </script>
 
     <script type="text/x-handlebars" data-template-name="_auth">
       <div id="fb-root"></div>
-
+  
       {{#unless App.Controller.auth.fb_logged_in }}
-      <a {{action "fbLogin" target="App.Controller.auth" }} class="socialButtons facebookButton"></a>
+        <a {{action "fbLogin" target="App.Controller.auth" }} class="socialButtons facebookButton"></a>
       {{/unless}}
-
+  
       {{#if App.Controller.auth.fb_logged_in }}
-      <a {{action "fbLogout" target="App.Controller.auth"}} class="socialButtons facebookButton"></a>
+        <a {{action "fbLogout" target="App.Controller.auth"}} class="socialButtons facebookButton"></a>
       {{/if}}
-
+  
       {{#unless App.Controller.auth.google_logged_in }}
-      <a {{action "googleLogin" target="App.Controller.auth"}} class="socialButtons googleButton"></a>
+        <a {{action "googleLogin" target="App.Controller.auth"}} class="socialButtons googleButton"></a>
       {{/unless}}
-
+  
       {{#if App.Controller.auth.google_logged_in }}
       <a {{action "googleLogout" target="App.Controller.auth"}} class="socialButtons googleButton"></a>
       {{/if}}
-
+  
       <h2 id="userInfo"></h2>
       <div id="friends"></div>
-
     </script>
 
     <!-- scripts -->
@@ -214,7 +317,7 @@
       window.jQuery || document.write('<script src="assets/js/libs/jquery.js"><\/script>')
     </script>
     <script src="assets/js/libs/jquery-animate.min.js"></script>
-    
+
     <!-- libs -->
     <script src="assets/js/libs/handlebars-1.0.0-rc.3.js"></script>
     <script src="assets/js/libs/ember-1.0.0-rc.1.js"></script>
@@ -225,6 +328,7 @@
     <!-- helper -->
     <script src="assets/js/helpers/webrtc.js"></script>
     <script src="assets/js/helpers/debugger.js"></script>
+    <script src="assets/js/helpers/signaling.js"></script>
 
     <!-- app -->
     <script src="assets/js/app.js"></script>
