@@ -317,7 +317,7 @@ var Users = {
       dataChannel: dataChannel,
       type: "remote"
     };
-
+    
     setTimeout(function() {
       $('#videoboxes').append("<div class='user' id='" + remoteUserId + "'><span class='name'>Name</span><video autoplay></video><form action='javascript:void(0);'><textarea rows='4' READONLY></textarea><input placeholder='Nachricht...'/></form></div>");
 
@@ -339,10 +339,13 @@ var Users = {
           return false;
         }
       });
-    }, 500);
+      console.log('usercounter: ' + Users.users.length);
+      Users.users.push(user);
+      console.log('usercounter: ' + Users.users.length);
 
-    Users.users.push(user);
-    window.App.Controller.user.set('usersCounter', this.users.length);
+      window.App.Controller.user.set('usersCounter', Users.users.length);
+    }, 500);
+    
   },
   getLocalUser: function() {
     for (var i = 0; i < Users.users.length; i++) {
@@ -361,7 +364,7 @@ var Users = {
       }
     }
 
-    alert("Unknown remote user id: " + data.userId);
+    alert("Unknown remote user id: " + id);
     return null;
   },
   removeLocalUser: function() {
@@ -391,10 +394,9 @@ var Users = {
 
         $('#' + user.id).remove();
         user = null;
-        
-        window.App.Controller.user.set('usersCounter', this.users.length);
 
         Users.users.splice(i, 1);
+        window.App.Controller.user.set('usersCounter', Users.users.length);
         return true;
       }
     }

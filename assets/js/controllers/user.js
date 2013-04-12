@@ -1,11 +1,26 @@
 ﻿App.UserController = Ember.ObjectController.extend({
   init: function() {
     this.addObserver('usersCounter', function(){
-      console.log('UserController: change userCounter and View');
-      if(this.usersCounter === 1) $('#videoboxes .user').css('width', '600px');
-      else if(this.usersCounter === 2) $('#videoboxes .user').css('width', '450px');
-      else if(this.usersCounter >= 3) $('#videoboxes .user').css('width', '350px');
-      else return false;
+      if(this.usersCounter === 1){
+        $('.user').css('width', '600px');
+        $('#videoboxes').css('width', '600px');
+      }
+      else if(this.usersCounter === 2){
+        $('.user').css('width', '450px');
+        $('#videoboxes').css('width', '940px');
+      }
+      else if(this.usersCounter === 3){
+        $('.user').css('width', '350px');
+        $('#videoboxes').css('width', '1110px');
+      }
+      else if(this.usersCounter === 4){
+        $('.user').css('width', '350px');
+        $('#videoboxes').css('width', '790px');
+      }
+      else if(this.usersCounter >= 5){
+        $('.user').css('width', '350px');
+        $('#videoboxes').css('width', '1110px');
+      }
     });
   },
   onGetMediaSuccess: function(stream) {
@@ -35,6 +50,7 @@
     /* after user allows camera and mic, we disable the infobox and the black overlayfilter*/
     $('#infoField').fadeOut();
     $('#blackFilter').fadeOut();
+    $('#videoboxes').animate({opacity: '1'}, 500);
   },
   onGetMediaError: function(error) {
     console.log("LocalMedia: ERROR");

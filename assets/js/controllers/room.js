@@ -15,14 +15,14 @@
     }, 500);
   },
   animation: function(){
-      var interval = setInterval(function(){animate($('#show_sidebar'));}, 1250);
+      var interval = setInterval(function(){animate($('#show_sidebar'));}, 3000);
 
       function animate(item){
-        if(parseInt(item.css('right')) > -25){
+        if(parseInt(item.css('right')) > -35){
           clearInterval(interval);
         }
         else{
-          item.animate({boxShadow: '0 0 300px rgba(68,68,255,0)'}, 1200, function(){item.css('box-shadow','0 0 0px #44f')});
+          item.animate({boxShadow: '0 0 400px rgba(255,0,0,0.5)'}, 3000, function(){item.css('box-shadow','0 0 0px rgba(255,0,0,1)')});
         }
       }
   },
