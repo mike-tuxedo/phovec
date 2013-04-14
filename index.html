@@ -190,11 +190,15 @@
         </div>
       </div>
       <!-- fake inputfield for a second shadow for the plus button -->
-      <input id="show_sidebar_shadow"/>
-      <input type="button" id="show_sidebar" value="< " {{ action showSidebar target="view" }}/>
-      <div id="social_sidebar">
-        {{ partial 'auth' }}
+    <!--  <input id="show_sidebar_shadow"/> -->
+      <div id="social_sidebar_container">
+        <input type="button" id="show_sidebar" value="< " {{ action showSidebar target="view" }}/>
+        <div id="social_sidebar">
+          {{ partial 'auth' }}
+        </div>
       </div>
+      
+
   
       <!-- Facebook-Instance -->
       <script type="text/javascript" src="http://connect.facebook.net/en_US/all.js"></script>

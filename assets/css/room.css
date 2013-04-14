@@ -32,46 +32,6 @@
   z-index: 10;
 }
 
-#show_sidebar_shadow {
-  position: absolute;
-  border-top-left-radius: 70px;
-  border-bottom-left-radius: 70px;
-  border-bottom-right-radius: 70px;
-  border-top-right-radius: 70px;
-  width: 70px;
-  height: 70px;
-  right: -35px;
-  margin-top: 300px;
-  overflow-x: hidden;
-  box-shadow: 0px 0px 15px #444;
-  -webkit-box-shadow: 0px 0px 15px #444;
-}
-
-#show_sidebar {
-  cursor: pointer;
-  position: absolute;
-  background: #303743;
-  border-width: 5px;
-  border-top-left-radius: 70px;
-  border-bottom-left-radius: 70px;
-  border-bottom-right-radius: 70px;
-  border-top-right-radius: 70px;
-  width: 70px;
-  height: 70px;
-  right: -35px;
-  margin-top: 300px;
-  font-size: 50px;
-  font-family: arial;
-  color: #e0dfeb;
-  z-index: 30;
-  overflow-x: hidden;
-}
-
-#show_sidebar:hover {
-  opacity: 1;
-  overflow-x: hidden;
-}
-
 .get_friends {
   position: fixed;
   right: -10px;
@@ -93,16 +53,70 @@
   overflow-x: hidden;
 }
 
+#social_sidebar_container {
+  position: absolute;
+  width: 220px;
+  min-height: 600px;
+  right: -180px;
+  top: 75px;
+}
+
+#show_sidebar_shadow {
+  position: absolute;
+  border-top-left-radius: 70px;
+  border-bottom-left-radius: 70px;
+  border-bottom-right-radius: 70px;
+  border-top-right-radius: 70px;
+  width: 70px;
+  height: 70px;
+  right: -35px;
+  margin-top: 300px;
+  overflow-x: hidden;
+  box-shadow: 0px 0px 15px #444;
+  -webkit-box-shadow: 0px 0px 15px #444;
+}
+
+#show_sidebar {
+  cursor: pointer;
+  position: absolute;
+  width: 70px;
+  height: 70px;
+  left: 0px;
+  top: 45%;
+  z-index: 30;
+  overflow-x: hidden;
+  
+  background: #303743;
+  border-width: 5px;
+  border-top-left-radius: 70px;
+  border-bottom-left-radius: 70px;
+  border-bottom-right-radius: 70px;
+  border-top-right-radius: 70px;
+  
+  font-size: 50px;
+  font-family: arial;
+  color: #e0dfeb;
+
+}
+
+#show_sidebar:hover {
+  opacity: 1;
+  overflow-x: hidden;
+}
+
 #social_sidebar {
   position: absolute;
+  height: 100%;
+  width: 180px;
+  right: 0px;
+  
   border-top-left-radius: 5px;
   border-bottom-left-radius: 5px;
   box-shadow: 0px 0px 15px #444444;
-  padding: 5px;
-  right: -190px;
-  top: 75px;
-  height: 80%;
-  width: 180px;
+
+
+  
+
   background: #e0dfeb;
   overflow-x: hidden;
 }
