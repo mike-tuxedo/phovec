@@ -86,7 +86,8 @@
   z-index: 30;
   overflow-x: hidden;
   
-  background: #303743;
+  background: #003366;
+  background-image: url('../img/sidebar-arrow.png');
   border-width: 5px;
   border-top-left-radius: 70px;
   border-bottom-left-radius: 70px;
