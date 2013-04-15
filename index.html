@@ -161,7 +161,7 @@
         <img id="chrome" src="assets/img/chrome-hinweis-browser.png"/>
       </div>
       <div id="videoboxes">
-          <div class="user" id="local">
+        <div class="user local" id="local">
           {{#view App.UserView}}
             <div class="videoOptions">
               <div class="videoOptionsItems" {{ action muteAudio target="view" }}>
@@ -181,7 +181,6 @@
           <canvas id="faceDetectorOutput"></canvas>
           <div id="videoEffects" {{ action hideEffects target="view" }}>
             <input type="button" id="snapshotButton" {{action "takeScreenShotFromChatroom" }} class="" value="Take Snapshot"/>
-            <input type="button" id="getSnapshotButton" class="" value="get Snapshot" style="display:none" />
             <input type="button" {{action "putClassesOnUser" }} class="" value="classes" />
             <input type="button" {{action "putHairOnUser" }} class="" value="hair" />
             <input type="button" {{action "putBeardOnUser" }} class="" value="beard"/>

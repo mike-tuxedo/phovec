@@ -1,17 +1,20 @@
 ﻿App.RoomController = Ember.ObjectController.extend({
   init: function() {
     var loop = setInterval(function() {
-      // there are some elements that must be configured during loading chatroom
-      if ( typeof FaceDetector !== 'undefined' && $('#faceDetectorOutput')[0] && $('video')[0] ) {
+    
+      // localVideo is not available during loading templates so an interval is used
+      var localVideo = $('.local video');
+      console.log('localVideo: ',localVideo);
+      if ( typeof FaceDetector !== 'undefined' && $('#faceDetectorOutput')[0] && localVideo && Users.getLocalUser().stream ) {
         
-        $('#faceDetectorOutput')[0].style.width = $('video').css('width');
-        $('#faceDetectorOutput')[0].style.height = '225px';
+        $('#faceDetectorOutput')[0].style.width = localVideo.css('width');
+        $('#faceDetectorOutput')[0].style.height = '250px';
 
-        FaceDetector.init($('video')[0], $('#faceDetectorOutput')[0]);
+        FaceDetector.init(localVideo[0], $('#faceDetectorOutput')[0]);
 
         clearInterval(loop);
       }
-
+      
     }, 1000);
   },
   animation: function() {
@@ -60,8 +63,7 @@
     var controller = this;
     
     $('#videoEffectsBar').css('margin-top', '250px');
-    $('#getSnapshotButton').hide();
-
+    
     html2canvas([document.getElementById('videoboxes')], {
       onrendered: function(canvas) {
         
@@ -70,7 +72,7 @@
         var videos = $('video');
         
         var snapshotWorker = new Worker('assets/js/helpers/snapshot_worker.js');
-        console.log('canvas',canvas);
+        
         snapshotWorker.postMessage({
           image_data: (canvas.getContext('2d').getImageData(0, 0, canvas.width, canvas.height)),
           color: '#999999', /* videobox-color */
@@ -79,6 +81,7 @@
 
         snapshotWorker.onmessage = function(e) {
           console.log('e.data',e.data);
+          
           if (e && !e.data) {
             console.log("RoomController: takeScreenShotFromChatroom error happend", e);
           }
@@ -91,21 +94,13 @@
             $('#progressSnapshotbar').attr('value', 0);
           }
           
-          var ctx = canvas.getContext('2d');
-          
           e.data.coords.forEach(function(coord, index) {
+            var ctx = canvas.getContext('2d');
             controller.drawVideoboxOnCanvas(videos[index], ctx, coord.startX, coord.startY, e.data.cellWidth, e.data.cellHeight);
           });
 
-          $('#getSnapshotButton').show();
+          var win = window.open(canvas.toDataURL(), 'Snapshot', ('width=' + canvas.width + ', height=' + canvas.height + ',menubar=1,resizable=0,scrollbars=0,status=0'));
 
-          $('#getSnapshotButton').click(function(e) {
-            var win = window.open(canvas.toDataURL(), 'Snapshot', ('width=' + canvas.width + ', height=' + canvas.height + ',menubar=1,resizable=0,scrollbars=0,status=0'));
-            //var win = window.open('./assets/js/helpers/snapshot_window.htm', 'Snapshot', ('width=' + canvas.width + ', height=' + canvas.height + ',menubar=1,resizable=0,scrollbars=0,status=0'));
-            //win.snapshotImage = canvas.toDataURL();
-            $('#snapshotButton').show();
-            
-          });
         };
 
       },
