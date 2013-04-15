@@ -34,7 +34,23 @@ var WebRTC = {
     };
     peerConnection.onaddstream = function(event) {
       trace("webrtc", "Remote Stream arrived", event);
-
+      var user = Users.getRemoteUser(remoteUserId);
+      user.stream = event.stream;
+      
+      //TODO
+      user.stream.getVideoTracks()[0].onmute = function(){
+        
+      };
+      user.stream.getVideoTracks()[0].onunmute = function(){
+        
+      };
+      user.stream.getAudioTracks()[0].onmute = function(){
+        
+      };
+      user.stream.getAudioTracks()[0].onunmute = function(){
+        
+      };      
+    
       $('#' + remoteUserId + ' video').attr('src', URL.createObjectURL(event.stream));
       if (navigator.browser[0] === "Firefox") {
         $('#' + remoteUserId + ' video').get(0).play();
@@ -89,7 +105,7 @@ var WebRTC = {
       trace("webrtc", "DataChannel ondatachannel", event);
     };*/
 
-    Users.createRemoteUser(roomHash, remoteUserId, peerConnection, dataChannel);
+    Users.createRemoteUser(roomHash, remoteUserId, peerConnection, undefined);
   },
   modifyDescription: function(description) {
     var sdp = description.sdp;
