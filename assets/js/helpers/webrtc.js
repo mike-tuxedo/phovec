@@ -56,6 +56,7 @@ var WebRTC = {
         $('#' + remoteUserId + ' video').get(0).play();
       }
       trace("webrtc", "Remote Stream arrived", event);
+      
     };
     peerConnection.onremovestream = function(event) {
       trace("webrtc", "Remote Stream removed", event);

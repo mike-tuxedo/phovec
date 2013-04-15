@@ -161,7 +161,7 @@
         <img id="chrome" src="assets/img/chrome-hinweis-browser.png"/>
       </div>
       <div id="videoboxes">
-        <div class="user" id="local">
+          <div class="user" id="local">
           {{#view App.UserView}}
             <div class="videoOptions">
               <div class="videoOptionsItems" {{ action muteAudio target="view" }}>
@@ -201,7 +201,6 @@
         </div>
       </div>
 
-  
       <!-- Facebook-Instance -->
       <!--<script type="text/javascript" src="http://connect.facebook.net/en_US/all.js"></script>
       <script src="assets/js/libs/facebook-sdk-init.js"></script>
@@ -296,20 +295,20 @@
 
     <script type="text/x-handlebars" data-template-name="_auth">
       <div id="fb-root"></div>
-  
-      {{#unless App.Controller.auth.fb_logged_in }}
-        <a {{action "fbLogin" target="App.Controller.auth" }} class="socialButtons facebookButton"></a>
+
+      {{#unless App.Controller.auth.fbLoggedIn }}
+      <a {{action "fbLogin" target="App.Controller.auth" }} class="socialButtons facebookButton"></a>
       {{/unless}}
-  
-      {{#if App.Controller.auth.fb_logged_in }}
-        <a {{action "fbLogout" target="App.Controller.auth"}} class="socialButtons facebookButton"></a>
+
+      {{# if App.Controller.auth.fbLoggedIn }}
+      <a {{action "fbLogout" target="App.Controller.auth"}} class="socialButtons facebookButton"></a>
       {{/if}}
-  
-      {{#unless App.Controller.auth.google_logged_in }}
-        <a {{action "googleLogin" target="App.Controller.auth"}} class="socialButtons googleButton"></a>
+
+      {{# unless App.Controller.auth.googleLoggedIn }}
+      <a {{action "googleLogin" target="App.Controller.auth"}} class="socialButtons googleButton"></a>
       {{/unless}}
-  
-      {{#if App.Controller.auth.google_logged_in }}
+
+      {{#if App.Controller.auth.googleLoggedIn }}
       <a {{action "googleLogout" target="App.Controller.auth"}} class="socialButtons googleButton"></a>
       {{/if}}
       

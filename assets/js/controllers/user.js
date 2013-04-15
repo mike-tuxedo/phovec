@@ -1,4 +1,4 @@
-﻿App.UserController = Ember.ObjectController.extend({
+App.UserController = Ember.ObjectController.extend({
   init: function() {
     this.addObserver('usersCounter', function() {
       if (this.usersCounter === 1) {

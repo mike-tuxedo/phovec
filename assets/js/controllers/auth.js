@@ -133,7 +133,7 @@
   googleType : 'token',
   googleRequestURL : null,
   
-  google_logged_in : false,
+  googleLoggedIn : false,
   
   googleLogin: function(){
     

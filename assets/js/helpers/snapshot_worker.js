@@ -7,14 +7,14 @@ var getNewCoordinates = function(imgData, hexColor, formerCoords, cell){ // hexC
     
     for (var x=startX; x < imgData.width; x++){
       
-      var outer_offset = (y * imgData.width + x) * 4;
-      var outer_offset_last_pos_x = x > 0 ? (y * imgData.width + (x-1)) * 4 : 0;
+      var offset = (y * imgData.width + x) * 4;
+      var offsetLastPosX = x > 0 ? (y * imgData.width + (x-1)) * 4 : 0;
       
       // is pixel on the left upper corner of cell
       if( !hasArrayGotCoord(formerCoords, { startX: x, startY: y}) && 
-          getHexColor(imgData.data[outer_offset], imgData.data[outer_offset+1], imgData.data[outer_offset+2]) === hexColor &&
-          getHexColor(imgData.data[outer_offset-4], imgData.data[outer_offset-3], imgData.data[outer_offset-2]) !== hexColor && 
-          getHexColor(imgData.data[outer_offset-(imgData.width*4)], imgData.data[outer_offset-(imgData.width*4)+1], imgData.data[outer_offset-(imgData.width*4)+2]) !== hexColor ){
+          getHexColor(imgData.data[offset], imgData.data[offset+1], imgData.data[offset+2]) === hexColor &&
+          getHexColor(imgData.data[offset-4], imgData.data[offset-3], imgData.data[offset-2]) !== hexColor && 
+          getHexColor(imgData.data[offset-(imgData.width*4)], imgData.data[offset-(imgData.width*4)+1], imgData.data[offset-(imgData.width*4)+2]) !== hexColor ){
         
         startX = x;
         startY = y;
@@ -25,13 +25,14 @@ var getNewCoordinates = function(imgData, hexColor, formerCoords, cell){ // hexC
       }
       // is pixel on the right side of cell
       else if( !cell.width && 
-               getHexColor(imgData.data[outer_offset], imgData.data[outer_offset+1], imgData.data[outer_offset+2]) !== hexColor &&
-               getHexColor(imgData.data[outer_offset_last_pos_x], imgData.data[outer_offset_last_pos_x+1], imgData.data[outer_offset_last_pos_x+2]) === hexColor ){
+               getHexColor(imgData.data[offset], imgData.data[offset+1], imgData.data[offset+2]) !== hexColor &&
+               getHexColor(imgData.data[offsetLastPosX], imgData.data[offsetLastPosX+1], imgData.data[offsetLastPosX+2]) === hexColor )
+      {
         
         endX = x;
         
         // is pixel on the right lower corner of cell
-        if( getHexColor(imgData.data[outer_offset_last_pos_x+(imgData.width*4)-4], imgData.data[outer_offset_last_pos_x+(imgData.width*4)-3], imgData.data[outer_offset_last_pos_x+(imgData.width*4)-2]) !== hexColor ){
+        if( getHexColor(imgData.data[offsetLastPosX+(imgData.width*4)-4], imgData.data[offsetLastPosX+(imgData.width*4)-3], imgData.data[offsetLastPosX+(imgData.width*4)-2]) !== hexColor ){
           
           if(!cell.width){
             cell.width = endX - startX;

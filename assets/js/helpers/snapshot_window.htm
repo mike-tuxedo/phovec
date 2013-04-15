@@ -1,0 +1,92 @@
+﻿<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Alter Snapshot</title>
+</head>
+
+<body>
+<form>
+  <input type="checkbox" id="inserTextBox" value="insertText">Text-Mode<br>
+  <textarea cols="10" rows="10" id="textNode"></textarea>
+  <input type="button" value="Get Altered Snapshot" id="alteredSnapshotButton" />
+</form>
+<br />
+<br />
+<br />
+
+<div id="container" style="position:absolute"></div>
+</body>
+
+<!-- kinetic-lib -->      
+<script src="http://d3lp1msu2r81bx.cloudfront.net/kjs/js/lib/kinetic-v4.4.0.min.js"></script>
+<script src="./snapshot_window_lib/initStage.js"></script>
+
+<script>
+  
+  <!-- get snapshot after editing it -->
+  alteredSnapshotButton.onclick = function(){
+
+    changeCirclesVisibility(false);
+    
+    var container = document.getElementById('container');
+    
+    window.stage.toDataURL({
+      callback: function(dataUrl){
+        window.open(dataUrl, ('width=' + container.width + ', height=' + container.height));
+        changeCirclesVisibility(true);
+      },
+      mimeType: 'image/jpeg',
+      quality: 1
+    });
+  };
+  
+  /* hide circles when clicked and show them again */
+  function changeCirclesVisibility(visible){
+    var stage = window.stage;
+    var layer = stage.getChildren()[0];
+    
+    snapShotGroup.children.forEach(function(shape){
+      if(shape.shapeType !== 'Image'){ /* just hide or show circles not image */
+        visible ? shape.show() : shape.hide();
+        stage.draw();
+      }
+    });
+  }
+  
+  /* methode that is called when stage is created */
+  window.addEventListener("snapshotStage:created", handleActionsOnStage,false);
+  
+  function handleActionsOnStage(){
+  
+    var layer = stage.getChildren()[0];
+    
+    layer.on('mousedown', function(e){
+      var text = document.getElementById('textNode').value;
+      console.log('e: ',e);
+      insertText(e.x,e.x,text,this);
+    });
+    
+  }
+  
+  function insertText(x,y,text,layer){
+  
+    var simpleText = new Kinetic.Text({
+      x: x,
+      y: y,
+      text: text,
+      fontSize: 30,
+      fontFamily: 'Calibri',
+      fill: 'green',
+      name: 'textnode',
+      draggable: true,
+      dragOnTop: false
+    });
+    
+    layer.add(simpleText);
+  }
+  
+  
+</script>
+
+</html>
