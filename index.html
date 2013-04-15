@@ -12,7 +12,7 @@
     <link rel="stylesheet" href="assets/css/style.css">
     <link rel="stylesheet" href="assets/css/development.css">
   </head>
-  <body>
+  <body scrolling="no">
     <!-- debugger content -->
     <div id="debugger">
       <h1>Debugger</h1><div class="refresh" onclick="WebRTCDebugger.update();"></div>
@@ -189,15 +189,17 @@
           </div>
         </div>
       </div>
-      <!-- fake inputfield for a second shadow for the plus button -->
-    <!--  <input id="show_sidebar_shadow"/> -->
-      <div id="social_sidebar_container">
-        <input type="button" id="show_sidebar" value="" {{ action showSidebar target="view" }}/>
-        <div id="social_sidebar">
-          {{ partial 'auth' }}
+      
+      <!-- to hide the scrollbar, we need a div whos position is not outside the site -->
+      <div id="scrollbar_fix"> 
+        <div id="social_sidebar_container">
+          <input type="button" id="show_sidebar" value="" {{ action showSidebar target="view" }}/>
+          <div id="show_sidebar_shadow"></div>
+          <div id="social_sidebar">
+            {{ partial 'auth' }}
+          </div>
         </div>
       </div>
-      
 
   
       <!-- Facebook-Instance -->
@@ -310,6 +312,9 @@
       {{#if App.Controller.auth.google_logged_in }}
       <a {{action "googleLogout" target="App.Controller.auth"}} class="socialButtons googleButton"></a>
       {{/if}}
+      
+      <a class="socialButtons email_button" href="#"></a>
+      <hr />
   
       <h2 id="userInfo"></h2>
       <div id="friends"></div>

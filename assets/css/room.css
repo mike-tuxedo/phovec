@@ -5,7 +5,7 @@
   margin-left: -300px;
   margin-top: -50px;
   left: 50%;
-  z-index: 20;
+  z-index: 35;
   background: rgba(255,255,255,0);
 }
 
@@ -29,7 +29,7 @@
   background-repeat: no-repeat;
   background-size: 100%;
   opacity: 0.8;
-  z-index: 10;
+  z-index: 30;
 }
 
 .get_friends {
@@ -53,25 +53,36 @@
   overflow-x: hidden;
 }
 
+#scrollbar_fix{
+  position: absolute;
+  width: 330px;
+  min-height: 600px;
+  right: 0px;
+  top: 75px;
+  overflow: hidden;
+}
+
 #social_sidebar_container {
   position: absolute;
-  width: 220px;
+  width: 330px;
   min-height: 600px;
   right: -180px;
-  top: 75px;
+  overflow: hidden;
 }
 
 #show_sidebar_shadow {
   position: absolute;
+  width: 70px;
+  height: 70px;
+  left: 115px;
+  top: 45%;
+  overflow: hidden;
+  
   border-top-left-radius: 70px;
   border-bottom-left-radius: 70px;
   border-bottom-right-radius: 70px;
   border-top-right-radius: 70px;
-  width: 70px;
-  height: 70px;
-  right: -35px;
-  margin-top: 300px;
-  overflow-x: hidden;
+
   box-shadow: 0px 0px 15px #444;
   -webkit-box-shadow: 0px 0px 15px #444;
 }
@@ -81,14 +92,17 @@
   position: absolute;
   width: 70px;
   height: 70px;
-  left: 0px;
+  left: 115px;
   top: 45%;
-  z-index: 30;
-  overflow-x: hidden;
+  z-index: 25;
+  overflow: hidden;
   
-  background: #003366;
+  background: #303743;
   background-image: url('../img/sidebar-arrow.png');
-  border-width: 5px;
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+  
+  border: 10px solid #e0dfeb;
   border-top-left-radius: 70px;
   border-bottom-left-radius: 70px;
   border-bottom-right-radius: 70px;
@@ -102,24 +116,21 @@
 
 #show_sidebar:hover {
   opacity: 1;
-  overflow-x: hidden;
+  overflow: hidden;
 }
 
 #social_sidebar {
   position: absolute;
-  height: 100%;
+  height: 95%;
   width: 180px;
   right: 0px;
+  top: 15px;
   
   border-top-left-radius: 5px;
   border-bottom-left-radius: 5px;
   box-shadow: 0px 0px 15px #444444;
-
-
-  
-
   background: #e0dfeb;
-  overflow-x: hidden;
+  overflow: hidden;
 }
 
 .socialButtons {
@@ -127,7 +138,7 @@
   width: 60px;
   height: 60px;
   float: left;
-  overflow-x: hidden;
+  overflow: hidden;
 }
 
 .socialButtons:hover {
@@ -143,7 +154,7 @@
 }
 
 #friends {
-  height: 70%;
+  height: auto;
   overflow-y: scroll;
   overflow-x: hidden;
 }
@@ -172,9 +183,9 @@
   background-repeat: no-repeat;
 }
 
-.twitterButton {
+.email_button {
   display: block;
-  background-image: url('../img/twitterbutton.png');
+  background-image: url('../img/emailbutton.png');
   background-size: 100% 100%;
   background-repeat: no-repeat;
 }
