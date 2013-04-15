@@ -1,12 +1,23 @@
-﻿App.UserController = Ember.ObjectController.extend({
+App.UserController = Ember.ObjectController.extend({
   init: function() {
-    this.addObserver('usersCounter', function(){
-      console.log('UserController: change userCounter and View');
-      if(this.usersCounter === 1) $('#videoboxes .user').css('width', '600px');
-      else if(this.usersCounter === 2) $('#videoboxes .user').css('width', '450px');
-      else if(this.usersCounter >= 3) $('#videoboxes .user').css('width', '350px');
-      else return false;
-    });
+    this.addObserver('usersCounter', function() {
+      if (this.usersCounter === 1) {
+        $('.user').css('width', '600px');
+        $('#videoboxes').css('width', '600px');
+      } else if (this.usersCounter === 2) {
+        $('.user').css('width', '450px');
+        $('#videoboxes').css('width', '940px');
+      } else if (this.usersCounter === 3) {
+        $('.user').css('width', '350px');
+        $('#videoboxes').css('width', '1110px');
+      } else if (this.usersCounter === 4) {
+        $('.user').css('width', '350px');
+        $('#videoboxes').css('width', '790px');
+      } else if (this.usersCounter >= 5) {
+        $('.user').css('width', '350px');
+        $('#videoboxes').css('width', '1110px');
+      }
+    });
   },
   onGetMediaSuccess: function(stream) {
     window.dispatchEvent(new CustomEvent("localmedia:available", {
@@ -25,30 +36,33 @@
 
     document.getElementById('videoboxes').getElementsByTagName('div')[0].getElementsByTagName('video')[0].play();
     /*
-    if(Users.users.length > 1){
-      for(i=1; i <= Users.users.length-1; i++){
-        console.log('try adding stream');
-        Users.users[i].peerConnection.removeStream(Users.users[0].stream);
-        Users.users[i].peerConnection.addStream(stream);
-      }
-    }*/
+     if(Users.users.length > 1){
+     for(i=1; i <= Users.users.length-1; i++){
+     console.log('try adding stream');
+     Users.users[i].peerConnection.removeStream(Users.users[0].stream);
+     Users.users[i].peerConnection.addStream(stream);
+     }
+     }*/
     /* after user allows camera and mic, we disable the infobox and the black overlayfilter*/
     $('#infoField').fadeOut();
     $('#blackFilter').fadeOut();
+    $('#videoboxes').animate({
+      opacity: '1'
+    }, 500);
   },
   onGetMediaError: function(error) {
     console.log("LocalMedia: ERROR");
     console.log(error);
-    
+
     /* check if user likes to do a textchat or not */
-    if(confirm('Nach dem du keinen Zugriff auf Kamera und Mikrofon erlaubst, kannst du nur einen Textchat führen! Ist das OK?')) {
-      $('#infoField').fadeOut();
-      $('#blackFilter').fadeOut();
-    }
-    else {
-      console.log('************ein redirect muss noch implementiert werden***********');
-      alert('Zurück auf die Startseite ...');
-    }
+    /*if(confirm('Nach dem du keinen Zugriff auf Kamera und Mikrofon erlaubst, kannst du nur einen Textchat führen! Ist das OK?')) {
+     $('#infoField').fadeOut();
+     $('#blackFilter').fadeOut();
+     }
+     else {
+     console.log('************ein redirect muss noch implementiert werden***********');
+     alert('Zurück auf die Startseite ...');
+     }*/
   },
   startGetMedia: function() {
     //request audio and video from your own hardware
@@ -62,31 +76,40 @@
     $("#local-stream").get(0).pause();
     $("#local-stream").attr("src", null);
   },
-  sendMail: function(mailSettings){
-    if( mailSettings.from && mailSettings.to && mailSettings.subject && mailSettings.text && mailSettings.html )
-      SignalingChannel.send({ subject: 'mail', chatroomHash: Users.users[0].roomHash, userHash: Users.users[0].id, mail: { from: mailSettings.from, to: mailSettings.to, subject: mailSettings.subject, text: mailSettings.text, html: mailSettings.html } });
+  sendMail: function(mailSettings) {
+    if (mailSettings.from && mailSettings.to && mailSettings.subject && mailSettings.text && mailSettings.html)
+      SignalingChannel.send({
+        subject: 'mail',
+        chatroomHash: Users.users[0].roomHash,
+        userHash: Users.users[0].id,
+        mail: {
+          from: mailSettings.from,
+          to: mailSettings.to,
+          subject: mailSettings.subject,
+          text: mailSettings.text,
+          html: mailSettings.html
+        }
+      });
   },
   muteAudio: function() {
-    if($('video').prop('muted') === false){
+    if ($('video').prop('muted') === false) {
       console.log('LocalMedia: Your audio should be muted for others');
       $('video').prop('muted', true);
-    }
-    else{
+    } else {
       console.log('LocalMedia: Your audio should be unmuted for others');
       $('video').prop('muted', false);
     }
   },
-  hideVideo: function(){
+  hideVideo: function() {
     console.log('LocalMedia: Your video should be hidden for you and others');
-    if(Users.users[0].stream.ended === false){
+    if (Users.users[0].stream.ended === false) {
       Users.users[0].stream.stop();
-      
+
       console.log('stream stopped');
-    }
-    else{
+    } else {
       console.log('stream plays again, hopefully');
       $('video').get(0).play();
-      
+
       navigator.getMedia({
         audio: false,
         video: true

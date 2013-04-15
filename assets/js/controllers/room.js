@@ -14,17 +14,23 @@
 
     }, 1000);
   },
-  animation: function(){
-      var interval = setInterval(function(){animate($('#show_sidebar'));}, 1250);
+  animation: function() {
+    var interval = setInterval(function() {
+      animate($('#show_sidebar'));
+    }, 3000);
 
-      function animate(item){
-        if(parseInt(item.css('right')) > -25){
-          clearInterval(interval);
-        }
-        else{
-          item.animate({boxShadow: '0 0 300px rgba(68,68,255,0)'}, 1200, function(){item.css('box-shadow','0 0 0px #44f')});
-        }
+    function animate(item) {
+      if (parseInt($('#social_sidebar_container').css('right')) > -150) {
+        clearInterval(interval);
+      } else {
+        item.animate({
+          boxShadow: '0 0 400px rgba(255,0,0,0.5)'
+        }, 3000, function() {
+          item.css('box-shadow', '0 0 0px rgba(255,0,0,1)')
+        });
       }
+    }
+
   },
   putClassesOnUser: function() {
     this.putUserStreamOnDetector('classes');
@@ -120,28 +126,14 @@
       height // // destination: height
     );
   },
-  setupVideoEffectBar: function() {
-    /*var isShown = false;
-    $('#videoEffectsBar').click(function() {
-      if (!isShown) {
-
-        $('#videoEffectsBar').css('box-shadow', 'inset 1px 3px 0px 0px #444');
-        $('#videoEffectsBar').css('border-bottom-left-radius', '0px');
-        $('#videoEffectsBar').css('border-bottom-right-radius', '0px');
-
-        $('#videoEffects').slideDown('fast', function() {
-          $('#videoEffects').css('box-shadow', 'inset 1px 0px 0px 0px #444');
-        });
-
-        isShown = true;
-      } else {
-        $('#videoEffectsBar').css('box-shadow', 'inset 1px 1px 5px #444');
-        $('#videoEffectsBar').css('border-bottom-left-radius', '15px');
-        $('#videoEffectsBar').css('border-bottom-right-radius', '15px');
-
-        $('#videoEffects').css('display', 'none');
-        isShown = false;
-      }
-    });*/
+  kickParticipant: function() {
+    var remoteUserId = $().attr('id');
+    
+    SignalingChannel.send({
+      subject: "participant-kick",
+      chatroomHash: Users.getLocalUser().roomHash,
+      userHash: Users.getLocalUser().id,
+      destinationHash: remoteUserId
+    });
   }
 });

@@ -2,9 +2,8 @@
  * Enables URLs without the # sign - only on server possible!
  */
 // App.Router.reopen({
-// location: 'history'
-// });
-App.Router.map(function() {
+  // location: 'history'
+// });App.Router.map(function() {
   this.route("about");
   this.route('rooms', {
     path: "/rooms"
@@ -12,33 +11,40 @@ App.Router.map(function() {
   this.route('room', {
     path: "/room/:roomhash"
   });
-  this.route("hangup");
-  this.route("unknown");
-  this.route("full");
+  this.route('room-unknown', {
+    path: "/room/unknown"
+  });
+  this.route('room-full', {
+    path: "/room/full"
+  });
+  this.route("room-hangup", {
+    path: "/room/hangup"
+  });
+  this.route("error");
 });
 
 App.ApplicationRoute = Ember.Route.extend({
-  enter: function(router) {
+  enter: function() {
     App.Controller = {};
   }
 });
 
 App.IndexRoute = Ember.Route.extend({
-  enter: function(route) {
+  enter: function() {
     WebRTC.hangup();
     SignalingChannel.close();
   }
 });
 
 App.RoomsRoute = Ember.Route.extend({
-  enter: function(router) {
+  enter: function() {
     WebRTC.init();
     SignalingChannel.init();
   }
 });
 
 App.RoomRoute = Ember.Route.extend({
-  enter: function(router) {
+  enter: function() {
     WebRTC.init();
     SignalingChannel.init();
 
@@ -56,9 +62,28 @@ App.RoomRoute = Ember.Route.extend({
   }
 });
 
-App.HangupRoute = Ember.Route.extend({
-  enter: function(router) {
+App.RoomHangupRoute = Ember.Route.extend({
+  enter: function() {
     WebRTC.hangup();
     SignalingChannel.close();
+    App.redirectUrlSec('', 5);
+  }
+});
+
+App.RoomFullRoute = Ember.Route.extend({
+  enter: function() {
+    App.redirectUrlSec('', 5);
+  }
+});
+
+App.ErrorRoute = Ember.Route.extend({
+  enter: function() {
+    App.redirectUrlSec('', 5);
+  }
+});
+
+App.RoomUnknownRoute = Ember.Route.extend({
+  enter: function() {
+    App.redirectUrlSec('', 5);
   }
 });

@@ -1,7 +1,7 @@
 ﻿var SignalingChannel = {
   webSocket: null,
   isConnected: false,
-  init: function() {   
+  init: function() {
     if (this.isConnected) {
       return;
     }
@@ -14,6 +14,25 @@
         trace("signaling", "ONOPEN", "-");
         self.isConnected = true;
 
+        /**
+         * Check roomHash length if route "room" is active
+         */
+        var url = location.href;
+        var roomRoute = "\/room\/";
+        var indexRoomHash = url.lastIndexOf(roomRoute);
+
+        if (indexRoomHash >= 0) {
+          indexRoomHash = indexRoomHash + roomRoute.length;
+          if (url.substr(indexRoomHash).length > 40 || url.substr(indexRoomHash).length < 40) {
+            App.handleURL('/room/unknown');
+            App.Router.router.replaceURL('/room/unknown');
+            return;
+          }
+        }
+
+        /**
+         * Send init to signaling server
+         */
         this.send(JSON.stringify({
           subject: "init",
           url: location.href
@@ -110,7 +129,8 @@
   close: function() {
     if (this.isConnected || this.webSocket) {
       trace("signaling", "CLOSE", "-");
-      this.webSocket.onclose = function() {};
+      this.webSocket.onclose = function() {
+      };
       this.webSocket.close();
       this.isConnected = false;
     }

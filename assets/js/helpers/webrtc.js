@@ -5,6 +5,8 @@ var WebRTC = {
       return true;
     }
 
+    this.initialized = true;
+
     window.addEventListener("localmedia:available", this.handleLocalMedia);
     window.addEventListener("signalingchannel:init", this.handleSignalingInit);
     window.addEventListener("signalingchannel:sdp", this.handleSignalingSdp);
@@ -12,7 +14,6 @@ var WebRTC = {
     window.addEventListener("signalingchannel:participant", this.handleSignalingParticipant);
 
     Users.createLocalUser();
-    this.initialized = true;
   },
   createPeerConnection: function(roomHash, userId, remoteUserId) {
     /**
@@ -163,15 +164,16 @@ var WebRTC = {
     if (data.error !== undefined) {
       switch(data.error) {
         case "room:full":
-          App.handleURL('/full');
-          App.Router.router.replaceURL('/full');
+          App.handleURL('/room/full');
+          App.Router.router.replaceURL('/room/full');
           break;
         case "room:unknown":
-          App.handleURL('/unknown');
-          App.Router.router.replaceURL('/unknown');
+          App.handleURL('/room/unknown');
+          App.Router.router.replaceURL('/room/unknown');
           break;
         default:
-          trace("webrtc", "Got unknown error!", event);
+          App.handleURL('/error');
+          App.Router.router.replaceURL('/error');
           break;
       }
       return;
@@ -196,6 +198,9 @@ var WebRTC = {
     var user = Users.getLocalUser();
     user.roomHash = data.roomHash;
     user.id = data.userId;
+    if (data.guestIds.length <= 0) {
+      user.admin = true;
+    }
 
     // Use setTimeout to get an asynchronous answer and don't stop the script
     setTimeout(function(user) {
@@ -302,6 +307,7 @@ var Users = {
       id: undefined,
       roomHash: undefined,
       stream: undefined,
+      admin: false,
       type: "local"
     };
 
@@ -319,8 +325,11 @@ var Users = {
       type: "remote"
     };
 
+    Users.users.push(user);
+
     setTimeout(function() {
-      $('#videoboxes').append("<div class='user' id='" + remoteUserId + "'><span class='name'>Name</span><video autoplay></video><form action='javascript:void(0);'><textarea rows='4' READONLY></textarea><input placeholder='Nachricht...'/></form></div>");
+      $('#videoboxes').append("<div class='user' id='" + remoteUserId + "'><span class='name'>Name</span><video autoplay></video></div>");
+      //<form action='javascript:void(0);'><textarea rows='4' READONLY></textarea><input placeholder='Nachricht...'/></form>
 
       $('#' + remoteUserId + " form input").keypress(function(e) {
         if (e.which == 13) {
@@ -340,10 +349,8 @@ var Users = {
           return false;
         }
       });
+      window.App.Controller.user.set('usersCounter', Users.users.length);
     }, 500);
-
-    Users.users.push(user);
-    window.App.Controller.user.set('usersCounter', this.users.length);
   },
   getLocalUser: function() {
     for (var i = 0; i < Users.users.length; i++) {
@@ -362,7 +369,7 @@ var Users = {
       }
     }
 
-    alert("Unknown remote user id: " + data.userId);
+    alert("Unknown remote user id: " + id);
     return null;
   },
   removeLocalUser: function() {
@@ -378,7 +385,6 @@ var Users = {
     }
   },
   removeRemoteUser: function(id) {
-
     for (var i = 0; i < Users.users.length; i++) {
       if (Users.users[i].id === id && Users.users[i].type === "remote") {
         var user = Users.users[i];
@@ -392,10 +398,9 @@ var Users = {
 
         $('#' + user.id).remove();
         user = null;
-        
-        window.App.Controller.user.set('usersCounter', this.users.length);
 
         Users.users.splice(i, 1);
+        window.App.Controller.user.set('usersCounter', Users.users.length);
         return true;
       }
     }
