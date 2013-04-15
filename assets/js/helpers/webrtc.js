@@ -22,7 +22,7 @@ var WebRTC = {
     var peerConnection = new PeerConnection(RTC_CONFIGURATION, RTC_MEDIA_CONSTRAINTS);
 
     peerConnection.onicecandidate = function(description) {
-      trace("webrtc", "Got Ice from STUN", description);
+      //trace("webrtc", "Got Ice from STUN", description);
 
       SignalingChannel.send({
         subject: "ice",
@@ -59,31 +59,37 @@ var WebRTC = {
      * Create DataChannel
      */
     /*var dataChannel = peerConnection.createDataChannel('RTCDataChannel', DATACHANNEL_OPTIONS);
-     dataChannel.onmessage = function(event) {
-     if (event.data.substr(0, 4) == "\\$cn") {
-     user.name = event.data.substr(4);
-     $('#' + remoteUserId + ' .name').text(user.name);
-     } else {
-     var name = $('#' + remoteUserId + ' .name').text();
-     var output = new Date().getHours() + ":" + new Date().getMinutes() + " (" + name + ") - " + event.data + "&#13;&#10;";
-     $('#' + remoteUserId + ' form textarea').append(output);
-     }
-     };
-     dataChannel.onopen = function(event) {
-     trace("webrtc", "DataChannel onopen", event);
-     dataChannel.send("\\$cn" + WebRTC.getLocalUser().name);
-     };
-     dataChannel.onclose = function(event) {
-     trace("webrtc", "DataChannel onclose", event);
-     };
-     dataChannel.onerror = function(event) {
-     trace("webrtc", "DataChannel onerror", event);
-     };
-     peerConnection.ondatachannel = function(event) {
-     trace("webrtc", "DataChannel ondatachannel", event);
-     };*/
 
-    Users.createRemoteUser(roomHash, remoteUserId, peerConnection, undefined);
+    if (navigator.browser[0] === "Firefox") {
+      dataChannel.binaryType = 'blob';
+    }
+
+    dataChannel.onmessage = function(event) {
+      var user = Users.getRemoteUser(remoteUserId);
+      if (event.data.substr(0, 4) == "\\$cn") {
+        user.name = event.data.substr(4);
+        $('#' + remoteUserId + ' .name').text(user.name);
+      } else {
+        var name = $('#' + remoteUserId + ' .name').text();
+        var output = new Date().getHours() + ":" + new Date().getMinutes() + " (" + name + ") - " + event.data + "&#13;&#10;";
+        $('#' + remoteUserId + ' form textarea').append(output);
+      }
+    };
+    dataChannel.onopen = function(event) {
+      trace("webrtc", "DataChannel onopen", event);
+      dataChannel.send("\\$cn" + Users.getLocalUser().name);
+    };
+    dataChannel.onclose = function(event) {
+      trace("webrtc", "DataChannel onclose", event);
+    };
+    dataChannel.onerror = function(event) {
+      trace("webrtc", "DataChannel onerror", event);
+    };
+    peerConnection.ondatachannel = function(event) {
+      trace("webrtc", "DataChannel ondatachannel", event);
+    };*/
+
+    Users.createRemoteUser(roomHash, remoteUserId, peerConnection, dataChannel);
   },
   modifyDescription: function(description) {
     var sdp = description.sdp;
@@ -103,7 +109,7 @@ var WebRTC = {
           trace("webrtc", "CreateAnswer Callback called", description);
           trace("webrtc", "Set local description", description);
           userRemote.peerConnection.setLocalDescription(description, function() {
-            trace("webrtc", "Success set local description", event);
+            trace("webrtc", "Success set local description", description);
           }, function(event) {
             trace("webrtc", "Failure set local description", event);
           });
@@ -139,11 +145,11 @@ var WebRTC = {
             destinationHash: userRemote.id,
             sdp: description
           });
-        }, function() {
-          trace("webrtc", "Failure set local", description);
+        }, function(event) {
+          trace("webrtc", "Failure set local", event);
         });
-      }, function() {
-        trace("webrtc", "Failure calling createOffer", "-");
+      }, function(event) {
+        trace("webrtc", "Failure calling createOffer", event);
       }, MEDIA_CONSTRAINTS_OFFER);
     }
   },
@@ -247,7 +253,7 @@ var WebRTC = {
     });
   },
   handleSignalingIce: function(event) {
-    trace("webrtc", "Handle Ice Candidate", event);
+    //trace("webrtc", "Handle Ice Candidate", event);
     var user = Users.getRemoteUser(event.detail.userId);
 
     user.peerConnection.addIceCandidate(new RTCIceCandidate({
@@ -330,9 +336,13 @@ var Users = {
       $('#videoboxes').append("<div class='user' id='" + remoteUserId + "'><span class='name'>Name</span><video autoplay></video></div>");
       //<form action='javascript:void(0);'><textarea rows='4' READONLY></textarea><input placeholder='Nachricht...'/></form>
 
-      $('#' + remoteUserId + " form input").keypress(function(e) {
-        if (e.which == 13) {
+      /*$('#' + remoteUserId + " form input").keypress(function(event) {
+        console.log(event.which);
+        if (event.which == 13) {
+
           var input = $(this).val();
+
+          console.log(dataChannel, remoteUserId, event, input, "vars");
           dataChannel.send(input);
 
           var hours = new Date().getHours()
@@ -347,7 +357,7 @@ var Users = {
           $(this).val("");
           return false;
         }
-      });
+      });*/
       window.App.Controller.user.set('usersCounter', Users.users.length);
     }, 500);
   },
