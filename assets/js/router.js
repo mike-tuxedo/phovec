@@ -52,7 +52,6 @@ App.RoomRoute = Ember.Route.extend({
     App.Controller.room = App.RoomController.create();
     App.Controller.room.animation();
     App.Controller.user = App.UserController.create();
-    App.Controller.user.startGetMedia();
 
     /*set a black background to let the user focus on the infofield an add a event for get info and background away*/
     $('#blackFilter').css('display', 'block');

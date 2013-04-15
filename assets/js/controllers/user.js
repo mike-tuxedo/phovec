@@ -17,7 +17,8 @@ App.UserController = Ember.ObjectController.extend({
         $('.user').css('width', '350px');
         $('#videoboxes').css('width', '1110px');
       }
-    });
+    });
+    this.set('usersCounter', 0);
   },
   onGetMediaSuccess: function(stream) {
     window.dispatchEvent(new CustomEvent("localmedia:available", {
@@ -35,20 +36,6 @@ App.UserController = Ember.ObjectController.extend({
     }
 
     document.getElementById('videoboxes').getElementsByTagName('div')[0].getElementsByTagName('video')[0].play();
-    /*
-     if(Users.users.length > 1){
-     for(i=1; i <= Users.users.length-1; i++){
-     console.log('try adding stream');
-     Users.users[i].peerConnection.removeStream(Users.users[0].stream);
-     Users.users[i].peerConnection.addStream(stream);
-     }
-     }*/
-    /* after user allows camera and mic, we disable the infobox and the black overlayfilter*/
-    $('#infoField').fadeOut();
-    $('#blackFilter').fadeOut();
-    $('#videoboxes').animate({
-      opacity: '1'
-    }, 500);
   },
   onGetMediaError: function(error) {
     console.log("LocalMedia: ERROR");

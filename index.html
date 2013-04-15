@@ -79,7 +79,6 @@
     </div>
 
     <script type="text/x-handlebars" data-template-name="application">
-      <div id="blackFilter"></div>
       <div id="content">
         {{outlet}}
       </div>
@@ -155,11 +154,7 @@
         {{#linkTo "index" id="backButton"}}{{/linkTo}}
         {{#linkTo "room-hangup" id="hangupButton"}}{{/linkTo}}
       </header>
-      
-      <div id="infoField">
-        <img id="arrow" src="assets/img/chrome-hinweis-pfeil.png"/>
-        <img id="chrome" src="assets/img/chrome-hinweis-browser.png"/>
-      </div>
+
       <div id="videoboxes">
           <div class="user" id="local">
           {{#view App.UserView}}
@@ -175,9 +170,11 @@
               </div>
             </div>
           {{/view}}
-  
+
           <span class="name" id="local_name">Name</span>
-          <video autoplay></video>
+          <div class="videoPoster">
+            <video autoplay></video>
+          </div>
           <canvas id="faceDetectorOutput"></canvas>
           <div id="videoEffects" {{ action hideEffects target="view" }}>
             <input type="button" id="snapshotButton" {{action "takeScreenShotFromChatroom" }} class="" value="Take Snapshot"/>

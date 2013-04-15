@@ -36,27 +36,14 @@ var WebRTC = {
       trace("webrtc", "Remote Stream arrived", event);
       var user = Users.getRemoteUser(remoteUserId);
       user.stream = event.stream;
-      
-      //TODO
-      user.stream.getVideoTracks()[0].onmute = function(){
-        
-      };
-      user.stream.getVideoTracks()[0].onunmute = function(){
-        
-      };
-      user.stream.getAudioTracks()[0].onmute = function(){
-        
-      };
-      user.stream.getAudioTracks()[0].onunmute = function(){
-        
-      };      
-    
+      WebRTC.addMuteListener(user);
+
       $('#' + remoteUserId + ' video').attr('src', URL.createObjectURL(event.stream));
       if (navigator.browser[0] === "Firefox") {
         $('#' + remoteUserId + ' video').get(0).play();
       }
       trace("webrtc", "Remote Stream arrived", event);
-      
+
     };
     peerConnection.onremovestream = function(event) {
       trace("webrtc", "Remote Stream removed", event);
@@ -77,34 +64,34 @@ var WebRTC = {
      */
     /*var dataChannel = peerConnection.createDataChannel('RTCDataChannel', DATACHANNEL_OPTIONS);
 
-    if (navigator.browser[0] === "Firefox") {
-      dataChannel.binaryType = 'blob';
-    }
+     if (navigator.browser[0] === "Firefox") {
+     dataChannel.binaryType = 'blob';
+     }
 
-    dataChannel.onmessage = function(event) {
-      var user = Users.getRemoteUser(remoteUserId);
-      if (event.data.substr(0, 4) == "\\$cn") {
-        user.name = event.data.substr(4);
-        $('#' + remoteUserId + ' .name').text(user.name);
-      } else {
-        var name = $('#' + remoteUserId + ' .name').text();
-        var output = new Date().getHours() + ":" + new Date().getMinutes() + " (" + name + ") - " + event.data + "&#13;&#10;";
-        $('#' + remoteUserId + ' form textarea').append(output);
-      }
-    };
-    dataChannel.onopen = function(event) {
-      trace("webrtc", "DataChannel onopen", event);
-      dataChannel.send("\\$cn" + Users.getLocalUser().name);
-    };
-    dataChannel.onclose = function(event) {
-      trace("webrtc", "DataChannel onclose", event);
-    };
-    dataChannel.onerror = function(event) {
-      trace("webrtc", "DataChannel onerror", event);
-    };
-    peerConnection.ondatachannel = function(event) {
-      trace("webrtc", "DataChannel ondatachannel", event);
-    };*/
+     dataChannel.onmessage = function(event) {
+     var user = Users.getRemoteUser(remoteUserId);
+     if (event.data.substr(0, 4) == "\\$cn") {
+     user.name = event.data.substr(4);
+     $('#' + remoteUserId + ' .name').text(user.name);
+     } else {
+     var name = $('#' + remoteUserId + ' .name').text();
+     var output = new Date().getHours() + ":" + new Date().getMinutes() + " (" + name + ") - " + event.data + "&#13;&#10;";
+     $('#' + remoteUserId + ' form textarea').append(output);
+     }
+     };
+     dataChannel.onopen = function(event) {
+     trace("webrtc", "DataChannel onopen", event);
+     dataChannel.send("\\$cn" + Users.getLocalUser().name);
+     };
+     dataChannel.onclose = function(event) {
+     trace("webrtc", "DataChannel onclose", event);
+     };
+     dataChannel.onerror = function(event) {
+     trace("webrtc", "DataChannel onerror", event);
+     };
+     peerConnection.ondatachannel = function(event) {
+     trace("webrtc", "DataChannel ondatachannel", event);
+     };*/
 
     Users.createRemoteUser(roomHash, remoteUserId, peerConnection, undefined);
   },
@@ -170,11 +157,27 @@ var WebRTC = {
       }, MEDIA_CONSTRAINTS_OFFER);
     }
   },
+  addMuteListener: function(user) {
+    user.stream.getVideoTracks()[0].onmute = function() {
+      $('#' + user.id + ' video').css('opacity', '0');
+    };
+    user.stream.getVideoTracks()[0].onunmute = function() {
+      $('#' + user.id + ' video').css('opacity', '1');
+    };
+    user.stream.getAudioTracks()[0].onmute = function() {
+      trace("webrtc", 'DISABLED Audio', '-');
+    };
+    user.stream.getAudioTracks()[0].onunmute = function() {
+      trace("webrtc", 'ENABLED Audio', '-');
+    };
+  },
   handleLocalMedia: function(event) {
     trace("webrtc", "Local Media Available", event);
 
     var user = Users.getLocalUser();
     user.stream = event.detail.stream;
+
+    WebRTC.addMuteListener(user);
   },
   handleSignalingInit: function(event) {
     trace("webrtc", "Signaling Init", event);
@@ -354,27 +357,27 @@ var Users = {
       //<form action='javascript:void(0);'><textarea rows='4' READONLY></textarea><input placeholder='Nachricht...'/></form>
 
       /*$('#' + remoteUserId + " form input").keypress(function(event) {
-        console.log(event.which);
-        if (event.which == 13) {
+       console.log(event.which);
+       if (event.which == 13) {
 
-          var input = $(this).val();
+       var input = $(this).val();
 
-          console.log(dataChannel, remoteUserId, event, input, "vars");
-          dataChannel.send(input);
+       console.log(dataChannel, remoteUserId, event, input, "vars");
+       dataChannel.send(input);
 
-          var hours = new Date().getHours()
-          hours = hours < 10 ? "0" + hours : hours;
+       var hours = new Date().getHours()
+       hours = hours < 10 ? "0" + hours : hours;
 
-          var minutes = new Date().getMinutes();
-          minutes = minutes < 10 ? "0" + minutes : minutes;
+       var minutes = new Date().getMinutes();
+       minutes = minutes < 10 ? "0" + minutes : minutes;
 
-          var output = hours + ":" + minutes + " (me) - " + input + "&#13;&#10;";
-          $('#' + remoteUserId + " textarea").append(output)
+       var output = hours + ":" + minutes + " (me) - " + input + "&#13;&#10;";
+       $('#' + remoteUserId + " textarea").append(output)
 
-          $(this).val("");
-          return false;
-        }
-      });*/
+       $(this).val("");
+       return false;
+       }
+       });*/
       window.App.Controller.user.set('usersCounter', Users.users.length);
     }, 500);
   },
@@ -449,5 +452,3 @@ var Users = {
     this.removeLocalUser();
   }
 };
-
-WebRTC.init();
