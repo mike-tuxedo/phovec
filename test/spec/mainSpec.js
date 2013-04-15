@@ -16,8 +16,5 @@ describe("when app shows startpage", function() {
     App.initialize();
     
   });
-  
-  it("should have an indexController", function(){
-    expect(indexController).not.toBeUndefined();
-  });
+
 });
