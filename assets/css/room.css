@@ -228,6 +228,48 @@ video {
   width: 100%;
 }
 
+/*------------Options under lokal Video--------------*/
+
+#video_options{
+  z-index: 50;
+  width: 100%;
+  height: 50px;
+  float: left;
+  box-shadow: inset 1px 1px 5px #444;
+  -webkit-box-shadow: inset 1px 1px 5px #444;
+  border-bottom-right-radius: 5px;
+  border-bottom-left-radius: 5px;
+}
+
+.video_options_buttons{
+  cursor: pointer;
+  width: 33.3%;
+  height: 30px;
+  float: left;
+  padding-top: 20px;
+  box-shadow: inset 5px 5px 10px #dd7777;
+  -webkit-box-shadow: inset 5px 5px 10px #dd7777;
+  background-image: -moz-linear-gradient(top, #dd2222 38%, #dd4444);
+  background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0.38, #dd2222), color-stop(1.0, #dd4444));
+  
+  font-weight: bold;
+}
+
+.video_options_buttons:hover{
+  background-image: -moz-linear-gradient(top, #dd4444 38%, #dd7777);
+  background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0.38, #dd4444), color-stop(1.0, #dd7777));
+
+}
+
+#control_audio{
+border-bottom-left-radius: 5px;
+}
+
+#control_effects{
+border-bottom-right-radius: 5px;
+}
+
+/*
 .videoOptions {
  // display: none;
   opacity: 0;
@@ -260,6 +302,7 @@ video {
 .videoOptions img:hover {
   background: #888;
 }
+*/
 
 #hangupButton {
   position: absolute;
