@@ -78,29 +78,22 @@ App.UserController = Ember.ObjectController.extend({
         }
       });
   },
-  muteAudio: function() {
-    if ($('video').prop('muted') === false) {
-      console.log('LocalMedia: Your audio should be muted for others');
-      $('video').prop('muted', true);
+  controlAudio: function() {
+    var user = Users.getLocalUser();
+    var audioStream = user.stream.getLocalTracks()[0].getAudioTracks()[0];
+    if (audioStream.enabled === false) {
+      audioStream.enabled = true;
     } else {
-      console.log('LocalMedia: Your audio should be unmuted for others');
-      $('video').prop('muted', false);
+      audioStream.enabled = false;
     }
   },
-  hideVideo: function() {
-    console.log('LocalMedia: Your video should be hidden for you and others');
-    if (Users.users[0].stream.ended === false) {
-      Users.users[0].stream.stop();
-
-      console.log('stream stopped');
+  controlVideo: function() {
+    var user = Users.getLocalUser();
+    var videoStream = user.stream.getLocalTracks()[0].getVideoTracks()[0];
+    if (videoStream.enabled === false) {
+      videoStream.enabled = true;
     } else {
-      console.log('stream plays again, hopefully');
-      $('video').get(0).play();
-
-      navigator.getMedia({
-        audio: false,
-        video: true
-      }, this.onGetMediaSuccess, this.onGetMediaError);
+      videoStream.enabled = false;
     }
   },
   usersCounter: 0

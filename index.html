@@ -156,25 +156,20 @@
       </header>
 
       <div id="videoboxes">
-          <div class="user" id="local">
-          {{#view App.UserView}}
-            <div class="videoOptions">
-              <div class="videoOptionsItems" {{ action muteAudio target="view" }}>
-                Audio Stumm schalten
-              </div>
-              <div class="videoOptionsItems" {{ action hideVideo target="view" }}>
-                Video deaktivieren
-              </div>
-              <div class="videoOptionsItems" {{ action showEffects target="view" }}>
-                effekte
-              </div>
-            </div>
-          {{/view}}
-
+        <div class="user" id="local">
           <span class="name" id="local_name">Name</span>
           <div class="videoPoster">
             <video autoplay></video>
           </div>
+          
+          {{#view App.UserView}}
+          <div id="video_options">
+            <div class="video_options_buttons" id="control_audio" {{ action controlAudio target="view" }}>on/off Audio</div>
+            <div class="video_options_buttons" id="control_video" {{ action controlVideo target="view" }}>on/off Video</div>
+            <div class="video_options_buttons" id="control_effects" {{ action controlEffects target="view" }}>show/on/off Effects</div>
+          </div>
+          {{/view}}
+
           <canvas id="faceDetectorOutput"></canvas>
           <div id="videoEffects" {{ action hideEffects target="view" }}>
             <input type="button" id="snapshotButton" {{action "takeScreenShotFromChatroom" }} class="" value="Take Snapshot"/>
