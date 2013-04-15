@@ -84,6 +84,7 @@
         {{outlet}}
       </div>
     </script>
+    
 
     <!-- templates -->
     <script type="text/x-handlebars" data-template-name="index">
@@ -162,21 +163,6 @@
       </div>
       <div id="videoboxes">
           <div class="user" id="local">
-            <!--
-          {{#view App.UserView}}
-            <div class="videoOptions">
-              <div class="videoOptionsItems" {{ action muteAudio target="view" }}>
-                Audio Stumm schalten
-              </div>
-              <div class="videoOptionsItems" {{ action hideVideo target="view" }}>
-                Video deaktivieren
-              </div>
-              <div class="videoOptionsItems" {{ action showEffects target="view" }}>
-                effekte
-              </div>
-            </div>
-          {{/view}}
-  -->
           <span class="name" id="local_name">Name</span>
           <video autoplay></video>
           
@@ -199,7 +185,7 @@
           </div>
         </div>
       </div>
-      
+
       <!-- to hide the scrollbar, we need a div whos position is not outside the site -->
       <div id="scrollbar_fix"> 
         <div id="social_sidebar_container">
@@ -210,7 +196,7 @@
           </div>
         </div>
       </div>
-
+      
       <!-- Facebook-Instance -->
       <script type="text/javascript" src="http://connect.facebook.net/en_US/all.js"></script>
       <script src="assets/js/libs/facebook-sdk-init.js"></script>
