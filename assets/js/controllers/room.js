@@ -20,7 +20,7 @@
     }, 3000);
 
     function animate(item) {
-      if (parseInt(item.css('right')) > -35) {
+      if (parseInt($('#social_sidebar_container').css('right')) > -150) {
         clearInterval(interval);
       } else {
         item.animate({
