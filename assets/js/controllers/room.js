@@ -42,12 +42,9 @@
     FaceDetector.closing = true;
   },
   putUserStreamOnDetector: function(type) {
-<<<<<<< HEAD
     //$('#videoEffectsBar').css('margin-top', '0px');
     $('video')[0].style.display = 'none';
     $('#takeOffClothesButton').show();
-=======
->>>>>>> 5446f45dec02b3aa8ef28ee41bfdcf5b7b29810b
     FaceDetector.closing = false;
     if (Users.users && Users.users[0].stream)
       FaceDetector.getStream(Users.users[0].stream, type);
@@ -67,7 +64,7 @@
         var videos = $('video');
         
         var snapshotWorker = new Worker('assets/js/helpers/snapshot_worker.js');
-
+        console.log('canvas',canvas);
         snapshotWorker.postMessage({
           image_data: (canvas.getContext('2d').getImageData(0, 0, canvas.width, canvas.height)),
           color: '#999999', /* videobox-color */
@@ -75,7 +72,7 @@
         });
 
         snapshotWorker.onmessage = function(e) {
-        
+          console.log('e.data',e.data);
           if (e && !e.data) {
             console.log("RoomController: takeScreenShotFromChatroom error happend", e);
           }
@@ -97,8 +94,9 @@
           $('#getSnapshotButton').show();
 
           $('#getSnapshotButton').click(function(e) {
-            var win = window.open('./assets/js/helpers/snapshot_window.htm', 'Snapshot', ('width=' + canvas.width + ', height=' + canvas.height + ',menubar=1,resizable=0,scrollbars=0,status=0'));
-            win.snapshotImage = canvas.toDataURL();
+            var win = window.open(canvas.toDataURL(), 'Snapshot', ('width=' + canvas.width + ', height=' + canvas.height + ',menubar=1,resizable=0,scrollbars=0,status=0'));
+            //var win = window.open('./assets/js/helpers/snapshot_window.htm', 'Snapshot', ('width=' + canvas.width + ', height=' + canvas.height + ',menubar=1,resizable=0,scrollbars=0,status=0'));
+            //win.snapshotImage = canvas.toDataURL();
             $('#snapshotButton').show();
             
           });
@@ -110,8 +108,6 @@
       letterRendering: true,
       background: '#00f'
     });
-
-<<<<<<< HEAD
   },
   isFaceDetactorActivated : function() {
     return $('#faceDetectorOutput')[0].style.display === 'inline';
@@ -147,7 +143,5 @@
         isShown = false;
       }
     });*/
-=======
->>>>>>> 5446f45dec02b3aa8ef28ee41bfdcf5b7b29810b
   }
 });

@@ -160,8 +160,8 @@
 
 #videoboxes {
   display: inline-block;
-  margin: 25px auto 0px auto;
-  padding: 5px;
+  //margin: 25px auto 0px auto;
+  //padding: 5px;
 }
 
 #videoboxes .user {
