@@ -39,14 +39,14 @@ App.IndexRoute = Ember.Route.extend({
 App.RoomsRoute = Ember.Route.extend({
   enter: function() {
     WebRTC.init();
-    SignalingChannel.init();
+    //SignalingChannel.init();
   }
 });
 
 App.RoomRoute = Ember.Route.extend({
   enter: function() {
     WebRTC.init();
-    SignalingChannel.init();
+    //SignalingChannel.init();
 
     App.Controller.auth = App.AuthController.create();
     App.Controller.room = App.RoomController.create();

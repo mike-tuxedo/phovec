@@ -186,6 +186,7 @@
 #videoboxes {
   display: inline-block;
   margin: 15px auto 0px auto;
+  outline: 5px solid #000;
 }
 
 #videoboxes .user {
@@ -215,10 +216,11 @@
 
 video {
   float: left;
-  width: 100%;
-  height: 100%;
+  width: 600px;
+  height:500px;
   background: #999;
   opacity: 0;
+  outline: 5px solid #000;
 }
 
 #videoboxes form, textarea, input {
@@ -231,7 +233,7 @@ video {
 
 /*------------Options under lokal Video--------------*/
 
-#video_options{
+#video_options {
   z-index: 50;
   width: 100%;
   height: 50px;
@@ -242,7 +244,7 @@ video {
   border-bottom-left-radius: 5px;
 }
 
-.video_options_buttons{
+.video_options_buttons {
   cursor: pointer;
   width: 33.3%;
   height: 30px;
@@ -252,58 +254,56 @@ video {
   -webkit-box-shadow: inset 5px 5px 10px #dd7777;
   background-image: -moz-linear-gradient(top, #dd2222 38%, #dd4444);
   background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0.38, #dd2222), color-stop(1.0, #dd4444));
-  
   font-weight: bold;
 }
 
-.video_options_buttons:hover{
+.video_options_buttons:hover {
   background-image: -moz-linear-gradient(top, #dd4444 38%, #dd7777);
   background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0.38, #dd4444), color-stop(1.0, #dd7777));
-
 }
 
-#control_audio{
-border-bottom-left-radius: 5px;
+#control_audio {
+  border-bottom-left-radius: 5px;
 }
 
-#control_effects{
-border-bottom-right-radius: 5px;
+#control_effects {
+  border-bottom-right-radius: 5px;
 }
 
 /*
-.videoOptions {
-  display: none;
-  opacity: 0;
-  border-top-left-radius: 5px;
-  border-top-right-radius: 5px;
-  position: absolute;
-  background: #fdfdfd;
-  width: 300px;
-  height: 251px;
-  z-index: 20;
-}
+ .videoOptions {
+ display: none;
+ opacity: 0;
+ border-top-left-radius: 5px;
+ border-top-right-radius: 5px;
+ position: absolute;
+ background: #fdfdfd;
+ width: 300px;
+ height: 251px;
+ z-index: 20;
+ }
 
-.videoOptionsItems {
-  width: 50%;
-  height: 50%;
-  float: left;
-}
+ .videoOptionsItems {
+ width: 50%;
+ height: 50%;
+ float: left;
+ }
 
-.videoOptionsItems:hover {
-  cursor: pointer;
-  background: #607890;
-}
+ .videoOptionsItems:hover {
+ cursor: pointer;
+ background: #607890;
+ }
 
-.videoOptions img {
-  cursor: pointer;
-  width: 50px;
-  margin-top: 198px;
-}
+ .videoOptions img {
+ cursor: pointer;
+ width: 50px;
+ margin-top: 198px;
+ }
 
-.videoOptions img:hover {
-  background: #888;
-}
-*/
+ .videoOptions img:hover {
+ background: #888;
+ }
+ */
 
 #hangupButton {
   position: absolute;
