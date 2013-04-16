@@ -3,19 +3,34 @@ App.UserController = Ember.ObjectController.extend({
     this.addObserver('usersCounter', function() {
       if (this.usersCounter === 1) {
         $('.user').css('width', '600px');
+        $('.video_options_buttons').css('width', '190px');
         $('#videoboxes').css('width', '600px');
+        $('#control_video').css('margin-left', '200px');
+        $('#control_effects').css('margin-left', '400px');
       } else if (this.usersCounter === 2) {
         $('.user').css('width', '450px');
+        $('.video_options_buttons').css('width', '140px');
         $('#videoboxes').css('width', '940px');
+        $('#control_video').css('margin-left', '150px');
+        $('#control_effects').css('margin-left', '300px');
       } else if (this.usersCounter === 3) {
         $('.user').css('width', '350px');
+        $('.video_options_buttons').css('width', '106.66px');
         $('#videoboxes').css('width', '1110px');
+        $('#control_video').css('margin-left', '116.66px');
+        $('#control_effects').css('margin-left', '233.66px');
       } else if (this.usersCounter === 4) {
         $('.user').css('width', '350px');
+        $('.video_options_buttons').css('width', '106.66px');
         $('#videoboxes').css('width', '790px');
+        $('#control_video').css('margin-left', '116.66px');
+        $('#control_effects').css('margin-left', '233.66px');
       } else if (this.usersCounter >= 5) {
         $('.user').css('width', '350px');
+        $('.video_options_buttons').css('width', '106.66px');
         $('#videoboxes').css('width', '1110px');
+        $('#control_video').css('margin-left', '116.66px');
+        $('#control_effects').css('margin-left', '233.66px');
       }
     });
     this.set('usersCounter', 0);
