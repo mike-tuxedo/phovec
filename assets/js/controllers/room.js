@@ -80,7 +80,8 @@
         });
 
         snapshotWorker.onmessage = function(e) {
-          console.log('e.data',e.data);
+          
+          console.log('takeScreenShotFromChatroom: coords found',e.data);
           
           if (e && !e.data) {
             console.log("RoomController: takeScreenShotFromChatroom error happend", e);
@@ -96,10 +97,12 @@
           
           e.data.coords.forEach(function(coord, index) {
             var ctx = canvas.getContext('2d');
-            controller.drawVideoboxOnCanvas(videos[index], ctx, coord.startX, coord.startY, e.data.cellWidth, e.data.cellHeight);
+            if(videos[index].style.display === 'inline'){
+              controller.drawVideoboxOnCanvas(videos[index], ctx, coord.startX, coord.startY, e.data.cellWidth, e.data.cellHeight);
+            }
           });
 
-          var win = window.open(canvas.toDataURL(), 'Snapshot', ('width=' + canvas.width + ', height=' + canvas.height + ',menubar=1,resizable=0,scrollbars=0,status=0'));
+          window.open(canvas.toDataURL(), 'Snapshot', ('width=' + canvas.width + ', height=' + canvas.height + ',menubar=1,resizable=0,scrollbars=0,status=0'));
 
         };
 
