@@ -91,21 +91,6 @@ App.UserController = Ember.ObjectController.extend({
     $("#local-stream").get(0).pause();
     $("#local-stream").attr("src", null);
   },
-  sendMail: function(mailSettings) {
-    if (mailSettings.from && mailSettings.to && mailSettings.subject && mailSettings.text && mailSettings.html)
-      SignalingChannel.send({
-        subject: 'mail',
-        chatroomHash: Users.users[0].roomHash,
-        userHash: Users.users[0].id,
-        mail: {
-          from: mailSettings.from,
-          to: mailSettings.to,
-          subject: mailSettings.subject,
-          text: mailSettings.text,
-          html: mailSettings.html
-        }
-      });
-  },
   muteAudio: function() {
     if ($('video').prop('muted') === false) {
       console.log('LocalMedia: Your audio should be muted for others');

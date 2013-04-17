@@ -371,3 +371,7 @@ video {
   height:100px;
   width:100%;
 }
+
+#mail_form{
+  display:none;
+}

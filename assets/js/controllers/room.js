@@ -159,8 +159,8 @@
     
     var _location = location.href;
     _location = _location.replace('#','%23');
-    
-    qr.text("qrcode_box", _location);
+    console.log('_location', _location);
+    qr.text("qrcode_box", 'Raum-Adresse zur Einladung:\n' + _location);
   
   }
 });
