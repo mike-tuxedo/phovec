@@ -1,17 +1,20 @@
 ﻿App.RoomController = Ember.ObjectController.extend({
   init: function() {
+    var controller = this;
     var loop = setInterval(function() {
     
       // localVideo is not available during loading templates so an interval is used
-      var localVideo = $('.local video');
-      console.log('localVideo: ',localVideo);
-      if ( typeof FaceDetector !== 'undefined' && $('#faceDetectorOutput')[0] && localVideo && Users.getLocalUser().stream ) {
+      var localVideo = $('.user video');
+      
+      if ( typeof FaceDetector !== 'undefined' && $('#faceDetectorOutput')[0] && localVideo[0] && Users.getLocalUser().stream ) {
         
         $('#faceDetectorOutput')[0].style.width = localVideo.css('width');
         $('#faceDetectorOutput')[0].style.height = '250px';
 
         FaceDetector.init(localVideo[0], $('#faceDetectorOutput')[0]);
-
+        
+        controller.createQRCode();
+        
         clearInterval(loop);
       }
       
@@ -48,6 +51,7 @@
     $('video')[0].style.display = 'inline';
     $('#faceDetectorOutput')[0].style.display = 'none';
     $('#videoEffectsBar').css('margin-top', '250px');
+    $('#takeOffClothesButton').hide();
     FaceDetector.closing = true;
   },
   putUserStreamOnDetector: function(type) {
@@ -81,7 +85,7 @@
 
         snapshotWorker.onmessage = function(e) {
           
-          console.log('takeScreenShotFromChatroom: coords found',e.data);
+          console.log('takeScreenShotFromChatroom: coords found: ',e.data);
           
           if (e && !e.data) {
             console.log("RoomController: takeScreenShotFromChatroom error happend", e);
@@ -95,9 +99,10 @@
             $('#progressSnapshotbar').attr('value', 0);
           }
           
+          var ctx = canvas.getContext('2d');
+          
           e.data.coords.forEach(function(coord, index) {
-            var ctx = canvas.getContext('2d');
-            if(videos[index].style.display === 'inline'){
+            if(videos[index].style.display !== 'none'){
               controller.drawVideoboxOnCanvas(videos[index], ctx, coord.startX, coord.startY, e.data.cellWidth, e.data.cellHeight);
             }
           });
@@ -133,5 +138,29 @@
       userHash: Users.getLocalUser().id,
       destinationHash: remoteUserId
     });
+  },
+  createQRCode: function() {
+  
+    if($('#qrcode_box').children()[0]){
+      return;
+    }
+    
+    var qr = new qrcode({
+        size: 150,
+        /*
+        * L - [Default] Allows recovery of up to 7% data loss
+        * M - Allows recovery of up to 15% data loss
+        * Q - Allows recovery of up to 25% data loss
+        * H - Allows recovery of up to 30% data loss */
+        ec_level: "L",
+        margin: 1
+      }
+    );
+    
+    var _location = location.href;
+    _location = _location.replace('#','%23');
+    
+    qr.text("qrcode_box", _location);
+  
   }
 });

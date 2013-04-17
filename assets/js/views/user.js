@@ -1,18 +1,20 @@
 App.UserView = Ember.View.extend({
   mouseEnter: function(e){
-      $('.videoOptions').css('opacity','0.9');
+      //$('.videoOptions').css('opacity','0.9');
   },
   mouseLeave: function(e){
-      $('.videoOptions').css('opacity','0');
+      //$('.videoOptions').css('opacity','0');
   },
-  showEffects: function(){
+  controlEffects: function(){
     $('#videoEffects').css('display', 'block');
     $('#videoEffects').css('margin-top', '0px');
   },
-  muteAudio: function(){
-    App.Controller.user.muteAudio();
+  controlAudio: function(){
+    console.log('audiocontrol');
+    //App.Controller.user.controlAudio();
   },
-  hideVideo: function(){
-    App.Controller.user.hideVideo();
+  controlVideo: function(){
+    console.log('videocontrol');
+    //App.Controller.user.controlVideo();
   }
 });

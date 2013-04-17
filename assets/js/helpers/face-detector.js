@@ -68,14 +68,12 @@
 	  var backCtx = FaceDetector.backContext;
 		var m = 4;
 	  var width = 4;
-		var i;
-		var comp;
 		
 		ctx.drawImage(video, 0, 0, FaceDetector.canvas.width, FaceDetector.canvas.height);
 		
 		backCtx.drawImage(video, 0, 0, FaceDetector.backCanvas.width, FaceDetector.backCanvas.height);
 		
-		comp = ccv.detect_objects(FaceDetector.ccv = FaceDetector.ccv || {
+		var comp = ccv.detect_objects(FaceDetector.ccv = FaceDetector.ccv || {
 			canvas: FaceDetector.backCanvas,
 			cascade: cascade,
 			interval: 4,
@@ -86,7 +84,7 @@
 			FaceDetector.comp = comp;
 		}
 		
-		for (i = FaceDetector.comp.length; i--; ) {
+		for(var i = FaceDetector.comp.length; i--; ) {
       // drawImage(img,x,y,width,height);
       if(type === 'classes')
         ctx.drawImage(FaceDetector.glasses, (FaceDetector.comp[i].x - width / 2) * m, (FaceDetector.comp[i].y - width / 2) * m, (FaceDetector.comp[i].width + width) * m, (FaceDetector.comp[i].height + width) * m);

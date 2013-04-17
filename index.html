@@ -84,6 +84,7 @@
         {{outlet}}
       </div>
     </script>
+    
 
     <!-- templates -->
     <script type="text/x-handlebars" data-template-name="index">
@@ -161,34 +162,29 @@
         <img id="chrome" src="assets/img/chrome-hinweis-browser.png"/>
       </div>
       <div id="videoboxes">
-        <div class="user local" id="local">
-          {{#view App.UserView}}
-            <div class="videoOptions">
-              <div class="videoOptionsItems" {{ action muteAudio target="view" }}>
-                Audio Stumm schalten
-              </div>
-              <div class="videoOptionsItems" {{ action hideVideo target="view" }}>
-                Video deaktivieren
-              </div>
-              <div class="videoOptionsItems" {{ action showEffects target="view" }}>
-                effekte
-              </div>
-            </div>
-          {{/view}}
-  
+        <div class="user" id="local">
           <span class="name" id="local_name">Name</span>
           <video autoplay></video>
+          
+          {{#view App.UserView}}
+          <div id="video_options">
+            <div class="video_options_buttons" id="control_audio" {{ action controlAudio target="view" }}>on/off Audio</div>
+            <div class="video_options_buttons" id="control_video" {{ action controlVideo target="view" }}>on/off Video</div>
+            <div class="video_options_buttons" id="control_effects" {{ action controlEffects target="view" }}>show/on/off Effects</div>
+          </div>
+          {{/view}}
+          
           <canvas id="faceDetectorOutput"></canvas>
           <div id="videoEffects" {{ action hideEffects target="view" }}>
             <input type="button" id="snapshotButton" {{action "takeScreenShotFromChatroom" }} class="" value="Take Snapshot"/>
             <input type="button" {{action "putClassesOnUser" }} class="" value="classes" />
             <input type="button" {{action "putHairOnUser" }} class="" value="hair" />
             <input type="button" {{action "putBeardOnUser" }} class="" value="beard"/>
-            <input type="button" id="takeOffClothesButton" {{action "takeOffClothesOfUser" }} class="" value="off" />
+            <input type="button" id="takeOffClothesButton" {{action "takeOffClothesOfUser" }} value="off" />
           </div>
         </div>
       </div>
-      
+
       <!-- to hide the scrollbar, we need a div whos position is not outside the site -->
       <div id="scrollbar_fix"> 
         <div id="social_sidebar_container">
@@ -198,8 +194,10 @@
             {{ partial 'auth' }}
           </div>
         </div>
+        <div id="fb-root"></div>
+        <div id="qrcode_box"></div>
       </div>
-
+        
       <!-- Facebook-Instance -->
       <script type="text/javascript" src="http://connect.facebook.net/en_US/all.js"></script>
       <script src="assets/js/libs/facebook-sdk-init.js"></script>
@@ -212,6 +210,10 @@
   
       <!-- screenshot-maker -->
       <script src="assets/js/libs/html2canvas/html2canvas.min.js"></script>
+      
+      <!-- qrcode-maker -->
+      <script src="assets/js/libs/qrcode.packed.js"></script>
+      
     </script>
     
     <script type="text/x-handlebars" data-template-name="about">
@@ -293,7 +295,6 @@
     </script>
 
     <script type="text/x-handlebars" data-template-name="_auth">
-      <div id="fb-root"></div>
 
       {{#unless App.Controller.auth.fbLoggedIn }}
       <a {{action "fbLogin" target="App.Controller.auth" }} class="socialButtons facebookButton"></a>
