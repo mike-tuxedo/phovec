@@ -7,7 +7,6 @@ var WebRTC = {
 
     this.initialized = true;
 
-    window.addEventListener("localmedia:available", this.handleLocalMedia);
     window.addEventListener("signalingchannel:init", this.handleSignalingInit);
     window.addEventListener("signalingchannel:sdp", this.handleSignalingSdp);
     window.addEventListener("signalingchannel:ice", this.handleSignalingIce);
@@ -172,12 +171,6 @@ var WebRTC = {
         trace("webrtc", "Failure calling createOffer", event);
       }, MEDIA_CONSTRAINTS_OFFER);
     }
-  },
-  handleLocalMedia: function(event) {
-    trace("webrtc", "Local Media Available", event);
-
-    var user = Users.getLocalUser();
-    user.stream = event.detail.stream;
   },
   handleSignalingInit: function(event) {
     trace("webrtc", "Signaling Init", event);

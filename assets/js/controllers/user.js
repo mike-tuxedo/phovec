@@ -3,30 +3,38 @@ App.UserController = Ember.ObjectController.extend({
     this.addObserver('usersCounter', function() {
       if (this.usersCounter === 1) {
         $('.user').css('width', '600px');
+        $('.user').css('height', '527px');
+
         $('.video_options_buttons').css('width', '190px');
         $('#videoboxes').css('width', '600px');
         $('#control_video').css('margin-left', '200px');
         $('#control_effects').css('margin-left', '400px');
       } else if (this.usersCounter === 2) {
         $('.user').css('width', '450px');
+        $('.user').css('height', '390px');
+        $('.videoWrapper').css('height', '340px');
         $('.video_options_buttons').css('width', '140px');
         $('#videoboxes').css('width', '940px');
         $('#control_video').css('margin-left', '150px');
         $('#control_effects').css('margin-left', '300px');
       } else if (this.usersCounter === 3) {
         $('.user').css('width', '350px');
+        $('.user').css('height', '350px');
+        $('.videoWrapper').css('height', '290px');
         $('.video_options_buttons').css('width', '106.66px');
         $('#videoboxes').css('width', '1110px');
         $('#control_video').css('margin-left', '116.66px');
         $('#control_effects').css('margin-left', '233.66px');
       } else if (this.usersCounter === 4) {
         $('.user').css('width', '350px');
+        $('.user').css('height', '350px');
         $('.video_options_buttons').css('width', '106.66px');
         $('#videoboxes').css('width', '790px');
         $('#control_video').css('margin-left', '116.66px');
         $('#control_effects').css('margin-left', '233.66px');
       } else if (this.usersCounter >= 5) {
         $('.user').css('width', '350px');
+        $('.user').css('height', '350px');
         $('.video_options_buttons').css('width', '106.66px');
         $('#videoboxes').css('width', '1110px');
         $('#control_video').css('margin-left', '116.66px');
@@ -35,18 +43,15 @@ App.UserController = Ember.ObjectController.extend({
     });
   },
   onGetMediaSuccess: function(stream) {
+    var user = Users.getLocalUser();
+    user.stream = stream;
+
     this.mediaOptions.isAdmissionMissing = false;
+
     if (this.mediaOptions.video === false) {
-      var videoStream = user.stream.getVideoTracks()[0];
-      videoStream.enabled = false;
+      stream.getVideoTracks()[0].enabled = false;
       $('.local video').css('opacity', '0');
     }
-
-    window.dispatchEvent(new CustomEvent("localmedia:available", {
-      detail: {
-        stream: stream
-      }
-    }));
 
     if ( typeof webkitURL !== "undefined") {
       document.getElementById('videoboxes').getElementsByTagName('div')[0].getElementsByTagName('video')[0].src = webkitURL.createObjectURL(stream);
@@ -186,7 +191,7 @@ App.UserController = Ember.ObjectController.extend({
       destinationHash: remoteUserId
     });
   },
-  usersCounter: 0,
+  usersCounter: 1,
   mediaOptions: {
     audio: false,
     video: false,
