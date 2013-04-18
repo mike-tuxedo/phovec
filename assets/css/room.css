@@ -184,8 +184,7 @@
 
 #videoboxes {
   display: inline-block;
-  margin: 15px auto 0px auto;
-  outline: 5px solid #000;
+  margin: 0px auto 0px auto;
 }
 
 #videoboxes .user {
@@ -194,11 +193,48 @@
   margin: 10px;
 }
 
-#videoboxes .videoPoster {
-  width: auto;
-  height: auto;
-  background: url('../img/avatar.jpg');
-  display: inline-block;
+.videoWrapper {
+  text-align: left;
+  position: relative;
+  width: 600px;
+  height: 450px;
+  margin: 27px 0 0 0;
+  padding: 0;
+  border: 1px solid #888;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+.videoWrapper img {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  z-index: -1;
+}
+
+.videoWrapper video {
+  width: 100%;
+  height: 100%;
+  opacity: 1;
+}
+
+.videoWrapper .stateMute{
+  width:64px;
+  height:64px;
+  background:url(../img/speaker_mute.png);
+  position: absolute;
+  z-index: 2;
+  display:none;
+}
+
+.videoWrapper .removeParticipant{
+  width:64px;
+  height:64px;
+  background:url(../img/hangup.png);
+  position: absolute;
+  z-index: 2;
+  right:0px;
 }
 
 #videoboxes .name {
@@ -211,15 +247,6 @@
   background: #e0dfeb;
   box-shadow: inset 1px 1px 5px #444;
   -webkit-box-shadow: inset 1px 1px 5px #444;
-}
-
-video {
-  float: left;
-  width: 600px;
-  height:500px;
-  background: #999;
-  opacity: 0;
-  outline: 5px solid #000;
 }
 
 #videoboxes form, textarea, input {
@@ -243,8 +270,8 @@ video {
   border-bottom-left-radius: 5px;
 }
 
-.video_options_buttons{
-  position:absolute;
+.video_options_buttons {
+  position: absolute;
   cursor: pointer;
   width: 190px;
   height: 30px;
@@ -261,16 +288,16 @@ video {
   background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0.38, #dd4444), color-stop(1.0, #dd7777));
 }
 
-#control_audio{
+#control_audio {
   border-bottom-left-radius: 5px;
 }
 
-#control_effects{
+#control_effects {
   border-bottom-right-radius: 5px;
   margin-left: 400px;
 }
 
-#control_video{
+#control_video {
   margin-left: 200px;
 }
 /*

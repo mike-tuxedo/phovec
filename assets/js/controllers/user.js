@@ -33,9 +33,15 @@ App.UserController = Ember.ObjectController.extend({
         $('#control_effects').css('margin-left', '233.66px');
       }
     });
-    this.set('usersCounter', 0);
   },
   onGetMediaSuccess: function(stream) {
+    this.mediaOptions.isAdmissionMissing = false;
+    if (this.mediaOptions.video === false) {
+      var videoStream = user.stream.getVideoTracks()[0];
+      videoStream.enabled = false;
+      $('.local video').css('opacity', '0');
+    }
+
     window.dispatchEvent(new CustomEvent("localmedia:available", {
       detail: {
         stream: stream
@@ -66,12 +72,12 @@ App.UserController = Ember.ObjectController.extend({
      alert('Zurück auf die Startseite ...');
      }*/
   },
-  startGetMedia: function() {
+  startGetMedia: function(options) {
     //request audio and video from your own hardware
     navigator.getMedia({
       audio: true,
       video: true
-    }, this.onGetMediaSuccess, this.onGetMediaError);
+    }, this.onGetMediaSuccess.bind(this), this.onGetMediaError);
   },
   stopGetMedia: function() {
     //get(0) gets the dom element from the jquery selector
@@ -82,7 +88,7 @@ App.UserController = Ember.ObjectController.extend({
     if (mailSettings.from && mailSettings.to && mailSettings.subject && mailSettings.text && mailSettings.html)
       SignalingChannel.send({
         subject: 'mail',
-        chatroomHash: Users.users[0].roomHash,
+        roomHash: Users.users[0].roomHash,
         userHash: Users.users[0].id,
         mail: {
           from: mailSettings.from,
@@ -95,21 +101,95 @@ App.UserController = Ember.ObjectController.extend({
   },
   controlAudio: function() {
     var user = Users.getLocalUser();
-    var audioStream = user.stream.getLocalTracks()[0].getAudioTracks()[0];
+    if (user.stream === undefined && this.mediaOptions.isAdmissionMissing === false) {
+      //show here maybe advice img?
+      //how to enable media access again
+      return;
+    } else if (user.stream === undefined && this.mediaOptions.isAdmissionMissing) {
+      //show here maybe advice img?
+      //how to allow the media request
+      this.mediaOptions.audio = true;
+      this.startGetMedia({
+        audio: true,
+        video: false
+      });
+      return;
+    }
+
+    var audioStream = user.stream.getAudioTracks()[0];
     if (audioStream.enabled === false) {
       audioStream.enabled = true;
+      $('.local .stateMute').hide();
+
+      SignalingChannel.send({
+        subject: "participant:audio:unmute",
+        roomHash: user.roomHash,
+        userHash: user.id
+      });
     } else {
       audioStream.enabled = false;
+      $('.local .stateMute').show();
+
+      SignalingChannel.send({
+        subject: "participant:audio:mute",
+        roomHash: user.roomHash,
+        userHash: user.id
+      });
     }
   },
   controlVideo: function() {
     var user = Users.getLocalUser();
-    var videoStream = user.stream.getLocalTracks()[0].getVideoTracks()[0];
+    if (user.stream === undefined && this.mediaOptions.isAdmissionMissing === false) {
+      //show here maybe advice img?
+      //how to enable media access again
+      return;
+    } else if (user.stream === undefined && this.mediaOptions.isAdmissionMissing) {
+      //show here maybe advice img?
+      //how to allow the media request
+      this.mediaOptions.video = true;
+      this.mediaOptions.audio = true;
+      this.startGetMedia({
+        audio: true,
+        video: true
+      });
+      return;
+    }
+
+    var videoStream = user.stream.getVideoTracks()[0];
     if (videoStream.enabled === false) {
       videoStream.enabled = true;
+      $('.local video').css('opacity', '1');
+
+      SignalingChannel.send({
+        subject: "participant:video:unmute",
+        roomHash: user.roomHash,
+        userHash: user.id
+      });
     } else {
       videoStream.enabled = false;
+      $('.local video').css('opacity', '0');
+
+      SignalingChannel.send({
+        subject: "participant:video:mute",
+        roomHash: user.roomHash,
+        userHash: user.id
+      });
     }
   },
-  usersCounter: 0
+  removeParticipant: function(remoteUserId) {
+    var user = Users.getLocalUser();
+    Users.removeRemoteUser(remoteUserId);
+    SignalingChannel.send({
+      subject: "participant:remove",
+      roomHash: user.roomHash,
+      userHash: user.id,
+      destinationHash: remoteUserId
+    });
+  },
+  usersCounter: 0,
+  mediaOptions: {
+    audio: false,
+    video: false,
+    isAdmissionMissing: true
+  }
 });
