@@ -302,6 +302,7 @@
   margin-left: 200px;
 }
 /*
+<<<<<<< HEAD
  .videoOptions {
  display: none;
  opacity: 0;
@@ -391,4 +392,17 @@
 
 .room-wrapper {
   text-align: center;
+}
+
+#takeOffClothesButton{
+  display:none;
+}
+
+#qrcode_box{
+  height:100px;
+  width:100%;
+}
+
+#mail_form{
+  display:none;
 }

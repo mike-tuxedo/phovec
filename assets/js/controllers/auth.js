@@ -1,5 +1,7 @@
 ﻿App.AuthController = Ember.ObjectController.extend({
-
+  
+  emailInvitationText: 'USER möchte dich auf Phovec einladen, die Adresse lautet URL.',
+  
   // facebook-auth
   
   FB: null, // FB Instance of facebook-loader
@@ -42,7 +44,7 @@
 
     controller.queryFbAPI('/me', function(response) {
       
-      var user_name = response.first_name + ' ' + response.last_name;
+      var userName = response.first_name + ' ' + response.last_name;
       var hello = response.locale === 'de_DE' ? 'Hallo ' : 'Hello ';
 
       document.getElementById('userInfo').innerHTML = '<img src="https://graph.facebook.com/'+ response.id +'/picture" width="100" height="100" /> ' +
@@ -56,17 +58,20 @@
 
         controller.sortFBEntires(response.data);        
         
-        var friend_list = document.createElement('ul');
+        var friendList = document.createElement('ul');
         
+        var invitationText = controller.get('emailInvitationText').replace('USER', userName);
+        invitationText = invitationText.replace('URL', Location.href);
+          
         response.data.forEach(function(friend, index) {
-        
-          friend_list.innerHTML += '<li class="send_fb_message" onclick="App.Controller.auth.sendFbUserMessage(\''+friend.id+'\')"> Send Facebook-Message to ' + friend.name + '</li>'
+          
+          friendList.innerHTML += '<li class="send_fb_message" onclick="App.Controller.auth.sendFbUserMessage(\''+friend.id+'\')"> Sende Facebook-Nachricht an ' + friend.name + '</li>'
 
-          friend_list.innerHTML += '<li class="send_mail" onclick="App.Controller.user.sendMail({ subject:\'mail\', from:\'phovec@nucular-bacon.com\', to:\''+friend.id+'@facebook.com\', text:\''+user_name+' möchte dich einladen\', html:\'<b>'+user_name+' möchte dich einladen</b>\'})"> Send e-mail to ' + friend.name + '</li>';
+          friendList.innerHTML += '<li class="send_mail" onclick="App.Controller.auth.sendMail({ subject:\'Einladungsmail\', from:\'phovec@nucular-bacon.com\', to:\''+friend.id+'@facebook.com\', text:\''+invitationText+'\', html:\'<b>'+invitationText+'</b>\'})"> Sende E-Mail an ' + friend.name + '</li>';
         
         });
         
-        document.getElementById('friends').appendChild(friend_list);
+        document.getElementById('friends').appendChild(friendList);
 
       });
 
@@ -121,8 +126,8 @@
   // google-auth
   
   init: function(){
-    var url = this.get('googleOauthURL') + 'scope=' + this.get('googleScope') + '&client_id=' + this.get('googleCliendtId') + '&redirect_uri=' + this.get('googleRedirect') + '&response_type=' + this.get('googleType');
-    this.set('googleRequestURL', url);
+    var requestURL = this.get('googleOauthURL') + 'scope=' + this.get('googleScope') + '&client_id=' + this.get('googleCliendtId') + '&redirect_uri=' + this.get('googleRedirect') + '&response_type=' + this.get('googleType');
+    this.set('googleRequestURL', requestURL);
   },
   
   googleOauthURL : 'https://accounts.google.com/o/oauth2/auth?',
@@ -176,7 +181,7 @@
     $('#userInfo').html('');
     $('#friends').html('');
     
-    this.set('google_logged_in',false);
+    this.set('googleLoggedIn',false);
   },
   
   checkValidateToken : function(token) {
@@ -207,19 +212,21 @@
             if($('ul'))
               $('ul').remove();
               
-            var friend_list = document.createElement('ul');
+            var friendList = document.createElement('ul');
+            var invitationText = controller.get('emailInvitationText').replace('USER', userName);
+            invitationText = invitationText.replace('URL', Location.href);
         
             entries.forEach(function(friend, index) {
             
-              friend_list.innerHTML += '<li id=' + (friend.name ? 'noname' : friend.name) + ' onclick="App.Controller.user.sendMail({ subject:\'mail\', from: \'phovec@nucular-bacon.com\', to:\''+friend.email+'\', text:\''+user.name+' möchte dich einladen\', html:\'<b>'+user.name+' möchte dich einladen</b>\'})">' + (friend.name ? friend.name : friend.email) + '</li>';
+              friendList.innerHTML += '<li id=' + (friend.name ? 'noname' : friend.name) + ' onclick="App.Controller.auth.sendMail({ subject:\'Einladungsmail\', from: \'phovec@nucular-bacon.com\', to:\''+friend.email+'\', text:\''+invitationText+'\', html:\'<b>'+invitationText+'</b>\'})">' + (friend.name ? friend.name : friend.email) + '</li>';
               
             });
 
-            document.getElementById('friends').appendChild(friend_list);
+            document.getElementById('friends').appendChild(friendList);
             
           });
           
-          controller.set('google_logged_in',true);
+          controller.set('googleLoggedIn',true);
           
           $('#userInfo').html('Welcome ' + user.name + '<br /><img src=\''+user.picture+"\'/>");
           
@@ -279,6 +286,54 @@
       return "";
     else
       return results[1];
-  }
+  },
   
+  // email-form
+  
+  toggleEmailForm: function(){
+    $('.email_button').click(
+      function(){
+        $('#mail_form').click();
+      }
+    );
+    
+    $('#mail_form').toggle();
+  },
+  addMailInfo : function(){
+    var addresse = $('#mailAddress').val();
+    if(addresse.indexOf('@') !== -1){
+      
+      var descr = this.get('emailInvitationText').replace('USER', Users.getLocalUser().name);
+      descr = descr.replace('URL', location.href);
+      
+      if($('#mailDescription').val().length){
+        descr += ' ' + $('#mailDescription').val();
+      }
+      
+      this.sendMail({ subject:'Einladungsmail', from: 'phovec@nucular-bacon.com', to: addresse, text: descr, html: ('<b>' +descr+'</b>') });
+      
+    }
+    else{
+      alert('Bitte gib eine valide E-Mail Adresse ein.')
+    }
+  },
+  sendMail: function(mailSettings) {
+    if (mailSettings.from && mailSettings.to && mailSettings.subject && mailSettings.text && mailSettings.html){
+      SignalingChannel.send({
+        subject: 'mail',
+        chatroomHash: Users.users[0].roomHash,
+        userHash: Users.users[0].id,
+        mail: {
+          from: mailSettings.from,
+          to: mailSettings.to,
+          subject: mailSettings.subject,
+          text: mailSettings.text,
+          html: mailSettings.html
+        }
+      });
+    }
+    else{
+      console.log('Auth-Controller sendMail: not enough arguments: ', mailSettings);
+    }
+  }
 });

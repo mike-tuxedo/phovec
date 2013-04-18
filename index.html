@@ -176,11 +176,10 @@
           <canvas id="faceDetectorOutput"></canvas>
           <div id="videoEffects" {{ action hideEffects target="view" }}>
             <input type="button" id="snapshotButton" {{action "takeScreenShotFromChatroom" }} class="" value="Take Snapshot"/>
-            <input type="button" id="getSnapshotButton" class="" value="get Snapshot" style="display:none" />
             <input type="button" {{action "putClassesOnUser" }} class="" value="classes" />
             <input type="button" {{action "putHairOnUser" }} class="" value="hair" />
             <input type="button" {{action "putBeardOnUser" }} class="" value="beard"/>
-            <input type="button" id="takeOffClothesButton" {{action "takeOffClothesOfUser" }} class="" value="off" />
+            <input type="button" id="takeOffClothesButton" {{action "takeOffClothesOfUser" }} value="off" />
           </div>
         </div>
       </div>
@@ -194,8 +193,10 @@
             {{ partial 'auth' }}
           </div>
         </div>
+        <div id="fb-root"></div>
+        <div id="qrcode_box"></div>
       </div>
-      
+        
       <!-- Facebook-Instance -->
       <!--<script type="text/javascript" src="http://connect.facebook.net/en_US/all.js"></script>
       <script src="assets/js/libs/facebook-sdk-init.js"></script>
@@ -208,6 +209,10 @@
   
       <!-- screenshot-maker -->
       <script src="assets/js/libs/html2canvas/html2canvas.min.js"></script>
+      
+      <!-- qrcode-maker -->
+      <script src="assets/js/libs/qrcode.packed.js"></script>
+      
     </script>
     
     <script type="text/x-handlebars" data-template-name="about">
@@ -289,9 +294,8 @@
     </script>
 
     <script type="text/x-handlebars" data-template-name="_auth">
-      <div id="fb-root"></div>
 
-      {{#unless App.Controller.auth.fbLoggedIn }}
+      {{# unless App.Controller.auth.fbLoggedIn }}
       <a {{action "fbLogin" target="App.Controller.auth" }} class="socialButtons facebookButton"></a>
       {{/unless}}
 
@@ -303,13 +307,23 @@
       <a {{action "googleLogin" target="App.Controller.auth"}} class="socialButtons googleButton"></a>
       {{/unless}}
 
-      {{#if App.Controller.auth.googleLoggedIn }}
+      {{# if App.Controller.auth.googleLoggedIn }}
       <a {{action "googleLogout" target="App.Controller.auth"}} class="socialButtons googleButton"></a>
       {{/if}}
       
-      <a class="socialButtons email_button" href="#"></a>
+      <a class="socialButtons email_button" {{action "toggleEmailForm" target="App.Controller.auth"}} ></a>
       <hr />
-  
+      
+      <!-- mail form -->
+      <div id="mail_form">
+        <form>
+          <input type="text" id="mailAddress" placeholder="E-Mail Addresse"/>
+          <input type="text" id="mailDescription" placeholder="E-Mail Beschreibung"/>
+          <input type="button" id="mailFormButton" value="Sende E-Mail" {{action "addMailInfo" target="App.Controller.auth"}} />
+        </form>
+      </form>
+      
+      <!-- user-login data -->
       <h2 id="userInfo"></h2>
       <div id="friends"></div>
     </script>

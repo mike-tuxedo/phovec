@@ -1,17 +1,23 @@
 ﻿App.RoomController = Ember.ObjectController.extend({
   init: function() {
+    var controller = this;
     var loop = setInterval(function() {
-      // there are some elements that must be configured during loading chatroom
-      if ( typeof FaceDetector !== 'undefined' && $('#faceDetectorOutput')[0] && $('video')[0] ) {
+    
+      // localVideo is not available during loading templates so an interval is used
+      var localVideo = $('.user video');
+      
+      if ( typeof FaceDetector !== 'undefined' && $('#faceDetectorOutput')[0] && localVideo[0] && Users.getLocalUser().stream ) {
         
-        $('#faceDetectorOutput')[0].style.width = $('video').css('width');
-        $('#faceDetectorOutput')[0].style.height = '225px';
+        $('#faceDetectorOutput')[0].style.width = localVideo.css('width');
+        $('#faceDetectorOutput')[0].style.height = '250px';
 
-        FaceDetector.init($('video')[0], $('#faceDetectorOutput')[0]);
-
+        FaceDetector.init(localVideo[0], $('#faceDetectorOutput')[0]);
+        
+        controller.createQRCode();
+        
         clearInterval(loop);
       }
-
+      
     }, 1000);
   },
   animation: function() {
@@ -45,6 +51,7 @@
     $('video')[0].style.display = 'inline';
     $('#faceDetectorOutput')[0].style.display = 'none';
     $('#videoEffectsBar').css('margin-top', '250px');
+    $('#takeOffClothesButton').hide();
     FaceDetector.closing = true;
   },
   putUserStreamOnDetector: function(type) {
@@ -60,8 +67,7 @@
     var controller = this;
     
     $('#videoEffectsBar').css('margin-top', '250px');
-    $('#getSnapshotButton').hide();
-
+    
     html2canvas([document.getElementById('videoboxes')], {
       onrendered: function(canvas) {
         
@@ -70,7 +76,7 @@
         var videos = $('video');
         
         var snapshotWorker = new Worker('assets/js/helpers/snapshot_worker.js');
-        console.log('canvas',canvas);
+        
         snapshotWorker.postMessage({
           image_data: (canvas.getContext('2d').getImageData(0, 0, canvas.width, canvas.height)),
           color: '#999999', /* videobox-color */
@@ -78,7 +84,9 @@
         });
 
         snapshotWorker.onmessage = function(e) {
-          console.log('e.data',e.data);
+          
+          console.log('takeScreenShotFromChatroom: coords found: ',e.data);
+          
           if (e && !e.data) {
             console.log("RoomController: takeScreenShotFromChatroom error happend", e);
           }
@@ -94,18 +102,13 @@
           var ctx = canvas.getContext('2d');
           
           e.data.coords.forEach(function(coord, index) {
-            controller.drawVideoboxOnCanvas(videos[index], ctx, coord.startX, coord.startY, e.data.cellWidth, e.data.cellHeight);
+            if(videos[index].style.display !== 'none'){
+              controller.drawVideoboxOnCanvas(videos[index], ctx, coord.startX, coord.startY, e.data.cellWidth, e.data.cellHeight);
+            }
           });
 
-          $('#getSnapshotButton').show();
+          window.open(canvas.toDataURL(), 'Snapshot', ('width=' + canvas.width + ', height=' + canvas.height + ',menubar=1,resizable=0,scrollbars=0,status=0'));
 
-          $('#getSnapshotButton').click(function(e) {
-            var win = window.open(canvas.toDataURL(), 'Snapshot', ('width=' + canvas.width + ', height=' + canvas.height + ',menubar=1,resizable=0,scrollbars=0,status=0'));
-            //var win = window.open('./assets/js/helpers/snapshot_window.htm', 'Snapshot', ('width=' + canvas.width + ', height=' + canvas.height + ',menubar=1,resizable=0,scrollbars=0,status=0'));
-            //win.snapshotImage = canvas.toDataURL();
-            $('#snapshotButton').show();
-            
-          });
         };
 
       },
@@ -135,5 +138,29 @@
       userHash: Users.getLocalUser().id,
       destinationHash: remoteUserId
     });
+  },
+  createQRCode: function() {
+  
+    if($('#qrcode_box').children()[0]){
+      return;
+    }
+    
+    var qr = new qrcode({
+        size: 150,
+        /*
+        * L - [Default] Allows recovery of up to 7% data loss
+        * M - Allows recovery of up to 15% data loss
+        * Q - Allows recovery of up to 25% data loss
+        * H - Allows recovery of up to 30% data loss */
+        ec_level: "L",
+        margin: 1
+      }
+    );
+    
+    var _location = location.href;
+    _location = _location.replace('#','%23');
+    console.log('_location', _location);
+    qr.text("qrcode_box", 'Raum-Adresse zur Einladung:\n' + _location);
+  
   }
 });
