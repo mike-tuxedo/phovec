@@ -296,7 +296,7 @@
 
     <script type="text/x-handlebars" data-template-name="_auth">
 
-      {{#unless App.Controller.auth.fbLoggedIn }}
+      {{# unless App.Controller.auth.fbLoggedIn }}
       <a {{action "fbLogin" target="App.Controller.auth" }} class="socialButtons facebookButton"></a>
       {{/unless}}
 
@@ -308,7 +308,7 @@
       <a {{action "googleLogin" target="App.Controller.auth"}} class="socialButtons googleButton"></a>
       {{/unless}}
 
-      {{#if App.Controller.auth.googleLoggedIn }}
+      {{# if App.Controller.auth.googleLoggedIn }}
       <a {{action "googleLogout" target="App.Controller.auth"}} class="socialButtons googleButton"></a>
       {{/if}}
       
