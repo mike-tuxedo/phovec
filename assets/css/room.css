@@ -10,12 +10,12 @@
   background: rgba(255,255,255,0);
 }
 
-#arrow{
+#arrow {
   float: left;
   width: 100px;
 }
 
-#chrome{
+#chrome {
   float: left;
   margin-top: 100px;
 }
@@ -53,7 +53,7 @@
   overflow-x: hidden;
 }
 
-#scrollbar_fix{
+#scrollbar_fix {
   position: absolute;
   width: 330px;
   height: 100%;
@@ -78,12 +78,10 @@
   left: 115px;
   top: 45%;
   overflow: hidden;
-  
   border-top-left-radius: 70px;
   border-bottom-left-radius: 70px;
   border-bottom-right-radius: 70px;
   border-top-right-radius: 70px;
-
   box-shadow: 0px 0px 15px #444;
   -webkit-box-shadow: 0px 0px 15px #444;
 }
@@ -97,22 +95,18 @@
   top: 45%;
   z-index: 25;
   overflow: hidden;
-  
   background: #303743;
   background-image: url('../img/sidebar-arrow.png');
   background-repeat: no-repeat;
   background-size: 100% 100%;
-  
   border: 10px solid #e0dfeb;
   border-top-left-radius: 70px;
   border-bottom-left-radius: 70px;
   border-bottom-right-radius: 70px;
   border-top-right-radius: 70px;
-  
   font-size: 50px;
   font-family: arial;
   color: #e0dfeb;
-
 }
 
 #show_sidebar:hover {
@@ -126,7 +120,6 @@
   width: 180px;
   right: 0px;
   top: 0px;
-  
   box-shadow: 0px 0px 15px #444444;
   background: #e0dfeb;
   overflow: hidden;
@@ -191,14 +184,58 @@
 
 #videoboxes {
   display: inline-block;
-  margin: 15px auto 0px auto;
-  opacity: 0;
+  margin: 0px auto 0px auto;
 }
 
 #videoboxes .user {
   width: 600px;
+  height: 527px;
   float: left;
   margin: 10px;
+}
+
+.videoWrapper {
+  text-align: left;
+  position: relative;
+  width: 100%;
+  height: 450px;
+  margin: 27px 0 0 0;
+  padding: 0;
+  border: 1px solid #888;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+.videoWrapper img {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  z-index: -1;
+}
+
+.videoWrapper video {
+  width: 100%;
+  height: 100%;
+  opacity: 1;
+}
+
+.videoWrapper .stateMute{
+  width:64px;
+  height:64px;
+  background:url(../img/speaker_mute.png);
+  position: absolute;
+  z-index: 2;
+  display:none;
+}
+
+.videoWrapper .removeParticipant{
+  width:64px;
+  height:64px;
+  background:url(../img/hangup.png);
+  position: absolute;
+  z-index: 2;
+  right:0px;
 }
 
 #videoboxes .name {
@@ -213,12 +250,6 @@
   -webkit-box-shadow: inset 1px 1px 5px #444;
 }
 
-video {
-  float: left;
-  width: 100%;
-  background: #999;
-}
-
 #videoboxes form, textarea, input {
   -moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;
@@ -229,7 +260,7 @@ video {
 
 /*------------Options under lokal Video--------------*/
 
-#video_options{
+#video_options {
   z-index: 50;
   width: 100%;
   height: 50px;
@@ -240,8 +271,8 @@ video {
   border-bottom-left-radius: 5px;
 }
 
-.video_options_buttons{
-  position:absolute;
+.video_options_buttons {
+  position: absolute;
   cursor: pointer;
   width: 190px;
   height: 30px;
@@ -250,61 +281,61 @@ video {
   background: rgba(50,50,60,1);
   border: 5px solid #fdfdfd;
   color: white;
-  
   font-weight: bold;
 }
 
-.video_options_buttons:hover{
+.video_options_buttons:hover {
   background-image: -moz-linear-gradient(top, #dd4444 38%, #dd7777);
   background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0.38, #dd4444), color-stop(1.0, #dd7777));
-
 }
 
-#control_audio{
+#control_audio {
   border-bottom-left-radius: 5px;
 }
 
-#control_effects{
+#control_effects {
   border-bottom-right-radius: 5px;
   margin-left: 400px;
 }
 
-#control_video{
+#control_video {
   margin-left: 200px;
 }
 /*
-.videoOptions {
-  opacity: 0;
-  border-top-left-radius: 5px;
-  border-top-right-radius: 5px;
-  position: absolute;
-  background: #fdfdfd;
-  width: 300px;
-  height: 251px;
-  z-index: 20;
-}
+<<<<<<< HEAD
+ .videoOptions {
+ display: none;
+ opacity: 0;
+ border-top-left-radius: 5px;
+ border-top-right-radius: 5px;
+ position: absolute;
+ background: #fdfdfd;
+ width: 300px;
+ height: 251px;
+ z-index: 20;
+ }
 
-.videoOptionsItems {
-  width: 50%;
-  height: 50%;
-  float: left;
-}
+ .videoOptionsItems {
+ width: 50%;
+ height: 50%;
+ float: left;
+ }
 
-.videoOptionsItems:hover {
-  cursor: pointer;
-  background: #607890;
-}
+ .videoOptionsItems:hover {
+ cursor: pointer;
+ background: #607890;
+ }
 
-.videoOptions img {
-  cursor: pointer;
-  width: 50px;
-  margin-top: 198px;
-}
+ .videoOptions img {
+ cursor: pointer;
+ width: 50px;
+ margin-top: 198px;
+ }
 
-.videoOptions img:hover {
-  background: #888;
-}
-*/
+ .videoOptions img:hover {
+ background: #888;
+ }
+ */
 
 #hangupButton {
   position: absolute;
@@ -347,11 +378,11 @@ video {
   height: 20px;
 }
 
-#faceDetectorOutput{
+#faceDetectorOutput {
   width: 100%;
   float: left;
   background: #A0A0A0;
-  display:none;
+  display: none;
 }
 
 #progressSnapshotbar {
@@ -359,7 +390,7 @@ video {
   margin: 0 auto;
 }
 
-.room-wrapper{
+.room-wrapper {
   text-align: center;
 }
 

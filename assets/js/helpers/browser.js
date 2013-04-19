@@ -156,13 +156,14 @@ MEDIA_CONSTRAINTS_ANSWER = {
 };
 
 /* Settings for DataChannel */
-if (navigator.browser[0] === "Chrome") {
+if (navigator.browser[0] === "Firefox") {
+  DATACHANNEL_OPTIONS = {
+    protocol: "text/chat",
+    preset: true,
+    stream: 5
+  };
+} else if (navigator.browser[0] === "Chrome") {
   DATACHANNEL_OPTIONS = {
     reliable: false
   };
-} else {
-  DATACHANNEL_OPTIONS = {
-    reliable: true
-  };
 }
-

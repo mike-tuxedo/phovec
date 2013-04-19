@@ -10,11 +10,9 @@ App.UserView = Ember.View.extend({
     $('#videoEffects').css('margin-top', '0px');
   },
   controlAudio: function(){
-    console.log('audiocontrol');
-    //App.Controller.user.controlAudio();
+    App.Controller.user.controlAudio();
   },
   controlVideo: function(){
-    console.log('videocontrol');
-    //App.Controller.user.controlVideo();
+    App.Controller.user.controlVideo();
   }
 });

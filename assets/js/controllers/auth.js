@@ -205,7 +205,7 @@
         data: null,
         success: function(resp) {
           
-          user = resp;
+          videoStream = resp;
           
           controller.getUserContacts(function(entries){
             

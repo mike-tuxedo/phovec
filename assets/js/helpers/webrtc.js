@@ -7,11 +7,11 @@ var WebRTC = {
 
     this.initialized = true;
 
-    window.addEventListener("localmedia:available", this.handleLocalMedia);
     window.addEventListener("signalingchannel:init", this.handleSignalingInit);
     window.addEventListener("signalingchannel:sdp", this.handleSignalingSdp);
     window.addEventListener("signalingchannel:ice", this.handleSignalingIce);
     window.addEventListener("signalingchannel:participant", this.handleSignalingParticipant);
+    window.addEventListener("signalingchannel:close", this.handleSignalingKicked);
 
     Users.createLocalUser();
   },
@@ -22,11 +22,11 @@ var WebRTC = {
     var peerConnection = new PeerConnection(RTC_CONFIGURATION, RTC_MEDIA_CONSTRAINTS);
 
     peerConnection.onicecandidate = function(description) {
-      trace("webrtc", "Got Ice from STUN", description);
+      //trace("webrtc", "Got Ice from STUN", description);
 
       SignalingChannel.send({
         subject: "ice",
-        chatroomHash: roomHash,
+        roomHash: roomHash,
         userHash: userId,
         destinationHash: remoteUserId,
         ice: description.candidate
@@ -34,13 +34,31 @@ var WebRTC = {
     };
     peerConnection.onaddstream = function(event) {
       trace("webrtc", "Remote Stream arrived", event);
+      var user = Users.getRemoteUser(remoteUserId);
+      user.stream = event.stream;
+
+      user.stream.getVideoTracks()[0].onmute = function() {
+        console.log("mute other");
+        $('#' + user.id + ' video').css('opacity', '0');
+      };
+      user.stream.getVideoTracks()[0].onunmute = function() {
+        console.log("unmute other");
+        $('#' + user.id + ' video').css('opacity', '1');
+      };
+      user.stream.getAudioTracks()[0].onmute = function() {
+        console.log("audio mute other");
+        trace("webrtc", 'DISABLED Audio', '-');
+      };
+      user.stream.getAudioTracks()[0].onunmute = function() {
+        console.log("audio unmute other");
+        trace("webrtc", 'ENABLED Audio', '-');
+      };
 
       $('#' + remoteUserId + ' video').attr('src', URL.createObjectURL(event.stream));
       if (navigator.browser[0] === "Firefox") {
         $('#' + remoteUserId + ' video').get(0).play();
       }
       trace("webrtc", "Remote Stream arrived", event);
-      
     };
     peerConnection.onremovestream = function(event) {
       trace("webrtc", "Remote Stream removed", event);
@@ -60,7 +78,13 @@ var WebRTC = {
      * Create DataChannel
      */
     /*var dataChannel = peerConnection.createDataChannel('RTCDataChannel', DATACHANNEL_OPTIONS);
+
+     if (navigator.browser[0] === "Firefox") {
+     dataChannel.binaryType = 'blob';
+     }
+
      dataChannel.onmessage = function(event) {
+     var user = Users.getRemoteUser(remoteUserId);
      if (event.data.substr(0, 4) == "\\$cn") {
      user.name = event.data.substr(4);
      $('#' + remoteUserId + ' .name').text(user.name);
@@ -72,7 +96,7 @@ var WebRTC = {
      };
      dataChannel.onopen = function(event) {
      trace("webrtc", "DataChannel onopen", event);
-     dataChannel.send("\\$cn" + WebRTC.getLocalUser().name);
+     dataChannel.send("\\$cn" + Users.getLocalUser().name);
      };
      dataChannel.onclose = function(event) {
      trace("webrtc", "DataChannel onclose", event);
@@ -104,14 +128,14 @@ var WebRTC = {
           trace("webrtc", "CreateAnswer Callback called", description);
           trace("webrtc", "Set local description", description);
           userRemote.peerConnection.setLocalDescription(description, function() {
-            trace("webrtc", "Success set local description", event);
+            trace("webrtc", "Success set local description", description);
           }, function(event) {
             trace("webrtc", "Failure set local description", event);
           });
 
           SignalingChannel.send({
             subject: "sdp",
-            chatroomHash: userLocal.roomHash,
+            roomHash: userLocal.roomHash,
             userHash: userLocal.id,
             destinationHash: userRemote.id,
             sdp: description
@@ -135,24 +159,18 @@ var WebRTC = {
 
           SignalingChannel.send({
             subject: "sdp",
-            chatroomHash: userLocal.roomHash,
+            roomHash: userLocal.roomHash,
             userHash: userLocal.id,
             destinationHash: userRemote.id,
             sdp: description
           });
-        }, function() {
-          trace("webrtc", "Failure set local", description);
+        }, function(event) {
+          trace("webrtc", "Failure set local", event);
         });
-      }, function() {
-        trace("webrtc", "Failure calling createOffer", "-");
+      }, function(event) {
+        trace("webrtc", "Failure calling createOffer", event);
       }, MEDIA_CONSTRAINTS_OFFER);
     }
-  },
-  handleLocalMedia: function(event) {
-    trace("webrtc", "Local Media Available", event);
-
-    var user = Users.getLocalUser();
-    user.stream = event.detail.stream;
   },
   handleSignalingInit: function(event) {
     trace("webrtc", "Signaling Init", event);
@@ -248,8 +266,12 @@ var WebRTC = {
     });
   },
   handleSignalingIce: function(event) {
-    trace("webrtc", "Handle Ice Candidate", event);
+    //trace("webrtc", "Handle Ice Candidate", event);
     var user = Users.getRemoteUser(event.detail.userId);
+
+    if (event.detail.ice === undefined) {
+      user.peerConnection.addIceCandidate(new RTCIceCandidate(event.detail.ice));
+    }
 
     user.peerConnection.addIceCandidate(new RTCIceCandidate({
       sdpMid: event.detail.ice.sdpMid,
@@ -287,10 +309,31 @@ var WebRTC = {
       case "leave":
         Users.removeRemoteUser(data.userId);
         break;
+      case "audio:mute":
+        var userRemote = Users.getRemoteUser(data.userId);
+        $('#' + userRemote.id + ' .stateMute').show();
+        break;
+      case "audio:unmute":
+        var userRemote = Users.getRemoteUser(data.userId);
+        $('#' + userRemote.id + ' .stateMute').hide();
+        break;
+      case "video:mute":
+        var userRemote = Users.getRemoteUser(data.userId);
+        $('#' + userRemote.id + ' video').css('opacity', '0');
+        break;
+      case "video:unmute":
+        var userRemote = Users.getRemoteUser(data.userId);
+        $('#' + userRemote.id + ' video').css('opacity', '1');
+        break;
       default:
         trace("webrtc", "Undefined participant message", "-");
         break;
     }
+  },
+  handleSignalingKicked: function(event) {
+    WebRTC.hangup();
+    App.handleURL('/room/hangup');
+    App.Router.router.replaceURL('/room/hangup');
   },
   hangup: function() {
     Users.reset();
@@ -328,27 +371,40 @@ var Users = {
     Users.users.push(user);
 
     setTimeout(function() {
-      $('#videoboxes').append("<div class='user' id='" + remoteUserId + "'><span class='name'>Name</span><video autoplay></video></div>");
+      var removeParticipant = "";
+      if (Users.getLocalUser().admin === true) {
+        removeParticipant = "<div class='removeParticipant' onclick=\"App.Controller.user.removeParticipant('" + remoteUserId + "')\"></div>";
+      }
+
+      var remoteUserString = "<div class='user' id='" + remoteUserId + "'>" + "<span class='name'>Name</span>" + "<div class='videoWrapper'>" + "<div class='stateMute'></div>" + removeParticipant + "<img src='assets/img/avatar.jpg' />" + "<video autoplay></video>" + "</div>" + "</div>"
+
+      console.log(remoteUserString)
+
+      $('#videoboxes').append(remoteUserString);
       //<form action='javascript:void(0);'><textarea rows='4' READONLY></textarea><input placeholder='Nachricht...'/></form>
 
-      $('#' + remoteUserId + " form input").keypress(function(e) {
-        if (e.which == 13) {
-          var input = $(this).val();
-          dataChannel.send(input);
+      /*$('#' + remoteUserId + " form input").keypress(function(event) {
+       console.log(event.which);
+       if (event.which == 13) {
 
-          var hours = new Date().getHours()
-          hours = hours < 10 ? "0" + hours : hours;
+       var input = $(this).val();
 
-          var minutes = new Date().getMinutes();
-          minutes = minutes < 10 ? "0" + minutes : minutes;
+       console.log(dataChannel, remoteUserId, event, input, "vars");
+       dataChannel.send(input);
 
-          var output = hours + ":" + minutes + " (me) - " + input + "&#13;&#10;";
-          $('#' + remoteUserId + " textarea").append(output)
+       var hours = new Date().getHours()
+       hours = hours < 10 ? "0" + hours : hours;
 
-          $(this).val("");
-          return false;
-        }
-      });
+       var minutes = new Date().getMinutes();
+       minutes = minutes < 10 ? "0" + minutes : minutes;
+
+       var output = hours + ":" + minutes + " (me) - " + input + "&#13;&#10;";
+       $('#' + remoteUserId + " textarea").append(output)
+
+       $(this).val("");
+       return false;
+       }
+       });*/
       window.App.Controller.user.set('usersCounter', Users.users.length);
     }, 500);
   },
@@ -389,11 +445,11 @@ var Users = {
       if (Users.users[i].id === id && Users.users[i].type === "remote") {
         var user = Users.users[i];
 
-        if (user.peerConnection !== undefined) {
-          user.peerConnection.close();
+        if (user.peerConnection.signalingState !== undefined) {
+          //user.peerConnection.close();
         }
         if (user.dataChannel !== undefined) {
-          user.dataChannel.close();
+          //user.dataChannel.close();
         }
 
         $('#' + user.id).remove();
@@ -409,11 +465,12 @@ var Users = {
   removeAllRemotes: function() {
     for (var i = 0; i < Users.users.length; i++) {
       if (Users.users[i].type === "remote") {
-        if (Users.users[i].peerConnection !== undefined) {
-          Users.users[i].peerConnection.close();
+        if (Users.users[i].peerConnection.signalingState !== closed) {
+          //Bugfix: Which attribute shows if calling close is possible and don't throws an error
+          //Users.users[i].peerConnection.close();
         }
         if (Users.users[i].dataChannel !== undefined) {
-          Users.users[i].dataChannel.close();
+          //Users.users[i].dataChannel.close();
         }
       }
     }
@@ -423,5 +480,3 @@ var Users = {
     this.removeLocalUser();
   }
 };
-
-WebRTC.init();

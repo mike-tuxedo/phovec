@@ -4,12 +4,12 @@
     <meta content="text/html;charset=UTF-8" http-equiv="content-type">
     <title>Phovec</title>
     <link rel='icon' href='assets/img/favicon.png' type='image/png'/>
+    <link rel="stylesheet" href="assets/css/style.css">
     <link rel="stylesheet" href="assets/css/startpage.css">
     <link rel="stylesheet" href="assets/css/about.css">
     <link rel="stylesheet" href="assets/css/room.css">
     <link rel="stylesheet" href="assets/css/rooms.css">
     <link rel="stylesheet" href="assets/css/hangup.css">
-    <link rel="stylesheet" href="assets/css/style.css">
     <link rel="stylesheet" href="assets/css/development.css">
   </head>
   <body scrolling="no">
@@ -79,7 +79,6 @@
     </div>
 
     <script type="text/x-handlebars" data-template-name="application">
-      <div id="blackFilter"></div>
       <div id="content">
         {{outlet}}
       </div>
@@ -156,15 +155,15 @@
         {{#linkTo "index" id="backButton"}}{{/linkTo}}
         {{#linkTo "room-hangup" id="hangupButton"}}{{/linkTo}}
       </header>
-      
-      <div id="infoField">
-        <img id="arrow" src="assets/img/chrome-hinweis-pfeil.png"/>
-        <img id="chrome" src="assets/img/chrome-hinweis-browser.png"/>
-      </div>
+
       <div id="videoboxes">
-        <div class="user" id="local">
+        <div class="user local" id="local">
           <span class="name" id="local_name">Name</span>
-          <video autoplay></video>
+          <div class="videoWrapper">
+            <div class="stateMute"></div>
+            <img src="assets/img/avatar.jpg"/>
+            <video autoplay></video>
+          </div>
           
           {{#view App.UserView}}
           <div id="video_options">
@@ -173,7 +172,7 @@
             <div class="video_options_buttons" id="control_effects" {{ action controlEffects target="view" }}>show/on/off Effects</div>
           </div>
           {{/view}}
-          
+
           <canvas id="faceDetectorOutput"></canvas>
           <div id="videoEffects" {{ action hideEffects target="view" }}>
             <input type="button" id="snapshotButton" {{action "takeScreenShotFromChatroom" }} class="" value="Take Snapshot"/>
@@ -199,7 +198,7 @@
       </div>
         
       <!-- Facebook-Instance -->
-      <script type="text/javascript" src="http://connect.facebook.net/en_US/all.js"></script>
+      <!--<script type="text/javascript" src="http://connect.facebook.net/en_US/all.js"></script>
       <script src="assets/js/libs/facebook-sdk-init.js"></script>
   
       <!-- face-detection -->
