@@ -43,8 +43,7 @@
               coordArray.push(coord);
             }
           });
-          
-          console.log('coordArray: ',coordArray);
+          console.log('e.data: ',e.data);
           expect(videoNum).toEqual(coordArray.length); // there must be as many video-coords as there are video-tags
           
           done = true;

@@ -7,47 +7,43 @@
   
   recordVideo: function(object,recordedType){
     
-    if(this.recording){
-      this.stopRecording();
+    if(VARecorder.recording){
+      VARecorder.stopRecording();
     }
     
     if(recordedType === 'video'){
-      this.recorder = RecordRTC({
+      VARecorder.recorder = RecordRTC({
         video: object // video-tag
       });
-      this.recorder.recordVideo();
-      this.recording = true;
-      this.recordedType = recordedType;
+      VARecorder.recorder.recordVideo();
+      VARecorder.recording = true;
+      VARecorder.recordedType = recordedType;
     }
     else if(recordedType === 'audio'){
-      this.recorder = RecordRTC({
-        stream: object // MediaStream or LocalMediaStream
+      VARecorder.recorder = RecordRTC({
+        stream: object
       });
-      this.recorder.recordAudio();
-      this.recording = true;
-      this.recordedType = recordedType;
+      VARecorder.recorder.recordAudio();
+      VARecorder.recording = true;
+      VARecorder.recordedType = recordedType;
     }
   },
   
   stopRecording: function(){
-    if(this.recordedType === 'video'){
-      this.recorder.stopVideo(function(recordedFileURL){
-        recordedFileLocation = recordedFileURL;
+    if(VARecorder.recordedType === 'video'){
+      VARecorder.recorder.stopVideo(function(recordedFileURL) {
+        window.open(recordedFileURL);
       });
     }
-    else if(this.recordedType === 'audio'){
-      this.recorder.stopAudio(function(recordedFileURL) {
-         recordedFileLocation = recordedFileURL;
+    else if(VARecorder.recordedType === 'audio'){
+      VARecorder.recorder.stopAudio(function(recordedFileURL) { 
+        window.open(recordedFileURL);
       });
     }
     else{
       console.log('VARecorder stopRecording: attribute recordedType not set')
     }
-    this.recording = false;
-  },
-  
-  getRecordedFileViaURL: function(){
-    return recordedFileLocation;
+    VARecorder.recording = false;
   }
   
 };

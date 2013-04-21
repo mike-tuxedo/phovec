@@ -235,7 +235,7 @@ function RecordRTCFileWriter(config) {
 /* https://github.com/mattdiamond/Recorderjs */
 function initAudioRecorder(audioWorkerPath) {
 
-    var WORKER_PATH = audioWorkerPath || 'https://webrtc-experiment.appspot.com/audio-recorder.js';
+    var WORKER_PATH = audioWorkerPath || './assets/js/libs/audio-recorder.js';
 
     var Recorder = function (source, cfg) {
         var config = cfg || {};

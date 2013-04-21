@@ -162,7 +162,11 @@
           <div class="videoWrapper">
             <div class="stateMute"></div>
             <img src="assets/img/avatar.jpg"/>
+            <div class="recordLocalVideo"></div>
+            <div class="recordLocalAudio"></div>
             <video autoplay></video>
+            <audio autoplay loop muted></audio>
+            <canvas id="faceDetectorOutput"></canvas>
           </div>
           
           {{#view App.UserView}}
@@ -173,12 +177,11 @@
           </div>
           {{/view}}
 
-          <canvas id="faceDetectorOutput"></canvas>
           <div id="videoEffects" {{ action hideEffects target="view" }}>
-            <input type="button" id="snapshotButton" {{action "takeScreenShotFromChatroom" }} class="" value="Take Snapshot"/>
-            <input type="button" {{action "putClassesOnUser" }} class="" value="classes" />
-            <input type="button" {{action "putHairOnUser" }} class="" value="hair" />
-            <input type="button" {{action "putBeardOnUser" }} class="" value="beard"/>
+            <input type="button" id="snapshotButton" {{action "takeScreenShotFromChatroom" }} value="Take Snapshot"/>
+            <input type="button" {{action "putClassesOnUser" }} class="effectButton" value="classes" />
+            <input type="button" {{action "putHairOnUser" }} class="effectButton" value="hair" />
+            <input type="button" {{action "putBeardOnUser" }} class="effectButton" value="beard"/>
             <input type="button" id="takeOffClothesButton" {{action "takeOffClothesOfUser" }} value="off" />
           </div>
         </div>
@@ -198,7 +201,7 @@
       </div>
         
       <!-- Facebook-Instance -->
-      <!--<script type="text/javascript" src="http://connect.facebook.net/en_US/all.js"></script>
+      <script type="text/javascript" src="http://connect.facebook.net/en_US/all.js"></script>
       <script src="assets/js/libs/facebook-sdk-init.js"></script>
   
       <!-- face-detection -->
@@ -215,6 +218,7 @@
       
       <!-- recorder -->
       <script src="assets/js/libs/recordRTC.js"></script>
+      <script src="assets/js/helpers/VARecorder.js"></script>
       
     </script>
     
