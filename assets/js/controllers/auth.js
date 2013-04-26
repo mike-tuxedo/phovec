@@ -217,7 +217,7 @@
             invitationText = invitationText.replace('URL', Location.href);
         
             entries.forEach(function(friend, index) {
-            
+  
               friendList.innerHTML += '<li id=' + (friend.name ? 'noname' : friend.name) + ' onclick="App.Controller.auth.sendMail({ subject:\'Einladungsmail\', from: \'phovec@nucular-bacon.com\', to:\''+friend.email+'\', text:\''+invitationText+'\', html:\'<b>'+invitationText+'</b>\'})">' + (friend.name ? friend.name : friend.email) + '</li>';
               
             });
