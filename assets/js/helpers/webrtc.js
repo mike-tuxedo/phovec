@@ -376,7 +376,7 @@ var Users = {
         removeParticipant = "<div class='removeParticipant' onclick=\"App.Controller.user.removeParticipant('" + remoteUserId + "')\"></div>";
       }
 
-      var remoteUserString = "<div class='user' id='" + remoteUserId + "'>" + "<span class='name'>Name</span>" + "<div class='videoWrapper'>" + "<div class='stateMute'></div>" + removeParticipant + "<img src='assets/img/avatar.jpg' />" + "<video autoplay></video>" + "</div>" + "</div>"
+      var remoteUserString = "<div class='user' id='" + remoteUserId + "'>" + "<span class='name'>Name</span>" + "<div class='videoWrapper'>" + "<div class='stateMute'></div>" + removeParticipant + "<img src='assets/img/avatar.jpg' /><div class='recordRemoteVideo'></div><div class='recordRemoteAudio'></div>" + "<video autoplay></video><audio autoplay loop muted></audio>" + "</div>" + "</div>"
 
       console.log(remoteUserString)
 
@@ -425,7 +425,7 @@ var Users = {
       }
     }
 
-    alert("Unknown remote user id: " + id);
+    console.log("Unknown remote user id: " + id);
     return null;
   },
   removeLocalUser: function() {

@@ -302,7 +302,6 @@
   margin-left: 200px;
 }
 /*
-<<<<<<< HEAD
  .videoOptions {
  display: none;
  opacity: 0;
@@ -381,7 +380,6 @@
 #faceDetectorOutput {
   width: 100%;
   float: left;
-  background: #A0A0A0;
   display: none;
 }
 
@@ -392,6 +390,10 @@
 
 .room-wrapper {
   text-align: center;
+}
+
+.effectButton{
+  display:none;
 }
 
 #takeOffClothesButton{
@@ -405,4 +407,50 @@
 
 #mail_form{
   display:none;
+}
+
+.recordLocalVideo{
+  width: 32px;
+  height: 32px;
+  position: absolute;
+  background: url(../img/stop_record_video.png);
+  z-index: 2;
+  background-repeat: no-repeat;
+  top: 60px;
+  left: 10px;
+  display:none;
+}
+
+.recordRemoteVideo{
+  width: 32px;
+  height: 32px;
+  position: absolute;
+  background: url(../img/stop_record_video.png);
+  z-index: 2;
+  background-repeat: no-repeat;
+  top: 60px;
+  left: 10px;
+}
+
+.recordLocalAudio{
+  width: 32px;
+  height: 32px;
+  position: absolute;
+  background: url(../img/stop_record_audio.png);
+  z-index: 2;
+  background-repeat: no-repeat;
+  top: 90px;
+  left: 10px;
+  display:none;
+}
+
+.recordRemoteAudio{
+  width: 32px;
+  height: 32px;
+  position: absolute;
+  background: url(../img/stop_record_audio.png);
+  z-index: 2;
+  background-repeat: no-repeat;
+  top: 90px;
+  left: 10px;
 }

@@ -89,21 +89,6 @@ App.UserController = Ember.ObjectController.extend({
     $("#local-stream").get(0).pause();
     $("#local-stream").attr("src", null);
   },
-  sendMail: function(mailSettings) {
-    if (mailSettings.from && mailSettings.to && mailSettings.subject && mailSettings.text && mailSettings.html)
-      SignalingChannel.send({
-        subject: 'mail',
-        roomHash: Users.users[0].roomHash,
-        userHash: Users.users[0].id,
-        mail: {
-          from: mailSettings.from,
-          to: mailSettings.to,
-          subject: mailSettings.subject,
-          text: mailSettings.text,
-          html: mailSettings.html
-        }
-      });
-  },
   controlAudio: function() {
     var user = Users.getLocalUser();
     if (user.stream === undefined && this.mediaOptions.isAdmissionMissing === false) {
@@ -157,6 +142,9 @@ App.UserController = Ember.ObjectController.extend({
         audio: true,
         video: true
       });
+      
+      // inform recorder the local stream can now be used
+      window.dispatchEvent(new CustomEvent("videostream:available"));
       return;
     }
 
