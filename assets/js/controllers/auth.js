@@ -66,18 +66,19 @@
           $('ul').remove();
         
 
-        controller.sortFBEntires(response.data);        
+        controller.sortFBEntries(response.data);        
+        controller.setFBMailAttributes(response.data);  
         
         var friendList = document.createElement('ul');
         
         var invitationText = controller.get('emailInvitationText').replace('USER', userName);
         invitationText = invitationText.replace('URL', location.href);
-          
+        
         response.data.forEach(function(friend, index) {
           
           friendList.innerHTML += '<li class="send_fb_message" onclick="App.Controller.auth.sendFbUserMessage(\''+friend.id+'\')"> Sende Facebook-Nachricht an ' + friend.name + '</li>'
 
-          friendList.innerHTML += '<li class="send_mail" onclick="App.Controller.auth.sendMail({ subject:\'Einladungsmail\', from:\'phovec@nucular-bacon.com\', to:\''+friend.id+'@facebook.com\', text:\''+invitationText+'\', html:\'<b>'+invitationText+'</b>\'})"> Sende E-Mail an ' + friend.name + '</li>';
+          friendList.innerHTML += '<li class="send_mail" onclick="App.Controller.auth.sendMail({ subject:\'Einladungsmail\', from:\'phovec@nucular-bacon.com\', to:\''+friend.email+'\', text:\''+invitationText+'\', html:\'<b>'+invitationText+'</b>\'})"> Sende E-Mail an ' + friend.name + '</li>';
         
         });
         
@@ -101,15 +102,27 @@
 
   },
   
-  sortFBEntires : function(entries){
+  sortFBEntries : function(entries){
   
-    for(var next=1; next < entries.length; next++)
-      for(var former=next; former > 0; former--)
-        if( entries[former-1].name > entries[former].name ){
-          var former_entry = entries[former];
-          entries[former] = entries[former-1];
-          entries[former-1] = former_entry;
-        }
+    for(var next=1; next < entries.length; next++){
+      for(var former=next; former > 0 && entries[former-1].name > entries[former].name; former--){
+      
+        var former_entry = entries[former];
+        entries[former] = entries[former-1];
+        entries[former-1] = former_entry;
+        
+      }
+    }
+    
+  },
+
+  setFBMailAttributes : function(entries){
+    for(var e=0; e < entries.length; e++){
+      var wholeName = entries[e].name.split(' ');
+      var firstName = wholeName[0].toLowerCase();
+      var secondName = wholeName.length > 2 ? wholeName.splice(1,wholeName.length).join('.').toLowerCase() : wholeName[1].toLowerCase();
+      entries[e].email = firstName + '.' + secondName + '@facebook.com';
+    }
   },
   
   sendFbUserMessage: function(id) {
