@@ -13,18 +13,26 @@
     var controller = this;
     
     var FB = this.get('FB');
-
-    FB.login(function(response) {
-      if (response.authResponse) {
-      
-        controller.set('fbLoggedIn', true);
+    
+    FB.getLoginStatus(function(response) {
+    
+      if (response.status === 'connected') {
         controller.setupFBInfo();
-
-      } else {
-        console.log('login in failed', response);
+      } 
+      else if (response.status === 'not_authorized') {
+        alert('You are not authorized logging in by facebook-account');
+      } 
+      else {
+        FB.login(function(response) {
+          if (response.authResponse) {
+            controller.setupFBInfo();
+          } else {
+            console.log('login in failed due to: ', response);
+          }
+        });
       }
     });
-
+    
   },
   
   fbLogout: function() {
@@ -41,7 +49,9 @@
   setupFBInfo: function() {
 
     var controller = this;
-
+    
+    controller.set('fbLoggedIn', true);
+    
     controller.queryFbAPI('/me', function(response) {
       
       var userName = response.first_name + ' ' + response.last_name;
@@ -61,7 +71,7 @@
         var friendList = document.createElement('ul');
         
         var invitationText = controller.get('emailInvitationText').replace('USER', userName);
-        invitationText = invitationText.replace('URL', Location.href);
+        invitationText = invitationText.replace('URL', location.href);
           
         response.data.forEach(function(friend, index) {
           
@@ -109,9 +119,12 @@
     var msg = {};
     msg.to = id;
     msg.method = 'send';
-    msg.name = 'Phovec Invitation';
-    msg.link = 'http://www.nytimes.com/2011/06/15/arts/people-argue-just-to-win-scholars-assert.html';
-
+    msg.name = 'Phovec Einladung';
+    msg.link = location.href;
+    msg.picture = 'http://fbrell.com/f8.jpg';
+    msg.description = ('Ein Freund möchte dich auf Phovec einladen! Deine Einladungsadresse lautet: ' + location.href);
+    msg.caption = 'ivisible text';
+    
     FB.ui(msg, function(response) {
 
       if (response && response.success) {
@@ -203,9 +216,9 @@
     $.ajax({
         url: 'https://www.googleapis.com/oauth2/v1/userinfo?access_token=' + acToken,
         data: null,
-        success: function(resp) {
+        success: function(response) {
           
-          videoStream = resp;
+          videoStream = response;
           
           controller.getUserContacts(function(entries){
             
@@ -213,8 +226,8 @@
               $('ul').remove();
               
             var friendList = document.createElement('ul');
-            var invitationText = controller.get('emailInvitationText').replace('USER', userName);
-            invitationText = invitationText.replace('URL', Location.href);
+            var invitationText = controller.get('emailInvitationText').replace('USER', response.name);
+            invitationText = invitationText.replace('URL', location.href);
         
             entries.forEach(function(friend, index) {
   
@@ -228,7 +241,7 @@
           
           controller.set('googleLoggedIn',true);
           
-          $('#userInfo').html('Welcome ' + user.name + '<br /><img src=\''+user.picture+"\'/>");
+          $('#userInfo').html('Welcome ' + response.name + '<br /><img src=\''+response.picture+"\'/>");
           
         },
         dataType: "jsonp"
@@ -321,7 +334,7 @@
     if (mailSettings.from && mailSettings.to && mailSettings.subject && mailSettings.text && mailSettings.html){
       SignalingChannel.send({
         subject: 'mail',
-        chatroomHash: Users.users[0].roomHash,
+        roomHash: Users.users[0].roomHash,
         userHash: Users.users[0].id,
         mail: {
           from: mailSettings.from,

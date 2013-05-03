@@ -83,6 +83,7 @@
         $('.videoWrapper img').show();
         $('.recordLocalVideo').show();
         $('.recordLocalAudio').show();
+        $('.removeParticipant').show();
         $('video').show();
         
         var obj = {};
@@ -115,7 +116,7 @@
               controller.drawVideoboxOnCanvas(obj.videos[index], ctx, coord.startX, coord.startY, e.data.cellWidth, e.data.cellHeight);
             }
           });
-
+          
           window.open(canvas.toDataURL(), 'Snapshot', ('width=' + canvas.width + ', height=' + canvas.height + ',menubar=1,resizable=0,scrollbars=0,status=0'));
 
         });
@@ -152,7 +153,7 @@
     
     SignalingChannel.send({
       subject: "participant-kick",
-      chatroomHash: Users.getLocalUser().roomHash,
+      roomHash: Users.getLocalUser().roomHash,
       userHash: Users.getLocalUser().id,
       destinationHash: remoteUserId
     });
@@ -175,9 +176,9 @@
       }
     );
     
-    var _location = location.href;
-    _location = _location.replace('#','%23');
-    qr.text("qrcode_box", 'Raum-Adresse zur Einladung:\n' + _location);
+    var alteredURL = location.href;
+    alteredURL = alteredURL.replace('#','%23');
+    qr.text("qrcode_box", 'Raum-Adresse zur Einladung:\n' + alteredURL);
   
   },
   handleClickEvent: function(e){

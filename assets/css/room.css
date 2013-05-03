@@ -373,8 +373,8 @@
 #videoEffects input {
   float: left;
   margin-left: 5px;
-  width: 40px;
-  height: 20px;
+  width: 80px;
+  height: 25px;
 }
 
 #faceDetectorOutput {

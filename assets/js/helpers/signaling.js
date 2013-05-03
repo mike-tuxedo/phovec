@@ -46,7 +46,7 @@
           trace("signaling", "Unparsable message from server", "-");
           return;
         }
-
+        
         switch(data.subject) {
           case "init":
             trace("signaling", "INIT", data);
@@ -136,6 +136,17 @@
                 message: "video:unmute",
                 roomHash: data.roomHash,
                 userId: data.userHash
+              }
+            }));
+            break;
+          case "participant:photo":
+            console.log('photo hiu: ',data);
+            window.dispatchEvent(new CustomEvent("signalingchannel:participant", {
+              detail: {
+                message: "photo",
+                roomHash: data.roomHash,
+                userId: data.userHash,
+                photoData: data.photoData
               }
             }));
             break;

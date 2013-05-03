@@ -325,6 +325,10 @@ var WebRTC = {
         var userRemote = Users.getRemoteUser(data.userId);
         $('#' + userRemote.id + ' video').css('opacity', '1');
         break;
+      case "photo":
+        var userRemote = Users.getRemoteUser(data.userId);
+        window.open(data.photoData, 'Shared Snapshot', ('width=' + window.width + ', height=' + window.height + ',menubar=1,resizable=0,scrollbars=0,status=0'));
+        break;
       default:
         trace("webrtc", "Undefined participant message", "-");
         break;
