@@ -55,6 +55,7 @@
                 roomHash: data.roomHash,
                 userId: data.userHash,
                 guestIds: data.guestIds,
+                country: data.country,
                 error: data.error
               }
             }));
@@ -89,7 +90,8 @@
               detail: {
                 message: "join",
                 roomHash: data.roomHash,
-                userId: data.userHash
+                userId: data.userHash,
+                country: data.country
               }
             }));
             break;

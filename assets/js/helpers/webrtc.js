@@ -15,7 +15,7 @@ var WebRTC = {
 
     Users.createLocalUser();
   },
-  createPeerConnection: function(roomHash, userId, remoteUserId) {
+  createPeerConnection: function(roomHash, userId, remoteUserId, remoteUserCountry) {
     /**
      * Create PeerConnection
      */
@@ -108,7 +108,7 @@ var WebRTC = {
      trace("webrtc", "DataChannel ondatachannel", event);
      };*/
 
-    Users.createRemoteUser(roomHash, remoteUserId, peerConnection, undefined);
+    Users.createRemoteUser(roomHash, remoteUserId, remoteUserCountry, peerConnection, undefined);
   },
   modifyDescription: function(description) {
     var sdp = description.sdp;
@@ -207,7 +207,7 @@ var WebRTC = {
      * because there could be action with the remote user now
      */
     for (var i = 0; i < data.guestIds.length; i++) {
-      WebRTC.createPeerConnection(data.roomHash, data.userId, data.guestIds[i].id)
+      WebRTC.createPeerConnection(data.roomHash, data.userId, data.guestIds[i].id, data.guestIds[i].country)
     }
 
     /**
@@ -226,8 +226,9 @@ var WebRTC = {
       var localName = "Test";
       //prompt("Nickname:", "Bitte Namen wählen...");
       user.name = localName;
-
-      $('#local_name').text(localName);
+    
+      var countryImg = '<img id="local_country" class="countryLocation" src=\'./assets/img/countries/'+(data.country ? data.country : "unknown")+'.png\'/>';
+      $('#local_name').html(localName+countryImg);
       $('#videoboxes #local').attr("id", data.userId);
     }, 500);
   },
@@ -287,7 +288,7 @@ var WebRTC = {
       case "join":
         var userLocal = Users.getLocalUser();
 
-        WebRTC.createPeerConnection(data.roomHash, userLocal.id, data.userId);
+        WebRTC.createPeerConnection(data.roomHash, userLocal.id, data.userId, data.country);
         var userRemote = Users.getRemoteUser(data.userId);
 
         var loop = setInterval(function() {
@@ -361,7 +362,7 @@ var Users = {
     Users.users.push(user);
     return user;
   },
-  createRemoteUser: function(roomHash, remoteUserId, peerConnection, dataChannel) {
+  createRemoteUser: function(roomHash, remoteUserId, remoteUserCountry, peerConnection, dataChannel) {
     var user = {
       name: undefined,
       id: remoteUserId,
@@ -380,7 +381,7 @@ var Users = {
         removeParticipant = "<div class='removeParticipant' onclick=\"App.Controller.user.removeParticipant('" + remoteUserId + "')\"></div>";
       }
 
-      var remoteUserString = "<div class='user' id='" + remoteUserId + "'>" + "<span class='name'>Name</span>" + "<div class='videoWrapper'>" + "<div class='stateMute'></div>" + removeParticipant + "<img src='assets/img/avatar.jpg' /><div class='recordRemoteVideo'></div><div class='recordRemoteAudio'></div>" + "<video autoplay></video><audio autoplay loop muted></audio>" + "</div>" + "</div>"
+      var remoteUserString = "<div class='user' id='" + remoteUserId + "'>" + "<span class='name'>Name <img class='countryLocation' src=\'./assets/img/countries/"+(remoteUserCountry ? remoteUserCountry : "unknown")+".png\'/></span>" + "<div class='videoWrapper'>" + "<div class='stateMute'></div>" + removeParticipant + "<img src='assets/img/avatar.jpg' /><div class='recordRemoteVideo'></div><div class='recordRemoteAudio'></div>" + "<video autoplay></video><audio autoplay loop muted></audio>" + "</div>" + "</div>"
 
       console.log(remoteUserString)
 
