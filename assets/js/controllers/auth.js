@@ -1,5 +1,6 @@
 ﻿App.AuthController = Ember.ObjectController.extend({
   
+  // do not change reserved words: USER, URL
   emailInvitationText: 'USER möchte dich auf Phovec einladen, die Adresse lautet URL.',
   
   // facebook-auth
