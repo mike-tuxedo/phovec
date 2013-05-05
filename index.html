@@ -324,13 +324,11 @@
       <hr />
       
       <!-- mail form -->
-      <div id="mail_form">
-        <form>
-          <input type="text" id="mailAddress" placeholder="E-Mail Addresse"/>
-          <input type="text" id="mailDescription" placeholder="E-Mail Beschreibung"/>
-          <input type="button" id="mailFormButton" value="Sende E-Mail" {{action "addMailInfo" target="App.Controller.auth"}} />
-        </form>
-      </div>
+      <form id="mail_form">
+        <input type="text" id="mailAddress" placeholder="E-Mail Addresse"/>
+        <input type="text" id="mailDescription" placeholder="E-Mail Beschreibung"/>
+        <input type="button" id="mailFormButton" value="Sende E-Mail" {{action "addMailInfo" target="App.Controller.auth"}} />
+      </form>
       
       <!-- user-login data -->
       <h2 id="userInfo"></h2>

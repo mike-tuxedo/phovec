@@ -1,5 +1,26 @@
 ﻿App.AuthController = Ember.ObjectController.extend({
   
+  hiddenFieldCreated: false,
+  
+  // Honeypot Captcha
+  createHiddenTextInput: function(){
+    
+    if( this.get('hiddenFieldCreated') ){
+      return;
+    }
+    
+    // this invisible text-field is for bots that want to send a mail message 
+    // when a bot fills it out the mail message is not sent
+    var textInput = document.createElement('input');
+    textInput.type = 'text';
+    textInput.id = "humanField";
+    textInput.style.display = 'none';
+    textInput.value = '';
+    $('#mail_form').append(textInput);
+    
+    this.set('hiddenFieldCreated', true);
+  },
+  
   // do not change reserved words: USER, URL
   emailInvitationText: 'USER möchte dich auf Phovec einladen, die Adresse lautet URL.',
   
@@ -328,7 +349,7 @@
   },
   addMailInfo : function(){
     var addresse = $('#mailAddress').val();
-    if(addresse.indexOf('@') !== -1){
+    if(addresse.indexOf('@') !== -1 && $('#humanField').val().length === 0 ){ // avoid wrong mail-addresses and bot-attacks
       
       var descr = this.get('emailInvitationText').replace('USER', Users.getLocalUser().name);
       descr = descr.replace('URL', location.href);

@@ -7,17 +7,24 @@
     window.addEventListener("videostream:available", function(e){
       
       var localVideo = $('.user video');
-      
       $('#faceDetectorOutput')[0].style.width = localVideo.css('width');
       $('#faceDetectorOutput')[0].style.height = $('video').css('height');
-
+      $('#faceDetectorOutput')[0].style.display = 'none';
       FaceDetector.init(localVideo[0], $('#faceDetectorOutput')[0]);
       
       controller.showInvitationQRCode();
       
-      $('#videoboxes')[0].addEventListener('mouseup',controller.handleClickEvent,false);
-        
+      $('#videoboxes')[0].addEventListener('mouseup',controller.handleClickEvent,false); // video-recording
+      
     },false);
+    
+    var loop = setInterval(function(){
+    
+      if( $('#mail_form')[0] ){
+        App.Controller.auth.createHiddenTextInput();
+        clearInterval(loop);
+      }
+    },500);
     
   },
   animation: function() {
