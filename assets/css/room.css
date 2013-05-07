@@ -184,7 +184,7 @@
 
 #videoboxes {
   display: inline-block;
-  margin: 0px auto 0px auto;
+  margin: 60px auto 0px auto;
 }
 
 #videoboxes .user {
@@ -246,6 +246,10 @@
   width: 100%;
   padding: 5px 0px 5px 0px;
   background: #e0dfeb;
+  background-image: url(../img/countries/AT.png);
+  background-size: 37px;
+  background-repeat: no-repeat;
+  background-position: 0px;
   box-shadow: inset 1px 1px 5px #444;
   -webkit-box-shadow: inset 1px 1px 5px #444;
 }
