@@ -4,7 +4,7 @@ App.UserController = Ember.ObjectController.extend({
       if (this.usersCounter === 1) {
         $('.user').css('width', '600px');
         $('.user').css('height', '527px');
-
+        $('.videoWrapper').css('height', '448px');
         $('.video_options_buttons').css('width', '190px');
         $('#videoboxes').css('width', '600px');
         $('#control_video').css('margin-left', '200px');
