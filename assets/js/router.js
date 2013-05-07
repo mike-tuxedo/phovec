@@ -52,7 +52,6 @@ App.RoomRoute = Ember.Route.extend({
     App.Controller.room = App.RoomController.create();
     App.Controller.room.animation();
     App.Controller.user = App.UserController.create();
-    App.Controller.user.startGetMedia();
   }
 });
 

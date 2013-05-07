@@ -4,12 +4,12 @@
     <meta content="text/html;charset=UTF-8" http-equiv="content-type">
     <title>Phovec</title>
     <link rel='icon' href='assets/img/favicon.png' type='image/png'/>
+    <link rel="stylesheet" href="assets/css/style.css">
     <link rel="stylesheet" href="assets/css/startpage.css">
     <link rel="stylesheet" href="assets/css/about.css">
     <link rel="stylesheet" href="assets/css/room.css">
     <link rel="stylesheet" href="assets/css/rooms.css">
     <link rel="stylesheet" href="assets/css/hangup.css">
-    <link rel="stylesheet" href="assets/css/style.css">
     <link rel="stylesheet" href="assets/css/development.css">
   </head>
   <body scrolling="no">
@@ -79,7 +79,6 @@
     </div>
 
     <script type="text/x-handlebars" data-template-name="application">
-      <div id="blackFilter"></div>
       <div id="content">
         {{outlet}}
       </div>
@@ -156,15 +155,19 @@
         {{#linkTo "index" id="backButton"}}{{/linkTo}}
         {{#linkTo "room-hangup" id="hangupButton"}}{{/linkTo}}
       </header>
-      
-      <div id="infoField">
-        <img id="arrow" src="assets/img/chrome-hinweis-pfeil.png"/>
-        <img id="chrome" src="assets/img/chrome-hinweis-browser.png"/>
-      </div>
+
       <div id="videoboxes">
-          <div class="user" id="local">
+        <div class="user local" id="local">
           <span class="name" id="local_name">Name</span>
-          <video autoplay></video>
+          <div class="videoWrapper">
+            <div class="stateMute"></div>
+            <img src="assets/img/avatar.jpg"/>
+            <div class="recordLocalVideo"></div>
+            <div class="recordLocalAudio"></div>
+            <video autoplay></video>
+            <audio autoplay loop muted></audio>
+            <canvas id="faceDetectorOutput"></canvas>
+          </div>
           
           {{#view App.UserView}}
           <div id="video_options">
@@ -173,16 +176,15 @@
             <div class="video_options_buttons" id="control_effects" {{ action controlEffects target="view" }}>show/on/off Effects</div>
           </div>
           {{/view}}
-          
-          <canvas id="faceDetectorOutput"></canvas>
+
           <div id="videoEffects" {{ action hideEffects target="view" }}>
-            <input type="button" id="snapshotButton" {{action "takeScreenShotFromChatroom" }} class="" value="Take Snapshot"/>
-            <input type="button" id="getSnapshotButton" class="" value="get Snapshot" style="display:none" />
-            <input type="button" {{action "putClassesOnUser" }} class="" value="classes" />
-            <input type="button" {{action "putHairOnUser" }} class="" value="hair" />
-            <input type="button" {{action "putBeardOnUser" }} class="" value="beard"/>
-            <input type="button" id="takeOffClothesButton" {{action "takeOffClothesOfUser" }} class="" value="off" />
+            <input type="button" id="snapshotButton" {{action "takeScreenShotFromChatroom" }} value="Take Snapshot"/>
+            <input type="button" {{action "putClassesOnUser" }} class="effectButton" value="classes" />
+            <input type="button" {{action "putHairOnUser" }} class="effectButton" value="hair" />
+            <input type="button" {{action "putBeardOnUser" }} class="effectButton" value="beard"/>
+            <input type="button" id="takeOffClothesButton" {{action "takeOffClothesOfUser" }} value="off" />
           </div>
+          
         </div>
       </div>
 
@@ -195,7 +197,10 @@
             {{ partial 'auth' }}
           </div>
         </div>
+        <div id="qrcode_box"></div>
       </div>
+      
+      <div id="fb-root"></div>
       
       <!-- Facebook-Instance -->
       <script type="text/javascript" src="http://connect.facebook.net/en_US/all.js"></script>
@@ -209,6 +214,14 @@
   
       <!-- screenshot-maker -->
       <script src="assets/js/libs/html2canvas/html2canvas.min.js"></script>
+      
+      <!-- qrcode-maker -->
+      <script src="assets/js/libs/qrcode.packed.js"></script>
+      
+      <!-- recorder -->
+      <script src="assets/js/libs/recordRTC.js"></script>
+      <script src="assets/js/helpers/VARecorder.js"></script>
+      
     </script>
     
     <script type="text/x-handlebars" data-template-name="about">
@@ -290,9 +303,8 @@
     </script>
 
     <script type="text/x-handlebars" data-template-name="_auth">
-      <div id="fb-root"></div>
 
-      {{#unless App.Controller.auth.fbLoggedIn }}
+      {{# unless App.Controller.auth.fbLoggedIn }}
       <a {{action "fbLogin" target="App.Controller.auth" }} class="socialButtons facebookButton"></a>
       {{/unless}}
 
@@ -304,13 +316,21 @@
       <a {{action "googleLogin" target="App.Controller.auth"}} class="socialButtons googleButton"></a>
       {{/unless}}
 
-      {{#if App.Controller.auth.googleLoggedIn }}
+      {{# if App.Controller.auth.googleLoggedIn }}
       <a {{action "googleLogout" target="App.Controller.auth"}} class="socialButtons googleButton"></a>
       {{/if}}
       
-      <a class="socialButtons email_button" href="#"></a>
+      <a class="socialButtons email_button" {{action "toggleEmailForm" target="App.Controller.auth"}} ></a>
       <hr />
-  
+      
+      <!-- mail form -->
+      <form id="mail_form">
+        <input type="text" id="mailAddress" placeholder="E-Mail Addresse"/>
+        <input type="text" id="mailDescription" placeholder="E-Mail Beschreibung"/>
+        <input type="button" id="mailFormButton" value="Sende E-Mail" {{action "addMailInfo" target="App.Controller.auth"}} />
+      </form>
+      
+      <!-- user-login data -->
       <h2 id="userInfo"></h2>
       <div id="friends"></div>
     </script>

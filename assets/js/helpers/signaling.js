@@ -46,15 +46,16 @@
           trace("signaling", "Unparsable message from server", "-");
           return;
         }
-
+        
         switch(data.subject) {
           case "init":
             trace("signaling", "INIT", data);
             window.dispatchEvent(new CustomEvent("signalingchannel:init", {
               detail: {
-                roomHash: data.chatroomHash,
+                roomHash: data.roomHash,
                 userId: data.userHash,
                 guestIds: data.guestIds,
+                country: data.country,
                 error: data.error
               }
             }));
@@ -64,7 +65,7 @@
             window.dispatchEvent(new CustomEvent("signalingchannel:sdp", {
               detail: {
                 sdp: data.sdp,
-                roomHash: data.chatroomHash,
+                roomHash: data.roomHash,
                 userId: data.userHash
               }
             }));
@@ -75,7 +76,7 @@
               window.dispatchEvent(new CustomEvent("signalingchannel:ice", {
                 detail: {
                   ice: data.ice,
-                  roomHash: data.chatroomHash,
+                  roomHash: data.roomHash,
                   userId: data.userHash
                 }
               }));
@@ -83,25 +84,83 @@
               //ice not usable
             }
             break;
-          case "participant-join":
+          case "participant:join":
             //trace("signaling", "JOIN", data);
             window.dispatchEvent(new CustomEvent("signalingchannel:participant", {
               detail: {
                 message: "join",
-                roomHash: data.chatroomHash,
-                userId: data.userHash
+                roomHash: data.roomHash,
+                userId: data.userHash,
+                country: data.country
               }
             }));
             break;
-          case "participant-leave":
+          case "participant:leave":
             //trace("signaling", "LEAVE", data);
             window.dispatchEvent(new CustomEvent("signalingchannel:participant", {
               detail: {
                 message: "leave",
-                roomHash: data.chatroomHash,
+                roomHash: data.roomHash,
                 userId: data.userHash
               }
             }));
+            break;
+          case "participant:audio:mute":
+            window.dispatchEvent(new CustomEvent("signalingchannel:participant", {
+              detail: {
+                message: "audio:mute",
+                roomHash: data.roomHash,
+                userId: data.userHash
+              }
+            }));
+            break;
+          case "participant:audio:unmute":
+            window.dispatchEvent(new CustomEvent("signalingchannel:participant", {
+              detail: {
+                message: "audio:unmute",
+                roomHash: data.roomHash,
+                userId: data.userHash
+              }
+            }));
+            break;
+          case "participant:video:mute":
+            window.dispatchEvent(new CustomEvent("signalingchannel:participant", {
+              detail: {
+                message: "video:mute",
+                roomHash: data.roomHash,
+                userId: data.userHash
+              }
+            }));
+            break;
+          case "participant:video:unmute":
+            window.dispatchEvent(new CustomEvent("signalingchannel:participant", {
+              detail: {
+                message: "video:unmute",
+                roomHash: data.roomHash,
+                userId: data.userHash
+              }
+            }));
+            break;
+          case "participant:photo":
+            console.log('photo hiu: ',data);
+            window.dispatchEvent(new CustomEvent("signalingchannel:participant", {
+              detail: {
+                message: "photo",
+                roomHash: data.roomHash,
+                userId: data.userHash,
+                photoData: data.photoData
+              }
+            }));
+            break;
+          case "close":
+            window.dispatchEvent(new CustomEvent("signalingchannel:close", {
+              detail: {
+                message: "close",
+                roomHash: data.roomHash,
+                userId: data.userHash
+              }
+            }));
+            SignalingChannel.close();
             break;
           default:
             trace("signaling", "Unknown subject in message!", data);
