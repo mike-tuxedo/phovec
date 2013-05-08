@@ -18,7 +18,7 @@
       else{
         $('#social_sidebar_container').animate({ right: '-300px'}, { duration: 250, queue: false });
         $('#hangupButton').animate({marginRight: '0px'}, { duration: 250, queue: false });
-        $('#scrollbar_fix').css('width','100px');
+        $('#scrollbar_fix').animate({width: '100px'}, {duration: 250, queue: false});
         
         $('#show_sidebar').mouseout(function(){$('#show_sidebar').css('opacity', '1')});
         this.sidebar = false;
