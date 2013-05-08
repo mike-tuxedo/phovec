@@ -228,8 +228,10 @@ var WebRTC = {
       //prompt("Nickname:", "Bitte Namen wählen...");
       user.name = localName;
     
-      var countryImg = '<img id="local_country" class="countryLocation" src=\'./assets/img/countries/'+(data.country ? data.country : "unknown")+'.png\'/>';
-      $('#local_name').html(localName+countryImg);
+      //var countryImg = '<img id="local_country" class="countryLocation" src=\'./assets/img/countries/'+(data.country ? data.country : "unknown")+'.png\'/>';
+      //$('#local_name').html(localName+countryImg);
+      var img = (data.country ? data.country : "unknown") + '.png';
+      $('#local_name').css('background-image', 'url(assets/img/countries/' + img + ')');
       $('#videoboxes #local').attr("id", data.userId);
     }, 500);
   },
@@ -406,9 +408,10 @@ var Users = {
         removeParticipant = "<div class='removeParticipant' onclick=\"App.Controller.user.removeParticipant('" + remoteUserId + "')\"></div>";
       }
 
-      var remoteUserString = "<div class='user' id='" + remoteUserId + "'>" + "<span class='name'>Name <img class='countryLocation' src=\'./assets/img/countries/"+(remoteUserCountry ? remoteUserCountry : "unknown")+".png\'/></span>" + "<div class='videoWrapper'>" + "<div class='stateMute'></div>" + removeParticipant + "<img src='assets/img/avatar.jpg' /><div class='recordRemoteVideo'></div><div class='recordRemoteAudio'></div>" + "<video autoplay></video><audio autoplay loop muted></audio>" + "</div>" + "</div>"
+      var img = './assets/img/countries/' + (remoteUserCountry ? remoteUserCountry : "unknown") + '.png';
+      var remoteUserString = "<div class='user' id='" + remoteUserId + "'>" + "<span class='name' style='background-image: url(" + img + ")'>Name</span>" + "<div class='videoWrapper'><div class='stateMute'></div>" + removeParticipant + "<img src='assets/img/avatar.jpg' /><div class='recordRemoteVideo'></div><div class='recordRemoteAudio'></div>" + "<video autoplay></video><audio autoplay loop muted></audio>" + "</div>" + "</div>";
 
-      console.log(remoteUserString)
+      console.log(remoteUserString);
 
       $('#videoboxes').append(remoteUserString);
       //<form action='javascript:void(0);'><textarea rows='4' READONLY></textarea><input placeholder='Nachricht...'/></form>

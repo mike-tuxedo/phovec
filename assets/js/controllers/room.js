@@ -37,7 +37,7 @@
         clearInterval(interval);
       } else {
         item.animate({
-          boxShadow: '0 0 400px rgba(255,0,0,0.5)'
+          boxShadow: '0 0 200px rgba(255,0,0,0.5)'
         }, 3000, function() {
           item.css('box-shadow', '0 0 0px rgba(255,0,0,1)')
         });
