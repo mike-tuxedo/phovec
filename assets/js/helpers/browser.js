@@ -70,14 +70,16 @@ function formatTime(timestamp) {
 }
 
 //TURN SERVER TEST
-if (navigator.browser[0] === "Chrome") {
+if (navigator.browser[0] === "Chrome" || navigator.browser[0] === "Firefox") {
   RTC_CONFIGURATION = {
     'iceServers': [{
       url: "turn:phovec@nucular-bacon.com",
       credential: "phovec-test"
     }]
   };
-} else if (navigator.browser[0] === "Firefox") {
+}
+
+/*
   RTC_CONFIGURATION = {
     'iceServers': [{
       "url": "stun:stun.sipgate.net"
@@ -89,7 +91,7 @@ if (navigator.browser[0] === "Chrome") {
       "url": "stun:stun1.voiceeclipse.net"
     }]
   };
-}
+*/
 
 /* "Media Constraints" for PeerConnection */
 if (navigator.browser[0] === "Chrome") {
