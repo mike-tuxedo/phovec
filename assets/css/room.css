@@ -123,12 +123,13 @@
   box-shadow: 0px 0px 15px #444444;
   background: #e0dfeb;
   overflow: hidden;
+  z-index: 75;
 }
 
 .socialButtons {
   cursor: pointer;
-  width: 60px;
-  height: 60px;
+  width: 100px;
+  height: 25px;
   float: left;
   overflow: hidden;
 }
@@ -137,8 +138,16 @@
   opacity: 0.8;
 }
 
+#userInfo{
+display: inline-block;
+margin: 5px;
+padding: 25px;
+color: #888;
+line-height: 1.5;
+}
 #userInfo p {
   font-size: 16px;
+  text-shadow: 0px -1px 1px #fff;
 }
 
 #userInfo img {
@@ -163,21 +172,21 @@
 
 .facebookButton {
   display: block;
-  background-image: url('../img/facebookbutton.png');
+  background-image: url('../img/sidebar/facebook.png');
   background-size: 100% 100%;
   background-repeat: no-repeat;
 }
 
 .googleButton {
   display: block;
-  background-image: url('../img/googlebutton.png');
+  background-image: url('../img/sidebar/google.png');
   background-size: 100% 100%;
   background-repeat: no-repeat;
 }
 
 .email_button {
   display: block;
-  background-image: url('../img/emailbutton.png');
+  background-image: url('../img/sidebar/email.png');
   background-size: 100% 100%;
   background-repeat: no-repeat;
 }
@@ -349,7 +358,7 @@
   border-left: 8px solid #e0dfeb;
   border-bottom: 8px solid #e0dfeb;
   box-shadow: 0px 0px 15px #444444;
-  background: #303743;
+  background: #e0dfeb;
   background-image: url('../img/hoerer_rot.png');
   background-size: 70%;
   background-repeat: no-repeat;
