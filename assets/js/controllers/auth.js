@@ -369,6 +369,7 @@
       alert('Bitte gib eine valide E-Mail Adresse ein.')
     }
   },
+  
   sendMail: function(mailSettings) {
   
     if (mailSettings.from && mailSettings.to && mailSettings.subject && mailSettings.text && mailSettings.html){

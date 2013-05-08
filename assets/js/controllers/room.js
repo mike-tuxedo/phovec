@@ -85,13 +85,7 @@
     html2canvas([document.getElementById('videoboxes')], {
       onrendered: function(canvas) {
         
-        $('.videoWrapper').css('background','');
-        $('.stateMute').show();
-        $('.videoWrapper img').show();
-        $('.recordLocalVideo').show();
-        $('.recordLocalAudio').show();
-        $('.removeParticipant').show();
-        $('video').show();
+        controller.showVisibleSymbolsAgain();
         
         var obj = {};
         obj.videos = $('video');
@@ -164,6 +158,27 @@
       userHash: Users.getLocalUser().id,
       destinationHash: remoteUserId
     });
+  },
+  showVisibleSymbolsAgain: function(){
+  
+    $('.videoWrapper').css('background','');
+    
+    if( Users.getLocalUser().stream.getVideoTracks()[0].enabled ){
+      $('.recordLocalVideo').show();
+    }
+    
+    if( Users.getLocalUser().stream.getAudioTracks()[0].enabled ){
+      $('.recordLocalAudio').show();
+    }
+    else{
+      $('.stateMute').show();
+    }
+    
+    // remote user recording buttons
+    
+    $('.removeParticipant').show(); // onyl host has got these images
+    $('video').show();
+    
   },
   showInvitationQRCode: function() {
   
