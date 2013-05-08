@@ -188,7 +188,7 @@
       </div>
 
       <!-- to hide the scrollbar, we need a div whos position is not outside the site -->
-      <div id="scrollbar_fix"> 
+      <div id="scrollbar_fix">
         <div id="social_sidebar_container">
           <input type="button" id="show_sidebar" value="" {{ action showSidebar target="view" }}/>
           <div id="show_sidebar_shadow"></div>
@@ -196,10 +196,11 @@
             {{ partial 'auth' }}
           </div>
         </div>
-        <div id="fb-root"></div>
         <div id="qrcode_box"></div>
       </div>
-        
+      
+      <div id="fb-root"></div>
+      
       <!-- Facebook-Instance -->
       <script type="text/javascript" src="http://connect.facebook.net/en_US/all.js"></script>
       <script src="assets/js/libs/facebook-sdk-init.js"></script>
@@ -322,12 +323,10 @@
       <hr />
       
       <!-- mail form -->
-      <div id="mail_form">
-        <form>
-          <input type="text" id="mailAddress" placeholder="E-Mail Addresse"/>
-          <input type="text" id="mailDescription" placeholder="E-Mail Beschreibung"/>
-          <input type="button" id="mailFormButton" value="Sende E-Mail" {{action "addMailInfo" target="App.Controller.auth"}} />
-        </form>
+      <form id="mail_form">
+        <input type="text" id="mailAddress" placeholder="E-Mail Addresse"/>
+        <input type="text" id="mailDescription" placeholder="E-Mail Beschreibung"/>
+        <input type="button" id="mailFormButton" value="Sende E-Mail" {{action "addMailInfo" target="App.Controller.auth"}} />
       </form>
       
       <!-- user-login data -->

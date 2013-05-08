@@ -7,17 +7,24 @@
     window.addEventListener("videostream:available", function(e){
       
       var localVideo = $('.user video');
-      
       $('#faceDetectorOutput')[0].style.width = localVideo.css('width');
       $('#faceDetectorOutput')[0].style.height = $('video').css('height');
-
+      $('#faceDetectorOutput')[0].style.display = 'none';
       FaceDetector.init(localVideo[0], $('#faceDetectorOutput')[0]);
       
       controller.showInvitationQRCode();
       
-      $('#videoboxes')[0].addEventListener('mouseup',controller.handleClickEvent,false);
-        
+      $('#videoboxes')[0].addEventListener('mouseup',controller.handleClickEvent,false); // video-recording
+      
     },false);
+    
+    var loop = setInterval(function(){
+    
+      if( $('#mail_form')[0] ){
+        App.Controller.auth.createHiddenTextInput();
+        clearInterval(loop);
+      }
+    },500);
     
   },
   animation: function() {
@@ -30,7 +37,7 @@
         clearInterval(interval);
       } else {
         item.animate({
-          boxShadow: '0 0 400px rgba(255,0,0,0.5)'
+          boxShadow: '0 0 200px rgba(255,0,0,0.5)'
         }, 3000, function() {
           item.css('box-shadow', '0 0 0px rgba(255,0,0,1)')
         });
@@ -83,6 +90,7 @@
         $('.videoWrapper img').show();
         $('.recordLocalVideo').show();
         $('.recordLocalAudio').show();
+        $('.removeParticipant').show();
         $('video').show();
         
         var obj = {};
@@ -115,7 +123,7 @@
               controller.drawVideoboxOnCanvas(obj.videos[index], ctx, coord.startX, coord.startY, e.data.cellWidth, e.data.cellHeight);
             }
           });
-
+          
           window.open(canvas.toDataURL(), 'Snapshot', ('width=' + canvas.width + ', height=' + canvas.height + ',menubar=1,resizable=0,scrollbars=0,status=0'));
 
         });
@@ -152,7 +160,7 @@
     
     SignalingChannel.send({
       subject: "participant-kick",
-      chatroomHash: Users.getLocalUser().roomHash,
+      roomHash: Users.getLocalUser().roomHash,
       userHash: Users.getLocalUser().id,
       destinationHash: remoteUserId
     });
@@ -175,9 +183,9 @@
       }
     );
     
-    var _location = location.href;
-    _location = _location.replace('#','%23');
-    qr.text("qrcode_box", 'Raum-Adresse zur Einladung:\n' + _location);
+    var alteredURL = location.href;
+    alteredURL = alteredURL.replace('#','%23');
+    qr.text("qrcode_box", 'Raum-Adresse zur Einladung:\n' + alteredURL);
   
   },
   handleClickEvent: function(e){
