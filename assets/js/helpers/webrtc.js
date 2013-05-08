@@ -11,6 +11,7 @@ var WebRTC = {
     window.addEventListener("signalingchannel:sdp", this.handleSignalingSdp);
     window.addEventListener("signalingchannel:ice", this.handleSignalingIce);
     window.addEventListener("signalingchannel:participant", this.handleSignalingParticipant);
+    window.addEventListener("signalingchannel:error", this.handleSignalingError);
     window.addEventListener("signalingchannel:close", this.handleSignalingKicked);
 
     Users.createLocalUser();
@@ -282,8 +283,9 @@ var WebRTC = {
   },
   handleSignalingParticipant: function(event) {
     trace("webrtc", "Handle Participant", event);
-
+    
     var data = event.detail;
+    
     switch (data.message) {
       case "join":
         var userLocal = Users.getLocalUser();
@@ -311,29 +313,41 @@ var WebRTC = {
         Users.removeRemoteUser(data.userId);
         break;
       case "audio:mute":
+        WebRTC.handleRecordingButtons(data.userId, 'audio', false);
         var userRemote = Users.getRemoteUser(data.userId);
         $('#' + userRemote.id + ' .stateMute').show();
         break;
       case "audio:unmute":
+        WebRTC.handleRecordingButtons(data.userId, 'audio', true);
         var userRemote = Users.getRemoteUser(data.userId);
         $('#' + userRemote.id + ' .stateMute').hide();
         break;
       case "video:mute":
+        WebRTC.handleRecordingButtons(data.userId, 'video', false);
+        WebRTC.handleRecordingButtons(data.userId, 'audio', false);
         var userRemote = Users.getRemoteUser(data.userId);
         $('#' + userRemote.id + ' video').css('opacity', '0');
         break;
       case "video:unmute":
+        WebRTC.handleRecordingButtons(data.userId, 'video', true);
+        WebRTC.handleRecordingButtons(data.userId, 'audio', true);
         var userRemote = Users.getRemoteUser(data.userId);
         $('#' + userRemote.id + ' video').css('opacity', '1');
-        break;
-      case "photo":
-        var userRemote = Users.getRemoteUser(data.userId);
-        window.open(data.photoData, 'Shared Snapshot', ('width=' + window.width + ', height=' + window.height + ',menubar=1,resizable=0,scrollbars=0,status=0'));
         break;
       default:
         trace("webrtc", "Undefined participant message", "-");
         break;
     }
+  },
+  handleSignalingError: function(event){
+    trace("webrtc", "Handle Error", event);
+
+    var data = event.detail;
+    
+    if(data.subject === 'mail:error'){
+      alert('Einladung-Mail zu ' + data.to + ' ist nicht angekommen.');
+    }
+    
   },
   handleSignalingKicked: function(event) {
     WebRTC.hangup();
@@ -344,6 +358,17 @@ var WebRTC = {
     Users.reset();
     this.initialized = false;
     trace("webrtc", "Reset", "-");
+  },
+  handleRecordingButtons: function(remoteId,type,show){
+    
+    type = type === 'video' ? '.recordRemoteVideo' : '.recordRemoteAudio';
+    
+    if(show){
+      $('#'+remoteId+' '+type).show();
+    }
+    else{
+      $('#'+remoteId+' '+type).hide();
+    }
   }
 };
 

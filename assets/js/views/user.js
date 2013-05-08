@@ -16,6 +16,7 @@ App.UserView = Ember.View.extend({
   controlVideo: function(){
     App.Controller.user.controlVideo();
     $('.recordLocalVideo').toggle();
+    $('.recordLocalAudio').toggle();
     $('.effectButton').toggle();
     $('#faceDetectorOutput').toggle();
   }

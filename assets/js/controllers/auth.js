@@ -348,7 +348,11 @@
     $('#mail_form').toggle();
   },
   addMailInfo : function(){
+    
+    $('#mailFormButton').attr('disabled',true);
+    
     var addresse = $('#mailAddress').val();
+    
     if(addresse.indexOf('@') !== -1 && $('#humanField').val().length === 0 ){ // avoid wrong mail-addresses and bot-attacks
       
       var descr = this.get('emailInvitationText').replace('USER', Users.getLocalUser().name);
@@ -366,7 +370,9 @@
     }
   },
   sendMail: function(mailSettings) {
+  
     if (mailSettings.from && mailSettings.to && mailSettings.subject && mailSettings.text && mailSettings.html){
+    
       SignalingChannel.send({
         subject: 'mail',
         roomHash: Users.users[0].roomHash,
@@ -379,6 +385,11 @@
           html: mailSettings.html
         }
       });
+      
+      setTimeout(function(){
+        $('#mailFormButton').attr('disabled',false);
+      },250);
+      
     }
     else{
       console.log('Auth-Controller sendMail: not enough arguments: ', mailSettings);
