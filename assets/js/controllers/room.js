@@ -16,6 +16,8 @@
       
       $('#videoboxes')[0].addEventListener('mouseup',controller.handleClickEvent,false); // video-recording
       
+      $('#videoEffects').show();
+      
     },false);
     
     var loop = setInterval(function(){
@@ -79,8 +81,7 @@
     var controller = this;
     
     $('#videoEffectsBar').css('margin-top', '250px');
-    $('.videoWrapper').children().hide();
-    $('.videoWrapper').css('background','#999999');
+    controller.hideSymbolsForWorker();
     
     html2canvas([document.getElementById('videoboxes')], {
       onrendered: function(canvas) {
@@ -159,25 +160,52 @@
       destinationHash: remoteUserId
     });
   },
+  hideSymbolsForWorker: function(){
+    $('.videoWrapper').children().hide();
+    $('.videoWrapper').css('background','#999999'); // #999999 reference-color for snapshot-worker
+  },
   showVisibleSymbolsAgain: function(){
   
     $('.videoWrapper').css('background','');
     
-    if( Users.getLocalUser().stream.getVideoTracks()[0].enabled ){
+    var localUser = Users.getLocalUser();
+    
+    if( localUser.stream.getVideoTracks()[0].enabled ){ // when video is activated activate video-recording-button
       $('.recordLocalVideo').show();
     }
     
-    if( Users.getLocalUser().stream.getAudioTracks()[0].enabled ){
-      $('.recordLocalAudio').show();
+    if( localUser.stream.getAudioTracks()[0].enabled ){ // when audio is activated activate audio-recording-button
+      $('.recordLocalAudio').show(); 
     }
     else{
-      $('.stateMute').show();
+      $('#'+localUser.id+' .stateMute').show();
     }
     
-    // remote user recording buttons
+    // show recording buttons of remote users whether they have switched on their video/audio
+    var remoteUsers = Users.getRemoteUsers();
     
-    $('.removeParticipant').show(); // onyl host has got these images
+    for(var r = 0; r < remoteUsers.length; r++){
+      this.handleRemoteRecordingButtons(remoteUsers[r].id);
+    }
+    
+    $('.removeParticipant').show(); // only host has got these images so this code does not work on guests
     $('video').show();
+    
+  },
+  handleRemoteRecordingButtons: function(remoteId){
+  
+    var remoteUser = Users.getRemoteUser(remoteId);
+    
+    if( remoteUser.stream.getVideoTracks()[0].enabled ){ // when video is activated activate video-recording-button
+      $('#'+remoteId+' .recordLocalVideo').show();
+    }
+    
+    if( remoteUser.stream.getAudioTracks()[0].enabled ){ // when audio is activated activate audio-recording-button
+      $('#'+remoteId+' .recordLocalAudio').show(); 
+    }
+    else{
+      $('#'+remoteId+' .stateMute').show();
+    }
     
   },
   showInvitationQRCode: function() {

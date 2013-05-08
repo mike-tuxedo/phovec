@@ -326,13 +326,18 @@ var WebRTC = {
         break;
       case "video:mute":
         WebRTC.handleRecordingButtons(data.userId, 'video', false);
-        WebRTC.handleRecordingButtons(data.userId, 'audio', false);
         var userRemote = Users.getRemoteUser(data.userId);
         $('#' + userRemote.id + ' video').css('opacity', '0');
         break;
       case "video:unmute":
-        WebRTC.handleRecordingButtons(data.userId, 'video', true);
-        WebRTC.handleRecordingButtons(data.userId, 'audio', true);
+        if(WebRTC.firstVideoUnmuteMessage){
+          WebRTC.firstVideoUnmuteMessage = false;
+          WebRTC.handleRecordingButtons(data.userId, 'video', true);
+          WebRTC.handleRecordingButtons(data.userId, 'audio', true);
+        }
+        else{
+          WebRTC.handleRecordingButtons(data.userId, 'video', true);
+        }
         var userRemote = Users.getRemoteUser(data.userId);
         $('#' + userRemote.id + ' video').css('opacity', '1');
         break;
@@ -371,7 +376,8 @@ var WebRTC = {
     else{
       $('#'+remoteId+' '+type).hide();
     }
-  }
+  },
+  firstVideoUnmuteMessage: true
 };
 
 var Users = {
@@ -460,6 +466,17 @@ var Users = {
 
     console.log("Unknown remote user id: " + id);
     return null;
+  },
+  getRemoteUsers: function(){
+    var remoteUsers = [];
+    
+    for (var i = 0; i < Users.users.length; i++) {
+      if (Users.users[i].type === "remote") {
+        remoteUsers.push(Users.users[i]);
+      }
+    }
+    
+    return remoteUsers;
   },
   removeLocalUser: function() {
     for (var i = 0; i < Users.users.length; i++) {

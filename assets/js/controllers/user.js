@@ -127,6 +127,9 @@ App.UserController = Ember.ObjectController.extend({
         roomHash: user.roomHash,
         userHash: user.id
       });
+      
+      $('.recordLocalAudio').show();
+      
     } else {
       audioStream.enabled = false;
       $('.local .stateMute').show();
@@ -136,6 +139,8 @@ App.UserController = Ember.ObjectController.extend({
         roomHash: user.roomHash,
         userHash: user.id
       });
+      
+      $('.recordLocalAudio').hide();
     }
   },
   controlVideo: function() {
@@ -157,6 +162,7 @@ App.UserController = Ember.ObjectController.extend({
     }
 
     var videoStream = user.stream.getVideoTracks()[0];
+    
     if (videoStream.enabled === false) {
       videoStream.enabled = true;
       $('.local video').css('opacity', '1');
@@ -168,7 +174,7 @@ App.UserController = Ember.ObjectController.extend({
       });
       
       $('.recordLocalVideo').show();
-      $('.recordLocalAudio').show();
+      $('#faceDetectorOutput').show();
       
     } else {
       videoStream.enabled = false;
@@ -179,6 +185,9 @@ App.UserController = Ember.ObjectController.extend({
         roomHash: user.roomHash,
         userHash: user.id
       });
+      
+      $('.recordLocalVideo').hide();
+      $('#faceDetectorOutput').hide();
     }
   },
   removeParticipant: function(remoteUserId) {
