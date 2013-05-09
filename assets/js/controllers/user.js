@@ -61,7 +61,13 @@ App.UserController = Ember.ObjectController.extend({
 
     if (this.mediaOptions.video === false) {
       stream.getVideoTracks()[0].enabled = false;
+      $('.recordLocalAudio').show();
+      
       $('.local video').css('opacity', '0');
+    }
+    else{
+      $('.recordLocalVideo').show();
+      $('.recordLocalAudio').show();
     }
 
     if ( typeof webkitURL !== "undefined") {
@@ -73,6 +79,14 @@ App.UserController = Ember.ObjectController.extend({
     }
 
     document.getElementById('videoboxes').getElementsByTagName('div')[0].getElementsByTagName('video')[0].play();
+    
+    var user = Users.getLocalUser();
+      
+    SignalingChannel.send({
+      subject: "participant:video:unmute",
+      roomHash: user.roomHash,
+      userHash: user.id
+    });
   },
   onGetMediaError: function(error) {
     console.log("LocalMedia: ERROR");
@@ -88,7 +102,7 @@ App.UserController = Ember.ObjectController.extend({
      alert('Zurück auf die Startseite ...');
      }*/
   },
-  startGetMedia: function(options) {
+  startGetMedia: function() {
     //request audio and video from your own hardware
     navigator.getMedia({
       audio: true,
@@ -110,10 +124,7 @@ App.UserController = Ember.ObjectController.extend({
       //show here maybe advice img?
       //how to allow the media request
       this.mediaOptions.audio = true;
-      this.startGetMedia({
-        audio: true,
-        video: false
-      });
+      this.startGetMedia();
       return;
     }
 
@@ -127,6 +138,9 @@ App.UserController = Ember.ObjectController.extend({
         roomHash: user.roomHash,
         userHash: user.id
       });
+      
+      $('.recordLocalAudio').show();
+      
     } else {
       audioStream.enabled = false;
       $('.local .stateMute').show();
@@ -136,6 +150,8 @@ App.UserController = Ember.ObjectController.extend({
         roomHash: user.roomHash,
         userHash: user.id
       });
+      
+      $('.recordLocalAudio').hide();
     }
   },
   controlVideo: function() {
@@ -149,10 +165,7 @@ App.UserController = Ember.ObjectController.extend({
       //how to allow the media request
       this.mediaOptions.video = true;
       this.mediaOptions.audio = true;
-      this.startGetMedia({
-        audio: true,
-        video: true
-      });
+      this.startGetMedia();
       
       // inform recorder the local stream can now be used
       window.dispatchEvent(new CustomEvent("videostream:available"));
@@ -160,6 +173,7 @@ App.UserController = Ember.ObjectController.extend({
     }
 
     var videoStream = user.stream.getVideoTracks()[0];
+    
     if (videoStream.enabled === false) {
       videoStream.enabled = true;
       $('.local video').css('opacity', '1');
@@ -169,6 +183,10 @@ App.UserController = Ember.ObjectController.extend({
         roomHash: user.roomHash,
         userHash: user.id
       });
+      
+      $('.recordLocalVideo').show();
+      $('#faceDetectorOutput').show();
+      
     } else {
       videoStream.enabled = false;
       $('.local video').css('opacity', '0');
@@ -178,6 +196,9 @@ App.UserController = Ember.ObjectController.extend({
         roomHash: user.roomHash,
         userHash: user.id
       });
+      
+      $('.recordLocalVideo').hide();
+      $('#faceDetectorOutput').hide();
     }
   },
   removeParticipant: function(remoteUserId) {

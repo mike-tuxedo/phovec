@@ -443,6 +443,7 @@ line-height: 1.5;
   background-repeat: no-repeat;
   top: 60px;
   left: 10px;
+  display:none;
 }
 
 .recordLocalAudio{
@@ -466,6 +467,7 @@ line-height: 1.5;
   background-repeat: no-repeat;
   top: 90px;
   left: 10px;
+  display:none;
 }
 
 .countryLocation{
