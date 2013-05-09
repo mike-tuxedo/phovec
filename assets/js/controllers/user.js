@@ -1,45 +1,56 @@
 App.UserController = Ember.ObjectController.extend({
   init: function() {
     this.addObserver('usersCounter', function() {
+      console.log('SET videosize');
       if (this.usersCounter === 1) {
         $('.user').css('width', '600px');
         $('.user').css('height', '527px');
         $('.videoWrapper').css('height', '448px');
-        $('.video_options_buttons').css('width', '190px');
+        $('.video_options_buttons').css('width', '194px');
         $('#videoboxes').css('width', '600px');
-        $('#control_video').css('margin-left', '200px');
+        $('#videoboxes').css('margin-top', '40px');
+        $('#control_video').css('margin-left', '198px');
         $('#control_effects').css('margin-left', '400px');
       } else if (this.usersCounter === 2) {
         $('.user').css('width', '450px');
         $('.user').css('height', '390px');
         $('.videoWrapper').css('height', '340px');
-        $('.video_options_buttons').css('width', '140px');
+        $('.video_options_buttons').css('width', '146px');
         $('#videoboxes').css('width', '940px');
-        $('#control_video').css('margin-left', '150px');
-        $('#control_effects').css('margin-left', '300px');
+        $('#videoboxes').css('margin-top', '100px');
+        $('#control_video').css('margin-left', '146px');
+        $('#control_effects').css('margin-left', '298px');
       } else if (this.usersCounter === 3) {
         $('.user').css('width', '350px');
         $('.user').css('height', '350px');
         $('.videoWrapper').css('height', '290px');
-        $('.video_options_buttons').css('width', '106.66px');
+        $('.video_options_buttons').css('width', '114px');
         $('#videoboxes').css('width', '1110px');
-        $('#control_video').css('margin-left', '116.66px');
-        $('#control_effects').css('margin-left', '233.66px');
+        $('#videoboxes').css('margin-top', '100px');
+        $('#control_video').css('margin-left', '115px');
+        $('#control_effects').css('margin-left', '230px');
       } else if (this.usersCounter === 4) {
         $('.user').css('width', '350px');
         $('.user').css('height', '350px');
-        $('.video_options_buttons').css('width', '106.66px');
+        $('.videoWrapper').css('height', '290px');
+        $('.video_options_buttons').css('width', '114px');
         $('#videoboxes').css('width', '790px');
-        $('#control_video').css('margin-left', '116.66px');
-        $('#control_effects').css('margin-left', '233.66px');
+        $('#videoboxes').css('margin-top', '15px');
+        $('#control_video').css('margin-left', '115px');
+        $('#control_effects').css('margin-left', '230px');
       } else if (this.usersCounter >= 5) {
         $('.user').css('width', '350px');
         $('.user').css('height', '350px');
-        $('.video_options_buttons').css('width', '106.66px');
+        $('.videoWrapper').css('height', '290px');
+        $('.video_options_buttons').css('width', '114px');
         $('#videoboxes').css('width', '1110px');
-        $('#control_video').css('margin-left', '116.66px');
-        $('#control_effects').css('margin-left', '233.66px');
+        $('#videoboxes').css('margin-top', '40px');
+        $('#control_video').css('margin-left', '115px');
+        $('#control_effects').css('margin-left', '230px');
       }
+      else if(this.usersCounter === 0){
+      }
+      App.Controller.user.set('usersCounter', 0);
     });
   },
   onGetMediaSuccess: function(stream) {
