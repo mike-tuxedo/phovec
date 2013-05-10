@@ -12,8 +12,6 @@
       $('#faceDetectorOutput')[0].style.display = 'none';
       FaceDetector.init(localVideo[0], $('#faceDetectorOutput')[0]);
       
-      controller.showInvitationQRCode();
-      
       $('#videoboxes')[0].addEventListener('mouseup',controller.handleClickEvent,false); // video-recording
       
       $('#videoEffects').show();

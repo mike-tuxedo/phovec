@@ -196,7 +196,6 @@
             {{ partial 'auth' }}
           </div>
         </div>
-        <div id="qrcode_box"></div>
       </div>
       
       <div id="fb-root"></div>
@@ -304,23 +303,23 @@
     <script type="text/x-handlebars" data-template-name="_auth">
     {{#view App.AuthView}}
       {{# unless App.Controller.auth.fbLoggedIn }}
-      <a {{action "fbLogin" target="App.Controller.auth" }} class="socialButtons facebookButton inactive"></a>
+      <a class="socialButtons inactive" id="facebook_tab" {{action "facebookTab" target="App.Controller.auth" }}></a>
       {{/unless}}
 <!--
       {{# if App.Controller.auth.fbLoggedIn }}
-      <a {{action "fbLogout" target="App.Controller.auth"}} class="socialButtons facebookButton"></a> 
+      <a {{action "fbLogout" target="App.Controller.auth"}} class="socialButtons facebookTab"></a> 
       {{/if}}
 -->
       {{# unless App.Controller.auth.googleLoggedIn }}
-      <a {{action "googleLogin" target="App.Controller.auth"}} class="socialButtons googleButton inactive"></a>
+      <a class="socialButtons inactive" id="google_tab" {{action "googleTab" target="App.Controller.auth"}}></a>
       {{/unless}}
 <!--
       {{# if App.Controller.auth.googleLoggedIn }}
        <a {{action "googleLogout" target="App.Controller.auth"}} class="socialButtons googleButton"></a> 
       {{/if}}
       -->
-      <a class="socialButtons email_button inactive" {{action "toggleEmailForm" target="App.Controller.auth"}} ></a>
-      <a class="socialButtons qr_code tab_active" {{ action "showQrCode" target="view" }}></a>
+      <a class="socialButtons email_button inactive" id="email_tab"{{action "emailTab" target="view"}}></a>
+      <a class="socialButtons qr_code tab_active" id="qr_tab" {{ action "QrCodeTab" target="view" }}></a>
       
       <!-- mail form -->
       <form id="mail_form">
@@ -340,6 +339,7 @@
         </p>
       </div>
       <div id="friends">
+        <div id="qrcode_box"></div>
       </div>
     </script>
 
@@ -371,6 +371,7 @@
     <script src="assets/js/views/room.js"></script>
     <script src="assets/js/views/invitation.js"></script>
     <script src="assets/js/views/user.js"></script>
+    <script src="assets/js/views/auth.js"></script>
 
     <!-- models -->
     <script src="assets/js/models/user.js"></script>

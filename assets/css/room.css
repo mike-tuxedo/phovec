@@ -170,7 +170,7 @@ line-height: 1.5;
   background: #A0CAE2;
 }
 
-.facebookButton {
+#facebook_tab {
   display: block;
   background: #3b5998;
   background-image: url('../img/sidebar/facebook.png');
@@ -179,7 +179,7 @@ line-height: 1.5;
   background-repeat: no-repeat;
 }
 
-.googleButton {
+#google_tab {
   display: block;
   background: #db5149;
   background-image: url('../img/sidebar/google.png');
