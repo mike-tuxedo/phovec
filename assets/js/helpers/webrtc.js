@@ -11,6 +11,7 @@ var WebRTC = {
     window.addEventListener("signalingchannel:sdp", this.handleSignalingSdp);
     window.addEventListener("signalingchannel:ice", this.handleSignalingIce);
     window.addEventListener("signalingchannel:participant", this.handleSignalingParticipant);
+    window.addEventListener("signalingchannel:error", this.handleSignalingError);
     window.addEventListener("signalingchannel:close", this.handleSignalingKicked);
 
     Users.createLocalUser();
@@ -282,8 +283,9 @@ var WebRTC = {
   },
   handleSignalingParticipant: function(event) {
     trace("webrtc", "Handle Participant", event);
-
+    
     var data = event.detail;
+    
     switch (data.message) {
       case "join":
         var userLocal = Users.getLocalUser();
@@ -311,18 +313,29 @@ var WebRTC = {
         Users.removeRemoteUser(data.userId);
         break;
       case "audio:mute":
+        WebRTC.handleRecordingButtons(data.userId, 'audio', false);
         var userRemote = Users.getRemoteUser(data.userId);
         $('#' + userRemote.id + ' .stateMute').show();
         break;
       case "audio:unmute":
+        WebRTC.handleRecordingButtons(data.userId, 'audio', true);
         var userRemote = Users.getRemoteUser(data.userId);
         $('#' + userRemote.id + ' .stateMute').hide();
         break;
       case "video:mute":
+        WebRTC.handleRecordingButtons(data.userId, 'video', false);
         var userRemote = Users.getRemoteUser(data.userId);
         $('#' + userRemote.id + ' video').css('opacity', '0');
         break;
       case "video:unmute":
+        if(WebRTC.firstVideoUnmuteMessage){
+          WebRTC.firstVideoUnmuteMessage = false;
+          WebRTC.handleRecordingButtons(data.userId, 'video', true);
+          WebRTC.handleRecordingButtons(data.userId, 'audio', true);
+        }
+        else{
+          WebRTC.handleRecordingButtons(data.userId, 'video', true);
+        }
         var userRemote = Users.getRemoteUser(data.userId);
         $('#' + userRemote.id + ' video').css('opacity', '1');
         break;
@@ -330,6 +343,16 @@ var WebRTC = {
         trace("webrtc", "Undefined participant message", "-");
         break;
     }
+  },
+  handleSignalingError: function(event){
+    trace("webrtc", "Handle Error", event);
+
+    var data = event.detail;
+    
+    if(data.subject === 'mail:error'){
+      alert('Einladung-Mail zu ' + data.to + ' ist nicht angekommen.');
+    }
+    
   },
   handleSignalingKicked: function(event) {
     WebRTC.hangup();
@@ -340,7 +363,19 @@ var WebRTC = {
     Users.reset();
     this.initialized = false;
     trace("webrtc", "Reset", "-");
-  }
+  },
+  handleRecordingButtons: function(remoteId,type,show){
+    
+    type = type === 'video' ? '.recordRemoteVideo' : '.recordRemoteAudio';
+    
+    if(show){
+      $('#'+remoteId+' '+type).show();
+    }
+    else{
+      $('#'+remoteId+' '+type).hide();
+    }
+  },
+  firstVideoUnmuteMessage: true
 };
 
 var Users = {
@@ -371,7 +406,8 @@ var Users = {
     };
 
     Users.users.push(user);
-
+    console.log('Pushed USER: ' + this.users.length);
+      
     setTimeout(function() {
       var removeParticipantHTML = "";
       if (Users.getLocalUser().admin === true) {
@@ -420,6 +456,17 @@ var Users = {
 
     console.log("Unknown remote user id: " + id);
     return null;
+  },
+  getRemoteUsers: function(){
+    var remoteUsers = [];
+    
+    for (var i = 0; i < Users.users.length; i++) {
+      if (Users.users[i].type === "remote") {
+        remoteUsers.push(Users.users[i]);
+      }
+    }
+    
+    return remoteUsers;
   },
   removeLocalUser: function() {
     for (var i = 0; i < Users.users.length; i++) {

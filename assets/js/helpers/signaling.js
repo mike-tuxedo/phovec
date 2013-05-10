@@ -143,14 +143,13 @@
               }
             }));
             break;
-          case "participant:photo":
-            console.log('photo hiu: ',data);
-            window.dispatchEvent(new CustomEvent("signalingchannel:participant", {
+          case "mail:error":
+            window.dispatchEvent(new CustomEvent("signalingchannel:error", {
               detail: {
-                message: "photo",
+                message: "mail:error",
                 roomHash: data.roomHash,
                 userId: data.userHash,
-                photoData: data.photoData
+                to: data.to
               }
             }));
             break;

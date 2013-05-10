@@ -171,12 +171,12 @@
           <div id="video_options">
             <div class="video_options_buttons" id="control_audio" {{ action controlAudio target="view" }}>on/off Audio</div>
             <div class="video_options_buttons" id="control_video" {{ action controlVideo target="view" }}>on/off Video</div>
-            <div class="video_options_buttons" id="control_effects" {{ action controlEffects target="view" }}>show/on/off Effects</div>
+            <div class="video_options_buttons" id="control_effects" {{ action controlEffects target="view" }}>Effects</div>
           </div>
           {{/view}}
 
           <div id="videoEffects" {{ action hideEffects target="view" }}>
-            <input type="button" id="snapshotButton" {{action "takeScreenShotFromChatroom" }} value="Take Snapshot"/>
+            <input type="button" id="snapshotButton" class="effectButton" {{action "takeScreenShotFromChatroom" }} value="Snapshot"/>
             <input type="button" {{action "putClassesOnUser" }} class="effectButton" value="classes" />
             <input type="button" {{action "putHairOnUser" }} class="effectButton" value="hair" />
             <input type="button" {{action "putBeardOnUser" }} class="effectButton" value="beard"/>

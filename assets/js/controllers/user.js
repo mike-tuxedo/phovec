@@ -1,45 +1,56 @@
 App.UserController = Ember.ObjectController.extend({
   init: function() {
     this.addObserver('usersCounter', function() {
+      console.log('SET videosize');
       if (this.usersCounter === 1) {
         $('.user').css('width', '600px');
         $('.user').css('height', '527px');
         $('.videoWrapper').css('height', '448px');
-        $('.video_options_buttons').css('width', '190px');
+        $('.video_options_buttons').css('width', '194px');
         $('#videoboxes').css('width', '600px');
-        $('#control_video').css('margin-left', '200px');
+        $('#videoboxes').css('margin-top', '40px');
+        $('#control_video').css('margin-left', '198px');
         $('#control_effects').css('margin-left', '400px');
       } else if (this.usersCounter === 2) {
         $('.user').css('width', '450px');
         $('.user').css('height', '390px');
         $('.videoWrapper').css('height', '340px');
-        $('.video_options_buttons').css('width', '140px');
+        $('.video_options_buttons').css('width', '146px');
         $('#videoboxes').css('width', '940px');
-        $('#control_video').css('margin-left', '150px');
-        $('#control_effects').css('margin-left', '300px');
+        $('#videoboxes').css('margin-top', '100px');
+        $('#control_video').css('margin-left', '146px');
+        $('#control_effects').css('margin-left', '298px');
       } else if (this.usersCounter === 3) {
         $('.user').css('width', '350px');
         $('.user').css('height', '350px');
         $('.videoWrapper').css('height', '290px');
-        $('.video_options_buttons').css('width', '106.66px');
+        $('.video_options_buttons').css('width', '114px');
         $('#videoboxes').css('width', '1110px');
-        $('#control_video').css('margin-left', '116.66px');
-        $('#control_effects').css('margin-left', '233.66px');
+        $('#videoboxes').css('margin-top', '100px');
+        $('#control_video').css('margin-left', '115px');
+        $('#control_effects').css('margin-left', '230px');
       } else if (this.usersCounter === 4) {
         $('.user').css('width', '350px');
         $('.user').css('height', '350px');
-        $('.video_options_buttons').css('width', '106.66px');
+        $('.videoWrapper').css('height', '290px');
+        $('.video_options_buttons').css('width', '114px');
         $('#videoboxes').css('width', '790px');
-        $('#control_video').css('margin-left', '116.66px');
-        $('#control_effects').css('margin-left', '233.66px');
+        $('#videoboxes').css('margin-top', '15px');
+        $('#control_video').css('margin-left', '115px');
+        $('#control_effects').css('margin-left', '230px');
       } else if (this.usersCounter >= 5) {
         $('.user').css('width', '350px');
         $('.user').css('height', '350px');
-        $('.video_options_buttons').css('width', '106.66px');
+        $('.videoWrapper').css('height', '290px');
+        $('.video_options_buttons').css('width', '114px');
         $('#videoboxes').css('width', '1110px');
-        $('#control_video').css('margin-left', '116.66px');
-        $('#control_effects').css('margin-left', '233.66px');
+        $('#videoboxes').css('margin-top', '40px');
+        $('#control_video').css('margin-left', '115px');
+        $('#control_effects').css('margin-left', '230px');
       }
+      else if(this.usersCounter === 0){
+      }
+      App.Controller.user.set('usersCounter', 0);
     });
   },
   onGetMediaSuccess: function(stream) {
@@ -50,7 +61,13 @@ App.UserController = Ember.ObjectController.extend({
 
     if (this.mediaOptions.video === false) {
       stream.getVideoTracks()[0].enabled = false;
+      $('.recordLocalAudio').show();
+      
       $('.local video').css('opacity', '0');
+    }
+    else{
+      $('.recordLocalVideo').show();
+      $('.recordLocalAudio').show();
     }
 
     if ( typeof webkitURL !== "undefined") {
@@ -62,6 +79,14 @@ App.UserController = Ember.ObjectController.extend({
     }
 
     document.getElementById('videoboxes').getElementsByTagName('div')[0].getElementsByTagName('video')[0].play();
+    
+    var user = Users.getLocalUser();
+      
+    SignalingChannel.send({
+      subject: "participant:video:unmute",
+      roomHash: user.roomHash,
+      userHash: user.id
+    });
   },
   onGetMediaError: function(error) {
     console.log("LocalMedia: ERROR");
@@ -77,7 +102,7 @@ App.UserController = Ember.ObjectController.extend({
      alert('Zurück auf die Startseite ...');
      }*/
   },
-  startGetMedia: function(options) {
+  startGetMedia: function() {
     //request audio and video from your own hardware
     navigator.getMedia({
       audio: true,
@@ -99,10 +124,7 @@ App.UserController = Ember.ObjectController.extend({
       //show here maybe advice img?
       //how to allow the media request
       this.mediaOptions.audio = true;
-      this.startGetMedia({
-        audio: true,
-        video: false
-      });
+      this.startGetMedia();
       return;
     }
 
@@ -116,6 +138,9 @@ App.UserController = Ember.ObjectController.extend({
         roomHash: user.roomHash,
         userHash: user.id
       });
+      
+      $('.recordLocalAudio').show();
+      
     } else {
       audioStream.enabled = false;
       $('.local .stateMute').show();
@@ -125,6 +150,8 @@ App.UserController = Ember.ObjectController.extend({
         roomHash: user.roomHash,
         userHash: user.id
       });
+      
+      $('.recordLocalAudio').hide();
     }
   },
   controlVideo: function() {
@@ -138,10 +165,7 @@ App.UserController = Ember.ObjectController.extend({
       //how to allow the media request
       this.mediaOptions.video = true;
       this.mediaOptions.audio = true;
-      this.startGetMedia({
-        audio: true,
-        video: true
-      });
+      this.startGetMedia();
       
       // inform recorder the local stream can now be used
       window.dispatchEvent(new CustomEvent("videostream:available"));
@@ -149,6 +173,7 @@ App.UserController = Ember.ObjectController.extend({
     }
 
     var videoStream = user.stream.getVideoTracks()[0];
+    
     if (videoStream.enabled === false) {
       videoStream.enabled = true;
       $('.local video').css('opacity', '1');
@@ -158,6 +183,10 @@ App.UserController = Ember.ObjectController.extend({
         roomHash: user.roomHash,
         userHash: user.id
       });
+      
+      $('.recordLocalVideo').show();
+      $('#faceDetectorOutput').show();
+      
     } else {
       videoStream.enabled = false;
       $('.local video').css('opacity', '0');
@@ -167,6 +196,9 @@ App.UserController = Ember.ObjectController.extend({
         roomHash: user.roomHash,
         userHash: user.id
       });
+      
+      $('.recordLocalVideo').hide();
+      $('#faceDetectorOutput').hide();
     }
   },
   removeParticipant: function(remoteUserId) {
