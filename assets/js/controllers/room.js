@@ -225,6 +225,7 @@
     
     var alteredURL = location.href;
     alteredURL = alteredURL.replace('#','%23');
+    $('#userInfo').html('');
     qr.text("qrcode_box", 'Raum-Adresse zur Einladung:\n' + alteredURL);
   
   },

@@ -104,7 +104,7 @@
         
         });
         
-        document.getElementById('friends').appendChild(friendList);
+        document.getElementById('friends_of_facebook').appendChild(friendList);
 
       });
 
@@ -270,7 +270,7 @@
               
             });
 
-            document.getElementById('friends').appendChild(friendList);
+            document.getElementById('friends_of_google').appendChild(friendList);
             
           });
           
@@ -334,18 +334,6 @@
       return "";
     else
       return results[1];
-  },
-  
-  // email-form
-  
-  toggleEmailForm: function(){
-    $('.email_button').click(
-      function(){
-        $('#mail_form').click();
-      }
-    );
-    
-    $('#mail_form').toggle();
   },
   addMailInfo : function(){
     

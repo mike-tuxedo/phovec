@@ -303,7 +303,7 @@
     <script type="text/x-handlebars" data-template-name="_auth">
     {{#view App.AuthView}}
       {{# unless App.Controller.auth.fbLoggedIn }}
-      <a class="socialButtons inactive" id="facebook_tab" {{action "facebookTab" target="App.Controller.auth" }}></a>
+      <a class="socialButtons tab_inactive" id="facebook_tab" {{action "facebookTab" target="view" }}></a>
       {{/unless}}
 <!--
       {{# if App.Controller.auth.fbLoggedIn }}
@@ -311,22 +311,16 @@
       {{/if}}
 -->
       {{# unless App.Controller.auth.googleLoggedIn }}
-      <a class="socialButtons inactive" id="google_tab" {{action "googleTab" target="App.Controller.auth"}}></a>
+      <a class="socialButtons tab_inactive" id="google_tab" {{action "googleTab" target="view"}}></a>
       {{/unless}}
 <!--
       {{# if App.Controller.auth.googleLoggedIn }}
        <a {{action "googleLogout" target="App.Controller.auth"}} class="socialButtons googleButton"></a> 
       {{/if}}
       -->
-      <a class="socialButtons email_button inactive" id="email_tab"{{action "emailTab" target="view"}}></a>
-      <a class="socialButtons qr_code tab_active" id="qr_tab" {{ action "QrCodeTab" target="view" }}></a>
-      
-      <!-- mail form -->
-      <form id="mail_form">
-        <input type="text" id="mailAddress" placeholder="E-Mail Addresse"/>
-        <input type="text" id="mailDescription" placeholder="E-Mail Beschreibung"/>
-        <input type="button" id="mailFormButton" value="Sende E-Mail" {{action "addMailInfo" target="App.Controller.auth"}} />
-      </form>
+      <a class="socialButtons tab_inactive" id="email_tab"{{action "emailTab" target="view"}}></a>
+      <a class="socialButtons tab_inactive" id="qr_tab" {{ action "QrCodeTab" target="view" }}></a>
+
     {{/view}}
       <!-- user-login data -->
       <div id="userInfo">
@@ -338,8 +332,16 @@
             Du bist bei keinem dieser Netzwerke? KEIN PROBLEM, schicke einfach eine gute alte <strong>eMail</strong> ;)
         </p>
       </div>
-      <div id="friends">
-        <div id="qrcode_box"></div>
+      <div id="qrcode_box"></div>
+      <div id="friends_of_facebook"></div>
+      <div id="friends_of_google"></div>
+      <div id="friends_of_email">
+        <!-- mail form -->
+        <form id="mail_form">
+          <input type="text" id="mailAddress" placeholder="E-Mail Addresse"/>
+          <input type="text" id="mailDescription" placeholder="E-Mail Beschreibung"/>
+          <input type="button" id="mailFormButton" value="Sende E-Mail" {{action "addMailInfo" target="App.Controller.auth"}} />
+        </form>
       </div>
     </script>
 
