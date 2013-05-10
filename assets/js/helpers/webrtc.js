@@ -411,7 +411,8 @@ var Users = {
     };
 
     Users.users.push(user);
-
+    console.log('Pushed USER: ' + this.users.length);
+      
     setTimeout(function() {
       var removeParticipant = "";
       if (Users.getLocalUser().admin === true) {
