@@ -38,31 +38,21 @@ var WebRTC = {
       var user = Users.getRemoteUser(remoteUserId);
       user.stream = event.stream;
 
-      user.stream.getVideoTracks()[0].onmute = function() {
-        console.log("mute other");
-        $('#' + user.id + ' video').css('opacity', '0');
-      };
-      user.stream.getVideoTracks()[0].onunmute = function() {
-        console.log("unmute other");
-        $('#' + user.id + ' video').css('opacity', '1');
-      };
-      user.stream.getAudioTracks()[0].onmute = function() {
-        console.log("audio mute other");
-        trace("webrtc", 'DISABLED Audio', '-');
-      };
-      user.stream.getAudioTracks()[0].onunmute = function() {
-        console.log("audio unmute other");
-        trace("webrtc", 'ENABLED Audio', '-');
-      };
+      if (user.stream.getVideoTracks()[0].enabled === false) {
+        $('#' + remoteUserId + ' video').css('opacity', '1');
+      }
+      if (user.stream.getAudioTracks()[0].enabled === false) {
+        $('#' + remoteUserId + ' .stateMute').show();
+      }
 
       $('#' + remoteUserId + ' video').attr('src', URL.createObjectURL(event.stream));
       if (navigator.browser[0] === "Firefox") {
         $('#' + remoteUserId + ' video').get(0).play();
       }
-      
+
       WebRTC.handleRecordingButtons(remoteUserId, 'video', true);
       WebRTC.handleRecordingButtons(remoteUserId, 'audio', true);
-      
+
       trace("webrtc", "Remote Stream arrived", event);
     };
     peerConnection.onremovestream = function(event) {
@@ -103,7 +93,19 @@ var WebRTC = {
           $('#' + remoteUserId + ' form textarea').append(output);
           break;
         case "file":
-          
+          console.log("receive onload", data.content);
+          var fileUrl = data.content;
+
+          var save = document.createElement('a');
+          save.href = fileUrl;
+          save.target = '_blank';
+          save.download = "File" || fileUrl;
+
+          var event = document.createEvent('Event');
+          event.initEvent('click', true, true);
+
+          save.dispatchEvent(event);
+          (window.URL || window.webkitURL).revokeObjectURL(save.href);
           break;
         default:
           trace("webrtc", "unknown data channel subject", "-")
@@ -125,19 +127,44 @@ var WebRTC = {
         event.preventDefault();
 
         var reader = new FileReader();
-        reader.onload = function(event) {
-          var data = {
-            "subject": "file",
-            "content": ""
-          };
-          data.content = event.target.result;
-          console.log(data.content);
-          Users.getRemoteUser(remoteUserId).dataChannel.send(JSON.stringify(data));
-        };
-
         var files = event.dataTransfer.files;
+        var frameLength = 128;
+        //Max. amount of bytes to send via DataChannel
+
         for (var i = 0; i < files.length; i++) {
-          reader.readAsText(files[i]);
+          var type = files[i].type;
+          var size = files[i].size;
+          var name = files[i].name;
+
+          reader.onload = function(event) {
+            var dataURL = event.target.result;
+            var data = {
+              "subject": "file",
+              "content": undefined,
+              "name": name,
+              "size": event.total,
+              "type": type,
+              "timestamp": event.timestamp,
+              "lastFrame": false
+            };
+
+            while (true) {
+              if (dataURL.length < frameLength) {
+                data.content = dataURL;
+                data.lastFrame = true;
+                break;
+              } else {
+                data.content = dataURL.slice(0, frameLength);
+                dataURL = dataURL.slice(data.content.length);
+              }
+
+              Users.getRemoteUser(remoteUserId).dataChannel.send(JSON.stringify(data));
+            }
+
+            trace("webrtc", "SEND File", "-");
+          };
+
+          reader.readAsDataURL(files[i]);
         }
       }, false);
 
