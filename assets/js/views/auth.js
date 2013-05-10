@@ -8,6 +8,7 @@ App.AuthView = Ember.View.extend({
     //change content of sidebar
     //$('#userInfo').html('');
     $('#qrcode_box').show();
+    $('#userInfo').hide();
     $('#mail_form').hide();
     $('#friends_of_google').hide();
     $('#friends_of_facebook').hide();
@@ -20,6 +21,7 @@ App.AuthView = Ember.View.extend({
     $('#google_tab').removeClass('tab_active').addClass('tab_inactive');
     
     $('#qrcode_box').hide();
+    $('#userInfo').hide();
     $('#mail_form').show();
     $('#friends_of_google').hide();
     $('#friends_of_facebook').hide();
@@ -31,6 +33,7 @@ App.AuthView = Ember.View.extend({
     $('#qr_tab').removeClass('tab_active').addClass('tab_inactive');
     
     $('#qrcode_box').hide();
+    $('#userInfo').hide();
     $('#mail_form').hide();
     $('#friends_of_google').show();
     $('#friends_of_facebook').hide();
@@ -43,6 +46,7 @@ App.AuthView = Ember.View.extend({
     $('#google_tab').removeClass('tab_active').addClass('tab_inactive');
     
     $('#qrcode_box').hide();
+    $('#userInfo').hide();
     $('#mail_form').hide();
     $('#friends_of_google').hide();
     $('#friends_of_facebook').show();

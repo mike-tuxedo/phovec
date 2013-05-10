@@ -99,7 +99,7 @@
   background-image: url('../img/sidebar-arrow.png');
   background-repeat: no-repeat;
   background-size: 100% 100%;
-  border: 10px solid #e0dfeb;
+  border: 10px solid #303743;
   border-top-left-radius: 70px;
   border-bottom-left-radius: 70px;
   border-bottom-right-radius: 70px;
@@ -131,13 +131,15 @@
   width: 75px;
   height: 25px;
   float: left;
-  border-top-left-radius: 5px;
-  border-top-right-radius: 5px;
   overflow: hidden;
 }
 
 .socialButtons:hover {
   opacity: 0.8;
+}
+
+.sidebar_content{
+  margin-top: 50px;
 }
 
 #userInfo{
@@ -170,6 +172,23 @@ line-height: 1.5;
 
 #friends li:hover {
   background: #A0CAE2;
+}
+
+.email_input{
+  margin-left: 10%;
+  margin-bottom: 5px;
+  width: 80%;
+  border: 2px solid #66666B;
+}
+
+#mailDescription{
+  height: 100px;
+}
+
+#mailFormButton{
+  margin-left: 10%;
+  margin-bottom: 5px;
+  width: 80%;
 }
 
 #facebook_tab {
