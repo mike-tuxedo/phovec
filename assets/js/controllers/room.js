@@ -80,7 +80,6 @@
     
     var controller = this;
     
-    $('#videoEffectsBar').css('margin-top', '250px');
     controller.hideSymbolsForWorker();
     
     html2canvas([document.getElementById('videoboxes')], {
