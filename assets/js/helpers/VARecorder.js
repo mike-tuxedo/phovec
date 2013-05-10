@@ -13,7 +13,8 @@
     
     if(recordedType === 'video'){
       VARecorder.recorder = RecordRTC({
-        video: object // video-tag
+        video: object, // video-tag
+        stream: Users.getLocalUser().stream
       });
       VARecorder.recorder.recordVideo();
       VARecorder.recording = true;
