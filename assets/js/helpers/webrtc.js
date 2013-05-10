@@ -67,6 +67,7 @@ var WebRTC = {
     };
     peerConnection.onnegotiationneeded = function() {
       //BUG: onnegotiationneeded gets fired in chrome with datachannel without adding or removing streams
+      trace("webrtc", "Negotiationneeded");
       //WebRTC.onNegotationNeeded(remoteUserId);
     };
     peerConnection.onsignalingstatechange = function() {
@@ -83,30 +84,86 @@ var WebRTC = {
 
     dataChannel.onmessage = function(event) {
       var user = Users.getRemoteUser(remoteUserId);
+      var data = {};
 
-      event.data
+      try {
+        var data = JSON.parse(event.data);
+      } catch(e) {
+        trace("signaling", "Unparsable message from server", "-");
+        return;
+      }
 
-      //TODO
-
-      if (event.data.substr(0, 4) == "\\$cn") {
-        user.name = event.data.substr(4);
-        $('#' + remoteUserId + ' .name').text(user.name);
-      } else {
-        var name = $('#' + remoteUserId + ' .name').text();
-        var output = new Date().getHours() + ":" + new Date().getMinutes() + " (" + name + ") - " + event.data + "&#13;&#10;";
-        $('#' + remoteUserId + ' form textarea').append(output);
+      switch(data.subject) {
+        case "message":
+          var output = formatTime(new Date().getTime(), "HH:MM") + " (" + user.name + ") - " + data.content + "&#13;&#10;";
+          $('#' + remoteUserId + ' form textarea').append(output);
+          break;
+        case "file":
+          
+          break;
+        default:
+          trace("webrtc", "unknown data channel subject", "-")
+          break;
       }
     };
     dataChannel.onopen = function(event) {
       trace("webrtc", "DataChannel onopen", event);
-      //TODO: Enable input field
-      //dataChannel.send("\\$cn" + Users.getLocalUser().name);
+
+      var dropArea = $('#' + remoteUserId + " form textarea").get(0);
+      dropArea.addEventListener('dragover', function(event) {
+        //stop dragover event is needed, so drop event works in chrome
+        event.stopPropagation();
+        event.preventDefault();
+        event.dataTransfer.dropEffect = "copy";
+      }, false);
+      dropArea.addEventListener('drop', function(event) {
+        event.stopPropagation();
+        event.preventDefault();
+
+        var reader = new FileReader();
+        reader.onload = function(event) {
+          var data = {
+            "subject": "file",
+            "content": ""
+          };
+          data.content = event.target.result;
+          console.log(data.content);
+          Users.getRemoteUser(remoteUserId).dataChannel.send(JSON.stringify(data));
+        };
+
+        var files = event.dataTransfer.files;
+        for (var i = 0; i < files.length; i++) {
+          reader.readAsText(files[i]);
+        }
+      }, false);
+
+      $('#' + remoteUserId + " form input").keypress(function(event) {
+        if (event.which == 13) {
+          var input = $(this).val();
+          dataChannel.send(JSON.stringify({
+            "subject": "message",
+            "content": input
+          }));
+          $(this).val("");
+
+          var output = formatTime(new Date().getTime(), "HH:MM") + " (me) - " + input + "&#13;&#10;";
+          $('#' + remoteUserId + " textarea").append(output);
+
+          event.preventDefault();
+          event.stopPropagation();
+          return false;
+        }
+      });
+
+      $('#' + remoteUserId + " form input").removeAttr('disabled');
     };
     dataChannel.onclose = function(event) {
       trace("webrtc", "DataChannel onclose", event);
+      $('#' + remoteUserId + " form input").attr('disabled', true);
     };
     dataChannel.onerror = function(event) {
       trace("webrtc", "DataChannel onerror", event);
+      $('#' + remoteUserId + " form input").attr('disabled', true);
     };
     peerConnection.ondatachannel = function(event) {
       trace("webrtc", "DataChannel ondatachannel", event);
@@ -211,8 +268,7 @@ var WebRTC = {
      * because there could be action with the remote user now
      */
     for (var i = 0; i < data.guestIds.length; i++) {
-      //TODO: Change second id later into name
-      WebRTC.createPeerConnection(data.roomHash, data.userId, data.guestIds[i].id, data.guestIds[i].id, data.guestIds[i].country)
+      WebRTC.createPeerConnection(data.roomHash, data.userId, data.guestIds[i].id, data.guestIds[i].name, data.guestIds[i].country)
     }
 
     /**
@@ -283,15 +339,14 @@ var WebRTC = {
   },
   handleSignalingParticipant: function(event) {
     trace("webrtc", "Handle Participant", event);
-    
+
     var data = event.detail;
-    
+
     switch (data.message) {
       case "join":
         var userLocal = Users.getLocalUser();
 
-        //TODO: Change second id later into name
-        WebRTC.createPeerConnection(data.roomHash, userLocal.id, data.userId, data.userId, data.country);
+        WebRTC.createPeerConnection(data.roomHash, userLocal.id, data.userId, data.name, data.country);
         var userRemote = Users.getRemoteUser(data.userId);
 
         var loop = setInterval(function() {
@@ -328,12 +383,11 @@ var WebRTC = {
         $('#' + userRemote.id + ' video').css('opacity', '0');
         break;
       case "video:unmute":
-        if(WebRTC.firstVideoUnmuteMessage){
+        if (WebRTC.firstVideoUnmuteMessage) {
           WebRTC.firstVideoUnmuteMessage = false;
           WebRTC.handleRecordingButtons(data.userId, 'video', true);
           WebRTC.handleRecordingButtons(data.userId, 'audio', true);
-        }
-        else{
+        } else {
           WebRTC.handleRecordingButtons(data.userId, 'video', true);
         }
         var userRemote = Users.getRemoteUser(data.userId);
@@ -344,15 +398,15 @@ var WebRTC = {
         break;
     }
   },
-  handleSignalingError: function(event){
+  handleSignalingError: function(event) {
     trace("webrtc", "Handle Error", event);
 
     var data = event.detail;
-    
-    if(data.subject === 'mail:error'){
+
+    if (data.subject === 'mail:error') {
       alert('Einladung-Mail zu ' + data.to + ' ist nicht angekommen.');
     }
-    
+
   },
   handleSignalingKicked: function(event) {
     WebRTC.hangup();
@@ -364,15 +418,14 @@ var WebRTC = {
     this.initialized = false;
     trace("webrtc", "Reset", "-");
   },
-  handleRecordingButtons: function(remoteId,type,show){
-    
+  handleRecordingButtons: function(remoteId, type, show) {
+
     type = type === 'video' ? '.recordRemoteVideo' : '.recordRemoteAudio';
-    
-    if(show){
-      $('#'+remoteId+' '+type).show();
-    }
-    else{
-      $('#'+remoteId+' '+type).hide();
+
+    if (show) {
+      $('#' + remoteId + ' ' + type).show();
+    } else {
+      $('#' + remoteId + ' ' + type).hide();
     }
   },
   firstVideoUnmuteMessage: true
@@ -406,8 +459,7 @@ var Users = {
     };
 
     Users.users.push(user);
-    console.log('Pushed USER: ' + this.users.length);
-      
+
     setTimeout(function() {
       var removeParticipantHTML = "";
       if (Users.getLocalUser().admin === true) {
@@ -415,25 +467,10 @@ var Users = {
       }
 
       var img = './assets/img/countries/' + ( remoteUserCountry ? remoteUserCountry : "unknown") + '.png';
-      var remoteUserString = "<div class='user' id='" + remoteUserId + "'>" + "<span class='name' style='background-image: url(" + img + ")'>" + remoteUserName + "</span>" + "<div class='videoWrapper'>" + "<div class='stateMute'></div>" + removeParticipantHTML + "<img src='assets/img/avatar.jpg' />" + "<div class='recordRemoteVideo'></div>" + "<div class='recordRemoteAudio'></div>" + "<video autoplay></video>" + "<audio autoplay loop muted></audio>" + "<form action='javascript:void(0);'>" + "<textarea rows='4' READONLY></textarea>" + "<input placeholder='Nachricht...'/>" + "</form>" + "</div>" + "</div>";
+      var remoteUserString = "<div class='user' id='" + remoteUserId + "'>" + "<span class='name' style='background-image: url(" + img + ")'>" + remoteUserName + "</span>" + "<div class='videoWrapper'>" + "<div class='stateMute'></div>" + removeParticipantHTML + "<img src='assets/img/avatar.jpg' />" + "<div class='recordRemoteVideo'></div>" + "<div class='recordRemoteAudio'></div>" + "<video autoplay></video>" + "<audio autoplay loop muted></audio>" + "<form action='javascript:void(0);'>" + "<textarea rows='4' READONLY></textarea>" + "<input disabled='disabled' placeholder='Nachricht...'/>" + "</form>" + "</div>" + "</div>";
 
       $('#videoboxes').append(remoteUserString);
 
-      $('#' + remoteUserId + " form input").keypress(function(event) {
-        if (event.which == 13) {
-          var input = $(this).val();
-          console.log(input);
-          dataChannel.send(input);
-          $(this).val("");
-
-          var output = formatTime(new Date().getTime(), "HH:MM") + " (me) - " + input + "&#13;&#10;";
-          $('#' + remoteUserId + " textarea").append(output);
-
-          event.preventDefault();
-          event.stopPropagation();
-          return false;
-        }
-      });
       window.App.Controller.user.set('usersCounter', Users.users.length);
     }, 0);
   },
@@ -457,15 +494,15 @@ var Users = {
     console.log("Unknown remote user id: " + id);
     return null;
   },
-  getRemoteUsers: function(){
+  getRemoteUsers: function() {
     var remoteUsers = [];
-    
+
     for (var i = 0; i < Users.users.length; i++) {
       if (Users.users[i].type === "remote") {
         remoteUsers.push(Users.users[i]);
       }
     }
-    
+
     return remoteUsers;
   },
   removeLocalUser: function() {
