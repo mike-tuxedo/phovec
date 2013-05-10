@@ -59,6 +59,10 @@ var WebRTC = {
       if (navigator.browser[0] === "Firefox") {
         $('#' + remoteUserId + ' video').get(0).play();
       }
+      
+      WebRTC.handleRecordingButtons(remoteUserId, 'video', true);
+      WebRTC.handleRecordingButtons(remoteUserId, 'audio', true);
+      
       trace("webrtc", "Remote Stream arrived", event);
     };
     peerConnection.onremovestream = function(event) {
