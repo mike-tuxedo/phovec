@@ -15,7 +15,7 @@ var WebRTC = {
 
     Users.createLocalUser();
   },
-  createPeerConnection: function(roomHash, userId, remoteUserId, remoteUserCountry) {
+  createPeerConnection: function(roomHash, userId, remoteUserId, remoteUserName, remoteUserCountry) {
     /**
      * Create PeerConnection
      */
@@ -65,7 +65,8 @@ var WebRTC = {
       $('#' + remoteUserId + ' video').attr('src', '');
     };
     peerConnection.onnegotiationneeded = function() {
-      WebRTC.onNegotationNeeded(remoteUserId);
+      //BUG: onnegotiationneeded gets fired in chrome with datachannel without adding or removing streams
+      //WebRTC.onNegotationNeeded(remoteUserId);
     };
     peerConnection.onsignalingstatechange = function() {
       WebRTCDebugger.update();
@@ -77,38 +78,40 @@ var WebRTC = {
     /**
      * Create DataChannel
      */
-    /*var dataChannel = peerConnection.createDataChannel('RTCDataChannel', DATACHANNEL_OPTIONS);
+    var dataChannel = peerConnection.createDataChannel('RTCDataChannel', DATACHANNEL_OPTIONS);
 
-     if (navigator.browser[0] === "Firefox") {
-     dataChannel.binaryType = 'blob';
-     }
+    dataChannel.onmessage = function(event) {
+      var user = Users.getRemoteUser(remoteUserId);
 
-     dataChannel.onmessage = function(event) {
-     var user = Users.getRemoteUser(remoteUserId);
-     if (event.data.substr(0, 4) == "\\$cn") {
-     user.name = event.data.substr(4);
-     $('#' + remoteUserId + ' .name').text(user.name);
-     } else {
-     var name = $('#' + remoteUserId + ' .name').text();
-     var output = new Date().getHours() + ":" + new Date().getMinutes() + " (" + name + ") - " + event.data + "&#13;&#10;";
-     $('#' + remoteUserId + ' form textarea').append(output);
-     }
-     };
-     dataChannel.onopen = function(event) {
-     trace("webrtc", "DataChannel onopen", event);
-     dataChannel.send("\\$cn" + Users.getLocalUser().name);
-     };
-     dataChannel.onclose = function(event) {
-     trace("webrtc", "DataChannel onclose", event);
-     };
-     dataChannel.onerror = function(event) {
-     trace("webrtc", "DataChannel onerror", event);
-     };
-     peerConnection.ondatachannel = function(event) {
-     trace("webrtc", "DataChannel ondatachannel", event);
-     };*/
+      event.data
 
-    Users.createRemoteUser(roomHash, remoteUserId, remoteUserCountry, peerConnection, undefined);
+      //TODO
+
+      if (event.data.substr(0, 4) == "\\$cn") {
+        user.name = event.data.substr(4);
+        $('#' + remoteUserId + ' .name').text(user.name);
+      } else {
+        var name = $('#' + remoteUserId + ' .name').text();
+        var output = new Date().getHours() + ":" + new Date().getMinutes() + " (" + name + ") - " + event.data + "&#13;&#10;";
+        $('#' + remoteUserId + ' form textarea').append(output);
+      }
+    };
+    dataChannel.onopen = function(event) {
+      trace("webrtc", "DataChannel onopen", event);
+      //TODO: Enable input field
+      //dataChannel.send("\\$cn" + Users.getLocalUser().name);
+    };
+    dataChannel.onclose = function(event) {
+      trace("webrtc", "DataChannel onclose", event);
+    };
+    dataChannel.onerror = function(event) {
+      trace("webrtc", "DataChannel onerror", event);
+    };
+    peerConnection.ondatachannel = function(event) {
+      trace("webrtc", "DataChannel ondatachannel", event);
+    };
+
+    Users.createRemoteUser(roomHash, remoteUserId, remoteUserName, remoteUserCountry, peerConnection, dataChannel);
   },
   modifyDescription: function(description) {
     var sdp = description.sdp;
@@ -207,7 +210,8 @@ var WebRTC = {
      * because there could be action with the remote user now
      */
     for (var i = 0; i < data.guestIds.length; i++) {
-      WebRTC.createPeerConnection(data.roomHash, data.userId, data.guestIds[i].id, data.guestIds[i].country)
+      //TODO: Change second id later into name
+      WebRTC.createPeerConnection(data.roomHash, data.userId, data.guestIds[i].id, data.guestIds[i].id, data.guestIds[i].country)
     }
 
     /**
@@ -216,23 +220,18 @@ var WebRTC = {
     var user = Users.getLocalUser();
     user.roomHash = data.roomHash;
     user.id = data.userId;
+    user.country = data.country;
     if (data.guestIds.length <= 0) {
       user.admin = true;
     }
 
-    // Use setTimeout to get an asynchronous answer and don't stop the script
-    setTimeout(function(user) {
-      var user = Users.getLocalUser();
-      var localName = "Test";
-      //prompt("Nickname:", "Bitte Namen wählen...");
-      user.name = localName;
-    
-      //var countryImg = '<img id="local_country" class="countryLocation" src=\'./assets/img/countries/'+(data.country ? data.country : "unknown")+'.png\'/>';
-      //$('#local_name').html(localName+countryImg);
-      var img = (data.country ? data.country : "unknown") + '.png';
+    //BUG FIX EMBER JS take a while to render room layout
+    setTimeout(function() {
+      var img = (user.country ? user.country : "unknown") + '.png';
+      $('#local_name').text(user.name);
       $('#local_name').css('background-image', 'url(assets/img/countries/' + img + ')');
       $('#videoboxes #local').attr("id", data.userId);
-    }, 500);
+    }, 0);
   },
   handleSignalingSdp: function(event) {
     trace("webrtc", "Handle SDP", event);
@@ -257,10 +256,9 @@ var WebRTC = {
             userRemote.peerConnection.addStream(userLocal.stream);
             trace("webrtc", "Added local stream to peerConnection", userLocal.stream);
 
-            //Bugfix because addStream doesn't fire onnegotiationneeded in firefox nightly 23.01a
-            if (navigator.browser[0] === "Firefox") {
-              WebRTC.onNegotationNeeded(data.userId);
-            }
+            //Bugfix because addStream doesn't fire onnegotiationneeded in firefox nightly 23.01a and
+            //onnegotiationneeded gets fired in chrome with datachannel without adding or removing streams
+            WebRTC.onNegotationNeeded(data.userId);
           }
         }, 500);
       }
@@ -290,7 +288,8 @@ var WebRTC = {
       case "join":
         var userLocal = Users.getLocalUser();
 
-        WebRTC.createPeerConnection(data.roomHash, userLocal.id, data.userId, data.country);
+        //TODO: Change second id later into name
+        WebRTC.createPeerConnection(data.roomHash, userLocal.id, data.userId, data.userId, data.country);
         var userRemote = Users.getRemoteUser(data.userId);
 
         var loop = setInterval(function() {
@@ -302,10 +301,9 @@ var WebRTC = {
             userRemote.peerConnection.addStream(userLocal.stream);
             trace("webrtc", "Added local stream to peerConnection", userLocal.stream);
 
-            //Bugfix because addStream doesn't fire onnegotiationneeded in firefox nightly 23.01a
-            if (navigator.browser[0] === "Firefox") {
-              WebRTC.onNegotationNeeded(data.userId);
-            }
+            //Bugfix because addStream doesn't fire onnegotiationneeded in firefox nightly 23.01a and
+            //onnegotiationneeded gets fired in chrome with datachannel without adding or removing streams
+            WebRTC.onNegotationNeeded(data.userId);
           }
         }, 500);
         break;
@@ -327,10 +325,6 @@ var WebRTC = {
       case "video:unmute":
         var userRemote = Users.getRemoteUser(data.userId);
         $('#' + userRemote.id + ' video').css('opacity', '1');
-        break;
-      case "photo":
-        var userRemote = Users.getRemoteUser(data.userId);
-        window.open(data.photoData, 'Shared Snapshot', ('width=' + window.width + ', height=' + window.height + ',menubar=1,resizable=0,scrollbars=0,status=0'));
         break;
       default:
         trace("webrtc", "Undefined participant message", "-");
@@ -364,13 +358,14 @@ var Users = {
     Users.users.push(user);
     return user;
   },
-  createRemoteUser: function(roomHash, remoteUserId, remoteUserCountry, peerConnection, dataChannel) {
+  createRemoteUser: function(roomHash, remoteUserId, remoteUserName, remoteUserCountry, peerConnection, dataChannel) {
     var user = {
-      name: undefined,
+      name: remoteUserName,
       id: remoteUserId,
       roomHash: roomHash,
       peerConnection: peerConnection,
       stream: undefined,
+      country: undefined,
       dataChannel: dataChannel,
       type: "remote"
     };
@@ -378,43 +373,33 @@ var Users = {
     Users.users.push(user);
 
     setTimeout(function() {
-      var removeParticipant = "";
+      var removeParticipantHTML = "";
       if (Users.getLocalUser().admin === true) {
-        removeParticipant = "<div class='removeParticipant' onclick=\"App.Controller.user.removeParticipant('" + remoteUserId + "')\"></div>";
+        removeParticipantHTML = "<div class='removeParticipant' onclick=\"App.Controller.user.removeParticipant('" + remoteUserId + "')\"></div>";
       }
 
-      var img = './assets/img/countries/' + (remoteUserCountry ? remoteUserCountry : "unknown") + '.png';
-      var remoteUserString = "<div class='user' id='" + remoteUserId + "'>" + "<span class='name' style='background-image: url(" + img + ")'>Name</span>" + "<div class='videoWrapper'><div class='stateMute'></div>" + removeParticipant + "<img src='assets/img/avatar.jpg' /><div class='recordRemoteVideo'></div><div class='recordRemoteAudio'></div>" + "<video autoplay></video><audio autoplay loop muted></audio>" + "</div>" + "</div>";
-
-      console.log(remoteUserString);
+      var img = './assets/img/countries/' + ( remoteUserCountry ? remoteUserCountry : "unknown") + '.png';
+      var remoteUserString = "<div class='user' id='" + remoteUserId + "'>" + "<span class='name' style='background-image: url(" + img + ")'>" + remoteUserName + "</span>" + "<div class='videoWrapper'>" + "<div class='stateMute'></div>" + removeParticipantHTML + "<img src='assets/img/avatar.jpg' />" + "<div class='recordRemoteVideo'></div>" + "<div class='recordRemoteAudio'></div>" + "<video autoplay></video>" + "<audio autoplay loop muted></audio>" + "<form action='javascript:void(0);'>" + "<textarea rows='4' READONLY></textarea>" + "<input placeholder='Nachricht...'/>" + "</form>" + "</div>" + "</div>";
 
       $('#videoboxes').append(remoteUserString);
-      //<form action='javascript:void(0);'><textarea rows='4' READONLY></textarea><input placeholder='Nachricht...'/></form>
 
-      /*$('#' + remoteUserId + " form input").keypress(function(event) {
-       console.log(event.which);
-       if (event.which == 13) {
+      $('#' + remoteUserId + " form input").keypress(function(event) {
+        if (event.which == 13) {
+          var input = $(this).val();
+          console.log(input);
+          dataChannel.send(input);
+          $(this).val("");
 
-       var input = $(this).val();
+          var output = formatTime(new Date().getTime(), "HH:MM") + " (me) - " + input + "&#13;&#10;";
+          $('#' + remoteUserId + " textarea").append(output);
 
-       console.log(dataChannel, remoteUserId, event, input, "vars");
-       dataChannel.send(input);
-
-       var hours = new Date().getHours()
-       hours = hours < 10 ? "0" + hours : hours;
-
-       var minutes = new Date().getMinutes();
-       minutes = minutes < 10 ? "0" + minutes : minutes;
-
-       var output = hours + ":" + minutes + " (me) - " + input + "&#13;&#10;";
-       $('#' + remoteUserId + " textarea").append(output)
-
-       $(this).val("");
-       return false;
-       }
-       });*/
+          event.preventDefault();
+          event.stopPropagation();
+          return false;
+        }
+      });
       window.App.Controller.user.set('usersCounter', Users.users.length);
-    }, 500);
+    }, 0);
   },
   getLocalUser: function() {
     for (var i = 0; i < Users.users.length; i++) {
@@ -488,3 +473,4 @@ var Users = {
     this.removeLocalUser();
   }
 };
+

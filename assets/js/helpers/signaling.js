@@ -35,7 +35,8 @@
          */
         this.send(JSON.stringify({
           subject: "init",
-          url: location.href
+          url: location.href,
+          name: Users.getLocalUser().name
         }));
       };
       this.webSocket.onmessage = function(message) {
@@ -91,7 +92,8 @@
                 message: "join",
                 roomHash: data.roomHash,
                 userId: data.userHash,
-                country: data.country
+                country: data.country,
+                name: data.name
               }
             }));
             break;

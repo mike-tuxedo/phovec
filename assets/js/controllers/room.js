@@ -198,7 +198,6 @@
     
   },
   toggleRecorder: function(element,type){
-  
     if(!VARecorder.recording){
       this.startRecording(element,type);
     }
@@ -207,7 +206,6 @@
     }
   },
   startRecording: function(element,type){
-    
     var tagToTrack = $(element);
     tagToTrack.css('background', 'url(./assets/img/record_'+type+'.png)');
     tagToTrack.css('background-repeat', 'no-repeat');
@@ -228,7 +226,6 @@
     }
   },
   stopRecording: function(element,type){
-    
     var tagToTrack = $(element);
     tagToTrack.css('background', 'url(./assets/img/stop_record_'+type+'.png)');
     tagToTrack.css('background-repeat', 'no-repeat');

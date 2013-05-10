@@ -11,11 +11,11 @@
 	width: 350px;
 	min-width: 350px;
 	margin: 0 auto;
-	background-image: url('../img/startbutton.png');
+	background-image: url('../img/startbutton_disabled.png');
 	background-repeat: no-repeat;
 }
 
-#startButtonImage:hover, #infoButton:hover, #backButton:hover{
+#infoButton:hover, #backButton:hover{
 	opacity: 0.8;
 }
 

@@ -40,14 +40,14 @@ if ( typeof mozRTCIceCandidate !== "undefined") {
 
 /* Improved logging overview for development mode */
 function trace(file, message, object) {
-  var timestamp = formatTime(new Date().getTime());
+  var timestamp = formatTime(new Date().getTime(), "HH:MM:ss:SSS");
   console.log(timestamp + "\t" + file + "\t" + message + "\t");
-  console.log("\t\t" + "With data: ", object);
+  //console.log("\t\t" + "With data: ", object);
   WebRTCDebugger.update();
 }
 
-/* Format timestamp to HH:MM:ss:SSS */
-function formatTime(timestamp) {
+/* Format timestamp to HH:MM:ss:SSS or HH:MM */
+function formatTime(timestamp, format) {
   var dateTime = new Date(timestamp);
   var hours = dateTime.getHours();
   var minutes = dateTime.getMinutes();
@@ -66,7 +66,12 @@ function formatTime(timestamp) {
     miliseconds = "0" + miliseconds;
   }
 
-  return hours + ":" + minutes + ":" + seconds + ":" + miliseconds;
+  if (format === "HH:MM") {
+    return hours + ":" + minutes;
+  } else if (format === "HH:MM:ss:SSS") {
+    return hours + ":" + minutes + ":" + seconds + ":" + miliseconds;
+  }
+
 }
 
 //TURN SERVER TEST
@@ -80,18 +85,18 @@ if (navigator.browser[0] === "Chrome" || navigator.browser[0] === "Firefox") {
 }
 
 /*
-  RTC_CONFIGURATION = {
-    'iceServers': [{
-      "url": "stun:stun.sipgate.net"
-    }, {
-      "url": "stun:stun.internetcalls.com"
-    }, {
-      "url": "stun:provserver.televolution.net"
-    }, {
-      "url": "stun:stun1.voiceeclipse.net"
-    }]
-  };
-*/
+ RTC_CONFIGURATION = {
+ 'iceServers': [{
+ "url": "stun:stun.sipgate.net"
+ }, {
+ "url": "stun:stun.internetcalls.com"
+ }, {
+ "url": "stun:provserver.televolution.net"
+ }, {
+ "url": "stun:stun1.voiceeclipse.net"
+ }]
+ };
+ */
 
 /* "Media Constraints" for PeerConnection */
 if (navigator.browser[0] === "Chrome") {
