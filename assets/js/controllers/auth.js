@@ -395,5 +395,8 @@
     else{
       console.log('Auth-Controller sendMail: not enough arguments: ', mailSettings);
     }
+  },
+  getQrCode: function(){
+    console.log('show qrcode');
   }
 });

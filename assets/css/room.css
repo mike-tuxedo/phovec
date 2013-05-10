@@ -128,7 +128,7 @@
 
 .socialButtons {
   cursor: pointer;
-  width: 100px;
+  width: 74.5px;
   height: 25px;
   float: left;
   overflow: hidden;
@@ -172,23 +172,52 @@ line-height: 1.5;
 
 .facebookButton {
   display: block;
+  background: #3b5998;
   background-image: url('../img/sidebar/facebook.png');
-  background-size: 100% 100%;
+  background-size: auto 75%;
+  background-position: center center;
   background-repeat: no-repeat;
 }
 
 .googleButton {
   display: block;
+  background: #db5149;
   background-image: url('../img/sidebar/google.png');
-  background-size: 100% 100%;
+  background-size: auto 75%;
+  background-position: center center;
   background-repeat: no-repeat;
 }
 
 .email_button {
   display: block;
+  background: #fbfbfb;
   background-image: url('../img/sidebar/email.png');
-  background-size: 100% 100%;
+  background-size: auto 75%;
+  background-position: center center;
   background-repeat: no-repeat;
+}
+
+.qr_code{
+  display: block;
+  background: #66666b;
+  background-image: url('../img/sidebar/qrcode.png');
+  background-size: auto 75%;
+  background-position: center center;
+  background-repeat: no-repeat;
+}
+
+.tab_active{
+  border-top: 1px solid #444444;
+  border-left: 1px solid #444444;
+  border-right: 1px solid #444444;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+  box-shadow: inset 0px 1px 1px #999;
+}
+
+.inactive{
+  border-bottom: 1px solid #444444;
+  box-shadow: inset 1px 0px 1px #888;
 }
 
 #videoboxes {
@@ -207,6 +236,7 @@ line-height: 1.5;
   text-align: left;
   position: relative;
   width: 100%;
+  height: 450px;
   margin: 27px 0 0 0;
   padding: 0;
   border: 1px solid #888;

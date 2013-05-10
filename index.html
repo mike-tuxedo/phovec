@@ -302,24 +302,25 @@
     </script>
 
     <script type="text/x-handlebars" data-template-name="_auth">
-
+    {{#view App.AuthView}}
       {{# unless App.Controller.auth.fbLoggedIn }}
-      <a {{action "fbLogin" target="App.Controller.auth" }} class="socialButtons facebookButton"></a>
+      <a {{action "fbLogin" target="App.Controller.auth" }} class="socialButtons facebookButton inactive"></a>
       {{/unless}}
-
+<!--
       {{# if App.Controller.auth.fbLoggedIn }}
-      <a {{action "fbLogout" target="App.Controller.auth"}} class="socialButtons facebookButton"></a>
+      <a {{action "fbLogout" target="App.Controller.auth"}} class="socialButtons facebookButton"></a> 
       {{/if}}
-
+-->
       {{# unless App.Controller.auth.googleLoggedIn }}
-      <a {{action "googleLogin" target="App.Controller.auth"}} class="socialButtons googleButton"></a>
+      <a {{action "googleLogin" target="App.Controller.auth"}} class="socialButtons googleButton inactive"></a>
       {{/unless}}
-
+<!--
       {{# if App.Controller.auth.googleLoggedIn }}
-      <a {{action "googleLogout" target="App.Controller.auth"}} class="socialButtons googleButton"></a>
+       <a {{action "googleLogout" target="App.Controller.auth"}} class="socialButtons googleButton"></a> 
       {{/if}}
-      
-      <a class="socialButtons email_button" {{action "toggleEmailForm" target="App.Controller.auth"}} ></a>
+      -->
+      <a class="socialButtons email_button inactive" {{action "toggleEmailForm" target="App.Controller.auth"}} ></a>
+      <a class="socialButtons qr_code tab_active" {{ action "showQrCode" target="view" }}></a>
       
       <!-- mail form -->
       <form id="mail_form">
@@ -327,7 +328,7 @@
         <input type="text" id="mailDescription" placeholder="E-Mail Beschreibung"/>
         <input type="button" id="mailFormButton" value="Sende E-Mail" {{action "addMailInfo" target="App.Controller.auth"}} />
       </form>
-      
+    {{/view}}
       <!-- user-login data -->
       <div id="userInfo">
         <br />
