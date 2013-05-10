@@ -2,7 +2,7 @@
  * Enables URLs without the # sign - only on server possible!
  */
 // App.Router.reopen({
-  // location: 'history'
+// location: 'history'
 // });App.Router.map(function() {
   this.route("about");
   this.route('rooms', {
@@ -33,6 +33,9 @@ App.IndexRoute = Ember.Route.extend({
   enter: function() {
     WebRTC.hangup();
     SignalingChannel.close();
+    
+    //Create local user very early, so the user can add his name
+    WebRTC.init();
   }
 });
 

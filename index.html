@@ -92,15 +92,13 @@
       </header>
   
       <div id="startInfo">
-        <h1>Videochat mit Deinen Freunden!</h1>
-        <br>
+        <h1>Videochat mit Deinen Freunden!</h1><br>
         <p>
           Einfach auf Start klicken und du bist in einem Chatraum, von wo aus du deine Freunde einladen kannst.
         </p>
+        <input placeholder="Bitte wählen Sie einen Namen..." id="name"/>
       </div>
-      {{#linkTo "rooms"}}
-        <div id="startButtonImage"></div>
-      {{/linkTo}}
+      <div id="startButtonImage"></div>
     </script>
 
     <script type="text/x-handlebars" data-template-name="room-unknown">
@@ -158,7 +156,7 @@
 
       <div id="videoboxes">
         <div class="user local" id="local">
-          <span class="name" id="local_name">Name</span>
+          <span class="name" id="local_name">Phovec-Benutzer</span>
           <div class="videoWrapper">
             <div class="stateMute"></div>
             <img src="assets/img/avatar.jpg"/>
