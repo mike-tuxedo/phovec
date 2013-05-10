@@ -283,5 +283,65 @@
     }
     
     VARecorder.stopRecording();
+  },
+  insertSpeechToTextAt: function(id){
+    
+    if (typeof webkitSpeechRecognition !== 'undefined'){
+
+      var recognition = new webkitSpeechRecognition();
+      recognition.continuous = true;
+      recognition.interimResults = true;
+      var recordedText = '';
+      var recognizing = false;
+      
+      recognition.onstart = function() {
+        recognizing = true;
+      };
+
+      recognition.onerror = function(event) {
+        trace('RoomController insertSpeechToTextAt: SpeechRecognition-Error',event);
+      };
+
+      recognition.onend = function() {
+      };
+
+      recognition.onresult = function(event) {
+      
+          var interim_transcript = '';
+          
+          if( typeof event.results === 'undefined') {
+            recognition.onend = null;
+            recognition.stop();
+            trace('RoomController insertSpeechToTextAt: SpeechRecognition-Error',event);
+            return;
+          }
+          
+          for (var i = event.resultIndex; i < event.results.length; ++i) {
+            if (event.results[i].isFinal) {
+              recordedText += event.results[i][0].transcript;
+            } else {
+              recordedText += event.results[i][0].transcript;
+            }
+          }
+          console.log('recorded Text:',recordedText);
+          /*final_transcript = capitalizeText(final_transcript);
+          final_span.innerHTML = makeLinebreak(final_transcript);
+          interim_span.innerHTML = makeLinebreak(interim_transcript);
+          */
+      };
+        
+      recognition.start();
+      
+    }
+    else{
+      trace('RoomController insertSpeechToTextAt: SpeechRecognition-Error',event);
+    }
+  },
+  capitalizeText: function(text){
+    var allSigns = /\S/;
+    return text.replace(allSigns, function(s) { return s.toUpperCase(); });
+  },
+  makeLinebreak: function(text){
+  
   }
 });
