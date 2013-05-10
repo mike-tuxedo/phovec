@@ -80,7 +80,6 @@
     
     var controller = this;
     
-    $('#videoEffectsBar').css('margin-top', '250px');
     controller.hideSymbolsForWorker();
     
     html2canvas([document.getElementById('videoboxes')], {
@@ -197,11 +196,11 @@
     var remoteUser = Users.getRemoteUser(remoteId);
     
     if( remoteUser.stream.getVideoTracks()[0].enabled ){ // when video is activated activate video-recording-button
-      $('#'+remoteId+' .recordLocalVideo').show();
+      $('#'+remoteId+' .recordRemoteVideo').show();
     }
     
     if( remoteUser.stream.getAudioTracks()[0].enabled ){ // when audio is activated activate audio-recording-button
-      $('#'+remoteId+' .recordLocalAudio').show(); 
+      $('#'+remoteId+' .recordRemoteAudio').show(); 
     }
     else{
       $('#'+remoteId+' .stateMute').show();
