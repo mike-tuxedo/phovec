@@ -20,18 +20,6 @@
   margin-top: 100px;
 }
 
-#blackFilter {
-  position: absolute;
-  display: none;
-  width: 100%;
-  height: 100%;
-  background: rgba(0,0,0,0.95);
-  background-repeat: no-repeat;
-  background-size: 100%;
-  opacity: 0.8;
-  z-index: 30;
-}
-
 .get_friends {
   position: fixed;
   right: -10px;
@@ -87,7 +75,7 @@
 }
 
 .sidebar_open{
-  background: #303743;
+  background: #66666B;
   background-image: url('../img/sidebar-opened-arrow.png');
   background-repeat: no-repeat;
   background-size: 70% 70%;
@@ -99,7 +87,7 @@
 }
 
 .sidebar_close{
-  background: #303743;
+  background: #66666B;
   background-image: url('../img/sidebar-closed-arrow.png');
   background-repeat: no-repeat;
   background-size: 70% 70%;
@@ -534,4 +522,62 @@ line-height: 1.5;
 .countryLocation{
   width:32;
   height:32;
+}
+
+
+/*----------HELP---------*/
+
+#help{
+  position: absolute;
+  display: none;
+  top: 0px;
+  left: 0px;
+  bottom: 0px;
+  right: 0px;
+  background: rgba(0,0,0,0.8);
+  z-index: 100;
+}
+
+#help_window{
+  margin: 0 auto;
+  margin-top: 10%;
+  border-radius: 5px;
+  background: rgba(255,255,255,0.85);
+  width: 70%;
+  height: 70%;
+  color: #444;
+}
+
+#show_help{
+  cursor: pointer;
+  position: absolute;
+  width: 70px;
+  height: 30px;
+  
+  -webkit-transform:rotate(-90deg);
+  -moz-transform:rotate(-90deg);
+  padding-top: 10px;
+  font-weight: bold;
+  left: -20px;
+  top: 50%;
+
+  background: #66666B;
+  color:  #e0dfeb;
+  border-bottom-left-radius: 70px;
+  border-bottom-right-radius: 70px;  
+}
+
+#show_help:hover{
+  opacity: 0.8;
+}
+
+#close_help{
+  cursor: pointer;
+  width: 20px;
+  float: right;
+  text-align: center;
+  font-size: 18px;
+  padding: 3px;
+  color: #444;
+  font-weight: bold;
 }

@@ -27,5 +27,11 @@
         $('#show_sidebar').mouseout(function(){$('#show_sidebar').css('opacity', '1')});
         this.sidebar = false;
       }
+  },
+  openHelp: function(){
+    $('#help').fadeIn('fast');
+  },
+  closeHelp: function(){
+    $('#help').fadeOut('fast');
   }
 }); 
