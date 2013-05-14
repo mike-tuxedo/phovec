@@ -86,27 +86,40 @@
   -webkit-box-shadow: 0px 0px 15px #444;
 }
 
+.sidebar_open{
+  background: #303743;
+  background-image: url('../img/sidebar-opened-arrow.png');
+  background-repeat: no-repeat;
+  background-size: 70% 70%;
+  background-position: 20% 50%;
+  left: 150px;
+  
+  border-top-right-radius: 70px;
+  border-bottom-right-radius: 70px;
+}
+
+.sidebar_close{
+  background: #303743;
+  background-image: url('../img/sidebar-closed-arrow.png');
+  background-repeat: no-repeat;
+  background-size: 70% 70%;
+  background-position: 80% 50%;
+  left: 115px;
+  
+  border-top-left-radius: 70px;
+  border-bottom-left-radius: 70px;
+}
+
 #show_sidebar {
   cursor: pointer;
   position: absolute;
-  width: 70px;
+  width: 35px;
   height: 70px;
-  left: 115px;
   top: 45%;
-  z-index: 25;
+  z-index: 85;
   overflow: hidden;
-  background: #303743;
-  background-image: url('../img/sidebar-arrow.png');
-  background-repeat: no-repeat;
-  background-size: 100% 100%;
-  border: 10px solid #303743;
-  border-top-left-radius: 70px;
-  border-bottom-left-radius: 70px;
-  border-bottom-right-radius: 70px;
-  border-top-right-radius: 70px;
-  font-size: 50px;
-  font-family: arial;
-  color: #e0dfeb;
+
+  border: 0px;
 }
 
 #show_sidebar:hover {
