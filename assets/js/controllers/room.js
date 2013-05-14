@@ -33,7 +33,7 @@
     }, 3000);
 
     function animate(item) {
-      if (parseInt($('#social_sidebar_container').css('right')) > -150) {
+      if (parseInt($('#social_sidebar_container').css('right')) === 0) {
         clearInterval(interval);
       } else {
         item.animate({
