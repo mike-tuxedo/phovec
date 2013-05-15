@@ -526,6 +526,14 @@ line-height: 1.5;
 
 
 /*----------HELP---------*/
+#help h1 {
+  margin-bottom: 10px;
+}
+
+#help p, li {
+  margin: 10px 0px 10px 0px;
+  line-height: 1.4;
+}
 
 #help{
   position: absolute;
@@ -546,6 +554,18 @@ line-height: 1.5;
   width: 70%;
   height: 70%;
   color: #444;
+  text-align: left;
+  overflow-y: scroll;
+}
+
+#help_window img{
+  width: 80%;
+  display: block;
+  margin: auto;
+}
+
+#help_content{
+  padding: 50px;
 }
 
 #show_help{
@@ -573,8 +593,8 @@ line-height: 1.5;
 
 #close_help{
   cursor: pointer;
+  position: fixed;
   width: 20px;
-  float: right;
   text-align: center;
   font-size: 18px;
   padding: 3px;
