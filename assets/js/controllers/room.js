@@ -11,8 +11,6 @@
       $('#faceDetectorOutput')[0].style.height = $('video').css('height');
       $('#faceDetectorOutput')[0].style.display = 'none';
       FaceDetector.init(localVideo[0], $('#faceDetectorOutput')[0]);
-      
-      $('#videoboxes')[0].addEventListener('click',controller.handleClickEvent,true); // video-recording
 
       $('#videoEffects').show();
       
@@ -28,7 +26,7 @@
         
       }
       
-    },1000);
+    },1500);
     
   },
   animation: function() {
