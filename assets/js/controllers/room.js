@@ -11,8 +11,6 @@
       $('#faceDetectorOutput')[0].style.height = $('video').css('height');
       $('#faceDetectorOutput')[0].style.display = 'none';
       FaceDetector.init(localVideo[0], $('#faceDetectorOutput')[0]);
-      
-      $('#videoboxes')[0].addEventListener('mouseup',controller.handleClickEvent,false); // video-recording
 
       $('#videoEffects').show();
       
@@ -28,7 +26,7 @@
         
       }
       
-    },1000);
+    },1500);
     
   },
   animation: function() {
@@ -73,7 +71,7 @@
     $('#takeOffClothesButton').show();
     $('#snapshotButton').hide();
     FaceDetector.closing = false;
-    if (Users.users && Users.users[0].stream){
+    if (Users.users && Users.users[0].stream && !this.isFaceDetactorActivated){
       FaceDetector.getStream(Users.users[0].stream, type);
       this.isFaceDetactorActivated = true;
     }
@@ -114,7 +112,10 @@
           
           var ctx = canvas.getContext('2d');
           
-          e.data.coords.forEach(function(coord, index) {
+          var formatedCoors = e.data.coords.slice(1,e.data.coords.length); // wrong order of coords resort coords
+          formatedCoors.push(e.data.coords[0]);
+          
+          formatedCoors.forEach(function(coord, index) {
             if(obj.videos[index].style.display !== 'none'){
               controller.drawVideoboxOnCanvas(obj.videos[index], ctx, coord.startX, coord.startY, e.data.cellWidth, e.data.cellHeight);
             }
@@ -168,6 +169,7 @@
   showVisibleSymbolsAgain: function(){
   
     $('.videoWrapper').css('background','');
+    $('.bgAvatar').show();
     
     var localUser = Users.getLocalUser();
     
@@ -189,23 +191,25 @@
       this.handleRemoteRecordingButtons(remoteUsers[r].id);
     }
     
-    $('.removeParticipant').show(); // only host has got these images so this code does not work on guests
     $('video').show();
-    
+    $('.videoWrapper form').show();
+    $('.removeParticipant').show(); // only host has got these images so this code does not work on guests
+
   },
   handleRemoteRecordingButtons: function(remoteId){
   
     var remoteUser = Users.getRemoteUser(remoteId);
     
-    if( remoteUser.stream.getVideoTracks()[0].enabled ){ // when video is activated activate video-recording-button
-      $('#'+remoteId+' .recordRemoteVideo').show();
-    }
-    
-    if( remoteUser.stream.getAudioTracks()[0].enabled ){ // when audio is activated activate audio-recording-button
-      $('#'+remoteId+' .recordRemoteAudio').show(); 
-    }
-    else{
-      $('#'+remoteId+' .stateMute').show();
+    if( remoteUser && remoteUser.stream ){
+      if( remoteUser.stream.getVideoTracks()[0].enabled ){ // when video is activated activate video-recording-button
+        $('#'+remoteId+' .recordRemoteVideo').show();
+      }
+      if( remoteUser.stream.getAudioTracks()[0].enabled ){ // when audio is activated activate audio-recording-button
+        $('#'+remoteId+' .recordRemoteAudio').show();
+      }
+      else{
+        $('#'+remoteId+' .stateMute').show();
+      }
     }
     
   },
@@ -300,37 +304,40 @@
       this.speechRecognizer.continuous = true;
       this.speechRecognizer.interimResults = true;
       this.isSpeechRecognizerInitalized = true;
+      this.insertSpeechToTextAt(element);
     }
     else if(this.isSpeechRecognizerStarted){
       this.speechRecognizer.stop();
+      
+      if( !this.isMicroButtonRecording(element) ){
+        var call = function(){ this.insertSpeechToTextAt(element); }.bind(this);
+        setTimeout(call,200);
+      }
+    }
+    else if(this.isSpeechRecognizerInitalized && !this.isSpeechRecognizerStarted){
+      this.insertSpeechToTextAt(element);
     }
     
-    this.insertSpeechToTextAt(element);
   },
   insertSpeechToTextAt: function(element){
     
     var controller = this;
-    var inputField = $( $(element).parent().children('textarea')[1] );
-    
-    $('.micro_recorder').attr('disabled',true);
+    var inputField = $( $(element).parent().parent().children('div')[1] );
     
     if(typeof webkitSpeechRecognition !== 'undefined'){
 
-      controller.speechRecognizer.onstart = function() {
+      controller.speechRecognizer.onstart = function(){
         controller.isSpeechRecognizerStarted = true;
         element.src = 'assets/img/micro_recorder_on.png';
-        element.removeAttribute('disabled'); 
       };
-
-      controller.speechRecognizer.onerror = function(event) {
-        trace('RoomController insertSpeechToTextAt: SpeechRecognition-Error',event);
-      };
-
-      controller.speechRecognizer.onend = function() {
+      
+      controller.speechRecognizer.onerror = controller.speechRecognizerErrorHandler;
+      
+      controller.speechRecognizer.onend = function(){
         controller.isSpeechRecognizerStarted = false;
         controller.enableSpeechButtons();
       };
-
+      
       controller.speechRecognizer.onresult = function(event) {
         
         var speechText = '';
@@ -347,12 +354,12 @@
             speechText = event.results[i][0].transcript;
           }
           else if(event.results[i][0].transcript.indexOf('lösche Text') !== -1){
-            inputField.val('');
+            inputField.html("<input type='image' class='micro_recorder' src='assets/img/micro_recorder_off.png'/>");
             controller.toggleResultEventMethodOfSpeechRecognizer(controller.speechRecognizer.onresult);
           }
         }
         
-        inputField.val((inputField.val()+speechText));
+        inputField.html((inputField.html()+speechText));
         
       };
       
@@ -364,16 +371,21 @@
       trace('RoomController insertSpeechToTextAt: SpeechRecognition-Error',event);
     }
   },
+  speechRecognizerErrorHandler: function(e){
+    trace('RoomController insertSpeechToTextAt: SpeechRecognition-Error',event);
+  },
   toggleResultEventMethodOfSpeechRecognizer: function(reference){
     var controller = this;
     controller.speechRecognizer.onresult = null;
-    setTimeout(function(){ controller.speechRecognizer.onresult = reference },1500);
+    setTimeout(function(){ controller.speechRecognizer.onresult = reference },1800);
   },
   enableSpeechButtons: function(){
-    setTimeout(function(){ 
-      $('.micro_recorder').removeAttr('disabled'); 
+    setTimeout(function(){
       $('.micro_recorder').attr('src','assets/img/micro_recorder_off.png');
     }, 20);
+  },
+  isMicroButtonRecording: function(element){
+    return element.src.indexOf('micro_recorder_on.png') !== -1;
   },
   isSpeechRecognizerInitalized: null,
   isSpeechRecognizerStarted: false

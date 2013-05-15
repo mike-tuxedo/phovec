@@ -309,7 +309,6 @@ line-height: 1.5;
   width: 25px;
   height: 40px;
   float: right;
-  margin-right: -25px;
 }
 
 #videoboxes .name {
@@ -333,6 +332,26 @@ line-height: 1.5;
   box-sizing: border-box;
   float: left;
   width: 100%;
+}
+
+.chatInput{
+  background-color: #ffffff;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  width: 100%;
+  height:42px;
+  border: 2px solid #a6afb6;
+}
+
+.chatOutput{
+  background-color: #ffffff;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  width: 100%;
+  height:50px;
+  border: 2px solid #a6afb6;
 }
 
 /*------------Options under lokal Video--------------*/

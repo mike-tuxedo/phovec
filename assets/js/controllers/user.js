@@ -1,7 +1,6 @@
 App.UserController = Ember.ObjectController.extend({
   init: function() {
     this.addObserver('usersCounter', function() {
-      console.log('SET videosize');
       if (this.usersCounter === 1) {
         $('.user').css('width', '600px');
         $('.user').css('height', '527px');
