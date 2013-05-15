@@ -2,7 +2,7 @@
   templateName: 'index',
   keyUp: function(event) {
     if (event.target === document.getElementById("name")) {
-      if (document.getElementById("name").value.length >= 4) {
+      if (document.getElementById("name").value.length >= 3) {
         document.getElementById("startButtonImage").onmouseover = function() {
           this.style.opacity = 0.8;
         };
