@@ -214,7 +214,7 @@ line-height: 1.5;
 
 #google_tab {
   display: block;
-  background: #db5149;
+  background: #fff;
   background-image: url('../img/sidebar/google.png');
   background-size: auto 75%;
   background-position: center center;
@@ -223,7 +223,7 @@ line-height: 1.5;
 
 #email_tab {
   display: block;
-  background: #fbfbfb;
+  background: #ef9944;
   background-image: url('../img/sidebar/email.png');
   background-size: auto 75%;
   background-position: center center;
