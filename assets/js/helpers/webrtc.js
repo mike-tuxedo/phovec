@@ -75,15 +75,17 @@ var WebRTC = {
      * Create DataChannel
      */
     var dataChannel = peerConnection.createDataChannel('RTCDataChannel', DATACHANNEL_OPTIONS);
+    var frameCollection = [];
 
     dataChannel.onmessage = function(event) {
+      console.log("ON MESSAGE");
       var user = Users.getRemoteUser(remoteUserId);
       var data = {};
 
       try {
         var data = JSON.parse(event.data);
       } catch(e) {
-        trace("signaling", "Unparsable message from server", "-");
+        trace("signaling", "Unparsable message from remote user", "-");
         return;
       }
 
@@ -93,19 +95,20 @@ var WebRTC = {
           $('#' + remoteUserId + ' form textarea').append(output);
           break;
         case "file":
-          console.log("receive onload", data.content);
-          var fileUrl = data.content;
+          frameCollection.push(data.content);
+          console.log(data);
 
-          var save = document.createElement('a');
-          save.href = fileUrl;
-          save.target = '_blank';
-          save.download = "File" || fileUrl;
+          if (data.lastFrame === true) {
+            var dataURL = frameCollection.join('');
+            frameCollection = [];
 
-          var event = document.createEvent('Event');
-          event.initEvent('click', true, true);
+            var a = document.createElement('a');
+            a.download = data.name;
+            a.setAttribute('href', dataURL);
+            a.click();
 
-          save.dispatchEvent(event);
-          (window.URL || window.webkitURL).revokeObjectURL(save.href);
+            trace("webrtc", "RECEIVED File", "-")
+          }
           break;
         default:
           trace("webrtc", "unknown data channel subject", "-")
@@ -137,33 +140,13 @@ var WebRTC = {
           var name = files[i].name;
 
           reader.onload = function(event) {
-            var dataURL = event.target.result;
-            var data = {
-              "subject": "file",
-              "content": undefined,
-              "name": name,
-              "size": event.total,
-              "type": type,
-              "timestamp": event.timestamp,
-              "lastFrame": false
-            };
-
-            while (true) {
-              if (dataURL.length < frameLength) {
-                data.content = dataURL;
-                data.lastFrame = true;
-                break;
-              } else {
-                data.content = dataURL.slice(0, frameLength);
-                dataURL = dataURL.slice(data.content.length);
-              }
-
-              Users.getRemoteUser(remoteUserId).dataChannel.send(JSON.stringify(data));
-            }
-
-            trace("webrtc", "SEND File", "-");
+            WebRTC.sendData(remoteUserId, event.target.result, {
+              frameLength: frameLength,
+              type: type,
+              size: size,
+              name: name
+            });
           };
-
           reader.readAsDataURL(files[i]);
         }
       }, false);
@@ -201,6 +184,50 @@ var WebRTC = {
     };
 
     Users.createRemoteUser(roomHash, remoteUserId, remoteUserName, remoteUserCountry, peerConnection, dataChannel);
+  },
+  sendData: function(remoteUserId, dataURL, options, data) {
+    if ( typeof data === "undefined") {
+      var data = {
+        "subject": "file",
+        "content": undefined,
+        "lastFrame": false,
+        "firstFrame": true
+      };
+    }
+
+    console.log(dataURL.length);
+
+    if (dataURL.length < options.frameLength) {
+      data.content = dataURL;
+      data.lastFrame = true;
+    } else {
+      data.content = dataURL.slice(0, options.frameLength);
+      dataURL = dataURL.slice(data.content.length);
+    }
+
+    if (data.firstFrame === true) {
+      data.name = options.name;
+      data.size = options.size;
+      data.type = options.type;
+      data.timestamp = new Date().getTime();
+    }
+
+    if (Users.getRemoteUser(remoteUserId).dataChannel.readyState.toLowerCase() == 'open') {
+      Users.getRemoteUser(remoteUserId).dataChannel.send(JSON.stringify(data));
+      console.log(data);
+    } else {
+      setTimeout(function(remoteUserId, data) {
+        Users.getRemoteUser(remoteUserId).dataChannel.send(JSON.stringify(data));
+      }, 1000, remoteUserId, data);
+    }
+    
+    data.firstFrame = false;
+    if (data.lastFrame === true) {
+      trace("webrtc", "SEND File", "-");
+      return;
+    }
+
+    setTimeout(WebRTC.sendData, 100, remoteUserId, dataURL, options, data);
   },
   modifyDescription: function(description) {
     var sdp = description.sdp;
