@@ -151,6 +151,7 @@
     <script type="text/x-handlebars" data-template-name="room">
       <header>
         {{#linkTo "index" id="backButton"}}{{/linkTo}}
+        <div id="buttonFullscreen" {{action "toggleFullscreen" target="view"}}></div>
         {{#linkTo "room-hangup" id="hangupButton"}}{{/linkTo}}
       </header>
 
@@ -196,6 +197,13 @@
         </div>
       </div>
       <div id="glow"></div>
+      
+      <div id="nameArea">
+        <div>
+         <input placeholder="Bitte geben Sie Ihren Name ein..." id="name"/>
+         <div id="startButtonImage"></div>
+        </div>
+      </div>
       
       <div id="show_help" {{action "openHelp" target="view"}}>help</div>
       <div id="help">

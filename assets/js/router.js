@@ -33,7 +33,7 @@ App.IndexRoute = Ember.Route.extend({
   enter: function() {
     WebRTC.hangup();
     SignalingChannel.close();
-    
+
     //Create local user very early, so the user can add his name
     WebRTC.init();
   }
@@ -49,7 +49,6 @@ App.RoomsRoute = Ember.Route.extend({
 App.RoomRoute = Ember.Route.extend({
   enter: function() {
     WebRTC.init();
-    SignalingChannel.init();
 
     App.Controller.auth = App.AuthController.create();
     App.Controller.room = App.RoomController.create();
