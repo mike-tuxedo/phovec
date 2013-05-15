@@ -171,7 +171,7 @@
           <div id="video_options">
             <div class="video_options_buttons" id="control_audio" {{ action controlAudio target="view" }}>on/off Audio</div>
             <div class="video_options_buttons" id="control_video" {{ action controlVideo target="view" }}>on/off Video</div>
-            <div class="video_options_buttons" id="control_effects" {{ action controlEffects target="view" }}>Effects</div>
+            <div class="video_options_buttons" id="control_effects" {{ action controlEffects target="view" }}>Effekte</div>
           </div>
           {{/view}}
 
@@ -188,13 +188,70 @@
       <!-- to hide the scrollbar, we need a div whos position is not outside the site -->
       <div id="scrollbar_fix">
         <div id="social_sidebar_container">
-          <input type="button" id="show_sidebar" value="" {{ action showSidebar target="view" }}/>
+          <input type="button" id="show_sidebar" class="sidebar_close" value="" {{ action showSidebar target="view" }}/>
           <div id="show_sidebar_shadow"></div>
           <div id="social_sidebar">
             {{ partial 'auth' }}
           </div>
         </div>
       </div>
+      <div id="glow"></div>
+      
+      <div id="show_help" {{action "openHelp" target="view"}}>help</div>
+      <div id="help">
+        <div id="help_window">
+          <div id="close_help" {{action "closeHelp" target="view"}}>x</div>
+           <div id="help_content">
+             <h1 style="text-align: center;">Hilfe anleitung</h1>
+             <p>Hi!</p>
+             <p>
+               Du befindest dich gerade in einem Chatraum. Wenn du, genau wie im Bild, nur eine Videowall hast, 
+               dann heißt das das noch keiner ausßer dir im Raum ist! Natürlich willst du mit einem/einer FreundIn 
+               Chatten, aber wie? Ganz einfach! Klicke auf die Lasche an der rechten Seite um die Sidebar zu öffnen.
+             </p>
+             <br>
+             <p><strong>Die Sidebar bietet dir 4 möglichkeiten um Freunde einzuladen:</strong></p>
+             <ul>
+               <li>Mit Klick auf den Facebookbutton kannst du dich mit Facebook anmelden und wir zeigen dir alle deine Facebookfreunde in der Sidebar an. Diese kannst du dann mit einem einfachen Klick auf ihren Namen einladen.</li>
+               <li>Mit Klick auf den Google+ kannst du dich ebenfalls bei Google bzw. Gmail anmelden, sofern du dort ein Konto hast, und deine Kontakte von Google werden angezeigt.</li>
+               <li>Mit Klick auf eMail kannst du ganz  einfach eine eMail an Freunde schicken, von denen du die Adresse weißt.</li>
+               <li>mit Klick auf QRCode wird dir ein QRCode angezeigt den du, mit einer entsprechenden App, Fotografieren kannst. Damit kopierst du einfach nur die Adresse des Raumes auf dein Handy und brauchst diese nicht abtippen. Somit kannst du die Raumadresse an deine Freunde per SMS verschicken.</li>
+             </ul>
+             <br>
+             <img src="assets/img/help/help-03.png"/>
+             <br>
+             <p>
+               Als nächstes hast du die Möglichkeit zu entscheiden wie du Chatten willst.</p>
+             <p>
+               Du kannst standardmäßig mit
+               allen Freunden die den Raum betreten einen normalen <strong>Textchat</strong> führen. Wenn du mit ihnen Telefonieren willst
+               musst du <strong>Audio</strong> aktivieren. Dazu klickst du auf den ersten Button unter deiner Videowall. 
+               Willst du auch <strong>Video</strong> aktivieren, dann klicke den mittleren. Mit einem erneuten Klick werd die
+               jeweilige Funktion wieder deaktiviert.
+             </p>
+             <p>
+               Lustige Effekte können mit dem "Effekte" Button erzeugt werden. Probiers einfach mal aus :)!
+             </p>
+             <br>
+             <img src="assets/img/help/help-01.png"/>
+             <br>
+             <p>
+               Wird Audio oder Video aktiviert, wird am oberen Ende des Browsers eine Leiste eingeblendet. Dort fragt 
+               dich dein Browser ob er auf dein Mikrofon und/oder Kamera zugreifen darf. 
+               Dies musst du mit "<strong>Zulassen</strong>" bestätigen.
+             </p>
+             <img src="assets/img/help/help-04.png"/>
+             <br>
+             <p>
+               Hast du auch Video aktiviert, so siehst du im linken oberen Bereich eines Videos zwei kleine Buttons.
+               Mit "<strong>A</strong>" kannst du dein Audio aufnehmen und mit "<strong>V</strong>" auch dein Video.  
+             </p>
+             <br>
+             <img src="assets/img/help/help-02.png"/>
+           </div>
+        </div>
+      </div>
+
       
       <div id="fb-root"></div>
       

@@ -13,27 +13,31 @@
       FaceDetector.init(localVideo[0], $('#faceDetectorOutput')[0]);
       
       $('#videoboxes')[0].addEventListener('mouseup',controller.handleClickEvent,false); // video-recording
-      
+
       $('#videoEffects').show();
       
-    },false);
+    },true);
     
     var loop = setInterval(function(){
     
-      if( $('#mail_form')[0] ){
+      if( $('#videoboxes')[0] && $('#mail_form')[0] ){
+      
         App.Controller.auth.createHiddenTextInput();
+        $('#videoboxes')[0].addEventListener('click',controller.handleClickEvent,true); // for video-recording and text-recognizer
         clearInterval(loop);
+        
       }
-    },500);
+      
+    },1000);
     
   },
   animation: function() {
     var interval = setInterval(function() {
-      animate($('#show_sidebar'));
+      animate($('#glow'));
     }, 3000);
 
     function animate(item) {
-      if (parseInt($('#social_sidebar_container').css('right')) > -150) {
+      if (parseInt($('#social_sidebar_container').css('right')) === 0) {
         clearInterval(interval);
       } else {
         item.animate({
@@ -231,12 +235,19 @@
   handleClickEvent: function(e){
     
     // record video or audio
-    if(e.target.className.indexOf('record') !== -1){
+    if(e.target.tagName === 'DIV' && e.target.className.indexOf('record') !== -1){
       var type = (e.target.className.indexOf('Video') !== -1) ? 'video' : 'audio';
       App.Controller.room.toggleRecorder.call(App.Controller.room, e.target, type);
     }
+    // transform speech to text
+    else if(e.target.tagName === 'INPUT' && e.target.className === 'micro_recorder'){
+      App.Controller.room.toggleSpeechToText.call(App.Controller.room, e.target);
+    }
     
   },
+  
+  /* video/audio recording methods */
+  
   toggleRecorder: function(element,type){
     if(!VARecorder.recording){
       this.startRecording(element,type);
@@ -278,5 +289,92 @@
     }
     
     VARecorder.stopRecording();
-  }
+  },
+  
+  /* speech to text methods */
+  
+  toggleSpeechToText: function(element){
+    
+    if(!this.isSpeechRecognizerInitalized){
+      this.speechRecognizer = new webkitSpeechRecognition();
+      this.speechRecognizer.continuous = true;
+      this.speechRecognizer.interimResults = true;
+      this.isSpeechRecognizerInitalized = true;
+    }
+    else if(this.isSpeechRecognizerStarted){
+      this.speechRecognizer.stop();
+    }
+    
+    this.insertSpeechToTextAt(element);
+  },
+  insertSpeechToTextAt: function(element){
+    
+    var controller = this;
+    var inputField = $( $(element).parent().children('textarea')[1] );
+    
+    $('.micro_recorder').attr('disabled',true);
+    
+    if(typeof webkitSpeechRecognition !== 'undefined'){
+
+      controller.speechRecognizer.onstart = function() {
+        controller.isSpeechRecognizerStarted = true;
+        element.src = 'assets/img/micro_recorder_on.png';
+        element.removeAttribute('disabled'); 
+      };
+
+      controller.speechRecognizer.onerror = function(event) {
+        trace('RoomController insertSpeechToTextAt: SpeechRecognition-Error',event);
+      };
+
+      controller.speechRecognizer.onend = function() {
+        controller.isSpeechRecognizerStarted = false;
+        controller.enableSpeechButtons();
+      };
+
+      controller.speechRecognizer.onresult = function(event) {
+        
+        var speechText = '';
+        
+        if( typeof event.results === 'undefined') {
+          controller.speechRecognizer.onend = null;
+          controller.speechRecognizer.stop();
+          trace('RoomController insertSpeechToTextAt: SpeechRecognition-Error',event);
+          return;
+        }
+        
+        for (var i = event.resultIndex; i < event.results.length; ++i) {
+          if(event.results[i].isFinal){
+            speechText = event.results[i][0].transcript;
+          }
+          else if(event.results[i][0].transcript.indexOf('lösche Text') !== -1){
+            inputField.val('');
+            controller.toggleResultEventMethodOfSpeechRecognizer(controller.speechRecognizer.onresult);
+          }
+        }
+        
+        inputField.val((inputField.val()+speechText));
+        
+      };
+      
+      if(!controller.isSpeechRecognizerStarted){
+        controller.speechRecognizer.start();
+      }
+    }
+    else{
+      trace('RoomController insertSpeechToTextAt: SpeechRecognition-Error',event);
+    }
+  },
+  toggleResultEventMethodOfSpeechRecognizer: function(reference){
+    var controller = this;
+    controller.speechRecognizer.onresult = null;
+    setTimeout(function(){ controller.speechRecognizer.onresult = reference },1500);
+  },
+  enableSpeechButtons: function(){
+    setTimeout(function(){ 
+      $('.micro_recorder').removeAttr('disabled'); 
+      $('.micro_recorder').attr('src','assets/img/micro_recorder_off.png');
+    }, 20);
+  },
+  isSpeechRecognizerInitalized: null,
+  isSpeechRecognizerStarted: false
 });
