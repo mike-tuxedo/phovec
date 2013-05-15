@@ -114,7 +114,10 @@
           
           var ctx = canvas.getContext('2d');
           
-          e.data.coords.forEach(function(coord, index) {
+          var formatedCoors = e.data.coords.slice(1,e.data.coords.length);
+          formatedCoors.push(e.data.coords[0]);
+          
+          formatedCoors.forEach(function(coord, index) {
             if(obj.videos[index].style.display !== 'none'){
               controller.drawVideoboxOnCanvas(obj.videos[index], ctx, coord.startX, coord.startY, e.data.cellWidth, e.data.cellHeight);
             }
@@ -168,6 +171,7 @@
   showVisibleSymbolsAgain: function(){
   
     $('.videoWrapper').css('background','');
+    $('.bgAvatar').show();
     
     var localUser = Users.getLocalUser();
     
@@ -189,23 +193,25 @@
       this.handleRemoteRecordingButtons(remoteUsers[r].id);
     }
     
-    $('.removeParticipant').show(); // only host has got these images so this code does not work on guests
     $('video').show();
-    
+    $('.videoWrapper form').show();
+    $('.removeParticipant').show(); // only host has got these images so this code does not work on guests
+
   },
   handleRemoteRecordingButtons: function(remoteId){
   
     var remoteUser = Users.getRemoteUser(remoteId);
     
-    if( remoteUser.stream.getVideoTracks()[0].enabled ){ // when video is activated activate video-recording-button
-      $('#'+remoteId+' .recordRemoteVideo').show();
-    }
-    
-    if( remoteUser.stream.getAudioTracks()[0].enabled ){ // when audio is activated activate audio-recording-button
-      $('#'+remoteId+' .recordRemoteAudio').show(); 
-    }
-    else{
-      $('#'+remoteId+' .stateMute').show();
+    if( remoteUser && remoteUser.stream ){
+      if( remoteUser.stream.getVideoTracks()[0].enabled ){ // when video is activated activate video-recording-button
+        $('#'+remoteId+' .recordRemoteVideo').show();
+      }
+      if( remoteUser.stream.getAudioTracks()[0].enabled ){ // when audio is activated activate audio-recording-button
+        $('#'+remoteId+' .recordRemoteAudio').show();
+      }
+      else{
+        $('#'+remoteId+' .stateMute').show();
+      }
     }
     
   },
