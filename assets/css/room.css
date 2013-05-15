@@ -294,6 +294,13 @@ line-height: 1.5;
   right:0px;
 }
 
+.videoWrapper  .micro_recorder{
+  width: 25px;
+  height: 40px;
+  float: right;
+  margin-right: -25px;
+}
+
 #videoboxes .name {
   border-top-left-radius: 5px;
   border-top-right-radius: 5px;
@@ -523,7 +530,6 @@ line-height: 1.5;
   width:32;
   height:32;
 }
-
 
 /*----------HELP---------*/
 #help h1 {
