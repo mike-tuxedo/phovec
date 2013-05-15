@@ -188,14 +188,22 @@
       <!-- to hide the scrollbar, we need a div whos position is not outside the site -->
       <div id="scrollbar_fix">
         <div id="social_sidebar_container">
-          <input type="button" id="show_sidebar" value="" {{ action showSidebar target="view" }}/>
+          <input type="button" id="show_sidebar" class="sidebar_close" value="" {{ action showSidebar target="view" }}/>
           <div id="show_sidebar_shadow"></div>
           <div id="social_sidebar">
             {{ partial 'auth' }}
           </div>
         </div>
-        <div id="qrcode_box"></div>
       </div>
+      
+      <div id="show_help" {{action "openHelp" target="view"}}>help</div>
+      <div id="help">
+        <div id="help_window">
+          <div id="close_help" {{action "closeHelp" target="view"}}>x</div>
+           <p>Hilfe anleitung</p>   
+        </div>
+      </div>
+
       
       <div id="fb-root"></div>
       
@@ -302,30 +310,24 @@
     <script type="text/x-handlebars" data-template-name="_auth">
     {{#view App.AuthView}}
       {{# unless App.Controller.auth.fbLoggedIn }}
-      <a {{action "fbLogin" target="App.Controller.auth" }} class="socialButtons facebookButton inactive"></a>
+      <a class="socialButtons tab_inactive" id="facebook_tab" {{action "facebookTab" target="view" }}></a>
       {{/unless}}
 <!--
       {{# if App.Controller.auth.fbLoggedIn }}
-      <a {{action "fbLogout" target="App.Controller.auth"}} class="socialButtons facebookButton"></a> 
+      <a {{action "fbLogout" target="App.Controller.auth"}} class="socialButtons facebookTab"></a> 
       {{/if}}
 -->
       {{# unless App.Controller.auth.googleLoggedIn }}
-      <a {{action "googleLogin" target="App.Controller.auth"}} class="socialButtons googleButton inactive"></a>
+      <a class="socialButtons tab_inactive" id="google_tab" {{action "googleTab" target="view"}}></a>
       {{/unless}}
 <!--
       {{# if App.Controller.auth.googleLoggedIn }}
        <a {{action "googleLogout" target="App.Controller.auth"}} class="socialButtons googleButton"></a> 
       {{/if}}
       -->
-      <a class="socialButtons email_button inactive" {{action "toggleEmailForm" target="App.Controller.auth"}} ></a>
-      <a class="socialButtons qr_code tab_active" {{ action "showQrCode" target="view" }}></a>
-      
-      <!-- mail form -->
-      <form id="mail_form">
-        <input type="text" id="mailAddress" placeholder="E-Mail Addresse"/>
-        <input type="text" id="mailDescription" placeholder="E-Mail Beschreibung"/>
-        <input type="button" id="mailFormButton" value="Sende E-Mail" {{action "addMailInfo" target="App.Controller.auth"}} />
-      </form>
+      <a class="socialButtons tab_inactive" id="email_tab"{{action "emailTab" target="view"}}></a>
+      <a class="socialButtons tab_inactive" id="qr_tab" {{ action "QrCodeTab" target="view" }}></a>
+
     {{/view}}
       <!-- user-login data -->
       <div id="userInfo">
@@ -337,7 +339,15 @@
             Du bist bei keinem dieser Netzwerke? KEIN PROBLEM, schicke einfach eine gute alte <strong>eMail</strong> ;)
         </p>
       </div>
-      <div id="friends">
+      <div class="sidebar_content" id="qrcode_box"></div>
+      <div class="sidebar_content" id="friends_of_facebook"></div>
+      <div class="sidebar_content" id="friends_of_google"></div>
+      <div class="sidebar_content" id="friends_of_email">
+        <form id="mail_form">
+          <input type="text" class="email_input" id="mailAddress" placeholder="E-Mail Addresse"/>
+          <textarea type="text" class="email_input" id="mailDescription" placeholder="E-Mail Beschreibung"></textarea>
+          <input type="button" id="mailFormButton" value="Sende E-Mail" {{action "addMailInfo" target="App.Controller.auth"}} />
+        </form>
       </div>
     </script>
 
@@ -370,6 +380,7 @@
     <script src="assets/js/views/auth.js"></script>
     <script src="assets/js/views/invitation.js"></script>
     <script src="assets/js/views/user.js"></script>
+    <script src="assets/js/views/auth.js"></script>
 
     <!-- models -->
     <script src="assets/js/models/user.js"></script>

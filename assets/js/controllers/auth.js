@@ -103,8 +103,8 @@
           friendList.innerHTML += '<li class="send_mail" onclick="App.Controller.auth.sendMail({ subject:\'Einladungsmail\', from:\'phovec@nucular-bacon.com\', to:\''+friend.email+'\', cc: \''+friend.id+'@facebook.com\', text:\''+invitationText+'\', html:\'<b>'+invitationText+'</b>\'})"> Sende E-Mail an ' + friend.name + '</li>';
         
         });
-        
-        document.getElementById('friends').appendChild(friendList);
+
+        document.getElementById('friends_of_facebook').appendChild(friendList);
 
       });
 
@@ -270,7 +270,7 @@
               
             });
 
-            document.getElementById('friends').appendChild(friendList);
+            document.getElementById('friends_of_google').appendChild(friendList);
             
           });
           
@@ -334,18 +334,6 @@
       return "";
     else
       return results[1];
-  },
-  
-  // email-form
-  
-  toggleEmailForm: function(){
-    $('.email_button').click(
-      function(){
-        $('#mail_form').click();
-      }
-    );
-    
-    $('#mail_form').toggle();
   },
   addMailInfo : function(){
     

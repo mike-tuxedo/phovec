@@ -7,6 +7,7 @@
 }
 
 #startButtonImage {
+  cursor: pointer;
 	height: 100px;
 	width: 350px;
 	min-width: 350px;
