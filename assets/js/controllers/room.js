@@ -33,11 +33,11 @@
   },
   animation: function() {
     var interval = setInterval(function() {
-      animate($('#show_sidebar'));
+      animate($('#glow'));
     }, 3000);
 
     function animate(item) {
-      if (parseInt($('#social_sidebar_container').css('right')) > -150) {
+      if (parseInt($('#social_sidebar_container').css('right')) === 0) {
         clearInterval(interval);
       } else {
         item.animate({

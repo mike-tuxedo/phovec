@@ -20,7 +20,7 @@
       else{
         $('#social_sidebar_container').animate({ right: '-300px'}, { duration: 250, queue: false });
         $('#hangupButton').animate({marginRight: '0px'}, { duration: 250, queue: false });
-        $('#scrollbar_fix').animate({width: '100px'}, {duration: 250, queue: false});
+        $('#scrollbar_fix').animate({width: '45px'}, {duration: 250, queue: false});
         $('#show_sidebar').removeClass('sidebar_open').addClass('sidebar_close');
         $('#show_sidebar_shadow').show();
         
