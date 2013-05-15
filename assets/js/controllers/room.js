@@ -114,7 +114,7 @@
           
           var ctx = canvas.getContext('2d');
           
-          var formatedCoors = e.data.coords.slice(1,e.data.coords.length);
+          var formatedCoors = e.data.coords.slice(1,e.data.coords.length); // wrong order of coords resort coords
           formatedCoors.push(e.data.coords[0]);
           
           formatedCoors.forEach(function(coord, index) {
