@@ -43,7 +43,7 @@
 
 #scrollbar_fix {
   position: absolute;
-  width: 150px;
+  width: 45px;
   height: 100%;
   right: 0px;
   top: 0px;
@@ -113,6 +113,17 @@
 #show_sidebar:hover {
   opacity: 1;
   overflow: hidden;
+}
+
+#glow{
+  position: absolute;
+  width: 35px;
+  height: 70px;
+  border-top-left-radius: 70px;
+  border-bottom-left-radius: 70px;
+  top: 45%;
+  right: 0px;
+  z-index: -1;
 }
 
 #social_sidebar {
@@ -554,18 +565,18 @@ line-height: 1.5;
 
 #help_window{
   margin: 0 auto;
-  margin-top: 10%;
+  margin-top: 5%;
   border-radius: 5px;
   background: rgba(255,255,255,0.85);
-  width: 70%;
-  height: 70%;
+  width: 80%;
+  height: 80%;
   color: #444;
   text-align: left;
   overflow-y: scroll;
 }
 
 #help_window img{
-  width: 80%;
+  width: 85%;
   display: block;
   margin: auto;
 }
@@ -590,7 +601,9 @@ line-height: 1.5;
   background: #66666B;
   color:  #e0dfeb;
   border-bottom-left-radius: 70px;
-  border-bottom-right-radius: 70px;  
+  border-bottom-right-radius: 70px;
+  box-shadow: 0px 0px 15px #444;
+  -webkit-box-shadow: 0px 0px 15px #444;
 }
 
 #show_help:hover{

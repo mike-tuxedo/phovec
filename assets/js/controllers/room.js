@@ -33,7 +33,7 @@
   },
   animation: function() {
     var interval = setInterval(function() {
-      animate($('#show_sidebar'));
+      animate($('#glow'));
     }, 3000);
 
     function animate(item) {
