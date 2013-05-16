@@ -1,4 +1,7 @@
 App.AuthView = Ember.View.extend({
+  didInsertElement: function(){
+    App.Controller.auth.createHiddenTextInput();
+  },
   QrCodeTab: function(){
     //set tab active or inactive
     $('#qr_tab').removeClass('tab_inactive').addClass('tab_active');

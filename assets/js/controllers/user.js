@@ -166,8 +166,12 @@ App.UserController = Ember.ObjectController.extend({
       this.mediaOptions.audio = true;
       this.startGetMedia();
       
-      // inform recorder the local stream can now be used
-      window.dispatchEvent(new CustomEvent("videostream:available"));
+      var localVideo = $('.user video');
+      $('#faceDetectorOutput')[0].style.width = localVideo.css('width');
+      $('#faceDetectorOutput')[0].style.height = $('video').css('height');
+      $('#faceDetectorOutput')[0].style.display = 'none';
+      FaceDetector.init(localVideo[0], $('#faceDetectorOutput')[0]);
+      
       return;
     }
 

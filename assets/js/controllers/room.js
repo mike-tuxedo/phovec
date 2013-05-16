@@ -1,34 +1,5 @@
 ﻿App.RoomController = Ember.ObjectController.extend({
-  isFaceDetactorActivated: false,
-  init: function() {
-  
-    var controller = this;
-    
-    window.addEventListener("videostream:available", function(e){
-      
-      var localVideo = $('.user video');
-      $('#faceDetectorOutput')[0].style.width = localVideo.css('width');
-      $('#faceDetectorOutput')[0].style.height = $('video').css('height');
-      $('#faceDetectorOutput')[0].style.display = 'none';
-      FaceDetector.init(localVideo[0], $('#faceDetectorOutput')[0]);
-
-      $('#videoEffects').show();
-      
-    },true);
-    
-    var loop = setInterval(function(){
-    
-      if( $('#videoboxes')[0] && $('#mail_form')[0] ){
-      
-        App.Controller.auth.createHiddenTextInput();
-        $('#videoboxes')[0].addEventListener('click',controller.handleClickEvent,true); // for video-recording and text-recognizer
-        clearInterval(loop);
-        
-      }
-      
-    },1500);
-    
-  },
+  init: function() {},
   animation: function() {
     var interval = setInterval(function() {
       animate($('#glow'));
@@ -62,16 +33,14 @@
     $('#takeOffClothesButton').hide();
     $('#snapshotButton').show();
     FaceDetector.closing = true;
-    this.isFaceDetactorActivated = false;
   },
   putUserStreamOnDetector: function(type) {
     $('video')[0].style.display = 'none';
     $('#takeOffClothesButton').show();
     $('#snapshotButton').hide();
     FaceDetector.closing = false;
-    if (Users.users && Users.users[0].stream && !this.isFaceDetactorActivated){
-      FaceDetector.getStream(Users.users[0].stream, type);
-      this.isFaceDetactorActivated = true;
+    if (Users.getLocalUser().stream){
+      FaceDetector.getStream(Users.getLocalUser().stream, type);
     }
   },
   takeScreenShotFromChatroom: function() {
@@ -231,7 +200,7 @@
     
     var alteredURL = location.href;
     alteredURL = alteredURL.replace('#','%23');
-    qr.text("qrcode_box", 'Raum-Adresse zur Einladung:\n' + alteredURL);
+    qr.text("qrcode_box", alteredURL);
   
   },
   handleClickEvent: function(e){
@@ -298,11 +267,13 @@
   toggleSpeechToText: function(element){
     
     if(!this.isSpeechRecognizerInitalized){
+    
       this.speechRecognizer = new webkitSpeechRecognition();
       this.speechRecognizer.continuous = true;
       this.speechRecognizer.interimResults = true;
       this.isSpeechRecognizerInitalized = true;
       this.insertSpeechToTextAt(element);
+      
     }
     else if(this.isSpeechRecognizerStarted){
       this.speechRecognizer.stop();
@@ -320,7 +291,7 @@
   insertSpeechToTextAt: function(element){
     
     var controller = this;
-    var inputField = $( $(element).parent().parent().children('div')[1] );
+    var inputField = $( $(element).parent().children('div')[1] );
     
     if(typeof webkitSpeechRecognition !== 'undefined'){
 
@@ -352,7 +323,7 @@
             speechText = event.results[i][0].transcript;
           }
           else if(event.results[i][0].transcript.indexOf('lösche Text') !== -1){
-            inputField.html("<input type='image' class='micro_recorder' src='assets/img/micro_recorder_off.png'/>");
+            inputField.html("");
             controller.toggleResultEventMethodOfSpeechRecognizer(controller.speechRecognizer.onresult);
           }
         }
