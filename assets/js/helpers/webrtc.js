@@ -325,10 +325,9 @@ var WebRTC = {
      * Have to be before the modification of the local user,
      * because there could be action with the remote user now
      */
-    if(data.guestIDs != undefined){
-      for (var i = 0; i < data.guestIds.length; i++) {
-        WebRTC.createPeerConnection(data.roomHash, data.userId, data.guestIds[i].id, data.guestIds[i].name, data.guestIds[i].country)
-      }
+
+    for (var i = 0; i < data.users.length; i++) {
+      WebRTC.createPeerConnection(data.roomHash, data.userId, data.users[i].id, data.users[i].name, data.users[i].country)
     }
 
     /**
