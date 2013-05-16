@@ -80,330 +80,328 @@
 
     <script type="text/x-handlebars" data-template-name="application">
       <div id="content">
-        {{outlet}}
+      {{outlet}}
       </div>
     </script>
-    
 
     <!-- templates -->
     <script type="text/x-handlebars" data-template-name="index">
       <header>
-        {{#linkTo "about" id="infoButton"}}{{/linkTo}}
+      {{#linkTo "about" id="infoButton"}}{{/linkTo}}
       </header>
-  
+
       <div id="startInfo">
-        <h1>Videochat mit Deinen Freunden!</h1><br>
-        <p>
-          Einfach auf Start klicken und du bist in einem Chatraum, von wo aus du deine Freunde einladen kannst.
-        </p>
-        <input placeholder="Bitte wählen Sie einen Namen..." id="name"/>
+      <h1>Videochat mit Deinen Freunden!</h1><br>
+      <p>
+      Einfach auf Start klicken und du bist in einem Chatraum, von wo aus du deine Freunde einladen kannst.
+      </p>
+      <input placeholder="Bitte wählen Sie einen Namen..." id="name"/>
       </div>
       <div id="startButtonImage"></div>
     </script>
 
     <script type="text/x-handlebars" data-template-name="room-unknown">
       <div id="hangupInfo">
-        <div>
-          <h2>Dieser Raum ist uns nicht bekannt!</h2><br>
-          <h2>Eröffne doch Deinen eigenen Raum!</h2>
-          <p>
-            <br>Du wirst in <span class="countdown">5</span> Sekunden zur Startseite geleitet.  
-          <p>
-        </div>
+      <div>
+      <h2>Dieser Raum ist uns nicht bekannt!</h2><br>
+      <h2>Eröffne doch Deinen eigenen Raum!</h2>
+      <p>
+      <br>Du wirst in <span class="countdown">5</span> Sekunden zur Startseite geleitet.
+      <p>
+      </div>
       </div>
     </script>
 
     <script type="text/x-handlebars" data-template-name="room-full">
       <div id="hangupInfo">
-        <div>
-          <h2>Dieser Raum ist leider voll!</h2><br>
-          <h2>Eröffne doch Deinen eigenen Raum!</h2>
-          <p>
-            <br>Du wirst in <span class="countdown">5</span> Sekunden zur Startseite geleitet.  
-          <p>
-        </div>
+      <div>
+      <h2>Dieser Raum ist leider voll!</h2><br>
+      <h2>Eröffne doch Deinen eigenen Raum!</h2>
+      <p>
+      <br>Du wirst in <span class="countdown">5</span> Sekunden zur Startseite geleitet.
+      <p>
+      </div>
       </div>
     </script>
 
     <script type="text/x-handlebars" data-template-name="error">
       <div id="hangupInfo">
-        <div>
-          <h2>Es gab einen internen Fehler und unser Entwickler kümmeren sich bereits darum!</h2>
-          <br><h2>Bitte probier es doch später erneut!</h2>
-          <p>
-            <br>Du wirst in <span class="countdown">5</span> Sekunden zur Startseite geleitet.  
-          <p>
-        </div>
+      <div>
+      <h2>Es gab einen internen Fehler und unser Entwickler kümmeren sich bereits darum!</h2>
+      <br><h2>Bitte probier es doch später erneut!</h2>
+      <p>
+      <br>Du wirst in <span class="countdown">5</span> Sekunden zur Startseite geleitet.
+      <p>
+      </div>
       </div>
     </script>
 
     <script type="text/x-handlebars" data-template-name="rooms">
       <div id="roomsInfo">
-        <p>
-          Bitte warten...
-          <br>
-          <br>
-          <img src="assets/img/process_bar.gif">
-        </p>
+      <p>
+      Bitte warten...
+      <br>
+      <br>
+      <img src="assets/img/process_bar.gif">
+      </p>
       </div>
     </script>
 
     <script type="text/x-handlebars" data-template-name="room">
       <header>
-        {{#linkTo "index" id="backButton"}}{{/linkTo}}
-        <div id="buttonFullscreen" {{action "toggleFullscreen" target="view"}}></div>
-        {{#linkTo "room-hangup" id="hangupButton"}}{{/linkTo}}
+      {{#linkTo "index" id="backButton"}}{{/linkTo}}
+      <div id="buttonFullscreen" {{action "toggleFullscreen" target="view"}}></div>
+      {{#linkTo "room-hangup" id="hangupButton"}}{{/linkTo}}
       </header>
 
       <div id="videoboxes">
-        <div class="user local" id="local">
-          <span class="name" id="local_name">Phovec-Benutzer</span>
-          <div class="videoWrapper">
-            <div class="stateMute"></div>
-            <img class='bgAvatar' src="assets/img/avatar.jpg"/>
-            <div class="recordLocalVideo"></div>
-            <div class="recordLocalAudio"></div>
-            <video autoplay></video>
-            <audio autoplay loop muted></audio>
-            <canvas id="faceDetectorOutput"></canvas>
-          </div>
-          
-          {{#view App.UserView}}
-          <div id="video_options">
-            <div class="video_options_buttons" id="control_audio" {{ action controlAudio target="view" }}>on/off Audio</div>
-            <div class="video_options_buttons" id="control_video" {{ action controlVideo target="view" }}>on/off Video</div>
-            <div class="video_options_buttons" id="control_effects" {{ action controlEffects target="view" }}>Effekte</div>
-          </div>
-          {{/view}}
+      <div class="user local" id="local">
+      <span class="name" id="local_name">Phovec-Benutzer</span>
+      <div class="videoWrapper">
+      <div class="stateMute"></div>
+      <img class='bgAvatar' src="assets/img/avatar.jpg"/>
+      <div class="recordLocalVideo"></div>
+      <div class="recordLocalAudio"></div>
+      <video autoplay></video>
+      <audio autoplay loop muted></audio>
+      <canvas id="faceDetectorOutput"></canvas>
+      </div>
 
-          <div id="videoEffects" {{ action hideEffects target="view" }}>
-            <input type="button" id="snapshotButton" class="effectButton" {{action "takeScreenShotFromChatroom" }} value="Snapshot"/>
-            <input type="button" {{action "putClassesOnUser" }} class="effectButton" value="classes" />
-            <input type="button" {{action "putHairOnUser" }} class="effectButton" value="hair" />
-            <input type="button" {{action "putBeardOnUser" }} class="effectButton" value="beard"/>
-            <input type="button" id="takeOffClothesButton" {{action "takeOffClothesOfUser" }} value="off" />
-          </div>
-        </div>
+      {{#view App.UserView}}
+      <div id="video_options">
+      <div class="video_options_buttons" id="control_audio" {{ action controlAudio target="view" }}>on/off Audio</div>
+      <div class="video_options_buttons" id="control_video" {{ action controlVideo target="view" }}>on/off Video</div>
+      <div class="video_options_buttons" id="control_effects" {{ action controlEffects target="view" }}>Effekte</div>
+      </div>
+      {{/view}}
+
+      <div id="videoEffects" {{ action hideEffects target="view" }}>
+      <input type="button" id="snapshotButton" class="effectButton" {{action "takeScreenShotFromChatroom" }} value="Snapshot"/>
+      <input type="button" {{action "putClassesOnUser" }} class="effectButton" value="classes" />
+      <input type="button" {{action "putHairOnUser" }} class="effectButton" value="hair" />
+      <input type="button" {{action "putBeardOnUser" }} class="effectButton" value="beard"/>
+      <input type="button" id="takeOffClothesButton" {{action "takeOffClothesOfUser" }} value="off" />
+      </div>
+      </div>
       </div>
 
       <!-- to hide the scrollbar, we need a div whos position is not outside the site -->
       <div id="scrollbar_fix">
-        <div id="social_sidebar_container">
-          <input type="button" id="show_sidebar" class="sidebar_close" value="" {{ action showSidebar target="view" }}/>
-          <div id="show_sidebar_shadow"></div>
-          <div id="social_sidebar">
-            {{ partial 'auth' }}
-          </div>
-        </div>
+      <div id="social_sidebar_container">
+      <input type="button" id="show_sidebar" class="sidebar_close" value="" {{ action showSidebar target="view" }}/>
+      <div id="show_sidebar_shadow"></div>
+      <div id="social_sidebar">
+      {{ partial 'auth' }}
+      </div>
+      </div>
       </div>
       <div id="glow"></div>
-      
+
       <div id="nameArea">
-        <div>
-         <input placeholder="Bitte geben Sie Ihren Name ein..." id="name"/>
-         <div id="startButtonImage"></div>
-        </div>
+      <div>
+      <input placeholder="Bitte geben Sie Ihren Name ein..." id="name"/>
+      <div id="startButtonImage"></div>
       </div>
-      
-      <div id="show_help" {{action "openHelp" target="view"}}>help</div>
-      <div id="help">
-        <div id="help_window">
-          <div id="close_help" {{action "closeHelp" target="view"}}>x</div>
-           <div id="help_content">
-             <h1 style="text-align: center;">Hilfe anleitung</h1>
-             <p>Hi!</p>
-             <p>
-               Du befindest dich gerade in einem Chatraum. Wenn du, genau wie im Bild, nur eine Videowall hast, 
-               dann heißt das das noch keiner ausßer dir im Raum ist! Natürlich willst du mit einem/einer FreundIn 
-               Chatten, aber wie? Ganz einfach! Klicke auf die Lasche an der rechten Seite um die Sidebar zu öffnen.
-             </p>
-             <br>
-             <p><strong>Die Sidebar bietet dir 4 möglichkeiten um Freunde einzuladen:</strong></p>
-             <ul>
-               <li>Mit Klick auf den Facebookbutton kannst du dich mit Facebook anmelden und wir zeigen dir alle deine Facebookfreunde in der Sidebar an. Diese kannst du dann mit einem einfachen Klick auf ihren Namen einladen.</li>
-               <li>Mit Klick auf den Google+ kannst du dich ebenfalls bei Google bzw. Gmail anmelden, sofern du dort ein Konto hast, und deine Kontakte von Google werden angezeigt.</li>
-               <li>Mit Klick auf eMail kannst du ganz  einfach eine eMail an Freunde schicken, von denen du die Adresse weißt.</li>
-               <li>mit Klick auf QRCode wird dir ein QRCode angezeigt den du, mit einer entsprechenden App, Fotografieren kannst. Damit kopierst du einfach nur die Adresse des Raumes auf dein Handy und brauchst diese nicht abtippen. Somit kannst du die Raumadresse an deine Freunde per SMS verschicken.</li>
-             </ul>
-             <br>
-             <img src="assets/img/help/help-03.png"/>
-             <br>
-             <p>
-               Als nächstes hast du die Möglichkeit zu entscheiden wie du Chatten willst.</p>
-             <p>
-               Du kannst standardmäßig mit
-               allen Freunden die den Raum betreten einen normalen <strong>Textchat</strong> führen. Wenn du mit ihnen Telefonieren willst
-               musst du <strong>Audio</strong> aktivieren. Dazu klickst du auf den ersten Button unter deiner Videowall. 
-               Willst du auch <strong>Video</strong> aktivieren, dann klicke den mittleren. Mit einem erneuten Klick werd die
-               jeweilige Funktion wieder deaktiviert.
-             </p>
-             <p>
-               Lustige Effekte können mit dem "Effekte" Button erzeugt werden. Probiers einfach mal aus :)!
-             </p>
-             <br>
-             <img src="assets/img/help/help-01.png"/>
-             <br>
-             <p>
-               Wird Audio oder Video aktiviert, wird am oberen Ende des Browsers eine Leiste eingeblendet. Dort fragt 
-               dich dein Browser ob er auf dein Mikrofon und/oder Kamera zugreifen darf. 
-               Dies musst du mit "<strong>Zulassen</strong>" bestätigen.
-             </p>
-             <img src="assets/img/help/help-04.png"/>
-             <br>
-             <p>
-               Hast du auch Video aktiviert, so siehst du im linken oberen Bereich eines Videos zwei kleine Buttons.
-               Mit "<strong>A</strong>" kannst du dein Audio aufnehmen und mit "<strong>V</strong>" auch dein Video.  
-             </p>
-             <br>
-             <img src="assets/img/help/help-02.png"/>
-           </div>
-        </div>
       </div>
 
-      
+      <div id="show_help" {{action "openHelp" target="view"}}>help</div>
+      <div id="help">
+      <div id="help_window">
+      <div id="close_help" {{action "closeHelp" target="view"}}>x</div>
+      <div id="help_content">
+      <h1 style="text-align: center;">Hilfe anleitung</h1>
+      <p>Hi!</p>
+      <p>
+      Du befindest dich gerade in einem Chatraum. Wenn du, genau wie im Bild, nur eine Videowall hast,
+      dann heißt das das noch keiner ausßer dir im Raum ist! Natürlich willst du mit einem/einer FreundIn
+      Chatten, aber wie? Ganz einfach! Klicke auf die Lasche an der rechten Seite um die Sidebar zu öffnen.
+      </p>
+      <br>
+      <p><strong>Die Sidebar bietet dir 4 möglichkeiten um Freunde einzuladen:</strong></p>
+      <ul>
+      <li>Mit Klick auf den Facebookbutton kannst du dich mit Facebook anmelden und wir zeigen dir alle deine Facebookfreunde in der Sidebar an. Diese kannst du dann mit einem einfachen Klick auf ihren Namen einladen.</li>
+      <li>Mit Klick auf den Google+ kannst du dich ebenfalls bei Google bzw. Gmail anmelden, sofern du dort ein Konto hast, und deine Kontakte von Google werden angezeigt.</li>
+      <li>Mit Klick auf eMail kannst du ganz  einfach eine eMail an Freunde schicken, von denen du die Adresse weißt.</li>
+      <li>mit Klick auf QRCode wird dir ein QRCode angezeigt den du, mit einer entsprechenden App, Fotografieren kannst. Damit kopierst du einfach nur die Adresse des Raumes auf dein Handy und brauchst diese nicht abtippen. Somit kannst du die Raumadresse an deine Freunde per SMS verschicken.</li>
+      </ul>
+      <br>
+      <img src="assets/img/help/help-03.png"/>
+      <br>
+      <p>
+      Als nächstes hast du die Möglichkeit zu entscheiden wie du Chatten willst.</p>
+      <p>
+      Du kannst standardmäßig mit
+      allen Freunden die den Raum betreten einen normalen <strong>Textchat</strong> führen. Wenn du mit ihnen Telefonieren willst
+      musst du <strong>Audio</strong> aktivieren. Dazu klickst du auf den ersten Button unter deiner Videowall.
+      Willst du auch <strong>Video</strong> aktivieren, dann klicke den mittleren. Mit einem erneuten Klick werd die
+      jeweilige Funktion wieder deaktiviert.
+      </p>
+      <p>
+      Lustige Effekte können mit dem "Effekte" Button erzeugt werden. Probiers einfach mal aus :)!
+      </p>
+      <br>
+      <img src="assets/img/help/help-01.png"/>
+      <br>
+      <p>
+      Wird Audio oder Video aktiviert, wird am oberen Ende des Browsers eine Leiste eingeblendet. Dort fragt
+      dich dein Browser ob er auf dein Mikrofon und/oder Kamera zugreifen darf.
+      Dies musst du mit "<strong>Zulassen</strong>" bestätigen.
+      </p>
+      <img src="assets/img/help/help-04.png"/>
+      <br>
+      <p>
+      Hast du auch Video aktiviert, so siehst du im linken oberen Bereich eines Videos zwei kleine Buttons.
+      Mit "<strong>A</strong>" kannst du dein Audio aufnehmen und mit "<strong>V</strong>" auch dein Video.
+      </p>
+      <br>
+      <img src="assets/img/help/help-02.png"/>
+      </div>
+      </div>
+      </div>
+
       <div id="fb-root"></div>
-      
+
       <!-- Facebook-Instance -->
       <script type="text/javascript" src="http://connect.facebook.net/en_US/all.js"></script>
-      <script src="assets/js/libs/facebook-sdk-init.js"></script>
-  
-      <!-- face-detection -->
-      <script src="assets/js/libs/request-animation-frame.js"></script>
-      <script src="assets/js/libs/face-detection/ccv.js"></script>
-      <script src="assets/js/libs/face-detection/face.js"></script>
-      <script src="assets/js/helpers/face-detector.js"></script>
-  
-      <!-- screenshot-maker -->
-      <script src="assets/js/libs/html2canvas/html2canvas.min.js"></script>
-      
-      <!-- qrcode-maker -->
-      <script src="assets/js/libs/qrcode.packed.js"></script>
-      
-      <!-- recorder -->
-      <script src="assets/js/libs/recordRTC.js"></script>
-      <script src="assets/js/helpers/VARecorder.js"></script>
-      
+    <script src="assets/js/libs/facebook-sdk-init.js"></script>
+
+    <!-- face-detection -->
+    <script src="assets/js/libs/request-animation-frame.js"></script>
+    <script src="assets/js/libs/face-detection/ccv.js"></script>
+    <script src="assets/js/libs/face-detection/face.js"></script>
+    <script src="assets/js/helpers/face-detector.js"></script>
+
+    <!-- screenshot-maker -->
+    <script src="assets/js/libs/html2canvas/html2canvas.min.js"></script>
+
+    <!-- qrcode-maker -->
+    <script src="assets/js/libs/qrcode.packed.js"></script>
+
+    <!-- recorder -->
+    <script src="assets/js/libs/recordRTC.js"></script>
+    <script src="assets/js/helpers/VARecorder.js"></script>
+
     </script>
-    
+
     <script type="text/x-handlebars" data-template-name="about">
       <header>
-        {{#linkTo "index" id="backButton"}}{{/linkTo}}
+      {{#linkTo "index" id="backButton"}}{{/linkTo}}
       </header>
       <div id="aboutInfo">
-        <div class="leftColumn">
-          <h1>Information</h1>
-          <p>
-            Das ist ein Projekt, welches im Rahmen des Qualifikationsprojektes 3 an der Fachhochschule Salzburg
-            im Schwerpunkt Web + Communities realisiert wird. Mit der innovativen Technik WebRTC werden wir den Benutzern und Benutzerinnen
-            dieser Web-Applikation ermöglichen, Multi-Video-Konferenzen kostenlos ohne der Installation eines Plugin zu führen.
-          </p>
-          <h1>Techniken</h1>
-          <p>
-            Das Zentrale Element stellt die HTML5-JavaScript-Innovation WebRTC dar. Sie ermöglicht in der Zukunft mit jeden beliebigen Browser, ohne der Installation eines Programms oder zusätzlichen Plugins Audio- und Videokonferenzen zu führen und über einen Chat mit Freunden, Familien und Arbeitskollegen zu kommunizieren.
-            <br>
-            <br>
-            Für die Sitzungsherstellung verwenden wir einen Node.JS Server mit MongoDB, welcher Benutzer und Benutzerinnen registriert, untereinander vermittelt und das Erstellen von seperaten Chaträumen ermöglicht.
-            <br>
-            <br>
-            Die Strukturierung und den klaren Aufbau erhalten wir durch das JavaScript-Framework Ember.JS, welches ähnlich einem MVC-Framework arbeitet.
-          </p>
-        </div>
-        <div class="rightColumn">
-          <h1>Entwickler</h1>
-          <p>
-            <ul>
-              <li>
-                <a href="mailto:mtiefenthaler.mmt-b2010@fh-salzburg.ac.at">Michael Tiefenthaler</a>
-              </li>
-              <li>
-                <a href="mailto:fbruenner.mmt-b2010@fh-salzburg.ac.at">Franz Josef Brünner</a>
-              </li>
-              <li>
-                <a href="mailto:lwanko.mmt-b2010@fh-salzburg.ac.at">Lukas Wanko</a>
-              </li>
-            </ul>
-          </p>
-          <h1>Repositories</h1>
-          <p>
-            <ul>
-              <li>
-                <a href="https://github.com/mike-tuxedo/phovec">Github Client</a>
-              </li>
-              <li>
-                <a href="https://github.com/mike-tuxedo/Nodejs_P2P-HandshakeServer">Github Server</a>
-              </li>
-            </ul>
-          </p>
-          <h1>Anschrift</h1>
-          <p>
-            Fachhochschule Salzburg
-            <br>
-            Studiengang Multimediatechnology
-            <br>
-            <br>
-            Urstein Süd 1
-            <br>
-            5020 Salzburg
-            <br>
-            Österreich
-          </p>
-        </div>
+      <div class="leftColumn">
+      <h1>Information</h1>
+      <p>
+      Das ist ein Projekt, welches im Rahmen des Qualifikationsprojektes 3 an der Fachhochschule Salzburg
+      im Schwerpunkt Web + Communities realisiert wird. Mit der innovativen Technik WebRTC werden wir den Benutzern und Benutzerinnen
+      dieser Web-Applikation ermöglichen, Multi-Video-Konferenzen kostenlos ohne der Installation eines Plugin zu führen.
+      </p>
+      <h1>Techniken</h1>
+      <p>
+      Das Zentrale Element stellt die HTML5-JavaScript-Innovation WebRTC dar. Sie ermöglicht in der Zukunft mit jeden beliebigen Browser, ohne der Installation eines Programms oder zusätzlichen Plugins Audio- und Videokonferenzen zu führen und über einen Chat mit Freunden, Familien und Arbeitskollegen zu kommunizieren.
+      <br>
+      <br>
+      Für die Sitzungsherstellung verwenden wir einen Node.JS Server mit MongoDB, welcher Benutzer und Benutzerinnen registriert, untereinander vermittelt und das Erstellen von seperaten Chaträumen ermöglicht.
+      <br>
+      <br>
+      Die Strukturierung und den klaren Aufbau erhalten wir durch das JavaScript-Framework Ember.JS, welches ähnlich einem MVC-Framework arbeitet.
+      </p>
+      </div>
+      <div class="rightColumn">
+      <h1>Entwickler</h1>
+      <p>
+      <ul>
+      <li>
+      <a href="mailto:mtiefenthaler.mmt-b2010@fh-salzburg.ac.at">Michael Tiefenthaler</a>
+      </li>
+      <li>
+      <a href="mailto:fbruenner.mmt-b2010@fh-salzburg.ac.at">Franz Josef Brünner</a>
+      </li>
+      <li>
+      <a href="mailto:lwanko.mmt-b2010@fh-salzburg.ac.at">Lukas Wanko</a>
+      </li>
+      </ul>
+      </p>
+      <h1>Repositories</h1>
+      <p>
+      <ul>
+      <li>
+      <a href="https://github.com/mike-tuxedo/phovec">Github Client</a>
+      </li>
+      <li>
+      <a href="https://github.com/mike-tuxedo/Nodejs_P2P-HandshakeServer">Github Server</a>
+      </li>
+      </ul>
+      </p>
+      <h1>Anschrift</h1>
+      <p>
+      Fachhochschule Salzburg
+      <br>
+      Studiengang Multimediatechnology
+      <br>
+      <br>
+      Urstein Süd 1
+      <br>
+      5020 Salzburg
+      <br>
+      Österreich
+      </p>
+      </div>
       </div>
     </script>
 
     <script type="text/x-handlebars" data-template-name="room-hangup">
       <div id="hangupInfo">
-        <div>
-          <h2>Danke das du Phovec benutzt hast!</h2>
-          <h2>Du darfst gerne jederzeit wieder kommen!</h2>
-          <p>
-            <br>Du wirst in <span class="countdown">5</span> Sekunden zur Startseite geleitet.  
-          <p>
-        </div>
+      <div>
+      <h2>Danke das du Phovec benutzt hast!</h2>
+      <h2>Du darfst gerne jederzeit wieder kommen!</h2>
+      <p>
+      <br>Du wirst in <span class="countdown">5</span> Sekunden zur Startseite geleitet.
+      <p>
+      </div>
       </div>
     </script>
 
     <script type="text/x-handlebars" data-template-name="_auth">
-    {{#view App.AuthView}}
+      {{#view App.AuthView}}
       {{# unless App.Controller.auth.fbLoggedIn }}
       <a class="socialButtons tab_inactive" id="facebook_tab" {{action "facebookTab" target="view" }}></a>
       {{/unless}}
-<!--
+      <!--
       {{# if App.Controller.auth.fbLoggedIn }}
-      <a {{action "fbLogout" target="App.Controller.auth"}} class="socialButtons facebookTab"></a> 
+      <a {{action "fbLogout" target="App.Controller.auth"}} class="socialButtons facebookTab"></a>
       {{/if}}
--->
+      -->
       {{# unless App.Controller.auth.googleLoggedIn }}
       <a class="socialButtons tab_inactive" id="google_tab" {{action "googleTab" target="view"}}></a>
       {{/unless}}
-<!--
+      <!--
       {{# if App.Controller.auth.googleLoggedIn }}
-       <a {{action "googleLogout" target="App.Controller.auth"}} class="socialButtons googleButton"></a> 
+      <a {{action "googleLogout" target="App.Controller.auth"}} class="socialButtons googleButton"></a>
       {{/if}}
       -->
       <a class="socialButtons tab_inactive" id="email_tab"{{action "emailTab" target="view"}}></a>
       <a class="socialButtons tab_inactive" id="qr_tab" {{ action "QrCodeTab" target="view" }}></a>
 
-    {{/view}}
+      {{/view}}
       <!-- user-login data -->
       <div id="userInfo">
-        <br />
-        <h1>INFO</h1>
-        <br />
-        <p>
-            Melde dich mit <strong>Facebook</strong> oder <strong>Google+</strong> an und schicke deinen Freunden direkt eine Chateinladung. 
-            Du bist bei keinem dieser Netzwerke? KEIN PROBLEM, schicke einfach eine gute alte <strong>eMail</strong> ;)
-        </p>
+      <br />
+      <h1>INFO</h1>
+      <br />
+      <p>
+      Melde dich mit <strong>Facebook</strong> oder <strong>Google+</strong> an und schicke deinen Freunden direkt eine Chateinladung.
+      Du bist bei keinem dieser Netzwerke? KEIN PROBLEM, schicke einfach eine gute alte <strong>eMail</strong> ;)
+      </p>
       </div>
       <div class="sidebar_content" id="qrcode_box"></div>
       <div class="sidebar_content" id="friends_of_facebook"></div>
       <div class="sidebar_content" id="friends_of_google"></div>
       <div class="sidebar_content" id="friends_of_email">
-        <form id="mail_form">
-          <input type="text" class="email_input" id="mailAddress" placeholder="E-Mail Addresse"/>
-          <textarea type="text" class="email_input" id="mailDescription" placeholder="E-Mail Beschreibung"></textarea>
-          <input type="button" id="mailFormButton" value="Sende E-Mail" {{action "addMailInfo" target="App.Controller.auth"}} />
-        </form>
+      <form id="mail_form">
+      <input type="text" class="email_input" id="mailAddress" placeholder="E-Mail Addresse"/>
+      <textarea type="text" class="email_input" id="mailDescription" placeholder="E-Mail Beschreibung"></textarea>
+      <input type="button" id="mailFormButton" value="Sende E-Mail" {{action "addMailInfo" target="App.Controller.auth"}} />
+      </form>
       </div>
     </script>
 

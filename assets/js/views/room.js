@@ -71,8 +71,8 @@
   },
   toggleFullscreen: function() {
     var documentElement = document.getElementsByTagName("body")[0];
-    if (!document.fullscreenElement && // alternative standard method
-    !document.mozFullScreenElement && !document.webkitFullscreenElement) {// current working methods
+    console.log("toggle", (!document.fullscreenElement && !document.mozFullScreenElement && !document.webkitFullscreenElement));
+    if (!document.fullscreenElement && !document.mozFullScreenElement && !document.webkitFullscreenElement) {// current working methods
       if (documentElement.requestFullscreen) {
         documentElement.requestFullscreen();
       } else if (documentElement.mozRequestFullScreen) {
@@ -105,9 +105,9 @@
         element.onclick = function() {
           var name = document.querySelector("#nameArea #name").value;
           Users.getLocalUser().name = name;
-   
+
           SignalingChannel.init();
-          
+
           document.querySelector("#local_name").innerText = name;
           document.getElementById("nameArea").style.display = "none";
         };
