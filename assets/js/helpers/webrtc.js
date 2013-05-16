@@ -325,6 +325,7 @@ var WebRTC = {
      * Have to be before the modification of the local user,
      * because there could be action with the remote user now
      */
+
     for (var i = 0; i < data.users.length; i++) {
       WebRTC.createPeerConnection(data.roomHash, data.userId, data.users[i].id, data.users[i].name, data.users[i].country)
     }
@@ -336,10 +337,12 @@ var WebRTC = {
     user.roomHash = data.roomHash;
     user.id = data.userId;
     user.country = data.country;
-    if (data.users.length <= 0) {
-      user.admin = true;
+    
+    if(data.users != undefined){
+      if (data.users.length <= 0) {
+        user.admin = true;
+      }
     }
-
     //BUG FIX EMBER JS take a while to render room layout
     setTimeout(function() {
       var img = (user.country ? user.country : "unknown") + '.png';

@@ -2,12 +2,6 @@ App.UserView = Ember.View.extend({
   didInsertElement: function(){
     $('#videoboxes')[0].addEventListener('click',App.Controller.room.handleClickEvent,true);
   },
-  mouseEnter: function(e){
-      //$('.videoOptions').css('opacity','0.9');
-  },
-  mouseLeave: function(e){
-      //$('.videoOptions').css('opacity','0');
-  },
   controlEffects: function(){
     $('#videoEffects').css('display', 'block');
     $('#videoEffects').css('margin-top', '0px');
@@ -17,6 +11,5 @@ App.UserView = Ember.View.extend({
   },
   controlVideo: function(){
     App.Controller.user.controlVideo();
-    $('.effectButton').toggle();
   }
 });

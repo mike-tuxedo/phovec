@@ -456,23 +456,39 @@ line-height: 1.5;
 }
 
 #videoEffects {
+  position: absolute;
   display: none;
-  margin-top: 250px;
-  height: 40px;
-  width: 300px;
-  color: #303743;
+  top: 77px;
+  width: 600px;
+  height: 450px;
   background: #e0dfeb;
-  border-bottom-left-radius: 15px;
-  border-bottom-right-radius: 15px;
-  box-shadow: inset 1px 0px 0px #444;
-  -webkit-box-shadow: inset 1px 1px 5px #444;
 }
 
-#videoEffects input {
+#videoEffects div{
+  cursor: pointer;
+  width: 33%;
+  height: 50%;
   float: left;
-  margin-left: 5px;
-  width: 80px;
-  height: 25px;
+  border: 1px solid #444;
+}
+
+#videoEffects div:hover{
+  opacity: 0.8;  
+}
+
+#glasses{
+  background-image: url(../img/effects/glasses.png);
+  background-size: 100% 100%;
+}
+
+#hair{
+  background-image: url(../img/effects/hair.png);
+  background-size: 100% 100%;
+}
+
+#beard{
+  background-image: url(../img/effects/beard.png);
+  background-size: 100% 100%;
 }
 
 #faceDetectorOutput {
@@ -488,14 +504,6 @@ line-height: 1.5;
 
 .room-wrapper {
   text-align: center;
-}
-
-.effectButton{
-  display:none;
-}
-
-#takeOffClothesButton{
-  display:none;
 }
 
 #qrcode_box{

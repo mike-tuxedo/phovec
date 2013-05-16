@@ -18,8 +18,8 @@
     }
 
   },
-  putClassesOnUser: function() {
-    this.putUserStreamOnDetector('classes');
+  putGlassesOnUser: function() {
+    this.putUserStreamOnDetector('glasses');
   },
   putHairOnUser: function() {
     this.putUserStreamOnDetector('hair');
@@ -27,7 +27,7 @@
   putBeardOnUser: function() {
     this.putUserStreamOnDetector('beard');
   },
-  takeOffClothesOfUser: function() {
+  effectOff: function() {
     $('video')[0].style.display = 'inline';
     $('#faceDetectorOutput')[0].style.display = 'none';
     $('#takeOffClothesButton').hide();
@@ -36,8 +36,6 @@
   },
   putUserStreamOnDetector: function(type) {
     $('video')[0].style.display = 'none';
-    $('#takeOffClothesButton').show();
-    $('#snapshotButton').hide();
     FaceDetector.closing = false;
     if (Users.getLocalUser().stream){
       FaceDetector.getStream(Users.getLocalUser().stream, type);
