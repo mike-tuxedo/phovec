@@ -10,10 +10,7 @@
       $('#faceDetectorOutput')[0].style.width = localVideo.css('width');
       $('#faceDetectorOutput')[0].style.height = $('video').css('height');
       $('#faceDetectorOutput')[0].style.display = 'none';
-      FaceDetector.init(localVideo[0], $('#faceDetectorOutput')[0]);
-
-      $('#videoEffects').show();
-      
+      FaceDetector.init(localVideo[0], $('#faceDetectorOutput')[0]);      
     },true);
     
     var loop = setInterval(function(){
@@ -47,8 +44,8 @@
     }
 
   },
-  putClassesOnUser: function() {
-    this.putUserStreamOnDetector('classes');
+  putGlassesOnUser: function() {
+    this.putUserStreamOnDetector('glasses');
   },
   putHairOnUser: function() {
     this.putUserStreamOnDetector('hair');
@@ -56,20 +53,14 @@
   putBeardOnUser: function() {
     this.putUserStreamOnDetector('beard');
   },
-  takeOffClothesOfUser: function() {
+  effectOff: function() {
     $('video')[0].style.display = 'inline';
     $('#faceDetectorOutput')[0].style.display = 'none';
-    $('#videoEffectsBar').css('margin-top', '250px');
-    $('#takeOffClothesButton').hide();
-    $('#snapshotButton').show();
     FaceDetector.closing = true;
     this.isFaceDetactorActivated = false;
   },
   putUserStreamOnDetector: function(type) {
-    //$('#videoEffectsBar').css('margin-top', '0px');
     $('video')[0].style.display = 'none';
-    $('#takeOffClothesButton').show();
-    $('#snapshotButton').hide();
     FaceDetector.closing = false;
     if (Users.users && Users.users[0].stream && !this.isFaceDetactorActivated){
       FaceDetector.getStream(Users.users[0].stream, type);

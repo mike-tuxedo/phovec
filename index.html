@@ -177,11 +177,11 @@
           {{/view}}
 
           <div id="videoEffects" {{ action hideEffects target="view" }}>
-            <input type="button" id="snapshotButton" class="effectButton" {{action "takeScreenShotFromChatroom" }} value="Snapshot"/>
-            <input type="button" {{action "putClassesOnUser" }} class="effectButton" value="classes" />
-            <input type="button" {{action "putHairOnUser" }} class="effectButton" value="hair" />
-            <input type="button" {{action "putBeardOnUser" }} class="effectButton" value="beard"/>
-            <input type="button" id="takeOffClothesButton" {{action "takeOffClothesOfUser" }} value="off" />
+            <div {{action "putGlassesOnUser" }} class="effectButton" id="glasses" ></div>
+            <div {{action "putHairOnUser" }} class="effectButton" id="hair" ></div>
+            <div {{action "putBeardOnUser" }} class="effectButton" id="beard" ></div>
+            <div {{action "effectOff" }} class="effectButton" id="effekt_off" >kein Effekt</div>
+            <!-- <input type="button" id="snapshotButton" class="effectButton" {{action "takeScreenShotFromChatroom" }} value="Snapshot"/> -->
           </div>
         </div>
       </div>

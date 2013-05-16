@@ -183,9 +183,7 @@ App.UserController = Ember.ObjectController.extend({
         userHash: user.id
       });
       
-      $('.recordLocalVideo').show();
-      $('#faceDetectorOutput').show();
-      
+      $('.recordLocalVideo').show();    
     } else {
       videoStream.enabled = false;
       $('.local video').css('opacity', '0');

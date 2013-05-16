@@ -1,5 +1,6 @@
 ﻿App.IndexView = Ember.View.extend({
   templateName: 'index',
+  activeStartImage: false,
   keyUp: function(event) {
     if (event.target === document.getElementById("name")) {
       if (document.getElementById("name").value.length >= 3) {
@@ -14,12 +15,20 @@
           App.handleURL('/rooms');
           App.Router.router.replaceURL('/rooms');
         };
-        document.getElementById("startButtonImage").style.backgroundImage = "url('assets/img/startbutton.png')";
+        if(this.activeStartImage === false){
+          document.getElementById("startButtonImage").style.backgroundImage = "url('assets/img/startbutton.png')";
+          this.activeStartImage = true;       
+        }
+
       } else {
         document.getElementById("startButtonImage").onmouseover = null;
         document.getElementById("startButtonImage").onmouseout = null;
         document.getElementById("startButtonImage").onclick = null;
-        document.getElementById("startButtonImage").style.backgroundImage = "url('assets/img/startbutton_disabled.png')";
+        if(this.activeStartImage === true){
+          document.getElementById("startButtonImage").style.backgroundImage = "url('assets/img/startbutton_disabled.png')";
+          this.activeStartImage = false;
+        }
+        
       }
     }
   }

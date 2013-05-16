@@ -29,7 +29,7 @@
       var imageWidth = null;
       var imageHeight = null;
       
-      if(type === 'classes'){
+      if(type === 'glasses'){
         imageWidth = this.glasses.width;
         imageHeight = this.glasses.height;
       }  
@@ -92,7 +92,7 @@
 		
 		for(var i = this.comp.length; i--; ) {
       // drawImage(img,x,y,width,height);
-      if(type === 'classes')
+      if(type === 'glasses')
         ctx.drawImage(FaceDetector.glasses, (this.comp[i].x - width / 2) * m, (this.comp[i].y - width / 2) * m, (this.comp[i].width + width) * m, (this.comp[i].height + width) * m);
       else if(type === 'hair')
         ctx.drawImage(FaceDetector.hair, (this.comp[i].x - width / 2) * m, (this.comp[i].y - width / 2) * m, (this.comp[i].width + width) * m, (this.comp[i].height + width) * m);
@@ -104,13 +104,13 @@
 };
 
 FaceDetector.glasses = new Image();
-FaceDetector.glasses.src = 'assets/img/glasses.png';
+FaceDetector.glasses.src = 'assets/img/effects/glasses.png';
 
 FaceDetector.hair = new Image();
-FaceDetector.hair.src = 'assets/img/hair.png';
+FaceDetector.hair.src = 'assets/img/effects/hair.png';
 
 FaceDetector.beard = new Image();
-FaceDetector.beard.src = 'assets/img/beard.png';
+FaceDetector.beard.src = 'assets/img/effects/beard.png';
 
 // source_id must be a <video>-tag
 // output_id must be a <canvas>-tag
