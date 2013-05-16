@@ -59,14 +59,12 @@
   takeOffClothesOfUser: function() {
     $('video')[0].style.display = 'inline';
     $('#faceDetectorOutput')[0].style.display = 'none';
-    $('#videoEffectsBar').css('margin-top', '250px');
     $('#takeOffClothesButton').hide();
     $('#snapshotButton').show();
     FaceDetector.closing = true;
     this.isFaceDetactorActivated = false;
   },
   putUserStreamOnDetector: function(type) {
-    //$('#videoEffectsBar').css('margin-top', '0px');
     $('video')[0].style.display = 'none';
     $('#takeOffClothesButton').show();
     $('#snapshotButton').hide();
