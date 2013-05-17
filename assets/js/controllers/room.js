@@ -61,7 +61,7 @@
         controller.startSnapshotWorker(obj, function(e) {
           
           if (e && !e.data) {
-            console.log("RoomController takeScreenShotFromChatroom: error happend", e);
+            trace("RoomController takeScreenShotFromChatroom: error happend", e);
             return;
           }
           
@@ -73,7 +73,7 @@
             $('#progressSnapshotbar').attr('value', 0);
           }
           
-          console.log('RoomController takeScreenShotFromChatroom: coords found: ',e.data);
+          trace('RoomController takeScreenShotFromChatroom: coords found: ',e.data);
           
           var ctx = canvas.getContext('2d');
           
@@ -265,13 +265,8 @@
   toggleSpeechToText: function(element){
     
     if(!this.isSpeechRecognizerInitalized){
-    
-      this.speechRecognizer = new webkitSpeechRecognition();
-      this.speechRecognizer.continuous = true;
-      this.speechRecognizer.interimResults = true;
-      this.isSpeechRecognizerInitalized = true;
+      this.initializeSpeechRecognizer();
       this.insertSpeechToTextAt(element);
-      
     }
     else if(this.isSpeechRecognizerStarted){
       this.speechRecognizer.stop();
@@ -292,17 +287,16 @@
     var inputField = $( $(element).parent().children('div')[1] );
     
     if(typeof webkitSpeechRecognition !== 'undefined'){
-
-      controller.speechRecognizer.onstart = function(){
-        controller.isSpeechRecognizerStarted = true;
-        element.src = 'assets/img/micro_recorder_on.png';
-      };
       
       controller.speechRecognizer.onerror = controller.speechRecognizerErrorHandler;
-      
       controller.speechRecognizer.onend = function(){
         controller.isSpeechRecognizerStarted = false;
         controller.enableSpeechButtons();
+      };
+      
+      controller.speechRecognizer.onstart = function(){
+        controller.isSpeechRecognizerStarted = true;
+        element.src = 'assets/img/micro_recorder_on.png';
       };
       
       controller.speechRecognizer.onresult = function(event) {
@@ -339,7 +333,7 @@
     }
   },
   speechRecognizerErrorHandler: function(e){
-    trace('RoomController insertSpeechToTextAt: SpeechRecognition-Error',event);
+    trace('RoomController: SpeechRecognition-Error ',event);
   },
   toggleResultEventMethodOfSpeechRecognizer: function(reference){
     var controller = this;
@@ -354,6 +348,108 @@
   isMicroButtonRecording: function(element){
     return element.src.indexOf('micro_recorder_on.png') !== -1;
   },
+  handleGeneralSpeechOrders: function(){
+    
+    var controller = this;
+    controller.speechRecognizer.onerror = controller.speechRecognizerErrorHandler;
+    controller.speechRecognizer.onend = function(){
+      controller.isSpeechRecognizerStarted = false;
+      $('#speechButton').val('Sprachbefehle off');
+    };
+    
+    controller.speechRecognizer.onstart = function(){
+      controller.isSpeechRecognizerStarted = true;
+      $('#speechButton').val('Sprachbefehle on');
+    };
+    
+    controller.speechRecognizer.onresult = function(event) {
+    
+      if( typeof event.results === 'undefined') {
+        controller.speechRecognizer.onend = null;
+        controller.speechRecognizer.stop();
+        trace('RoomController handleGeneralSpeechOrders: SpeechRecognition-Error',event);
+        return;
+      }
+      
+      var spokeOrder = '';
+      
+      for (var i = event.resultIndex; i < event.results.length; ++i) {
+        spokeOrder += event.results[i][0].transcript;
+      }
+      
+      spokeOrder = spokeOrder.toLowerCase();
+      
+      if(controller.doesContainWord(spokeOrder,'sprachbefehl')){ // signal word that sentence must contain
+        
+        if( controller.doesContainWord(spokeOrder,'aufnahme') && (controller.doesContainWord(spokeOrder,'video') || controller.doesContainWord(spokeOrder,'audio')) ){
+        
+          if(controller.doesContainWord(spokeOrder,'start') ){
+            controller.executeSpeechOrder('recordUser',spokeOrder);
+          }
+          else if(controller.doesContainWord(spokeOrder,'stop')){
+            controller.executeSpeechOrder('stopRecordingUser',spokeOrder);
+          }
+          
+        }
+      }
+      
+    };
+    
+    if(!controller.isSpeechRecognizerStarted){
+      controller.speechRecognizer.start();
+    }
+      
+  },
+  doesContainWord: function(sentence,word){
+    return sentence.indexOf(word) !== -1;
+  },
+  executeSpeechOrder: function(order,sentence){
+    
+    var controller = this;
+    
+    if(controller.isSpeechOrderInExecution){
+      return;
+    }
+    
+    controller.isSpeechOrderInExecution = true;
+    
+    setTimeout(function(){ controller.isSpeechOrderInExecution = false; },3000);
+    
+    switch(order){
+      case 'recordUser':
+        
+        var medium = controller.doesContainWord(sentence,'video') ? 'video' : 'audio';
+        var tagclass = medium === 'video' ? 'recordRemoteVideo' : 'recordRemoteAudio';
+        var numberPosition = sentence.search(/\d{1,1}/);
+        var userNumber = Number(sentence.slice(numberPosition,numberPosition+1))-1;
+        var user = Users.getRemoteUsers()[userNumber];
+        
+        controller.toggleRecorder($('#'+user.id+' .'+tagclass)[0],medium);
+        
+        break;
+      
+      case 'stopRecordingUser':
+      
+        $('.recordLocalVideo').css('background', 'url(./assets/img/stop_record_video.png)');
+        $('.recordLocalAudio').css('background', 'url(./assets/img/stop_record_audio.png)');
+        $('.recordRemoteVideo').css('background', 'url(./assets/img/stop_record_video.png)');
+        $('.recordRemoteAudio').css('background', 'url(./assets/img/stop_record_audio.png)');
+        
+        VARecorder.stopRecording();
+        
+        break;
+        
+    };
+  },
+  initializeSpeechRecognizer: function(){
+  
+    this.speechRecognizer = new webkitSpeechRecognition();
+    this.speechRecognizer.continuous = true;
+    this.speechRecognizer.interimResults = true;
+    this.isSpeechRecognizerInitalized = true;
+    
+  },
+  isSpeechOrderInExecution: false,
   isSpeechRecognizerInitalized: null,
   isSpeechRecognizerStarted: false
 });

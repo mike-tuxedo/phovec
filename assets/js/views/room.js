@@ -92,6 +92,20 @@
       document.getElementById("buttonFullscreen").style.backgroundImage = "url('assets/img/fullscreen_start.png')";
     }
   },
+  toggleSpeechOrder: function(){
+  
+    if(App.Controller.room.isSpeechRecognizerStarted){
+      App.Controller.room.speechRecognizer.stop();
+    }
+    else{
+      
+      if(!this.isSpeechRecognizerInitalized){
+        App.Controller.room.initializeSpeechRecognizer();
+      }
+      
+      App.Controller.room.handleGeneralSpeechOrders();
+    }
+  },
   keyUp: function(event) {
     if (event.target === document.querySelector("#nameArea #name")) {
       var element = document.querySelector("#nameArea #startButtonImage");

@@ -152,6 +152,9 @@
       {{#linkTo "index" id="backButton"}}{{/linkTo}}
       <div id="buttonFullscreen" {{action "toggleFullscreen" target="view"}}></div>
       {{#linkTo "room-hangup" id="hangupButton"}}{{/linkTo}}
+      
+      <input type="button" id="speechButton" value="Sprachbefehl off" {{action "toggleSpeechOrder" on="click" target="view"}}/>
+      
       </header>
 
       <div id="videoboxes">

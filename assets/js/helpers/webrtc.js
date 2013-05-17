@@ -520,7 +520,8 @@ var Users = {
     };
 
     Users.users.push(user);
-
+    var userNumber = Users.users.length-1;
+    
     setTimeout(function() {
       var removeParticipantHTML = "";
       if (Users.getLocalUser().admin === true) {
@@ -528,7 +529,7 @@ var Users = {
       }
 
       var img = './assets/img/countries/' + ( remoteUserCountry ? remoteUserCountry : "unknown") + '.png';
-      var remoteUserString = "<div class='user' id='" + remoteUserId + "'>" + "<span class='name' style='background-image: url(" + img + ")'>" + remoteUserName + "</span>" + "<div class='videoWrapper'>" + "<div class='stateMute'></div>" + removeParticipantHTML + "<img class='bgAvatar' src='assets/img/avatar.jpg' />" + "<div class='recordRemoteVideo'></div>" + "<div class='recordRemoteAudio'></div>" + "<video autoplay></video>" + "<audio autoplay loop muted></audio>" + "<form action='javascript:void(0);'>" + "<div class='chatOutput' contenteditable='false'></div>" + "<div class='chatInput' contenteditable='true'></div><input type='image' class='micro_recorder' src='assets/img/micro_recorder_off.png'/>" + "</form>" + "</div>" + "</div>";
+      var remoteUserString = "<div class='user' id='" + remoteUserId + "'>" + "<span class='name' style='background-image: url(" + img + ")'>" + userNumber + "." + remoteUserName + "</span>" + "<div class='videoWrapper'>" + "<div class='stateMute'></div>" + removeParticipantHTML + "<img class='bgAvatar' src='assets/img/avatar.jpg' />" + "<div class='recordRemoteVideo'></div>" + "<div class='recordRemoteAudio'></div>" + "<video autoplay></video>" + "<audio autoplay loop muted></audio>" + "<form action='javascript:void(0);'>" + "<div class='chatOutput' contenteditable='false'></div>" + "<div class='chatInput' contenteditable='true'></div><input type='image' class='micro_recorder' src='assets/img/micro_recorder_off.png'/>" + "</form>" + "</div>" + "</div>";
 
       $('#videoboxes').append(remoteUserString);
 
