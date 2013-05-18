@@ -381,6 +381,7 @@
       
       if(controller.doesContainWord(spokeOrder,'sprachbefehl')){ // signal word that sentence must contain
         
+        // video/audio recording of myself or remote users
         if( controller.doesContainWord(spokeOrder,'aufnahme') && (controller.doesContainWord(spokeOrder,'video') || controller.doesContainWord(spokeOrder,'audio')) ){
         
           if(controller.doesContainWord(spokeOrder,'start') ){
@@ -391,6 +392,12 @@
           }
           
         }
+        // hang up
+        else if( controller.doesContainWord(spokeOrder,'auflegen') ){
+          controller.executeSpeechOrder('hangUp',spokeOrder);
+        }
+        
+        
       }
       
     };
@@ -407,22 +414,31 @@
     
     var controller = this;
     
+    // is necessary because of sentences that came after an execution is in process
     if(controller.isSpeechOrderInExecution){
       return;
     }
-    
     controller.isSpeechOrderInExecution = true;
+    setTimeout(function(){ controller.isSpeechOrderInExecution = false; },3000); 
     
-    setTimeout(function(){ controller.isSpeechOrderInExecution = false; },3000);
     
     switch(order){
       case 'recordUser':
         
         var medium = controller.doesContainWord(sentence,'video') ? 'video' : 'audio';
-        var tagclass = medium === 'video' ? 'recordRemoteVideo' : 'recordRemoteAudio';
         var numberPosition = sentence.search(/\d{1,1}/);
-        var userNumber = Number(sentence.slice(numberPosition,numberPosition+1))-1;
-        var user = Users.getRemoteUsers()[userNumber];
+        var tagclass;
+        var user;
+        
+        if(numberPosition === -1){
+          tagclass = medium === 'video' ? 'recordLocalVideo' : 'recordLocalAudio';
+          user = Users.getLocalUser();
+        }
+        else{
+          tagclass = medium === 'video' ? 'recordRemoteVideo' : 'recordRemoteAudio';
+          var userNumber = Number(sentence.slice(numberPosition,numberPosition+1))-1;
+          user = Users.getRemoteUsers()[userNumber];
+        }
         
         controller.toggleRecorder($('#'+user.id+' .'+tagclass)[0],medium);
         
@@ -436,6 +452,14 @@
         $('.recordRemoteAudio').css('background', 'url(./assets/img/stop_record_audio.png)');
         
         VARecorder.stopRecording();
+        
+        break;
+      
+      case 'hangUp':
+        
+        controller.speechRecognizer.stop();
+        App.handleURL('/room/hangup');
+        App.Router.router.replaceURL('/room/hangup');
         
         break;
         
