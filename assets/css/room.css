@@ -309,6 +309,8 @@ line-height: 1.5;
   width: 25px;
   height: 40px;
   float: right;
+  margin-top: -40px;
+  margin-right: 25px;
 }
 
 #videoboxes .name {
@@ -342,6 +344,8 @@ line-height: 1.5;
   width: 100%;
   height:42px;
   border: 2px solid #a6afb6;
+  padding-right: 60px;
+  overflow-y: scroll;
 }
 
 .chatOutput{

@@ -321,7 +321,8 @@
         }
         
         inputField.html((inputField.html()+speechText));
-        
+        inputField.scrollTop(inputField[0].scrollHeight);
+
       };
       
       if(!controller.isSpeechRecognizerStarted){
@@ -393,6 +394,10 @@
           
         }
         // hang up
+        else if( controller.doesContainWord(spokeOrder,'umbenennen') ){
+          controller.executeSpeechOrder('rename',spokeOrder);
+        }
+        // hang up
         else if( controller.doesContainWord(spokeOrder,'auflegen') ){
           controller.executeSpeechOrder('hangUp',spokeOrder);
         }
@@ -455,6 +460,11 @@
         
         break;
       
+      case 'rename':
+        
+        $('#nameArea').show();
+        break;
+        
       case 'hangUp':
         
         controller.speechRecognizer.stop();
