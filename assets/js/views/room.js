@@ -118,10 +118,21 @@
         };
         element.onclick = function() {
           var name = document.querySelector("#nameArea #name").value;
-          Users.getLocalUser().name = name;
-
-          SignalingChannel.init();
-
+          var localUser = Users.getLocalUser();
+          localUser.name = name;
+          
+          if(SignalingChannel.webSocket){ // user wants to rename their name
+            SignalingChannel.send({
+              subject: "participant:edit",
+              roomHash: localUser.roomHash,
+              userHash: localUser.id,
+              put: { name: localUser.name, country: localUser.country }
+            });
+          }
+          else{
+            SignalingChannel.init();
+          }
+          
           document.querySelector("#local_name").innerText = name;
           document.getElementById("nameArea").style.display = "none";
         };

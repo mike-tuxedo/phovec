@@ -485,5 +485,10 @@
   },
   isSpeechOrderInExecution: false,
   isSpeechRecognizerInitalized: null,
-  isSpeechRecognizerStarted: false
+  isSpeechRecognizerStarted: false,
+  updateUser: function(data,userNum){
+    var videoBoxHead = $('#'+data.userId+' span');
+    videoBoxHead.css('background-image','url(./assets/img/countries/'+data.country+'.png)');
+    videoBoxHead.html(userNum+'.'+data.name);
+  }
 });
