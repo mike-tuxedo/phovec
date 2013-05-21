@@ -107,6 +107,18 @@
               }
             }));
             break;
+          case "participant:edit":
+            trace("signaling", "EDIT", data);
+            window.dispatchEvent(new CustomEvent("signalingchannel:participant", {
+              detail: {
+                message: "edit",
+                roomHash: data.roomHash,
+                userId: data.userHash,
+                country: data.country,
+                name: data.name
+              }
+            }));
+            break;
           case "participant:audio:mute":
             window.dispatchEvent(new CustomEvent("signalingchannel:participant", {
               detail: {

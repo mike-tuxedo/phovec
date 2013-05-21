@@ -1,31 +1,5 @@
 ﻿App.RoomController = Ember.ObjectController.extend({
-  isFaceDetactorActivated: false,
-  init: function() {
-  
-    var controller = this;
-    
-    window.addEventListener("videostream:available", function(e){
-      
-      var localVideo = $('.user video');
-      $('#faceDetectorOutput')[0].style.width = localVideo.css('width');
-      $('#faceDetectorOutput')[0].style.height = $('video').css('height');
-      $('#faceDetectorOutput')[0].style.display = 'none';
-      FaceDetector.init(localVideo[0], $('#faceDetectorOutput')[0]);      
-    },true);
-    
-    var loop = setInterval(function(){
-    
-      if( $('#videoboxes')[0] && $('#mail_form')[0] ){
-      
-        App.Controller.auth.createHiddenTextInput();
-        $('#videoboxes')[0].addEventListener('click',controller.handleClickEvent,true); // for video-recording and text-recognizer
-        clearInterval(loop);
-        
-      }
-      
-    },1500);
-    
-  },
+  init: function() {},
   animation: function() {
     var interval = setInterval(function() {
       animate($('#glow'));
@@ -56,15 +30,15 @@
   effectOff: function() {
     $('video')[0].style.display = 'inline';
     $('#faceDetectorOutput')[0].style.display = 'none';
+    $('#takeOffClothesButton').hide();
+    $('#snapshotButton').show();
     FaceDetector.closing = true;
-    this.isFaceDetactorActivated = false;
   },
   putUserStreamOnDetector: function(type) {
     $('video')[0].style.display = 'none';
     FaceDetector.closing = false;
-    if (Users.users && Users.users[0].stream && !this.isFaceDetactorActivated){
-      FaceDetector.getStream(Users.users[0].stream, type);
-      this.isFaceDetactorActivated = true;
+    if (Users.getLocalUser().stream){
+      FaceDetector.getStream(Users.getLocalUser().stream, type);
     }
   },
   takeScreenShotFromChatroom: function() {
@@ -87,7 +61,7 @@
         controller.startSnapshotWorker(obj, function(e) {
           
           if (e && !e.data) {
-            console.log("RoomController takeScreenShotFromChatroom: error happend", e);
+            trace("RoomController takeScreenShotFromChatroom: error happend", e);
             return;
           }
           
@@ -99,7 +73,7 @@
             $('#progressSnapshotbar').attr('value', 0);
           }
           
-          console.log('RoomController takeScreenShotFromChatroom: coords found: ',e.data);
+          trace('RoomController takeScreenShotFromChatroom: coords found: ',e.data);
           
           var ctx = canvas.getContext('2d');
           
@@ -224,7 +198,7 @@
     
     var alteredURL = location.href;
     alteredURL = alteredURL.replace('#','%23');
-    qr.text("qrcode_box", 'Raum-Adresse zur Einladung:\n' + alteredURL);
+    qr.text("qrcode_box", alteredURL);
   
   },
   handleClickEvent: function(e){
@@ -291,10 +265,7 @@
   toggleSpeechToText: function(element){
     
     if(!this.isSpeechRecognizerInitalized){
-      this.speechRecognizer = new webkitSpeechRecognition();
-      this.speechRecognizer.continuous = true;
-      this.speechRecognizer.interimResults = true;
-      this.isSpeechRecognizerInitalized = true;
+      this.initializeSpeechRecognizer();
       this.insertSpeechToTextAt(element);
     }
     else if(this.isSpeechRecognizerStarted){
@@ -313,20 +284,19 @@
   insertSpeechToTextAt: function(element){
     
     var controller = this;
-    var inputField = $( $(element).parent().parent().children('div')[1] );
+    var inputField = $( $(element).parent().children('div')[1] );
     
     if(typeof webkitSpeechRecognition !== 'undefined'){
-
-      controller.speechRecognizer.onstart = function(){
-        controller.isSpeechRecognizerStarted = true;
-        element.src = 'assets/img/micro_recorder_on.png';
-      };
       
       controller.speechRecognizer.onerror = controller.speechRecognizerErrorHandler;
-      
       controller.speechRecognizer.onend = function(){
         controller.isSpeechRecognizerStarted = false;
         controller.enableSpeechButtons();
+      };
+      
+      controller.speechRecognizer.onstart = function(){
+        controller.isSpeechRecognizerStarted = true;
+        element.src = 'assets/img/micro_recorder_on.png';
       };
       
       controller.speechRecognizer.onresult = function(event) {
@@ -345,13 +315,14 @@
             speechText = event.results[i][0].transcript;
           }
           else if(event.results[i][0].transcript.indexOf('lösche Text') !== -1){
-            inputField.html("<input type='image' class='micro_recorder' src='assets/img/micro_recorder_off.png'/>");
+            inputField.html("");
             controller.toggleResultEventMethodOfSpeechRecognizer(controller.speechRecognizer.onresult);
           }
         }
         
         inputField.html((inputField.html()+speechText));
-        
+        inputField.scrollTop(inputField[0].scrollHeight);
+
       };
       
       if(!controller.isSpeechRecognizerStarted){
@@ -363,7 +334,7 @@
     }
   },
   speechRecognizerErrorHandler: function(e){
-    trace('RoomController insertSpeechToTextAt: SpeechRecognition-Error',event);
+    trace('RoomController: SpeechRecognition-Error ',event);
   },
   toggleResultEventMethodOfSpeechRecognizer: function(reference){
     var controller = this;
@@ -378,6 +349,146 @@
   isMicroButtonRecording: function(element){
     return element.src.indexOf('micro_recorder_on.png') !== -1;
   },
+  handleGeneralSpeechOrders: function(){
+    
+    var controller = this;
+    controller.speechRecognizer.onerror = controller.speechRecognizerErrorHandler;
+    controller.speechRecognizer.onend = function(){
+      controller.isSpeechRecognizerStarted = false;
+      $('#speechButton').val('Sprachbefehle off');
+    };
+    
+    controller.speechRecognizer.onstart = function(){
+      controller.isSpeechRecognizerStarted = true;
+      $('#speechButton').val('Sprachbefehle on');
+    };
+    
+    controller.speechRecognizer.onresult = function(event) {
+    
+      if( typeof event.results === 'undefined') {
+        controller.speechRecognizer.onend = null;
+        controller.speechRecognizer.stop();
+        trace('RoomController handleGeneralSpeechOrders: SpeechRecognition-Error',event);
+        return;
+      }
+      
+      var spokeOrder = '';
+      
+      for (var i = event.resultIndex; i < event.results.length; ++i) {
+        spokeOrder += event.results[i][0].transcript;
+      }
+      
+      spokeOrder = spokeOrder.toLowerCase();
+      
+      if(controller.doesContainWord(spokeOrder,'sprachbefehl')){ // signal word that sentence must contain
+        
+        // video/audio recording of myself or remote users
+        if( controller.doesContainWord(spokeOrder,'aufnahme') && (controller.doesContainWord(spokeOrder,'video') || controller.doesContainWord(spokeOrder,'audio')) ){
+        
+          if(controller.doesContainWord(spokeOrder,'start') ){
+            controller.executeSpeechOrder('recordUser',spokeOrder);
+          }
+          else if(controller.doesContainWord(spokeOrder,'stop')){
+            controller.executeSpeechOrder('stopRecordingUser',spokeOrder);
+          }
+          
+        }
+        // hang up
+        else if( controller.doesContainWord(spokeOrder,'umbenennen') ){
+          controller.executeSpeechOrder('rename',spokeOrder);
+        }
+        // hang up
+        else if( controller.doesContainWord(spokeOrder,'auflegen') ){
+          controller.executeSpeechOrder('hangUp',spokeOrder);
+        }
+        
+        
+      }
+      
+    };
+    
+    if(!controller.isSpeechRecognizerStarted){
+      controller.speechRecognizer.start();
+    }
+      
+  },
+  doesContainWord: function(sentence,word){
+    return sentence.indexOf(word) !== -1;
+  },
+  executeSpeechOrder: function(order,sentence){
+    
+    var controller = this;
+    
+    // is necessary because of sentences that came after an execution is in process
+    if(controller.isSpeechOrderInExecution){
+      return;
+    }
+    controller.isSpeechOrderInExecution = true;
+    setTimeout(function(){ controller.isSpeechOrderInExecution = false; },3000); 
+    
+    
+    switch(order){
+      case 'recordUser':
+        
+        var medium = controller.doesContainWord(sentence,'video') ? 'video' : 'audio';
+        var numberPosition = sentence.search(/\d{1,1}/);
+        var tagclass;
+        var user;
+        
+        if(numberPosition === -1){
+          tagclass = medium === 'video' ? 'recordLocalVideo' : 'recordLocalAudio';
+          user = Users.getLocalUser();
+        }
+        else{
+          tagclass = medium === 'video' ? 'recordRemoteVideo' : 'recordRemoteAudio';
+          var userNumber = Number(sentence.slice(numberPosition,numberPosition+1))-1;
+          user = Users.getRemoteUsers()[userNumber];
+        }
+        
+        controller.toggleRecorder($('#'+user.id+' .'+tagclass)[0],medium);
+        
+        break;
+      
+      case 'stopRecordingUser':
+      
+        $('.recordLocalVideo').css('background', 'url(./assets/img/stop_record_video.png)');
+        $('.recordLocalAudio').css('background', 'url(./assets/img/stop_record_audio.png)');
+        $('.recordRemoteVideo').css('background', 'url(./assets/img/stop_record_video.png)');
+        $('.recordRemoteAudio').css('background', 'url(./assets/img/stop_record_audio.png)');
+        
+        VARecorder.stopRecording();
+        
+        break;
+      
+      case 'rename':
+        
+        $('#nameArea').show();
+        break;
+        
+      case 'hangUp':
+        
+        controller.speechRecognizer.stop();
+        App.handleURL('/room/hangup');
+        App.Router.router.replaceURL('/room/hangup');
+        
+        break;
+        
+    };
+  },
+  initializeSpeechRecognizer: function(){
+  
+    this.speechRecognizer = new webkitSpeechRecognition();
+    this.speechRecognizer.continuous = true;
+    this.speechRecognizer.interimResults = true;
+    this.isSpeechRecognizerInitalized = true;
+    
+  },
+  isSpeechOrderInExecution: false,
   isSpeechRecognizerInitalized: null,
-  isSpeechRecognizerStarted: false
+  isSpeechRecognizerStarted: false,
+  updateUser: function(data,userNum){
+    var videoBoxHead = $('#'+data.userId+' span');
+    videoBoxHead.css('background-image','url(./assets/img/countries/'+data.country+'.png)');
+    videoBoxHead.html(userNum+'.'+data.name);
+  }
 });
