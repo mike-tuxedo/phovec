@@ -9,7 +9,7 @@
     var self = this;
 
     try {
-      this.webSocket = new WebSocket('wss://www.nucular-bacon.com:49152');
+      this.webSocket = new WebSocket('ws://www.nucular-bacon.com:49152');
       this.webSocket.onopen = function() {
         trace("signaling", "ONOPEN", "-");
         self.isConnected = true;
