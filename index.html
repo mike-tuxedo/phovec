@@ -149,38 +149,38 @@
 
     <script type="text/x-handlebars" data-template-name="room">
       <header>
-      {{#linkTo "index" id="backButton"}}{{/linkTo}}
-      <div id="buttonFullscreen" {{action "toggleFullscreen" target="view"}}></div>
-      {{#linkTo "room-hangup" id="hangupButton"}}{{/linkTo}}
+        {{#linkTo "index" id="backButton"}}{{/linkTo}}
+        <div id="buttonFullscreen" {{action "toggleFullscreen" target="view"}}></div>
+        {{#linkTo "room-hangup" id="hangupButton"}}{{/linkTo}}
       </header>
 
       <div id="videoboxes">
-      <div class="user local" id="local">
-      <span class="name" id="local_name">Phovec-Benutzer</span>
-      <div class="videoWrapper">
-      <div class="stateMute"></div>
-      <img class='bgAvatar' src="assets/img/avatar.jpg"/>
-      <div class="recordLocalVideo"></div>
-      <div class="recordLocalAudio"></div>
-      <video autoplay></video>
-      <audio autoplay loop muted></audio>
-      <canvas id="faceDetectorOutput"></canvas>
-      </div>
+        <div class="user local" id="local">
+        <span class="name" id="local_name">Phovec-Benutzer</span>
+        <div class="videoWrapper">
+          <div class="stateMute"></div>
+          <img class='bgAvatar' src="assets/img/avatar.jpg"/>
+          div class="recordLocalVideo"></div>
+          <div class="recordLocalAudio"></div>
+          <video autoplay></video>
+          <audio autoplay loop muted></audio>
+          <canvas id="faceDetectorOutput"></canvas>
+        </div>
 
       {{#view App.UserView}}
       <div id="video_options">
-      <div class="video_options_buttons" id="control_audio" {{ action controlAudio target="view" }}>on/off Audio</div>
-      <div class="video_options_buttons" id="control_video" {{ action controlVideo target="view" }}>on/off Video</div>
-      <div class="video_options_buttons" id="control_effects" {{ action controlEffects target="view" }}>Effekte</div>
+        <div class="video_options_buttons" id="control_audio" {{ action controlAudio target="view" }}>on/off Audio</div>
+        <div class="video_options_buttons" id="control_video" {{ action controlVideo target="view" }}>on/off Video</div>
+        <div class="video_options_buttons" id="control_effects" {{ action controlEffects target="view" }}>Effekte</div>
       </div>
       {{/view}}
 
       <div id="videoEffects" {{ action hideEffects target="view" }}>
-      <input type="button" id="snapshotButton" class="effectButton" {{action "takeScreenShotFromChatroom" }} value="Snapshot"/>
-      <input type="button" {{action "putClassesOnUser" }} class="effectButton" value="classes" />
-      <input type="button" {{action "putHairOnUser" }} class="effectButton" value="hair" />
-      <input type="button" {{action "putBeardOnUser" }} class="effectButton" value="beard"/>
-      <input type="button" id="takeOffClothesButton" {{action "takeOffClothesOfUser" }} value="off" />
+        <input type="button" id="snapshotButton" class="effectButton" {{action "takeScreenShotFromChatroom" }} value="Snapshot"/>
+        <input type="button" {{action "putClassesOnUser" }} class="effectButton" value="classes" />
+        <input type="button" {{action "putHairOnUser" }} class="effectButton" value="hair" />
+        <input type="button" {{action "putBeardOnUser" }} class="effectButton" value="beard"/>
+        <input type="button" id="takeOffClothesButton" {{action "takeOffClothesOfUser" }} value="off" />
       </div>
       </div>
       </div>

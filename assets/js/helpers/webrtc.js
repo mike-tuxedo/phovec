@@ -336,17 +336,9 @@ var WebRTC = {
     user.roomHash = data.roomHash;
     user.id = data.userId;
     user.country = data.country;
-    if (data.guestIds.length <= 0) {
+    if (data.users.length <= 0) {
       user.admin = true;
     }
-
-    //BUG FIX EMBER JS take a while to render room layout
-    setTimeout(function() {
-      var img = (user.country ? user.country : "unknown") + '.png';
-      $('#local_name').text(user.name);
-      $('#local_name').css('background-image', 'url(assets/img/countries/' + img + ')');
-      $('#videoboxes #local').attr("id", data.userId);
-    }, 0);
   },
   handleSignalingSdp: function(event) {
     trace("webrtc", "Handle SDP", event);

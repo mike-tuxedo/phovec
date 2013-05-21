@@ -68,6 +68,12 @@
     if (Users.getLocalUser().name === "Phovec-Benutzer" || Users.getLocalUser().name === undefined) {
       $('#nameArea').show();
     }
+
+    var user = Users.getLocalUser();
+    var img = (user.country ? user.country : "unknown") + '.png';
+    $('#local_name').text(user.name);
+    $('#local_name').css('background-image', 'url(assets/img/countries/' + img + ')');
+    $('#videoboxes #local').attr("id", user.id);
   },
   toggleFullscreen: function() {
     var documentElement = document.getElementsByTagName("body")[0];
@@ -120,4 +126,4 @@
       }
     }
   }
-});
+}); 
