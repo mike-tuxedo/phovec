@@ -1,5 +1,5 @@
 ﻿var FaceDetector = {
-  closing: false,
+  closed: true,
   typeToLoad: null,
 	getStream: function(stream,type) {
     
@@ -33,9 +33,9 @@
         imageWidth = this.glasses.width;
         imageHeight = this.glasses.height;
       }  
-      else if(type === 'hair'){
-        imageWidth = this.hair.width;
-        imageHeight = this.hair.height;
+      else if(type === 'hat'){
+        imageWidth = this.hat.width;
+        imageHeight = this.hat.height;
       }
       else if(type === 'beard'){
         imageWidth = this.beard.width;
@@ -63,7 +63,7 @@
 	},
 	drawToCanvas: function() {
     
-    if(!this.closing){
+    if(!this.closed){
       this.drawToCanvas = this.drawToCanvas.bind(this);
       requestAnimationFrame(this.drawToCanvas,type);
     }
@@ -94,8 +94,8 @@
       // drawImage(img,x,y,width,height);
       if(type === 'glasses')
         ctx.drawImage(FaceDetector.glasses, (this.comp[i].x - width / 2) * m, (this.comp[i].y - width / 2) * m, (this.comp[i].width + width) * m, (this.comp[i].height + width) * m);
-      else if(type === 'hair')
-        ctx.drawImage(FaceDetector.hair, (this.comp[i].x - width / 2) * m, (this.comp[i].y - width / 2) * m, (this.comp[i].width + width) * m, (this.comp[i].height + width) * m);
+      else if(type === 'hat')
+        ctx.drawImage(FaceDetector.hat, ((this.comp[i].x - width / 2) * m) /1.8, (-130 * m) /2, (this.comp[i].width + width) * m * 2, (this.comp[i].height + width) * m * 2);
       else if(type === 'beard')
         ctx.drawImage(FaceDetector.beard, (this.comp[i].x - width / 2) * m, (this.comp[i].y - width / 2) * m, (this.comp[i].width + width) * m, (this.comp[i].height + width) * m);
     }
@@ -106,8 +106,8 @@
 FaceDetector.glasses = new Image();
 FaceDetector.glasses.src = 'assets/img/effects/glasses.png';
 
-FaceDetector.hair = new Image();
-FaceDetector.hair.src = 'assets/img/effects/hair.png';
+FaceDetector.hat = new Image();
+FaceDetector.hat.src = 'assets/img/effects/hat.png';
 
 FaceDetector.beard = new Image();
 FaceDetector.beard.src = 'assets/img/effects/beard.png';
@@ -116,7 +116,7 @@ FaceDetector.beard.src = 'assets/img/effects/beard.png';
 // output_id must be a <canvas>-tag
 FaceDetector.init = function(source, output) {
   
-  this.closing = false;
+  this.closed = false;
   
 	this.video = source; // source that is used for receiving data from
 	this.backCanvas = document.createElement('canvas'); // canvas that is used for calculations
