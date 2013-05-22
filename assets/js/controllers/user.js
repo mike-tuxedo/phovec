@@ -68,6 +68,8 @@ App.UserController = Ember.ObjectController.extend({
     else{
       $('.recordLocalVideo').show();
       $('.recordLocalAudio').show();
+      $('#control_effects').removeClass('disabled');
+      console.log('remove disabled');
     }
 
     if ( typeof webkitURL !== "undefined") {
@@ -181,6 +183,7 @@ App.UserController = Ember.ObjectController.extend({
     if (videoStream.enabled === false) {
       videoStream.enabled = true;
       $('.local video').css('opacity', '1');
+      $('#control_effects').removeClass('disabled');
 
       SignalingChannel.send({
         subject: "participant:video:unmute",
@@ -192,6 +195,7 @@ App.UserController = Ember.ObjectController.extend({
     } else {
       videoStream.enabled = false;
       $('.local video').css('opacity', '0');
+      $('#control_effects').addClass('disabled');
 
       SignalingChannel.send({
         subject: "participant:video:mute",

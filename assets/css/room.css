@@ -405,40 +405,6 @@ line-height: 1.5;
   border-bottom: 1px solid #444444;
   margin-left: 200px;
 }
-/*
- .videoOptions {
- display: none;
- opacity: 0;
- border-top-left-radius: 5px;
- border-top-right-radius: 5px;
- position: absolute;
- background: #fdfdfd;
- width: 300px;
- height: 251px;
- z-index: 20;
- }
-
- .videoOptionsItems {
- width: 50%;
- height: 50%;
- float: left;
- }
-
- .videoOptionsItems:hover {
- cursor: pointer;
- background: #607890;
- }
-
- .videoOptions img {
- cursor: pointer;
- width: 50px;
- margin-top: 198px;
- }
-
- .videoOptions img:hover {
- background: #888;
- }
- */
 
 #hangupButton {
   position: absolute;
@@ -596,6 +562,10 @@ line-height: 1.5;
 .countryLocation{
   width:32;
   height:32;
+}
+
+.disabled{
+  z-index: -1;
 }
 
 /*----------HELP---------*/
