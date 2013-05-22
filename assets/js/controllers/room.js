@@ -21,8 +21,8 @@
   putGlassesOnUser: function() {
     this.putUserStreamOnDetector('glasses');
   },
-  putHairOnUser: function() {
-    this.putUserStreamOnDetector('hair');
+  putHatOnUser: function() {
+    this.putUserStreamOnDetector('hat');
   },
   putBeardOnUser: function() {
     this.putUserStreamOnDetector('beard');
@@ -32,11 +32,11 @@
     $('#faceDetectorOutput')[0].style.display = 'none';
     $('#takeOffClothesButton').hide();
     $('#snapshotButton').show();
-    FaceDetector.closing = true;
+    FaceDetector.closed = true;
   },
   putUserStreamOnDetector: function(type) {
     $('video')[0].style.display = 'none';
-    FaceDetector.closing = false;
+    FaceDetector.closed = false;
     if (Users.getLocalUser().stream){
       FaceDetector.getStream(Users.getLocalUser().stream, type);
     }
