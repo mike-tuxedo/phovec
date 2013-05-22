@@ -52,7 +52,7 @@ App.UserController = Ember.ObjectController.extend({
     $('.video_options_buttons').css('width', buttonWidth + 'px');
     $('#control_video').css('margin-left', buttonWidth + 'px');
     $('#control_effects').css('margin-left', buttonWidth*2-1 + 'px');
->>>>>>> 4d4d315aa259ae61fcd441b85ff394316017ff8c
+
   },
   onGetMediaSuccess: function(stream) {
     var user = Users.getLocalUser();
@@ -216,6 +216,8 @@ App.UserController = Ember.ObjectController.extend({
       userHash: user.id,
       destinationHash: remoteUserId
     });
+    
+    
   },
   userBoxes: document.getElementsByClassName('user').length,
   windowWidth: 0,

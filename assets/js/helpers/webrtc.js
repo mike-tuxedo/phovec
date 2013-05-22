@@ -593,7 +593,7 @@ var Users = {
 
         Users.users.splice(i, 1);
         var boxes = document.getElementsByClassName('user').length;
-        window.App.Controller.user.set('userBoxes', boxes);
+        window.App.Controller.user.set('userBoxes', boxes-1);
         return true;
       }
     }

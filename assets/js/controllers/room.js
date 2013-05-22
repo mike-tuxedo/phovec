@@ -19,7 +19,6 @@
     }
 
   },
-<<<<<<< HEAD
   addRemoteUsers: function() {
     var users = Users.getRemoteUsers();
     users.forEach.call(this, function(user, index, users) {
@@ -45,7 +44,11 @@
     if (Users.getLocalUser().admin !== true) {
       $('#' + user.id + ' .removeParticipant').hide();
     }
-    window.App.Controller.user.set('usersCounter', Users.users.length);
+
+    var boxes = document.getElementsByClassName('user').length;
+    window.App.Controller.user.set('userBoxes', boxes-1);
+    console.log(boxes);
+    
   },
   takeScreenShotFromChatroom: function() {
 
