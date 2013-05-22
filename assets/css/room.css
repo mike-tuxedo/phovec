@@ -459,14 +459,14 @@ line-height: 1.5;
   background-size: 100% 100%;
 }
 
-#hair{
-  background-image: url(../img/effects/hair.png);
+#hat{
+  background-image: url(../img/effects/hat.png);
   background-size: 100% 100%;
 }
 
-#hair:hover{
+#hat:hover{
   background: #fff;
-  background-image: url(../img/effects/hair.png);
+  background-image: url(../img/effects/hat.png);
   background-size: 100% 100%;
 }
 
