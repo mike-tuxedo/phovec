@@ -592,7 +592,8 @@ var Users = {
         user = null;
 
         Users.users.splice(i, 1);
-        window.App.Controller.user.set('usersCounter', Users.users.length);
+        var boxes = document.getElementsByClassName('user').length;
+        window.App.Controller.user.set('userBoxes', boxes);
         return true;
       }
     }

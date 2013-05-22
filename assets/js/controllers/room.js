@@ -19,6 +19,7 @@
     }
 
   },
+<<<<<<< HEAD
   addRemoteUsers: function() {
     var users = Users.getRemoteUsers();
     users.forEach.call(this, function(user, index, users) {

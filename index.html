@@ -287,14 +287,15 @@
           <div id="video_options">
             <div class="video_options_buttons" id="control_audio" {{ action controlAudio target="view" }}>on/off Audio</div>
             <div class="video_options_buttons" id="control_video" {{ action controlVideo target="view" }}>on/off Video</div>
-            <div class="video_options_buttons" id="control_effects" {{ action controlEffects target="view" }}>Effekte</div>
+            <div class="video_options_buttons disabled" id="control_effects" {{ action controlEffects target="view" }}>Effekte</div>
           </div>
-          
-          <div id="videoEffects" {{ action hideEffects target="view" }}>
-            <div {{action "putGlassesOnUser" target="view" }} class="effectButton" id="glasses" ></div>
-            <div {{action "putHairOnUser" target="view" }} class="effectButton" id="hair" ></div>
-            <div {{action "putBeardOnUser" target="view" }} class="effectButton" id="beard" ></div>
-            <div {{action "effectOff" target="view" }} class="effectButton" id="effekt_off" >kein Effekt</div>
+          <div id="videoEffects">
+            <div {{action "putGlassesOnUser" }} class="effectButton" id="glasses" ></div>
+            <div {{action "putHatOnUser" }} class="effectButton" id="hat" ></div>
+            <div {{action "putBeardOnUser" }} class="effectButton" id="beard" ></div>
+            <div {{action controlEffects target="view" }} class="effectButton" id="effect_off" >kein Effekt</div>
+            <div {{action controlEffects target="view" }} class="effectButton" id="effect_off" >kein Effekt</div>
+            <div {{action controlEffects target="view" }} class="effectButton" id="effect_off" >kein Effekt</div>
             <!-- <input type="button" id="snapshotButton" class="effectButton" {{action "takeScreenShotFromChatroom" }} value="Snapshot"/> -->
           </div>
         {{/view}}
@@ -319,7 +320,6 @@
         </div>
       </div>
     </div>
-
 
     <script type="text/x-handlebars" data-template-name="about">
       <header>

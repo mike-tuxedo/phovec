@@ -1,55 +1,58 @@
 App.UserController = Ember.ObjectController.extend({
-  init: function() {
-    this.addObserver('usersCounter', function() {
-      if (this.usersCounter === 1) {
-        $('.user').css('width', '600px');
-        $('.user').css('height', '527px');
-        $('.videoWrapper').css('height', '448px');
-        $('.video_options_buttons').css('width', '194px');
-        $('#videoboxes').css('width', '600px');
-        $('#videoboxes').css('margin-top', '40px');
-        $('#control_video').css('margin-left', '198px');
-        $('#control_effects').css('margin-left', '400px');
-      } else if (this.usersCounter === 2) {
-        $('.user').css('width', '450px');
-        $('.user').css('height', '390px');
-        $('.videoWrapper').css('height', '340px');
-        $('.video_options_buttons').css('width', '146px');
-        $('#videoboxes').css('width', '940px');
-        $('#videoboxes').css('margin-top', '100px');
-        $('#control_video').css('margin-left', '146px');
-        $('#control_effects').css('margin-left', '298px');
-      } else if (this.usersCounter === 3) {
-        $('.user').css('width', '350px');
-        $('.user').css('height', '350px');
-        $('.videoWrapper').css('height', '290px');
-        $('.video_options_buttons').css('width', '114px');
-        $('#videoboxes').css('width', '1110px');
-        $('#videoboxes').css('margin-top', '100px');
-        $('#control_video').css('margin-left', '115px');
-        $('#control_effects').css('margin-left', '230px');
-      } else if (this.usersCounter === 4) {
-        $('.user').css('width', '350px');
-        $('.user').css('height', '350px');
-        $('.videoWrapper').css('height', '290px');
-        $('.video_options_buttons').css('width', '114px');
-        $('#videoboxes').css('width', '790px');
-        $('#videoboxes').css('margin-top', '15px');
-        $('#control_video').css('margin-left', '115px');
-        $('#control_effects').css('margin-left', '230px');
-      } else if (this.usersCounter >= 5) {
-        $('.user').css('width', '350px');
-        $('.user').css('height', '350px');
-        $('.videoWrapper').css('height', '290px');
-        $('.video_options_buttons').css('width', '114px');
-        $('#videoboxes').css('width', '1110px');
-        $('#videoboxes').css('margin-top', '40px');
-        $('#control_video').css('margin-left', '115px');
-        $('#control_effects').css('margin-left', '230px');
-      } else if (this.usersCounter === 0) {
-      }
-      App.Controller.user.set('usersCounter', 0);
-    });
+  init: function(){
+    window.onresize = function(event) {
+        this.setWindowWidth();
+    }.bind(this);
+
+    this.addObserver('userBoxes', this.computeSize);
+  },
+  setWindowWidth: function(){
+    this.set('windowWidth', window.document.width);
+    this.computeSize();
+  },
+  computeSize: function(){
+    if (this.userBoxes === 1 || this.userBoxes === 0) {
+      var boxWidth = this.windowWidth/2.4;
+      var videoWidth = boxWidth;
+      $('#videoboxes').css('width', boxWidth + 'px');
+      
+    } else if (this.userBoxes === 2) {
+      var boxWidth =  this.windowWidth/1.2;
+      var videoWidth = boxWidth/2 - 20;
+      $('#videoboxes').css('width', boxWidth + 'px');
+      
+    } else if (this.userBoxes === 3) {
+      var boxWidth =  this.windowWidth/1.1;
+      var videoWidth = boxWidth/3 - 20;
+      $('#videoboxes').css('width', boxWidth + 'px');
+      
+    } else if (this.userBoxes === 4) {
+      var boxWidth =  this.windowWidth/2;
+      var videoWidth = boxWidth/2 - 20;
+      $('#videoboxes').css('width', boxWidth + 'px');
+      
+    } else if (this.userBoxes >= 5) {
+      var boxWidth =  this.windowWidth/1.5;
+      var videoWidth = boxWidth/3 - 20;
+      $('#videoboxes').css('width', boxWidth + 'px');
+    }
+    
+    this.setVideoSize(videoWidth);
+  },
+  setVideoSize:function(videoWidth){
+    //generell videosize
+    var videoHeight = videoWidth/1.3333;
+    var videoWrapperHeight = videoHeight;
+    $('.user, #videoEffects').css('width', videoWidth + 'px');
+    $('.user, #videoEffects').css('height', videoHeight + 'px');
+    $('.videoWrapper').css('height', videoWrapperHeight + 'px');
+    
+    //Video buttons for local user
+    var buttonWidth = videoWidth/3;
+    $('.video_options_buttons').css('width', buttonWidth + 'px');
+    $('#control_video').css('margin-left', buttonWidth + 'px');
+    $('#control_effects').css('margin-left', buttonWidth*2-1 + 'px');
+>>>>>>> 4d4d315aa259ae61fcd441b85ff394316017ff8c
   },
   onGetMediaSuccess: function(stream) {
     var user = Users.getLocalUser();
@@ -65,6 +68,8 @@ App.UserController = Ember.ObjectController.extend({
     } else {
       $('.recordLocalVideo').show();
       $('.recordLocalAudio').show();
+      $('#control_effects').removeClass('disabled');
+      console.log('remove disabled');
     }
 
     if ( typeof webkitURL !== "undefined") {
@@ -178,6 +183,7 @@ App.UserController = Ember.ObjectController.extend({
     if (videoStream.enabled === false) {
       videoStream.enabled = true;
       $('.local video').css('opacity', '1');
+      $('#control_effects').removeClass('disabled');
 
       SignalingChannel.send({
         subject: "participant:video:unmute",
@@ -189,6 +195,7 @@ App.UserController = Ember.ObjectController.extend({
     } else {
       videoStream.enabled = false;
       $('.local video').css('opacity', '0');
+      $('#control_effects').addClass('disabled');
 
       SignalingChannel.send({
         subject: "participant:video:mute",
@@ -210,7 +217,8 @@ App.UserController = Ember.ObjectController.extend({
       destinationHash: remoteUserId
     });
   },
-  usersCounter: 1,
+  userBoxes: document.getElementsByClassName('user').length,
+  windowWidth: 0,
   mediaOptions: {
     audio: false,
     video: false,

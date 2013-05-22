@@ -251,14 +251,13 @@ line-height: 1.5;
 
 #videoboxes {
   display: inline-block;
-  margin: 40px auto 0px auto;
+  margin: 0px auto 0px auto;
 }
 
 #videoboxes .user {
-  width: 600px;
-  height: 527px;
   float: left;
   margin: 10px;
+  margin-top: 60px;
 }
 
 .videoWrapper {
@@ -379,7 +378,6 @@ line-height: 1.5;
   float: left;
   padding-top: 5px;
   background: #66666b;
-  border: 5px solid #66666b;
   color: white;
   font-weight: bold;
 }
@@ -407,40 +405,6 @@ line-height: 1.5;
   border-bottom: 1px solid #444444;
   margin-left: 200px;
 }
-/*
- .videoOptions {
- display: none;
- opacity: 0;
- border-top-left-radius: 5px;
- border-top-right-radius: 5px;
- position: absolute;
- background: #fdfdfd;
- width: 300px;
- height: 251px;
- z-index: 20;
- }
-
- .videoOptionsItems {
- width: 50%;
- height: 50%;
- float: left;
- }
-
- .videoOptionsItems:hover {
- cursor: pointer;
- background: #607890;
- }
-
- .videoOptions img {
- cursor: pointer;
- width: 50px;
- margin-top: 198px;
- }
-
- .videoOptions img:hover {
- background: #888;
- }
- */
 
 #hangupButton {
   position: absolute;
@@ -466,22 +430,22 @@ line-height: 1.5;
 #videoEffects {
   position: absolute;
   display: none;
-  top: 77px;
+  top: 86px;
   width: 600px;
   height: 450px;
-  background: #e0dfeb;
+  background: rgba(255,255,255,0.75);
 }
 
 #videoEffects div{
   cursor: pointer;
-  width: 33%;
+  width: 33.3%;
   height: 50%;
   float: left;
-  border: 1px solid #444;
+  box-shadow: inset 0px 0px 2px #444;
 }
 
 #videoEffects div:hover{
-  opacity: 0.8;  
+  box-shadow: innset 0px 0px 2px #000;
 }
 
 #glasses{
@@ -489,8 +453,20 @@ line-height: 1.5;
   background-size: 100% 100%;
 }
 
-#hair{
-  background-image: url(../img/effects/hair.png);
+#glasses:hover{
+  background: #fff;
+  background-image: url(../img/effects/glasses.png);
+  background-size: 100% 100%;
+}
+
+#hat{
+  background-image: url(../img/effects/hat.png);
+  background-size: 100% 100%;
+}
+
+#hat:hover{
+  background: #fff;
+  background-image: url(../img/effects/hat.png);
   background-size: 100% 100%;
 }
 
@@ -498,6 +474,17 @@ line-height: 1.5;
   background-image: url(../img/effects/beard.png);
   background-size: 100% 100%;
 }
+
+#beard:hover{
+  background: #fff;
+  background-image: url(../img/effects/beard.png);
+  background-size: 100% 100%;
+}
+
+#effect_off:hover{
+  background: #fff;
+}
+
 
 #faceDetectorOutput {
   width: 100%;
@@ -575,6 +562,10 @@ line-height: 1.5;
 .countryLocation{
   width:32;
   height:32;
+}
+
+.disabled{
+  z-index: -1;
 }
 
 /*----------HELP---------*/
