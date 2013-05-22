@@ -548,8 +548,10 @@ var Users = {
 
       $('#videoboxes').append(remoteUserString);
 
-      window.App.Controller.user.set('usersCounter', Users.users.length);
+      var boxes = document.getElementsByClassName('user').length;
+      window.App.Controller.user.set('userBoxes', boxes);
     }, 0);
+
   },
   getLocalUser: function() {
     for (var i = 0; i < Users.users.length; i++) {
@@ -610,7 +612,8 @@ var Users = {
         user = null;
 
         Users.users.splice(i, 1);
-        window.App.Controller.user.set('usersCounter', Users.users.length);
+        var boxes = document.getElementsByClassName('user').length;
+        window.App.Controller.user.set('userBoxes', boxes);
         return true;
       }
     }
