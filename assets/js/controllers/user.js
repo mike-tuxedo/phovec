@@ -43,8 +43,8 @@ App.UserController = Ember.ObjectController.extend({
     //generell videosize
     var videoHeight = videoWidth/1.3333;
     var videoWrapperHeight = videoHeight;
-    $('.user').css('width', videoWidth + 'px');
-    $('.user').css('height', videoHeight + 'px');
+    $('.user, #videoEffects').css('width', videoWidth + 'px');
+    $('.user, #videoEffects').css('height', videoHeight + 'px');
     $('.videoWrapper').css('height', videoWrapperHeight + 'px');
     
     //Video buttons for local user

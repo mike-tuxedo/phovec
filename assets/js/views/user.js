@@ -5,8 +5,12 @@ App.UserView = Ember.View.extend({
     App.Controller.user.setWindowWidth();
   },
   controlEffects: function(){
-    $('#videoEffects').css('display', 'block');
-    $('#videoEffects').css('margin-top', '0px');
+    if($('#videoEffects').css('display') === 'block'){
+      $('#videoEffects').fadeOut('fast');
+    }
+    else{
+      $('#videoEffects').fadeIn('fast');
+    }
   },
   controlAudio: function(){
     App.Controller.user.controlAudio();

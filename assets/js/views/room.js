@@ -1,9 +1,6 @@
 ﻿App.RoomView = Ember.View.extend({
   templateName: 'room',
   classNames: ['room-wrapper'],
-  hideEffects: function() {
-    $('#videoEffects').css('display', 'none');
-  },
   sidebar: false,
   showSidebar: function() {
     if (this.sidebar === false) {

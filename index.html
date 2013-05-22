@@ -176,17 +176,19 @@
             <div class="video_options_buttons" id="control_video" {{ action controlVideo target="view" }}>on/off Video</div>
             <div class="video_options_buttons" id="control_effects" {{ action controlEffects target="view" }}>Effekte</div>
           </div>
-          {{/view}}
 
-          <div id="videoEffects" {{ action hideEffects target="view" }}>
+
+          <div id="videoEffects">
             <div {{action "putGlassesOnUser" }} class="effectButton" id="glasses" ></div>
             <div {{action "putHairOnUser" }} class="effectButton" id="hair" ></div>
             <div {{action "putBeardOnUser" }} class="effectButton" id="beard" ></div>
-            <div {{action "effectOff" }} class="effectButton" id="effekt_off" >kein Effekt</div>
+            <div {{action controlEffects target="view" }} class="effectButton" id="effect_off" >kein Effekt</div>
+            <div {{action controlEffects target="view" }} class="effectButton" id="effect_off" >kein Effekt</div>
+            <div {{action controlEffects target="view" }} class="effectButton" id="effect_off" >kein Effekt</div>
             <!-- <input type="button" id="snapshotButton" class="effectButton" {{action "takeScreenShotFromChatroom" }} value="Snapshot"/> -->
           </div>
         </div>
-
+          {{/view}}
       <!-- to hide the scrollbar, we need a div whos position is not outside the site -->
       <div id="scrollbar_fix">
       <div id="social_sidebar_container">
