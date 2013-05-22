@@ -1,19 +1,43 @@
 App.UserView = Ember.View.extend({
-  mouseEnter: function(e){
-      //$('.videoOptions').css('opacity','0.9');
+  classNames: ['user', 'local'],
+  elementId: 'local',
+  didInsertElement: function() {
+    $('#videoboxes')[0].addEventListener('click', App.Controller.room.handleClickEvent, true);
   },
-  mouseLeave: function(e){
-      //$('.videoOptions').css('opacity','0');
-  },
-  controlEffects: function(){
+  controlEffects: function() {
     $('#videoEffects').css('display', 'block');
     $('#videoEffects').css('margin-top', '0px');
   },
-  controlAudio: function(){
+  controlAudio: function() {
     App.Controller.user.controlAudio();
   },
-  controlVideo: function(){
+  controlVideo: function() {
     App.Controller.user.controlVideo();
-    $('.effectButton').toggle();
-  }
+  },
+  hideEffects: function() {
+    $('#videoEffects').css('display', 'none');
+  },
+  putGlassesOnUser: function() {
+    this.putUserStreamOnDetector('glasses');
+  },
+  putHairOnUser: function() {
+    this.putUserStreamOnDetector('hair');
+  },
+  putBeardOnUser: function() {
+    this.putUserStreamOnDetector('beard');
+  },
+  effectOff: function() {
+    $('video')[0].style.display = 'inline';
+    $('#faceDetectorOutput')[0].style.display = 'none';
+    $('#takeOffClothesButton').hide();
+    $('#snapshotButton').show();
+    FaceDetector.closing = true;
+  },
+  putUserStreamOnDetector: function(type) {
+    $('video')[0].style.display = 'none';
+    FaceDetector.closing = false;
+    if (Users.getLocalUser().stream) {
+      FaceDetector.getStream(Users.getLocalUser().stream, type);
+    }
+  },
 });

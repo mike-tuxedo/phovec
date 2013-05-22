@@ -46,8 +46,7 @@ App.UserController = Ember.ObjectController.extend({
         $('#videoboxes').css('margin-top', '40px');
         $('#control_video').css('margin-left', '115px');
         $('#control_effects').css('margin-left', '230px');
-      }
-      else if(this.usersCounter === 0){
+      } else if (this.usersCounter === 0) {
       }
       App.Controller.user.set('usersCounter', 0);
     });
@@ -61,10 +60,9 @@ App.UserController = Ember.ObjectController.extend({
     if (this.mediaOptions.video === false) {
       stream.getVideoTracks()[0].enabled = false;
       $('.recordLocalAudio').show();
-      
+
       $('.local video').css('opacity', '0');
-    }
-    else{
+    } else {
       $('.recordLocalVideo').show();
       $('.recordLocalAudio').show();
     }
@@ -78,9 +76,9 @@ App.UserController = Ember.ObjectController.extend({
     }
 
     document.getElementById('videoboxes').getElementsByTagName('div')[0].getElementsByTagName('video')[0].play();
-    
+
     var user = Users.getLocalUser();
-      
+
     SignalingChannel.send({
       subject: "participant:video:unmute",
       roomHash: user.roomHash,
@@ -137,9 +135,9 @@ App.UserController = Ember.ObjectController.extend({
         roomHash: user.roomHash,
         userHash: user.id
       });
-      
+
       $('.recordLocalAudio').show();
-      
+
     } else {
       audioStream.enabled = false;
       $('.local .stateMute').show();
@@ -149,7 +147,7 @@ App.UserController = Ember.ObjectController.extend({
         roomHash: user.roomHash,
         userHash: user.id
       });
-      
+
       $('.recordLocalAudio').hide();
     }
   },
@@ -165,14 +163,18 @@ App.UserController = Ember.ObjectController.extend({
       this.mediaOptions.video = true;
       this.mediaOptions.audio = true;
       this.startGetMedia();
-      
-      // inform recorder the local stream can now be used
-      window.dispatchEvent(new CustomEvent("videostream:available"));
+
+      var localVideo = $('.user video');
+      $('#faceDetectorOutput')[0].style.width = localVideo.css('width');
+      $('#faceDetectorOutput')[0].style.height = $('video').css('height');
+      $('#faceDetectorOutput')[0].style.display = 'none';
+      FaceDetector.init(localVideo[0], $('#faceDetectorOutput')[0]);
+
       return;
     }
 
     var videoStream = user.stream.getVideoTracks()[0];
-    
+
     if (videoStream.enabled === false) {
       videoStream.enabled = true;
       $('.local video').css('opacity', '1');
@@ -182,10 +184,8 @@ App.UserController = Ember.ObjectController.extend({
         roomHash: user.roomHash,
         userHash: user.id
       });
-      
+
       $('.recordLocalVideo').show();
-      $('#faceDetectorOutput').show();
-      
     } else {
       videoStream.enabled = false;
       $('.local video').css('opacity', '0');
@@ -195,7 +195,7 @@ App.UserController = Ember.ObjectController.extend({
         roomHash: user.roomHash,
         userHash: user.id
       });
-      
+
       $('.recordLocalVideo').hide();
       $('#faceDetectorOutput').hide();
     }

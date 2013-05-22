@@ -220,7 +220,7 @@ var WebRTC = {
         Users.getRemoteUser(remoteUserId).dataChannel.send(JSON.stringify(data));
       }, 1000, remoteUserId, data);
     }
-    
+
     data.firstFrame = false;
     if (data.lastFrame === true) {
       trace("webrtc", "SEND File", "-");
@@ -317,14 +317,18 @@ var WebRTC = {
     }
 
     /* set url according to the room-hash */
-    App.handleURL('room/' + data.roomHash);
-    App.Router.router.replaceURL('/room/' + data.roomHash);
-
+    /* only if we aren't already at the right url */
+    if (window.location.origin + "/#/room/" + data.roomHash !== location.href) {
+      App.handleURL('room/' + data.roomHash);
+      App.Router.router.replaceURL('/room/' + data.roomHash);
+    }
+    
     /**
      * Create remote users
      * Have to be before the modification of the local user,
      * because there could be action with the remote user now
      */
+
     for (var i = 0; i < data.users.length; i++) {
       WebRTC.createPeerConnection(data.roomHash, data.userId, data.users[i].id, data.users[i].name, data.users[i].country)
     }
@@ -336,6 +340,7 @@ var WebRTC = {
     user.roomHash = data.roomHash;
     user.id = data.userId;
     user.country = data.country;
+
     if (data.users.length <= 0) {
       user.admin = true;
     }
@@ -417,6 +422,21 @@ var WebRTC = {
       case "leave":
         Users.removeRemoteUser(data.userId);
         break;
+      case "edit":
+        var userNum;
+        var remoteUsers = Users.getRemoteUsers();
+
+        remoteUsers.forEach(function(user, index) {
+          if (user.id === data.userId) {
+            userNum = index;
+            user.country = data.country;
+            user.name = data.name;
+          }
+        });
+
+        App.Controller.room.updateUser(data, userNum + 1);
+
+        break;
       case "audio:mute":
         WebRTC.handleRecordingButtons(data.userId, 'audio', false);
         var userRemote = Users.getRemoteUser(data.userId);
@@ -497,6 +517,8 @@ var Users = {
     return user;
   },
   createRemoteUser: function(roomHash, remoteUserId, remoteUserName, remoteUserCountry, peerConnection, dataChannel) {
+    console.log("createRemoteUser");
+
     var user = {
       name: remoteUserName,
       id: remoteUserId,
@@ -509,20 +531,7 @@ var Users = {
     };
 
     Users.users.push(user);
-
-    setTimeout(function() {
-      var removeParticipantHTML = "";
-      if (Users.getLocalUser().admin === true) {
-        removeParticipantHTML = "<div class='removeParticipant' onclick=\"App.Controller.user.removeParticipant('" + remoteUserId + "')\"></div>";
-      }
-
-      var img = './assets/img/countries/' + ( remoteUserCountry ? remoteUserCountry : "unknown") + '.png';
-      var remoteUserString = "<div class='user' id='" + remoteUserId + "'>" + "<span class='name' style='background-image: url(" + img + ")'>" + remoteUserName + "</span>" + "<div class='videoWrapper'>" + "<div class='stateMute'></div>" + removeParticipantHTML + "<img class='bgAvatar' src='assets/img/avatar.jpg' />" + "<div class='recordRemoteVideo'></div>" + "<div class='recordRemoteAudio'></div>" + "<video autoplay></video>" + "<audio autoplay loop muted></audio>" + "<form action='javascript:void(0);'>" + "<div class='chatOutput' contenteditable='false'></div>" + "<div class='chatInput' contenteditable='true'><input type='image' class='micro_recorder' src='assets/img/micro_recorder_off.png'/></div>" + "</form>" + "</div>" + "</div>";
-
-      $('#videoboxes').append(remoteUserString);
-
-      window.App.Controller.user.set('usersCounter', Users.users.length);
-    }, 0);
+    window.App.Controller.room.addRemoteUser(user, Users.users.length - 1);
   },
   getLocalUser: function() {
     for (var i = 0; i < Users.users.length; i++) {

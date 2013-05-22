@@ -11,12 +11,13 @@
       VARecorder.stopRecording();
     }
     
+    VARecorder.recording = true;
+    
     if(recordedType === 'video'){
       VARecorder.recorder = RecordRTC({
         video: object // video-tag
       });
       VARecorder.recorder.recordVideo();
-      VARecorder.recording = true;
       VARecorder.recordedType = recordedType;
     }
     else if(recordedType === 'audio'){
@@ -24,7 +25,6 @@
         stream: object
       });
       VARecorder.recorder.recordAudio();
-      VARecorder.recording = true;
       VARecorder.recordedType = recordedType;
     }
   },

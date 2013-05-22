@@ -1,33 +1,5 @@
 ﻿App.RoomController = Ember.ObjectController.extend({
-  isFaceDetactorActivated: false,
   init: function() {
-  
-    var controller = this;
-    
-    window.addEventListener("videostream:available", function(e){
-      
-      var localVideo = $('.user video');
-      $('#faceDetectorOutput')[0].style.width = localVideo.css('width');
-      $('#faceDetectorOutput')[0].style.height = $('video').css('height');
-      $('#faceDetectorOutput')[0].style.display = 'none';
-      FaceDetector.init(localVideo[0], $('#faceDetectorOutput')[0]);
-
-      $('#videoEffects').show();
-      
-    },true);
-    
-    var loop = setInterval(function(){
-    
-      if( $('#videoboxes')[0] && $('#mail_form')[0] ){
-      
-        App.Controller.auth.createHiddenTextInput();
-        $('#videoboxes')[0].addEventListener('click',controller.handleClickEvent,true); // for video-recording and text-recognizer
-        clearInterval(loop);
-        
-      }
-      
-    },1500);
-    
   },
   animation: function() {
     var interval = setInterval(function() {
@@ -47,59 +19,58 @@
     }
 
   },
-  putClassesOnUser: function() {
-    this.putUserStreamOnDetector('classes');
+  addRemoteUsers: function() {
+    var users = Users.getRemoteUsers();
+    users.forEach.call(this, function(user, index, users) {
+      this.addRemoteUser(user, index);
+    });
   },
-  putHairOnUser: function() {
-    this.putUserStreamOnDetector('hair');
-  },
-  putBeardOnUser: function() {
-    this.putUserStreamOnDetector('beard');
-  },
-  takeOffClothesOfUser: function() {
-    $('video')[0].style.display = 'inline';
-    $('#faceDetectorOutput')[0].style.display = 'none';
-    $('#videoEffectsBar').css('margin-top', '250px');
-    $('#takeOffClothesButton').hide();
-    $('#snapshotButton').show();
-    FaceDetector.closing = true;
-    this.isFaceDetactorActivated = false;
-  },
-  putUserStreamOnDetector: function(type) {
-    //$('#videoEffectsBar').css('margin-top', '0px');
-    $('video')[0].style.display = 'none';
-    $('#takeOffClothesButton').show();
-    $('#snapshotButton').hide();
-    FaceDetector.closing = false;
-    if (Users.users && Users.users[0].stream && !this.isFaceDetactorActivated){
-      FaceDetector.getStream(Users.users[0].stream, type);
-      this.isFaceDetactorActivated = true;
+  addRemoteUser: function(user, index) {
+    var img = './assets/img/countries/' + (user.country ? user.country : "unknown") + '.png';
+
+    var source = $('#remoteUserTemp').html();
+    var template = Handlebars.compile(source);
+
+    var data = {
+      "img": img,
+      "userNumber": index + 1,
+      "remoteUserName": user.name,
+      "remoteUserId": user.id
+    };
+
+    var result = template(data);
+    $('#videoboxes').append(result);
+
+    if (Users.getLocalUser().admin !== true) {
+      $('#' + user.id + ' .removeParticipant').hide();
     }
+    window.App.Controller.user.set('usersCounter', Users.users.length);
   },
   takeScreenShotFromChatroom: function() {
-    
+
     var controller = this;
-    
+
     controller.hideSymbolsForWorker();
-    
+
     html2canvas([document.getElementById('videoboxes')], {
       onrendered: function(canvas) {
-        
+
         controller.showVisibleSymbolsAgain();
-        
+
         var obj = {};
         obj.videos = $('video');
         obj.canvas = canvas;
-        obj.color = '#999999'; // reference-color for videoboxes
+        obj.color = '#999999';
+        // reference-color for videoboxes
         obj.videoNum = obj.videos.length;
-        
+
         controller.startSnapshotWorker(obj, function(e) {
-          
+
           if (e && !e.data) {
-            console.log("RoomController takeScreenShotFromChatroom: error happend", e);
+            trace("RoomController takeScreenShotFromChatroom: error happend", e);
             return;
           }
-          
+
           if (e.data.progress) {
             $('#progressSnapshotbar').attr('value', e.data.progress);
             return;
@@ -107,20 +78,21 @@
             $('#progressSnapshotbar').hide();
             $('#progressSnapshotbar').attr('value', 0);
           }
-          
-          console.log('RoomController takeScreenShotFromChatroom: coords found: ',e.data);
-          
+
+          trace('RoomController takeScreenShotFromChatroom: coords found: ', e.data);
+
           var ctx = canvas.getContext('2d');
-          
-          var formatedCoors = e.data.coords.slice(1,e.data.coords.length); // wrong order of coords resort coords
+
+          var formatedCoors = e.data.coords.slice(1, e.data.coords.length);
+          // wrong order of coords resort coords
           formatedCoors.push(e.data.coords[0]);
-          
+
           formatedCoors.forEach(function(coord, index) {
-            if(obj.videos[index].style.display !== 'none'){
+            if (obj.videos[index].style.display !== 'none') {
               controller.drawVideoboxOnCanvas(obj.videos[index], ctx, coord.startX, coord.startY, e.data.cellWidth, e.data.cellHeight);
             }
           });
-          
+
           window.open(canvas.toDataURL(), 'Snapshot', ('width=' + canvas.width + ', height=' + canvas.height + ',menubar=1,resizable=0,scrollbars=0,status=0'));
 
         });
@@ -132,29 +104,28 @@
       background: '#00f'
     });
   },
-  startSnapshotWorker: function(obj,callback){
-        
+  startSnapshotWorker: function(obj, callback) {
+
     var snapshotWorker = new Worker('assets/js/helpers/snapshot_worker.js');
-    
+
     snapshotWorker.postMessage({
       image_data: (obj.canvas.getContext('2d').getImageData(0, 0, obj.canvas.width, obj.canvas.height)),
       color: obj.color, /* videobox-color */
-      videoNum: obj.videoNum 
+      videoNum: obj.videoNum
     });
 
     snapshotWorker.onmessage = callback;
   },
-  drawVideoboxOnCanvas : function(video,ctx,x,y,width,height){
-    ctx.drawImage(
-      video, 0, 0, video.videoWidth, video.videoHeight, // source: x, y, width, height
-      x, y, // destination: x, y
-      width, // // destination: width
-      height // // destination: height
+  drawVideoboxOnCanvas: function(video, ctx, x, y, width, height) {
+    ctx.drawImage(video, 0, 0, video.videoWidth, video.videoHeight, // source: x, y, width, height
+    x, y, // destination: x, y
+    width, // // destination: width
+    height // // destination: height
     );
   },
   kickParticipant: function() {
     var remoteUserId = $().attr('id');
-    
+
     SignalingChannel.send({
       subject: "participant-kick",
       roomHash: Users.getLocalUser().roomHash,
@@ -162,231 +133,364 @@
       destinationHash: remoteUserId
     });
   },
-  hideSymbolsForWorker: function(){
+  hideSymbolsForWorker: function() {
     $('.videoWrapper').children().hide();
-    $('.videoWrapper').css('background','#999999'); // #999999 reference-color for snapshot-worker
+    $('.videoWrapper').css('background', '#999999');
+    // #999999 reference-color for snapshot-worker
   },
-  showVisibleSymbolsAgain: function(){
-  
-    $('.videoWrapper').css('background','');
+  showVisibleSymbolsAgain: function() {
+
+    $('.videoWrapper').css('background', '');
     $('.bgAvatar').show();
-    
+
     var localUser = Users.getLocalUser();
-    
-    if( localUser.stream.getVideoTracks()[0].enabled ){ // when video is activated activate video-recording-button
+
+    if (localUser.stream.getVideoTracks()[0].enabled) {// when video is activated activate video-recording-button
       $('.recordLocalVideo').show();
     }
-    
-    if( localUser.stream.getAudioTracks()[0].enabled ){ // when audio is activated activate audio-recording-button
-      $('.recordLocalAudio').show(); 
+
+    if (localUser.stream.getAudioTracks()[0].enabled) {// when audio is activated activate audio-recording-button
+      $('.recordLocalAudio').show();
+    } else {
+      $('#' + localUser.id + ' .stateMute').show();
     }
-    else{
-      $('#'+localUser.id+' .stateMute').show();
-    }
-    
+
     // show recording buttons of remote users whether they have switched on their video/audio
     var remoteUsers = Users.getRemoteUsers();
-    
-    for(var r = 0; r < remoteUsers.length; r++){
+
+    for (var r = 0; r < remoteUsers.length; r++) {
       this.handleRemoteRecordingButtons(remoteUsers[r].id);
     }
-    
+
     $('video').show();
     $('.videoWrapper form').show();
-    $('.removeParticipant').show(); // only host has got these images so this code does not work on guests
+    $('.removeParticipant').show();
+    // only host has got these images so this code does not work on guests
 
   },
-  handleRemoteRecordingButtons: function(remoteId){
-  
+  handleRemoteRecordingButtons: function(remoteId) {
+
     var remoteUser = Users.getRemoteUser(remoteId);
-    
-    if( remoteUser && remoteUser.stream ){
-      if( remoteUser.stream.getVideoTracks()[0].enabled ){ // when video is activated activate video-recording-button
-        $('#'+remoteId+' .recordRemoteVideo').show();
+
+    if (remoteUser && remoteUser.stream) {
+      if (remoteUser.stream.getVideoTracks()[0].enabled) {// when video is activated activate video-recording-button
+        $('#' + remoteId + ' .recordRemoteVideo').show();
       }
-      if( remoteUser.stream.getAudioTracks()[0].enabled ){ // when audio is activated activate audio-recording-button
-        $('#'+remoteId+' .recordRemoteAudio').show();
-      }
-      else{
-        $('#'+remoteId+' .stateMute').show();
+      if (remoteUser.stream.getAudioTracks()[0].enabled) {// when audio is activated activate audio-recording-button
+        $('#' + remoteId + ' .recordRemoteAudio').show();
+      } else {
+        $('#' + remoteId + ' .stateMute').show();
       }
     }
-    
+
   },
   showInvitationQRCode: function() {
-  
-    if($('#qrcode_box').children()[0]){
+
+    if ($('#qrcode_box').children()[0]) {
       return;
     }
-    
+
     var qr = new qrcode({
-        size: 150,
-        /*
-        * L - [Default] Allows recovery of up to 7% data loss
-        * M - Allows recovery of up to 15% data loss
-        * Q - Allows recovery of up to 25% data loss
-        * H - Allows recovery of up to 30% data loss */
-        ec_level: "L",
-        margin: 1
-      }
-    );
-    
+      size: 150,
+      /*
+       * L - [Default] Allows recovery of up to 7% data loss
+       * M - Allows recovery of up to 15% data loss
+       * Q - Allows recovery of up to 25% data loss
+       * H - Allows recovery of up to 30% data loss */
+      ec_level: "L",
+      margin: 1
+    });
+
     var alteredURL = location.href;
-    alteredURL = alteredURL.replace('#','%23');
-    qr.text("qrcode_box", 'Raum-Adresse zur Einladung:\n' + alteredURL);
-  
+    alteredURL = alteredURL.replace('#', '%23');
+    qr.text("qrcode_box", alteredURL);
+
   },
-  handleClickEvent: function(e){
-    
+  handleClickEvent: function(e) {
+
     // record video or audio
-    if(e.target.tagName === 'DIV' && e.target.className.indexOf('record') !== -1){
+    if (e.target.tagName === 'DIV' && e.target.className.indexOf('record') !== -1) {
       var type = (e.target.className.indexOf('Video') !== -1) ? 'video' : 'audio';
       App.Controller.room.toggleRecorder.call(App.Controller.room, e.target, type);
     }
     // transform speech to text
-    else if(e.target.tagName === 'INPUT' && e.target.className === 'micro_recorder'){
+    else if (e.target.tagName === 'INPUT' && e.target.className === 'micro_recorder') {
       App.Controller.room.toggleSpeechToText.call(App.Controller.room, e.target);
     }
-    
+
   },
-  
+
   /* video/audio recording methods */
-  
-  toggleRecorder: function(element,type){
-    if(!VARecorder.recording){
-      this.startRecording(element,type);
-    }
-    else{
-      this.stopRecording(element,type);
+
+  toggleRecorder: function(element, type) {
+    if (!VARecorder.recording) {
+      this.startRecording(element, type);
+    } else {
+      this.stopRecording(element, type);
     }
   },
-  startRecording: function(element,type){
+  startRecording: function(element, type) {
     var tagToTrack = $(element);
-    tagToTrack.css('background', 'url(./assets/img/record_'+type+'.png)');
+    tagToTrack.css('background', 'url(./assets/img/record_' + type + '.png)');
     tagToTrack.css('background-repeat', 'no-repeat');
-    
-    if(type === 'video'){
+
+    if (type === 'video') {
       var videoTag = tagToTrack.parent().children('video');
       VARecorder.recordVideo(videoTag[0], type);
-    }
-    else{
+    } else {
       var audioTag = tagToTrack.parent().children('audio');
       audioTag.attr('muted', false);
       audioTag.attr('volume', 1);
       var user = Users.getRemoteUser(tagToTrack.parent().parent().attr('id'));
-      var stream = user ? user.stream : Users.getLocalUser().stream; // if user want to record remote-user then user-object must not be undefined
+      var stream = user ? user.stream : Users.getLocalUser().stream;
+      // if user want to record remote-user then user-object must not be undefined
       audioTag.attr('src', URL.createObjectURL(stream));
       audioTag[0].play();
       VARecorder.recordVideo(stream, type);
     }
   },
-  stopRecording: function(element,type){
+  stopRecording: function(element, type) {
     var tagToTrack = $(element);
-    tagToTrack.css('background', 'url(./assets/img/stop_record_'+type+'.png)');
+    tagToTrack.css('background', 'url(./assets/img/stop_record_' + type + '.png)');
     tagToTrack.css('background-repeat', 'no-repeat');
-    
-    if(type === 'audio'){
+
+    if (type === 'audio') {
       var audioTag = tagToTrack.parent().children('audio');
       audioTag.attr('muted', true);
       audioTag.attr('volume', 0);
       audioTag[0].pause();
     }
-    
+
     VARecorder.stopRecording();
   },
-  
-  /* speech to text methods */
-  
-  toggleSpeechToText: function(element){
-    
-    if(!this.isSpeechRecognizerInitalized){
-      this.speechRecognizer = new webkitSpeechRecognition();
-      this.speechRecognizer.continuous = true;
-      this.speechRecognizer.interimResults = true;
-      this.isSpeechRecognizerInitalized = true;
-      this.insertSpeechToTextAt(element);
-    }
-    else if(this.isSpeechRecognizerStarted){
-      this.speechRecognizer.stop();
-      
-      if( !this.isMicroButtonRecording(element) ){
-        var call = function(){ this.insertSpeechToTextAt(element); }.bind(this);
-        setTimeout(call,200);
-      }
-    }
-    else if(this.isSpeechRecognizerInitalized && !this.isSpeechRecognizerStarted){
-      this.insertSpeechToTextAt(element);
-    }
-    
-  },
-  insertSpeechToTextAt: function(element){
-    
-    var controller = this;
-    var inputField = $( $(element).parent().parent().children('div')[1] );
-    
-    if(typeof webkitSpeechRecognition !== 'undefined'){
 
-      controller.speechRecognizer.onstart = function(){
-        controller.isSpeechRecognizerStarted = true;
-        element.src = 'assets/img/micro_recorder_on.png';
-      };
-      
+  /* speech to text methods */
+
+  toggleSpeechToText: function(element) {
+
+    if (!this.isSpeechRecognizerInitalized) {
+      this.initializeSpeechRecognizer();
+      this.insertSpeechToTextAt(element);
+    } else if (this.isSpeechRecognizerStarted) {
+      this.speechRecognizer.stop();
+
+      if (!this.isMicroButtonRecording(element)) {
+        var call = function() {
+          this.insertSpeechToTextAt(element);
+        }.bind(this);
+        setTimeout(call, 200);
+      }
+    } else if (this.isSpeechRecognizerInitalized && !this.isSpeechRecognizerStarted) {
+      this.insertSpeechToTextAt(element);
+    }
+
+  },
+  insertSpeechToTextAt: function(element) {
+
+    var controller = this;
+    var inputField = $($(element).parent().children('div')[1]);
+
+    if ( typeof webkitSpeechRecognition !== 'undefined') {
+
       controller.speechRecognizer.onerror = controller.speechRecognizerErrorHandler;
-      
-      controller.speechRecognizer.onend = function(){
+      controller.speechRecognizer.onend = function() {
         controller.isSpeechRecognizerStarted = false;
         controller.enableSpeechButtons();
       };
-      
+
+      controller.speechRecognizer.onstart = function() {
+        controller.isSpeechRecognizerStarted = true;
+        element.src = 'assets/img/micro_recorder_on.png';
+      };
+
       controller.speechRecognizer.onresult = function(event) {
-        
+
         var speechText = '';
-        
-        if( typeof event.results === 'undefined') {
+
+        if ( typeof event.results === 'undefined') {
           controller.speechRecognizer.onend = null;
           controller.speechRecognizer.stop();
-          trace('RoomController insertSpeechToTextAt: SpeechRecognition-Error',event);
+          trace('RoomController insertSpeechToTextAt: SpeechRecognition-Error', event);
           return;
         }
-        
+
         for (var i = event.resultIndex; i < event.results.length; ++i) {
-          if(event.results[i].isFinal){
+          if (event.results[i].isFinal) {
             speechText = event.results[i][0].transcript;
-          }
-          else if(event.results[i][0].transcript.indexOf('lösche Text') !== -1){
-            inputField.html("<input type='image' class='micro_recorder' src='assets/img/micro_recorder_off.png'/>");
+          } else if (event.results[i][0].transcript.indexOf('lösche Text') !== -1) {
+            inputField.html("");
             controller.toggleResultEventMethodOfSpeechRecognizer(controller.speechRecognizer.onresult);
           }
         }
-        
-        inputField.html((inputField.html()+speechText));
-        
+
+        inputField.html((inputField.html() + speechText));
+        inputField.scrollTop(inputField[0].scrollHeight);
+
       };
-      
-      if(!controller.isSpeechRecognizerStarted){
+
+      if (!controller.isSpeechRecognizerStarted) {
         controller.speechRecognizer.start();
       }
-    }
-    else{
-      trace('RoomController insertSpeechToTextAt: SpeechRecognition-Error',event);
+    } else {
+      trace('RoomController insertSpeechToTextAt: SpeechRecognition-Error', event);
     }
   },
-  speechRecognizerErrorHandler: function(e){
-    trace('RoomController insertSpeechToTextAt: SpeechRecognition-Error',event);
+  speechRecognizerErrorHandler: function(e) {
+    trace('RoomController: SpeechRecognition-Error ', event);
   },
-  toggleResultEventMethodOfSpeechRecognizer: function(reference){
+  toggleResultEventMethodOfSpeechRecognizer: function(reference) {
     var controller = this;
     controller.speechRecognizer.onresult = null;
-    setTimeout(function(){ controller.speechRecognizer.onresult = reference },1800);
+    setTimeout(function() {
+      controller.speechRecognizer.onresult = reference
+    }, 1800);
   },
-  enableSpeechButtons: function(){
-    setTimeout(function(){
-      $('.micro_recorder').attr('src','assets/img/micro_recorder_off.png');
+  enableSpeechButtons: function() {
+    setTimeout(function() {
+      $('.micro_recorder').attr('src', 'assets/img/micro_recorder_off.png');
     }, 20);
   },
-  isMicroButtonRecording: function(element){
+  isMicroButtonRecording: function(element) {
     return element.src.indexOf('micro_recorder_on.png') !== -1;
   },
+  handleGeneralSpeechOrders: function() {
+
+    var controller = this;
+    controller.speechRecognizer.onerror = controller.speechRecognizerErrorHandler;
+    controller.speechRecognizer.onend = function() {
+      controller.isSpeechRecognizerStarted = false;
+      $('#speechButton').val('Sprachbefehle off');
+    };
+
+    controller.speechRecognizer.onstart = function() {
+      controller.isSpeechRecognizerStarted = true;
+      $('#speechButton').val('Sprachbefehle on');
+    };
+
+    controller.speechRecognizer.onresult = function(event) {
+
+      if ( typeof event.results === 'undefined') {
+        controller.speechRecognizer.onend = null;
+        controller.speechRecognizer.stop();
+        trace('RoomController handleGeneralSpeechOrders: SpeechRecognition-Error', event);
+        return;
+      }
+
+      var spokeOrder = '';
+
+      for (var i = event.resultIndex; i < event.results.length; ++i) {
+        spokeOrder += event.results[i][0].transcript;
+      }
+
+      spokeOrder = spokeOrder.toLowerCase();
+
+      if (controller.doesContainWord(spokeOrder, 'sprachbefehl')) {// signal word that sentence must contain
+
+        // video/audio recording of myself or remote users
+        if (controller.doesContainWord(spokeOrder, 'aufnahme') && (controller.doesContainWord(spokeOrder, 'video') || controller.doesContainWord(spokeOrder, 'audio'))) {
+
+          if (controller.doesContainWord(spokeOrder, 'start')) {
+            controller.executeSpeechOrder('recordUser', spokeOrder);
+          } else if (controller.doesContainWord(spokeOrder, 'stop')) {
+            controller.executeSpeechOrder('stopRecordingUser', spokeOrder);
+          }
+
+        }
+        // hang up
+        else if (controller.doesContainWord(spokeOrder, 'umbenennen')) {
+          controller.executeSpeechOrder('rename', spokeOrder);
+        }
+        // hang up
+        else if (controller.doesContainWord(spokeOrder, 'auflegen')) {
+          controller.executeSpeechOrder('hangUp', spokeOrder);
+        }
+
+      }
+
+    };
+
+    if (!controller.isSpeechRecognizerStarted) {
+      controller.speechRecognizer.start();
+    }
+
+  },
+  doesContainWord: function(sentence, word) {
+    return sentence.indexOf(word) !== -1;
+  },
+  executeSpeechOrder: function(order, sentence) {
+
+    var controller = this;
+
+    // is necessary because of sentences that came after an execution is in process
+    if (controller.isSpeechOrderInExecution) {
+      return;
+    }
+    controller.isSpeechOrderInExecution = true;
+    setTimeout(function() {
+      controller.isSpeechOrderInExecution = false;
+    }, 3000);
+
+    switch(order) {
+      case 'recordUser':
+
+        var medium = controller.doesContainWord(sentence, 'video') ? 'video' : 'audio';
+        var numberPosition = sentence.search(/\d{1,1}/);
+        var tagclass;
+        var user;
+
+        if (numberPosition === -1) {
+          tagclass = medium === 'video' ? 'recordLocalVideo' : 'recordLocalAudio';
+          user = Users.getLocalUser();
+        } else {
+          tagclass = medium === 'video' ? 'recordRemoteVideo' : 'recordRemoteAudio';
+          var userNumber = Number(sentence.slice(numberPosition, numberPosition + 1)) - 1;
+          user = Users.getRemoteUsers()[userNumber];
+        }
+
+        controller.toggleRecorder($('#'+user.id+' .'+tagclass)[0], medium);
+
+        break;
+
+      case 'stopRecordingUser':
+
+        $('.recordLocalVideo').css('background', 'url(./assets/img/stop_record_video.png)');
+        $('.recordLocalAudio').css('background', 'url(./assets/img/stop_record_audio.png)');
+        $('.recordRemoteVideo').css('background', 'url(./assets/img/stop_record_video.png)');
+        $('.recordRemoteAudio').css('background', 'url(./assets/img/stop_record_audio.png)');
+
+        VARecorder.stopRecording();
+
+        break;
+
+      case 'rename':
+
+        $('#nameArea').show();
+        break;
+
+      case 'hangUp':
+
+        controller.speechRecognizer.stop();
+        App.handleURL('/room/hangup');
+        App.Router.router.replaceURL('/room/hangup');
+
+        break;
+
+    };
+  },
+  initializeSpeechRecognizer: function() {
+
+    this.speechRecognizer = new webkitSpeechRecognition();
+    this.speechRecognizer.continuous = true;
+    this.speechRecognizer.interimResults = true;
+    this.isSpeechRecognizerInitalized = true;
+
+  },
+  isSpeechOrderInExecution: false,
   isSpeechRecognizerInitalized: null,
-  isSpeechRecognizerStarted: false
+  isSpeechRecognizerStarted: false,
+  updateUser: function(data, userNum) {
+    var videoBoxHead = $('#' + data.userId + ' span');
+    videoBoxHead.css('background-image', 'url(./assets/img/countries/' + data.country + '.png)');
+    videoBoxHead.html(userNum + '.' + data.name);
+  }
 });

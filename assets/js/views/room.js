@@ -1,9 +1,6 @@
 ﻿App.RoomView = Ember.View.extend({
   templateName: 'room',
   classNames: ['room-wrapper'],
-  hideEffects: function() {
-    $('#videoEffects').css('display', 'none');
-  },
   sidebar: false,
   showSidebar: function() {
     if (this.sidebar === false) {
@@ -64,7 +61,9 @@
   closeHelp: function() {
     $('#help').fadeOut('fast');
   },
-  didInsertElement: function() {
+  didInsertElement: function() {   
+    this.set('insertedElement', true);
+
     if (Users.getLocalUser().name === "Phovec-Benutzer" || Users.getLocalUser().name === undefined) {
       $('#nameArea').show();
     }
@@ -74,6 +73,8 @@
     $('#local_name').text(user.name);
     $('#local_name').css('background-image', 'url(assets/img/countries/' + img + ')');
     $('#videoboxes #local').attr("id", user.id);
+
+    window.App.Controller.room.addRemoteUsers();
   },
   toggleFullscreen: function() {
     var documentElement = document.getElementsByTagName("body")[0];
@@ -98,6 +99,19 @@
       document.getElementById("buttonFullscreen").style.backgroundImage = "url('assets/img/fullscreen_start.png')";
     }
   },
+  toggleSpeechOrder: function() {
+
+    if (App.Controller.room.isSpeechRecognizerStarted) {
+      App.Controller.room.speechRecognizer.stop();
+    } else {
+
+      if (!this.isSpeechRecognizerInitalized) {
+        App.Controller.room.initializeSpeechRecognizer();
+      }
+
+      App.Controller.room.handleGeneralSpeechOrders();
+    }
+  },
   keyUp: function(event) {
     if (event.target === document.querySelector("#nameArea #name")) {
       var element = document.querySelector("#nameArea #startButtonImage");
@@ -110,9 +124,22 @@
         };
         element.onclick = function() {
           var name = document.querySelector("#nameArea #name").value;
-          Users.getLocalUser().name = name;
+          var localUser = Users.getLocalUser();
+          localUser.name = name;
 
-          SignalingChannel.init();
+          if (SignalingChannel.webSocket) {// user wants to rename their name
+            SignalingChannel.send({
+              subject: "participant:edit",
+              roomHash: localUser.roomHash,
+              userHash: localUser.id,
+              put: {
+                name: localUser.name,
+                country: localUser.country
+              }
+            });
+          } else {
+            SignalingChannel.init();
+          }
 
           document.querySelector("#local_name").innerText = name;
           document.getElementById("nameArea").style.display = "none";
@@ -126,4 +153,4 @@
       }
     }
   }
-}); 
+});
