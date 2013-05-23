@@ -13,6 +13,8 @@ App.UserView = Ember.View.extend({
     else{
       $('#videoEffects').fadeIn('fast');
     }
+    this.effectOff();
+    this.controlLocalVideoVisibility('inline');
   },
   controlAudio: function() {
     App.Controller.user.controlAudio();
@@ -23,28 +25,29 @@ App.UserView = Ember.View.extend({
     }
     App.Controller.user.controlVideo();
   },
-  hideEffects: function() {
-    $('#videoEffects').css('display', 'none');
+  controlLocalVideoVisibility: function(option) {
+    var localUserId = Users.getLocalUser().id;
+    $('#'+localUserId+' video').css('display', option);
+  },
+  controlEffectsVisibility: function(option) {
+    $('#videoEffects').css('display', option);
   },
   putGlassesOnUser: function() {
     this.putUserStreamOnDetector('glasses');
   },
-  putHairOnUser: function() {
-    this.putUserStreamOnDetector('hair');
+  putHatOnUser: function() {
+    this.putUserStreamOnDetector('hat');
   },
   putBeardOnUser: function() {
     this.putUserStreamOnDetector('beard');
   },
   effectOff: function() {
-    $('video')[0].style.display = 'inline';
-    $('#faceDetectorOutput')[0].style.display = 'none';
-    $('#takeOffClothesButton').hide();
-    $('#snapshotButton').show();
-    FaceDetector.closing = true;
+    FaceDetector.closed = true;
   },
   putUserStreamOnDetector: function(type) {
-    $('video')[0].style.display = 'none';
-    FaceDetector.closing = false;
+    this.controlLocalVideoVisibility('none');
+    this.controlEffectsVisibility('none');
+    FaceDetector.closed = false;
     if (Users.getLocalUser().stream) {
       FaceDetector.getStream(Users.getLocalUser().stream, type);
     }

@@ -391,14 +391,24 @@
       if (controller.doesContainWord(spokeOrder, 'sprachbefehl')) {// signal word that sentence must contain
 
         // video/audio recording of myself or remote users
-        if (controller.doesContainWord(spokeOrder, 'aufnahme') && (controller.doesContainWord(spokeOrder, 'video') || controller.doesContainWord(spokeOrder, 'audio'))) {
-
-          if (controller.doesContainWord(spokeOrder, 'start')) {
-            controller.executeSpeechOrder('recordUser', spokeOrder);
-          } else if (controller.doesContainWord(spokeOrder, 'stop')) {
-            controller.executeSpeechOrder('stopRecordingUser', spokeOrder);
-          }
-
+        if (controller.doesContainWord(spokeOrder, 'video') || controller.doesContainWord(spokeOrder, 'audio')) {
+          
+          if(controller.doesContainWord(spokeOrder, 'aufnahme')){
+            if (controller.doesContainWord(spokeOrder, 'start')) {
+              controller.executeSpeechOrder('recordUser', spokeOrder);
+            } else if (controller.doesContainWord(spokeOrder, 'stop')) {
+              controller.executeSpeechOrder('stopRecordingUser', spokeOrder);
+            }
+            
+            // switch on/off local-video or local-audio
+          } else if (controller.doesContainWord(spokeOrder, 'an') || controller.doesContainWord(spokeOrder, 'aus') ) {
+              controller.executeSpeechOrder('switchLocalMedia', spokeOrder);
+          } 
+          
+        }
+        // show help pop-up-window
+        else if ( controller.doesContainWord(spokeOrder, 'hilfe') ) {
+          controller.executeSpeechOrder('help', spokeOrder);
         }
         // hang up
         else if (controller.doesContainWord(spokeOrder, 'umbenennen')) {
@@ -465,7 +475,48 @@
         VARecorder.stopRecording();
 
         break;
-
+      
+      case 'switchLocalMedia':
+        
+        var medium = controller.doesContainWord(sentence, 'video') ? 'video' : 'audio';
+        var switchMode = controller.doesContainWord(sentence, 'an') ? 'on' : 'off';
+        
+        if( medium === 'video' ){
+        
+          if(!FaceDetector.closed){
+            $('#faceDetectorOutput').toggle();
+          }
+          
+          var localUserVideoStream = Users.getLocalUser().stream.getVideoTracks()[0];
+          
+          if( switchMode === 'on' && !localUserVideoStream.enabled ){
+            App.Controller.user.controlVideo();
+          }
+          else if( switchMode === 'off' && localUserVideoStream.enabled ){
+            App.Controller.user.controlVideo();
+          }
+          
+        }
+        else{
+        
+          var localUserAudioStream = Users.getLocalUser().stream.getAudioTracks()[0];
+          
+          if( switchMode === 'on' && !localUserAudioStream.enabled ){
+            App.Controller.user.controlAudio();
+          }
+          else if( switchMode === 'off' && localUserAudioStream.enabled ){
+            App.Controller.user.controlAudio();
+          }
+          
+        }
+        
+        break;
+      
+      case 'help':
+      
+        $('#help').fadeIn('fast');
+        break;
+        
       case 'rename':
 
         $('#nameArea').show();

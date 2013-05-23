@@ -1,5 +1,12 @@
 ﻿var FaceDetector = {
-  closed: true,
+  set closed(val){ 
+    if(val === false){
+      this.canvas.style.display = 'inline';
+    }
+    else{
+      this.canvas.style.display = 'none';
+    }
+  },
   typeToLoad: null,
 	getStream: function(stream,type) {
     
@@ -116,14 +123,14 @@ FaceDetector.beard.src = 'assets/img/effects/beard.png';
 // output_id must be a <canvas>-tag
 FaceDetector.init = function(source, output) {
   
-  this.closed = false;
-  
 	this.video = source; // source that is used for receiving data from
 	this.backCanvas = document.createElement('canvas'); // canvas that is used for calculations
 	this.canvas = output; // canvas that is used for visualization
-	this.canvas.style.display = 'none';
 	this.context = this.canvas.getContext('2d');
 	
+  this.closed = false;
+  this.canvas.style.display = 'none';
+  
 	this.video.loop = true;
 	this.video.load();
   
