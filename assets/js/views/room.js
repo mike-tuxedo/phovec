@@ -61,7 +61,8 @@
   closeHelp: function() {
     $('#help').fadeOut('fast');
   },
-  didInsertElement: function() {   
+  didInsertElement: function() {
+    //<<<wo wird das benötigt? insertedElement existiert ja gar nicht!? MIKE FRAGT
     this.set('insertedElement', true);
 
     if (Users.getLocalUser().name === "Phovec-Benutzer" || Users.getLocalUser().name === undefined) {
@@ -75,6 +76,7 @@
     $('#videoboxes #local').attr("id", user.id);
 
     window.App.Controller.room.addRemoteUsers();
+    
   },
   toggleFullscreen: function() {
     var documentElement = document.getElementsByTagName("body")[0];
