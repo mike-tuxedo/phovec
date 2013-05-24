@@ -1,28 +1,38 @@
-      {{#view App.UserView}}
-          <span class="name" id="local_name">Phovec-Benutzer</span>
-        
-          <div class="videoWrapper">
-            <div class="stateMute"></div>
-            <img class='bgAvatar' src="assets/img/avatar.jpg"/>
-            <div class="recordLocalVideo"></div>
-            <div class="recordLocalAudio"></div>
-            <video autoplay></video>
-            <audio autoplay loop muted></audio>
-            <canvas id="faceDetectorOutput"></canvas>
-          </div>
-        
-          <div id="video_options">
-            <div class="video_options_buttons" id="control_audio" {{ action controlAudio target="view" }}>on/off Audio</div>
-            <div class="video_options_buttons" id="control_video" {{ action controlVideo target="view" }}>on/off Video</div>
-            <div class="video_options_buttons disabled" id="control_effects" {{ action controlEffects target="view" }}>Effekte</div>
-          </div>
-          <div id="videoEffects">
-            <div {{action putGlassesOnUser target="view" }} class="effectButton" id="glasses" ></div>
-            <div {{action putHatOnUser target="view" }} class="effectButton" id="hat" ></div>
-            <div {{action putBeardOnUser target="view" }} class="effectButton" id="beard" ></div>
-            <div {{action controlEffects target="view" }} class="effectButton" id="effect_off" >kein Effekt</div>
-            <div {{action controlEffects target="view" }} class="effectButton" id="effect_off" >kein Effekt</div>
-            <div {{action controlEffects target="view" }} class="effectButton" id="effect_off" >kein Effekt</div>
-            <!-- <input type="button" id="snapshotButton" class="effectButton" {{action "takeScreenShotFromChatroom" }} value="Snapshot"/> -->
-          </div>
-        {{/view}}
+{{#view App.UserView}} 
+<span class="name" id="local_name">Phovec-Benutzer</span>
+<div class="videoWrapper">
+  <div class="stateMute"></div>
+  <img class='bgAvatar' src="assets/img/avatar.jpg"/>
+  <div class="recordLocalVideo"></div>
+  <div class="recordLocalAudio"></div>
+  <video autoplay></video>
+  <audio autoplay loop muted></audio>
+  <canvas id="faceDetectorOutput"></canvas>
+</div>
+
+<div id="video_options">
+  <div class="video_options_buttons" id="control_audio" {{ action controlAudio target="view" }}>
+    on/off Audio
+  </div>
+  <div class="video_options_buttons" id="control_video" {{ action controlVideo target="view" }}>
+    on/off Video
+  </div>
+  <div class="video_options_buttons disabled" id="control_effects" {{ action controlEffects target="view" }}>
+    Effekte
+  </div>
+</div>
+<div id="videoEffects">
+  <div {{action putGlassesOnUser target="view" }} class="effectButton" id="glasses" ></div>
+  <div {{action putHatOnUser target="view" }} class="effectButton" id="hat" ></div>
+  <div {{action putBeardOnUser target="view" }} class="effectButton" id="beard" ></div>
+  <div {{action controlEffects target="view" }} class="effectButton" id="effect_off" >
+    kein Effekt
+  </div>
+  <div {{action controlEffects target="view" }} class="effectButton" id="effect_off" >
+    kein Effekt
+  </div>
+  <div {{action controlEffects target="view" }} class="effectButton" id="effect_off" >
+    kein Effekt
+  </div>
+</div>
+{{/view}}
