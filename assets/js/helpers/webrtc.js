@@ -91,8 +91,8 @@ var WebRTC = {
 
       switch(data.subject) {
         case "message":
-          var output = formatTime(new Date().getTime(), "HH:MM") + " (" + user.name + ") - " + data.content + "&#13;&#10;";
-          $('#' + remoteUserId + ' form textarea').append(output);
+          var output = formatTime(new Date().getTime(), "HH:MM") + " (" + user.name + ") - " + data.content + "&#13;&#10;<br>";
+          $('#' + remoteUserId + ' form .output').append(output);
           break;
         case "file":
           frameCollection.push(data.content);
@@ -149,17 +149,21 @@ var WebRTC = {
         }
       }, false);
 
-      $('#' + remoteUserId + " form input").keypress(function(event) {
-        if (event.which == 13) {
-          var input = $(this).val();
+      $("#" + remoteUserId + " form .input").keypress(function(event) {
+        if((event.altKey === true || event.ctrlKey === true || event.shiftKey === true) && event.which === 13){
+          var content = $(this).html();
+          $(this).html(content + "&#13;&#10;<br>");
+        }
+        else if (event.which === 13) {
+          var input = $(this).html();
           dataChannel.send(JSON.stringify({
             "subject": "message",
             "content": input
           }));
-          $(this).val("");
+          $(this).html("");
 
-          var output = formatTime(new Date().getTime(), "HH:MM") + " (me) - " + input + "&#13;&#10;";
-          $('#' + remoteUserId + " textarea").append(output);
+          var output = formatTime(new Date().getTime(), "HH:MM") + " (me) - " + input + "&#13;&#10;<br>";
+          $('#' + remoteUserId + " form .output").append(output);
 
           event.preventDefault();
           event.stopPropagation();
@@ -167,7 +171,7 @@ var WebRTC = {
         }
       });
 
-      $('#' + remoteUserId + " form input").removeAttr('disabled');
+      $("#" + remoteUserId + " form .input").attr('contenteditable','true');
     };
     dataChannel.onclose = function(event) {
       trace("webrtc", "DataChannel onclose", event);
