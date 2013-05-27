@@ -289,7 +289,7 @@ var WebRTC = {
   handleSignalingInit: function(event) {
     trace("webrtc", "Signaling Init", event);
     var data = event.detail;
-
+console.log(data);
     /**
      * If there is an error handle it
      */
