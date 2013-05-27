@@ -156,9 +156,9 @@
     msg.method = 'send';
     msg.name = 'Phovec Einladung';
     msg.link = location.href;
-    msg.picture = 'http://fbrell.com/f8.jpg';
+    msg.picture = 'assets/img/favicon.png';
     msg.description = ('Ein Freund möchte dich auf Phovec einladen! Deine Einladungsadresse lautet: ' + location.href);
-    msg.caption = 'ivisible text';
+    msg.caption = 'invisible text';
     
     FB.ui(msg, function(response) {
 
