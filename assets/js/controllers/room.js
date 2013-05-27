@@ -190,10 +190,10 @@
   },
   showInvitationQRCode: function() {
 
-    if ($('#qrcode_box').children()[0]) {
+    if($('#qrcode_box').html().indexOf('img') !== -1 ){
       return;
     }
-
+    
     var qr = new qrcode({
       size: 150,
       /*

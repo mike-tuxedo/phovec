@@ -319,6 +319,7 @@ var WebRTC = {
     /* set url according to the room-hash */
     /* only if we aren't already at the right url */
     if (window.location.origin + "/#/room/" + data.roomHash !== location.href) {
+      console.log('teste url');
       App.handleURL('room/' + data.roomHash);
       App.Router.router.replaceURL('/room/' + data.roomHash);
     }
