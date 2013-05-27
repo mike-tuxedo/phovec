@@ -1,41 +1,25 @@
- {{#view App.AuthView}}
-      {{# unless App.Controller.auth.fbLoggedIn }}
-      <a class="socialButtons tab_inactive" id="facebook_tab" {{action "facebookTab" target="view" }}></a>
-      {{/unless}}
-      <!--
-      {{# if App.Controller.auth.fbLoggedIn }}
-      <a {{action "fbLogout" target="App.Controller.auth"}} class="socialButtons facebookTab"></a>
-      {{/if}}
-      -->
-      {{# unless App.Controller.auth.googleLoggedIn }}
-      <a class="socialButtons tab_inactive" id="google_tab" {{action "googleTab" target="view"}}></a>
-      {{/unless}}
-      <!--
-      {{# if App.Controller.auth.googleLoggedIn }}
-      <a {{action "googleLogout" target="App.Controller.auth"}} class="socialButtons googleButton"></a>
-      {{/if}}
-      -->
-      <a class="socialButtons tab_inactive" id="email_tab"{{action "emailTab" target="view"}}></a>
-      <a class="socialButtons tab_inactive" id="qr_tab" {{ action "QrCodeTab" target="view" }}></a>
-
-      {{/view}}
-      <!-- user-login data -->
-      <div id="userInfo">
-      <br />
-      <h1>INFO</h1>
-      <br />
-      <p>
-      Melde dich mit <strong>Facebook</strong> oder <strong>Google+</strong> an und schicke deinen Freunden direkt eine Chateinladung.
-      Du bist bei keinem dieser Netzwerke? KEIN PROBLEM, schicke einfach eine gute alte <strong>eMail</strong> ;)
-      </p>
-      </div>
-      <div class="sidebar_content" id="qrcode_box"></div>
-      <div class="sidebar_content" id="friends_of_facebook"></div>
-      <div class="sidebar_content" id="friends_of_google"></div>
-      <div class="sidebar_content" id="friends_of_email">
-      <form id="mail_form">
-      <input type="text" class="email_input" id="mailAddress" placeholder="E-Mail Addresse"/>
-      <textarea type="text" class="email_input" id="mailDescription" placeholder="E-Mail Beschreibung"></textarea>
-      <input type="button" id="mailFormButton" value="Sende E-Mail" {{action "addMailInfo" target="App.Controller.auth"}} />
-      </form>
-      </div>
+{{#view App.AuthView}} <a class="socialButtons tab_inactive" id="facebook_tab" {{action "facebookTab" target="view" }}></a>
+<a class="socialButtons tab_inactive" id="google_tab" {{action "googleTab" target="view"}}></a>
+<a class="socialButtons tab_inactive" id="email_tab"{{action "emailTab" target="view"}}></a>
+<a class="socialButtons tab_inactive" id="qr_tab" {{ action "QrCodeTab" target="view" }}></a>
+{{/view}}
+<!-- user-login data -->
+<div id="userInfo">
+  <br />
+  <h1>INFO</h1>
+  <br />
+  <p>
+    Melde dich mit <strong>Facebook</strong> oder <strong>Google+</strong> an und schicke deinen Freunden direkt eine Chateinladung.
+    Du bist bei keinem dieser Netzwerke? KEIN PROBLEM, schicke einfach eine gute alte <strong>eMail</strong> ;)
+  </p>
+</div>
+<div class="sidebar_content" id="qrcode_box"></div>
+<div class="sidebar_content" id="friends_of_facebook"></div>
+<div class="sidebar_content" id="friends_of_google"></div>
+<div class="sidebar_content" id="friends_of_email">
+  <form id="mail_form">
+    <input type="text" class="email_input" id="mailAddress" placeholder="E-Mail Addresse"/>
+    <textarea type="text" class="email_input" id="mailDescription" placeholder="E-Mail Beschreibung"></textarea>
+    <input type="button" id="mailFormButton" value="Sende E-Mail" {{action "addMailInfo" target="App.Controller.auth"}} />
+  </form>
+</div>
