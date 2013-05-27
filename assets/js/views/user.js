@@ -4,7 +4,6 @@ App.UserView = Ember.View.extend({
   didInsertElement: function() {
     $('#videoboxes')[0].addEventListener('click', App.Controller.room.handleClickEvent, true);
     App.Controller.user.setWindowWidth();
-
     Users.updateLocalUserView();
   },
   controlEffects: function() {
@@ -51,5 +50,5 @@ App.UserView = Ember.View.extend({
     if (Users.getLocalUser().stream) {
       FaceDetector.getStream(Users.getLocalUser().stream, type);
     }
-  },
+  }
 });

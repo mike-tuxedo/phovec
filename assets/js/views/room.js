@@ -65,7 +65,6 @@
     if (Users.getLocalUser().name === "Phovec-Benutzer" || Users.getLocalUser().name === undefined) {
       $('#nameArea').show();
     }
-
     window.App.Controller.room.addRemoteUsers();
   },
   toggleFullscreen: function() {
