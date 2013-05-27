@@ -416,6 +416,14 @@ var WebRTC = {
         break;
       case "leave":
         Users.removeRemoteUser(data.userId);
+        
+        var remoteUsers = Users.getRemoteUsers();
+        
+        remoteUsers.forEach(function(user,index){
+          user.number = index+1;
+          App.Controller.room.updateUser(user);
+        });
+        
         break;
       case "edit":
         var remoteUser = Users.getRemoteUser(data.userId);
