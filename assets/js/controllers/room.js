@@ -1,6 +1,5 @@
 ﻿App.RoomController = Ember.ObjectController.extend({
-  init: function() {
-  },
+  init: function() {},
   animation: function() {
     var interval = setInterval(function() {
       animate($('#glow'));

@@ -2,11 +2,6 @@
   templateName: 'room',
   classNames: ['room-wrapper'],
   sidebar: false,
-  init: function(){
-    window.onresize = function(event) {
-        $('.sidebar_content').height() = window.document.height - 35 + 'px';
-    };
-  },
   showSidebar: function() {
     if (this.sidebar === false) {
       $('#scrollbar_fix').css('width', '310px');

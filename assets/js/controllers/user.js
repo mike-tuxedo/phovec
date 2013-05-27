@@ -1,6 +1,7 @@
 App.UserController = Ember.ObjectController.extend({
   init: function(){
     window.onresize = function(event) {
+        $('.sidebar_content').css('height', $(window).height() - 30 + 'px');
         this.setWindowWidth();
     }.bind(this);
 
