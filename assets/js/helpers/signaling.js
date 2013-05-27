@@ -34,9 +34,8 @@
          * Send init to signaling server
          */
         this.send(JSON.stringify({
-          subject: "init",
-          url: location.href,
-          name: Users.getLocalUser().name
+          subject: "init:room",
+          url: location.href
         }));
       };
       this.webSocket.onmessage = function(message) {

@@ -1,16 +1,16 @@
 App.UserView = Ember.View.extend({
   classNames: ['user', 'local'],
   elementId: 'local',
-  didInsertElement: function(){
-    $('#videoboxes')[0].addEventListener('click',App.Controller.room.handleClickEvent,true);
-
+  didInsertElement: function() {
+    $('#videoboxes')[0].addEventListener('click', App.Controller.room.handleClickEvent, true);
     App.Controller.user.setWindowWidth();
+
+    Users.updateLocalUserView();
   },
-  controlEffects: function(){
-    if($('#videoEffects').css('display') === 'block'){
+  controlEffects: function() {
+    if ($('#videoEffects').css('display') === 'block') {
       $('#videoEffects').fadeOut('fast');
-    }
-    else{
+    } else {
       $('#videoEffects').fadeIn('fast');
     }
     this.effectOff();
@@ -19,15 +19,15 @@ App.UserView = Ember.View.extend({
   controlAudio: function() {
     App.Controller.user.controlAudio();
   },
-  controlVideo: function(){
-    if(!FaceDetector.closed){
+  controlVideo: function() {
+    if (!FaceDetector.closed) {
       $('#faceDetectorOutput').toggle();
     }
     App.Controller.user.controlVideo();
   },
   controlLocalVideoVisibility: function(option) {
     var localUserId = Users.getLocalUser().id;
-    $('#'+localUserId+' video').css('display', option);
+    $('#' + localUserId + ' video').css('display', option);
   },
   controlEffectsVisibility: function(option) {
     $('#videoEffects').css('display', option);
