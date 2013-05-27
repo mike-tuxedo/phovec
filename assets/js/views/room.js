@@ -62,8 +62,6 @@
     $('#help').fadeOut('fast');
   },
   didInsertElement: function() {
-    var name = Users.getLocalUser().name;
-    console.log(name === undefined);
     if (Users.getLocalUser().name === "Phovec-Benutzer" || Users.getLocalUser().name === undefined) {
       $('#nameArea').show();
     }
