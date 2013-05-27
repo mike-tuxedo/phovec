@@ -46,7 +46,7 @@
           trace("signaling", "Unparsable message from server", "-");
           return;
         }
-        
+
         switch(data.subject) {
           case "init":
             trace("signaling", "INIT", data);
@@ -59,6 +59,18 @@
                 error: data.error
               }
             }));
+
+            if (Users.initLocalUser === false) {
+              Users.initLocalUser = true;
+              this.send(JSON.stringify({
+                subject: "init:user",
+                userHash: Users.getLocalUser().id,
+                roomHash: Users.getLocalUser().roomHash,
+                put: {
+                  name: Users.getLocalUser().name,
+                }
+              }));
+            }
             break;
           case "sdp":
             //trace("signaling", "SDP", data);
@@ -194,7 +206,7 @@
     }
   },
   send: function(message) {
-    //trace("signaling", "SEND", message);
+    trace("signaling", "SEND", message);
     SignalingChannel.webSocket.send(JSON.stringify(message));
   },
   close: function() {

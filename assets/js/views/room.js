@@ -122,14 +122,17 @@
             Users.initLocalUser = true;
             SignalingChannel.send({
               subject: "init:user",
+              userHash: localUser.id,
               roomHash: localUser.roomHash,
-              name: localUser.name
+              put: {
+                name: localUser.name,
+              }
             });
           } else if (Users.initLocalUser === true) {// user wants to rename their name
             SignalingChannel.send({
               subject: "participant:edit",
-              roomHash: localUser.roomHash,
               userHash: localUser.id,
+              roomHash: localUser.roomHash,
               put: {
                 name: localUser.name,
               }
