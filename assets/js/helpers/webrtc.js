@@ -78,7 +78,7 @@ var WebRTC = {
     var frameCollection = [];
 
     dataChannel.onmessage = function(event) {
-      console.log("ON MESSAGE");
+      trace("webrtc", "ON MESSAGE DATACHANNEL", "-");
       var user = Users.getRemoteUser(remoteUserId);
       var data = {};
 
@@ -96,8 +96,6 @@ var WebRTC = {
           break;
         case "file":
           frameCollection.push(data.content);
-          console.log(data);
-
           if (data.lastFrame === true) {
             var dataURL = frameCollection.join('');
             frameCollection = [];
@@ -195,8 +193,6 @@ var WebRTC = {
       };
     }
 
-    console.log(dataURL.length);
-
     if (dataURL.length < options.frameLength) {
       data.content = dataURL;
       data.lastFrame = true;
@@ -214,7 +210,6 @@ var WebRTC = {
 
     if (Users.getRemoteUser(remoteUserId).dataChannel.readyState.toLowerCase() == 'open') {
       Users.getRemoteUser(remoteUserId).dataChannel.send(JSON.stringify(data));
-      console.log(data);
     } else {
       setTimeout(function(remoteUserId, data) {
         Users.getRemoteUser(remoteUserId).dataChannel.send(JSON.stringify(data));
@@ -323,7 +318,7 @@ var WebRTC = {
       App.handleURL('room/' + data.roomHash);
       App.Router.router.replaceURL('/room/' + data.roomHash);
     }
-    
+
     /**
      * Create remote users
      * Have to be before the modification of the local user,
@@ -341,6 +336,7 @@ var WebRTC = {
     user.roomHash = data.roomHash;
     user.id = data.userId;
     user.country = data.country;
+    Users.updateLocalUserView();
 
     if (data.users.length <= 0) {
       user.admin = true;
@@ -397,7 +393,7 @@ var WebRTC = {
     trace("webrtc", "Handle Participant", event);
 
     var data = event.detail;
-
+    console.log(data);
     switch (data.message) {
       case "join":
         var userLocal = Users.getLocalUser();
@@ -424,19 +420,9 @@ var WebRTC = {
         Users.removeRemoteUser(data.userId);
         break;
       case "edit":
-        var userNum;
-        var remoteUsers = Users.getRemoteUsers();
-
-        remoteUsers.forEach(function(user, index) {
-          if (user.id === data.userId) {
-            userNum = index;
-            user.country = data.country;
-            user.name = data.name;
-          }
-        });
-
-        App.Controller.room.updateUser(data, userNum + 1);
-
+        var remoteUser = Users.getRemoteUser(data.userId);
+        remoteUser.name = data.name;
+        App.Controller.room.updateUser(data);
         break;
       case "audio:mute":
         WebRTC.handleRecordingButtons(data.userId, 'audio', false);
@@ -504,35 +490,64 @@ var WebRTC = {
 
 var Users = {
   users: [],
+  initLocalUser: false,
   createLocalUser: function() {
     var user = {
-      name: undefined,
-      id: undefined,
       roomHash: undefined,
       stream: undefined,
       admin: false,
-      type: "local"
+      type: "local",
+      _name: undefined,
+      _id: undefined,
+      _country: undefined,
+      get name(){
+        return this._name;
+      },
+      set name(name){
+        Users.updateLocalUserView();
+        this._name = name;
+      },
+      get id(){
+        return this._id;
+      },
+      set id(id){
+        Users.updateLocalUserView();
+        this._id = id;
+      },
+      get country(){
+        return this._country;
+      },
+      set country(country){
+        Users.updateLocalUserView();
+        this._country = country;
+      }
     };
 
     Users.users.push(user);
     return user;
   },
+  updateLocalUserView: function(){
+    var user = Users.getLocalUser();
+    var img = (user.country ? user.country : "unknown") + '.png';
+    $('#local_name').text(user.name);
+    $('#local_name').css('background-image', 'url(./assets/img/countries/' + img + ')');
+    $('#videoboxes #local').attr("id", user.id);
+  },
   createRemoteUser: function(roomHash, remoteUserId, remoteUserName, remoteUserCountry, peerConnection, dataChannel) {
-    console.log("createRemoteUser");
-
     var user = {
       name: remoteUserName,
       id: remoteUserId,
       roomHash: roomHash,
       peerConnection: peerConnection,
       stream: undefined,
-      country: undefined,
       dataChannel: dataChannel,
-      type: "remote"
+      type: "remote",
+      number: Users.users.length,
+      country: remoteUserCountry
     };
 
     Users.users.push(user);
-    window.App.Controller.room.addRemoteUser(user, Users.users.length);
+    window.App.Controller.room.addRemoteUser(user);
   },
   getLocalUser: function() {
     for (var i = 0; i < Users.users.length; i++) {
@@ -550,8 +565,6 @@ var Users = {
         return Users.users[i];
       }
     }
-
-    console.log("Unknown remote user id: " + id);
     return null;
   },
   getRemoteUsers: function() {
@@ -594,7 +607,7 @@ var Users = {
 
         Users.users.splice(i, 1);
         var boxes = document.getElementsByClassName('user').length;
-        window.App.Controller.user.set('userBoxes', boxes-1);
+        window.App.Controller.user.set('userBoxes', boxes - 1);
         return true;
       }
     }

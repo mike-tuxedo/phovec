@@ -67,24 +67,10 @@
     $('#help').fadeOut('fast');
   },
   didInsertElement: function() {
-    //<<<wo wird das benötigt? insertedElement existiert ja gar nicht!? MIKE FRAGT
-    //this.set('insertedElement', true);
-    if( document.getElementsByClassName('user').length === Users.users.length ){
-      return;
-    }
-    
     if (Users.getLocalUser().name === "Phovec-Benutzer" || Users.getLocalUser().name === undefined) {
       $('#nameArea').show();
     }
-
-    var user = Users.getLocalUser();
-    var img = (user.country ? user.country : "unknown") + '.png';
-    $('#local_name').text(user.name);
-    $('#local_name').css('background-image', 'url(assets/img/countries/' + img + ')');
-    $('#videoboxes #local').attr("id", user.id);
-    
     window.App.Controller.room.addRemoteUsers();
-    
   },
   toggleFullscreen: function() {
     var documentElement = document.getElementsByTagName("body")[0];
@@ -137,18 +123,25 @@
           var localUser = Users.getLocalUser();
           localUser.name = name;
 
-          if (SignalingChannel.webSocket) {// user wants to rename their name
+          if (Users.initLocalUser === false) {
+            Users.initLocalUser = true;
             SignalingChannel.send({
-              subject: "participant:edit",
-              roomHash: localUser.roomHash,
+              subject: "init:user",
               userHash: localUser.id,
+              roomHash: localUser.roomHash,
               put: {
                 name: localUser.name,
-                country: localUser.country
               }
             });
-          } else {
-            SignalingChannel.init();
+          } else if (Users.initLocalUser === true) {// user wants to rename their name
+            SignalingChannel.send({
+              subject: "participant:edit",
+              userHash: localUser.id,
+              roomHash: localUser.roomHash,
+              put: {
+                name: localUser.name,
+              }
+            });
           }
 
           document.querySelector("#local_name").innerText = name;

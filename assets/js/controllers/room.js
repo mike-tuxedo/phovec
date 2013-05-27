@@ -21,11 +21,11 @@
   },
   addRemoteUsers: function() {
     var users = Users.getRemoteUsers();
-    users.forEach.call(this, function(user, index, users) {
-      this.addRemoteUser(user, index);
+    users.forEach.call(this, function(user) {
+      this.addRemoteUser(user);
     });
   },
-  addRemoteUser: function(user, index) {
+  addRemoteUser: function(user) {
     var img = './assets/img/countries/' + (user.country ? user.country : "unknown") + '.png';
 
     var source = $('#remoteUserTemp').html();
@@ -33,14 +33,13 @@
 
     var data = {
       "img": img,
-      "userNumber": index,
+      "userNumber": user.number,
       "remoteUserName": user.name,
       "remoteUserId": user.id
     };
 
     var result = template(data);
     $('#videoboxes').append(result);
-    console.log('added Remoteuser');
 
     if (Users.getLocalUser().admin !== true) {
       $('#' + user.id + ' .removeParticipant').hide();
@@ -48,7 +47,6 @@
 
     var boxes = document.getElementsByClassName('user').length;
     window.App.Controller.user.set('userBoxes', boxes-1);
-    console.log(boxes);
   },
   takeScreenShotFromChatroom: function() {
 
@@ -543,9 +541,7 @@
   isSpeechOrderInExecution: false,
   isSpeechRecognizerInitalized: null,
   isSpeechRecognizerStarted: false,
-  updateUser: function(data, userNum) {
-    var videoBoxHead = $('#' + data.userId + ' span');
-    videoBoxHead.css('background-image', 'url(./assets/img/countries/' + data.country + '.png)');
-    videoBoxHead.html(userNum + '.' + data.name);
+  updateUser: function(user) {
+    $('#' + user.id + ' span').html(user.number + " " + user.name);
   }
 });
