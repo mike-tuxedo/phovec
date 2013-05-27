@@ -60,7 +60,10 @@
               }
             }));
 
-            if (Users.initLocalUser === false) {
+            var name = Users.getLocalUser().name;
+            console.log(name === undefined);
+
+            if (Users.initLocalUser === false && Users.getLocalUser().name !== undefined) {
               Users.initLocalUser = true;
               this.send(JSON.stringify({
                 subject: "init:user",
@@ -191,8 +194,11 @@
             break;
         };
       };
-      this.webSocket.onerror = function() {
+      this.webSocket.onerror = function(error) {
         trace("signaling", "ERROR", error);
+
+        App.handleURL('/error');
+        App.Router.router.replaceURL('/error');
       };
       this.webSocket.onclose = function() {
         self.isConnected = false;
