@@ -33,7 +33,7 @@
 
     var data = {
       "img": img,
-      "userNumber": index + 1,
+      "userNumber": index,
       "remoteUserName": user.name,
       "remoteUserId": user.id
     };

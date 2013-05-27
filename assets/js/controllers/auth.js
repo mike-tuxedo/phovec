@@ -156,9 +156,9 @@
     msg.method = 'send';
     msg.name = 'Phovec Einladung';
     msg.link = location.href;
-    msg.picture = 'http://fbrell.com/f8.jpg';
+    msg.picture = 'assets/img/favicon.png';
     msg.description = ('Ein Freund möchte dich auf Phovec einladen! Deine Einladungsadresse lautet: ' + location.href);
-    msg.caption = 'ivisible text';
+    msg.caption = 'invisible text';
     
     FB.ui(msg, function(response) {
 
@@ -182,7 +182,7 @@
   googleValidURL : 'https://www.googleapis.com/oauth2/v1/tokeninfo?access_token=',
   googleScope : 'https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email https://www.google.com/m8/feeds/',
   googleCliendtId : '186949140302.apps.googleusercontent.com',
-  googleRedirect : 'http://phovec.nucular-bacon.com/',
+  googleRedirect : 'http://localhost:8001/',
   googleType : 'token',
   googleRequestURL : null,
   

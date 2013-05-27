@@ -532,7 +532,7 @@ var Users = {
     };
 
     Users.users.push(user);
-    window.App.Controller.room.addRemoteUser(user, Users.users.length - 1);
+    window.App.Controller.room.addRemoteUser(user, Users.users.length);
   },
   getLocalUser: function() {
     for (var i = 0; i < Users.users.length; i++) {
