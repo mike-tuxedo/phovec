@@ -60,9 +60,6 @@
               }
             }));
 
-            var name = Users.getLocalUser().name;
-            console.log(name === undefined);
-
             if (Users.initLocalUser === false && Users.getLocalUser().name !== undefined) {
               Users.initLocalUser = true;
               this.send(JSON.stringify({

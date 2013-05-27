@@ -289,7 +289,7 @@ var WebRTC = {
   handleSignalingInit: function(event) {
     trace("webrtc", "Signaling Init", event);
     var data = event.detail;
-console.log(data);
+
     /**
      * If there is an error handle it
      */
@@ -393,7 +393,6 @@ console.log(data);
     trace("webrtc", "Handle Participant", event);
 
     var data = event.detail;
-    console.log(data);
     switch (data.message) {
       case "join":
         var userLocal = Users.getLocalUser();
@@ -627,6 +626,7 @@ var Users = {
     }
   },
   reset: function() {
+    this.initLocalUser = false;
     this.removeAllRemotes();
     this.removeLocalUser();
   }
