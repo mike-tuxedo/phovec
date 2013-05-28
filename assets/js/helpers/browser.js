@@ -42,7 +42,7 @@ if ( typeof mozRTCIceCandidate !== "undefined") {
 function trace(file, message, object) {
   var timestamp = formatTime(new Date().getTime(), "HH:MM:ss:SSS");
   console.log(timestamp + "\t" + file + "\t" + message + "\t");
-  console.log("\t\t" + "With data: ", object);
+  //console.log("\t\t" + "With data: ", object);
   WebRTCDebugger.update();
 }
 

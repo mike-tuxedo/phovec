@@ -4,27 +4,35 @@ var Visualizer = {
   audioContext: null,
   canvasContext: null,
   init: function(stream) {
-    var max = min = xIndex = 0;
-    var fWidth = 1;
-    
-    this.audioContext = new webkitAudioContext();
     this.canvasContext = document.getElementById('canvas').getContext('2d');
+    this.canvasContext.width = window.innerWidth;
+    this.canvasContext.height = 255;
+    document.getElementById('canvas').height = 255;
+
+    this.audioContext = new webkitAudioContext();
     this.analyser = this.audioContext.createAnalyser();
 
     this.microphone = this.audioContext.createMediaStreamSource(stream);
     this.microphone.connect(this.analyser);
-    this.canvasContext.fillStyle = "rgba(0, 0, 255, 1)";
-
+    this.canvasContext.fillStyle = "rgba(30, 30, 30, 1)";
+    var max = 0;
     setInterval( function() {
       // FFTData = new Float32Array(this.analyser.fftSize);
       // this.analyser.getByteTimeDomainData(FFTData);
       var BTDData = new Uint8Array(this.analyser.fftSize);
       this.analyser.getByteTimeDomainData(BTDData);
-      
-      Visualizer.canvasContext.clearRect(0, 0, 512, 200);
-      for (var i = 0; i < BTDData.length; i+=4) {
-        Visualizer.canvasContext.fillRect(i/4 * fWidth, 200, fWidth, -BTDData[i]);
-        console.log(BTDData.length, BTDData[i]);
+
+      Visualizer.canvasContext.clearRect(0, 0, document.getElementById('canvas').offsetWidth, document.getElementById('canvas').offsetHeight);
+      for (var i = 0; i < BTDData.length; i += stepSize) {
+        var stepSize = 32;
+        var fWidth = document.getElementById('canvas').offsetWidth / 2048;
+        var x = i * fWidth;
+        var y = document.getElementById('canvas').offsetHeight;
+        var width = fWidth * stepSize;
+        var height = -BTDData[i];
+
+        Visualizer.canvasContext.fillRect(x, y, width, height);
+        //console.log("x:" + x + "\t\ty:" + y + "\twidth:" + width + "\theight:" + height);
       }
     }.bind(this), 40);
   }

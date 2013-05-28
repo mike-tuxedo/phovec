@@ -354,7 +354,7 @@ line-height: 1.5;
   width: 100%;
 }
 
-.chatInput{
+.user .input{
   background-color: #ffffff;
   -moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;
@@ -366,7 +366,7 @@ line-height: 1.5;
   overflow-y: scroll;
 }
 
-.chatOutput{
+.user .output{
   background-color: #ffffff;
   -moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;
