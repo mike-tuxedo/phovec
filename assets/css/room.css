@@ -377,7 +377,17 @@ line-height: 1.5;
 }
 
 #speechButton{
-  width: 150px;
+  cursor: pointer;
+  position: absolute;
+  width: 50px;
+  height: 50px;
+  left: 50px;
+  
+  color:  #e0dfeb;
+  background-image: url(../img/micro_recorder_off.png);
+  background-repeat: no-repeat;
+  background-size: 45%;
+  background-position: 15px 13px;
 }
 
 /*------------Options under lokal Video--------------*/
@@ -442,8 +452,19 @@ line-height: 1.5;
   background-position: 10px;
 }
 
-#hangupButton:hover {
+#hangupButton:hover, #toolButtons div:hover {
   opacity: 0.8;
+}
+
+#toolButtons {
+  display: block;
+  height: 50px;
+  width: 110px;
+  border-bottom-right-radius: 50px;
+  border-right: 8px solid #66666B;
+  border-bottom: 8px solid #66666B;
+  box-shadow: 0px 0px 15px #444444;
+  background: #66666B;
 }
 
 #videoEffects {
@@ -665,7 +686,7 @@ line-height: 1.5;
   color: #444;
   font-weight: bold;
 }
-
+/*
 #buttonFullscreen{
   cursor: pointer;
   position: absolute;
@@ -684,6 +705,20 @@ line-height: 1.5;
   -webkit-box-shadow: 0px 0px 15px #444;
   background-image: url(../img/fullscreen_start.png);
   background-repeat: no-repeat;
+}
+*/
+
+#buttonFullscreen{
+  cursor: pointer;
+  position: absolute;
+  width: 50px;
+  height: 50px;
+  left: 0px;
+  
+  color:  #e0dfeb;
+  background-image: url(../img/fullscreen_start.png);
+  background-repeat: no-repeat;
+  background-position: -10px 15px;
 }
 
 #nameArea > div{
