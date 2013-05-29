@@ -483,7 +483,7 @@
             $('#faceDetectorOutput').toggle();
           }
           
-          var localUserVideoStream = Users.getLocalUser().stream.getVideoTracks()[0];
+          var localUserVideoStream = Users.getLocalUser().stream ? Users.getLocalUser().stream.getVideoTracks()[0] : { enabled: false };
           
           if( switchMode === 'on' && !localUserVideoStream.enabled ){
             App.Controller.user.controlVideo();
