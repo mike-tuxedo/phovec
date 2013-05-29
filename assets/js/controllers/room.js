@@ -360,12 +360,11 @@
     controller.speechRecognizer.onerror = controller.speechRecognizerErrorHandler;
     controller.speechRecognizer.onend = function() {
       controller.isSpeechRecognizerStarted = false;
-      $('#speechButton').val('Sprachbefehle off');
+      $('#speechButton').css('background-image', 'url(assets/img/micro_recorder_off.png)');
     };
 
     controller.speechRecognizer.onstart = function() {
       controller.isSpeechRecognizerStarted = true;
-      $('#speechButton').val('Sprachbefehle on');
     };
 
     controller.speechRecognizer.onresult = function(event) {
