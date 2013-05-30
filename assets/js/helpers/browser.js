@@ -101,9 +101,10 @@ if (navigator.browser[0] === "Chrome" || navigator.browser[0] === "Firefox") {
 /* "Media Constraints" for PeerConnection */
 if (navigator.browser[0] === "Chrome") {
   RTC_MEDIA_CONSTRAINTS = {
-    'optional': [{
-      'DtlsSrtpKeyAgreement': true
-    }, {
+    'optional': [
+    /* Commented this because otherwise renegotiation doesn't work 
+    * {'DtlsSrtpKeyAgreement': true}, */
+    {
       'RtpDataChannels': true
     }]
   };

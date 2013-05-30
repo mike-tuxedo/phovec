@@ -98,9 +98,9 @@
         
         response.data.forEach(function(friend, index) {
           
-          friendList.innerHTML += '<li class="send_fb_message" onclick="App.Controller.auth.sendFbUserMessage(\''+friend.id+'\')"> Sende Facebook-Nachricht an ' + friend.name + '</li>'
+          friendList.innerHTML += '<li class="send_fb_message" onclick="App.Controller.auth.sendFbUserMessage(\''+friend.id+'\')"> Facebook-Nachricht an ' + friend.name + '</li>'
 
-          friendList.innerHTML += '<li class="send_mail" onclick="App.Controller.auth.sendMail({ subject:\'Einladungsmail\', from:\'phovec@nucular-bacon.com\', to:\''+friend.email+'\', cc: \''+friend.id+'@facebook.com\', text:\''+invitationText+'\', html:\'<b>'+invitationText+'</b>\'})"> Sende E-Mail an ' + friend.name + '</li>';
+          friendList.innerHTML += '<li class="send_mail" onclick="App.Controller.auth.sendMail({ subject:\'Einladungsmail\', from:\'phovec@nucular-bacon.com\', to:\''+friend.email+'\', cc: \''+friend.id+'@facebook.com\', text:\''+invitationText+'\', html:\'<b>'+invitationText+'</b>\'})"> Facebook-E-Mail an ' + friend.name + '</li>';
         
           friendList.innerHTML += '<hr>';
         });

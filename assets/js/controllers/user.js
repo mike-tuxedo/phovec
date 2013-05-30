@@ -70,7 +70,6 @@ App.UserController = Ember.ObjectController.extend({
       $('.recordLocalVideo').show();
       $('.recordLocalAudio').show();
       $('#control_effects').removeClass('disabled');
-      console.log('remove disabled');
     }
 
     if ( typeof webkitURL !== "undefined") {
@@ -84,7 +83,6 @@ App.UserController = Ember.ObjectController.extend({
     document.getElementById('videoboxes').getElementsByTagName('div')[0].getElementsByTagName('video')[0].play();
 
     var user = Users.getLocalUser();
-
     SignalingChannel.send({
       subject: "participant:video:unmute",
       roomHash: user.roomHash,
@@ -94,16 +92,7 @@ App.UserController = Ember.ObjectController.extend({
   onGetMediaError: function(error) {
     console.log("LocalMedia: ERROR");
     console.log(error);
-
-    /* check if user likes to do a textchat or not */
-    /*if(confirm('Nach dem du keinen Zugriff auf Kamera und Mikrofon erlaubst, kannst du nur einen Textchat führen! Ist das OK?')) {
-     $('#infoField').fadeOut();
-     $('#blackFilter').fadeOut();
-     }
-     else {
-     console.log('************ein redirect muss noch implementiert werden***********');
-     alert('Zurück auf die Startseite ...');
-     }*/
+    alert('Zugriff verweigert!');
   },
   startGetMedia: function() {
     //request audio and video from your own hardware
