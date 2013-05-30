@@ -92,7 +92,9 @@ var WebRTC = {
       switch(data.subject) {
         case "message":
           var output = formatTime(new Date().getTime(), "HH:MM") + " (" + user.name + ") - " + data.content + "&#13;&#10;<br>";
-          $('#' + remoteUserId + ' form .output').append(output);
+          var outputField = $('#' + remoteUserId + ' form .output');
+          outputField.append(output);
+          outputField.scrollTop(outputField[0].scrollHeight);
           break;
         case "file":
           frameCollection.push(data.content);
@@ -163,8 +165,10 @@ var WebRTC = {
           $(this).html("");
 
           var output = formatTime(new Date().getTime(), "HH:MM") + " (me) - " + input + "&#13;&#10;<br>";
-          $('#' + remoteUserId + " form .output").append(output);
-
+          var outputField = $('#' + remoteUserId + " form .output");
+          outputField.append(output);
+          outputField.scrollTop(outputField[0].scrollHeight);
+          
           event.preventDefault();
           event.stopPropagation();
           return false;
