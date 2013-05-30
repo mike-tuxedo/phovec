@@ -1,7 +1,8 @@
 <header>
-  {{#linkTo "index" id="backButton"}}{{/linkTo}}
-  <div id="buttonFullscreen" {{action "toggleFullscreen" target="view"}}></div>
-  <input type="button" id="speechButton" value="Sprachbefehl off" {{action "toggleSpeechOrder" on="click" target="view"}}/>
+  <div id="toolButtons">
+    <div id="buttonFullscreen" {{action "toggleFullscreen" target="view"}}></div>
+    <div id="speechButton" {{action "toggleSpeechOrder" on="click" target="view"}}></div>
+  </div>
   {{#linkTo "room-hangup" id="hangupButton"}}{{/linkTo}}
 </header>
 

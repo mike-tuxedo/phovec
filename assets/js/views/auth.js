@@ -3,6 +3,7 @@ App.AuthView = Ember.View.extend({
     App.Controller.auth.createHiddenTextInput();
   },
   QrCodeTab: function(){
+    $('.sidebar_content').css('height', $(window).height() - 30 + 'px');
     //set tab active or inactive
     $('#qr_tab').removeClass('tab_inactive').addClass('tab_active');
     $('#email_tab').removeClass('tab_active').addClass('tab_inactive');
@@ -18,6 +19,7 @@ App.AuthView = Ember.View.extend({
     App.Controller.room.showInvitationQRCode();
   },
   emailTab: function(){
+    $('.sidebar_content').css('height', $(window).height() - 30 + 'px');
     $('#email_tab').removeClass('tab_inactive').addClass('tab_active');
     $('#qr_tab').removeClass('tab_active').addClass('tab_inactive');
     $('#facebook_tab').removeClass('tab_active').addClass('tab_inactive');
@@ -30,6 +32,7 @@ App.AuthView = Ember.View.extend({
     $('#friends_of_facebook').hide();
   },
   googleTab: function(){
+    $('.sidebar_content').css('height', $(window).height() - 30 + 'px');
     $('#google_tab').removeClass('tab_inactive').addClass('tab_active');
     $('#email_tab').removeClass('tab_active').addClass('tab_inactive');
     $('#facebook_tab').removeClass('tab_active').addClass('tab_inactive');
@@ -43,6 +46,7 @@ App.AuthView = Ember.View.extend({
     App.Controller.auth.googleLogin();
   },
   facebookTab: function(){
+    $('.sidebar_content').css('height', $(window).height() - 30 + 'px');
     $('#facebook_tab').removeClass('tab_inactive').addClass('tab_active');
     $('#email_tab').removeClass('tab_active').addClass('tab_inactive');
     $('#qr_tab').removeClass('tab_active').addClass('tab_inactive');

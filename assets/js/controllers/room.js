@@ -1,6 +1,5 @@
 ﻿App.RoomController = Ember.ObjectController.extend({
-  init: function() {
-  },
+  init: function() {},
   animation: function() {
     var interval = setInterval(function() {
       animate($('#glow'));
@@ -188,10 +187,10 @@
   },
   showInvitationQRCode: function() {
 
-    if ($('#qrcode_box').children()[0]) {
+    if($('#qrcode_box').html().indexOf('img') !== -1 ){
       return;
     }
-
+    
     var qr = new qrcode({
       size: 150,
       /*
@@ -361,12 +360,11 @@
     controller.speechRecognizer.onerror = controller.speechRecognizerErrorHandler;
     controller.speechRecognizer.onend = function() {
       controller.isSpeechRecognizerStarted = false;
-      $('#speechButton').val('Sprachbefehle off');
+      $('#speechButton').css('background-image', 'url(assets/img/micro_recorder_off.png)');
     };
 
     controller.speechRecognizer.onstart = function() {
       controller.isSpeechRecognizerStarted = true;
-      $('#speechButton').val('Sprachbefehle on');
     };
 
     controller.speechRecognizer.onresult = function(event) {
@@ -485,7 +483,7 @@
             $('#faceDetectorOutput').toggle();
           }
           
-          var localUserVideoStream = Users.getLocalUser().stream.getVideoTracks()[0];
+          var localUserVideoStream = Users.getLocalUser().stream ? Users.getLocalUser().stream.getVideoTracks()[0] : { enabled: false };
           
           if( switchMode === 'on' && !localUserVideoStream.enabled ){
             App.Controller.user.controlVideo();

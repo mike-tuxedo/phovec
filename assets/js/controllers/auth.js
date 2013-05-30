@@ -102,6 +102,7 @@
 
           friendList.innerHTML += '<li class="send_mail" onclick="App.Controller.auth.sendMail({ subject:\'Einladungsmail\', from:\'phovec@nucular-bacon.com\', to:\''+friend.email+'\', cc: \''+friend.id+'@facebook.com\', text:\''+invitationText+'\', html:\'<b>'+invitationText+'</b>\'})"> Sende E-Mail an ' + friend.name + '</li>';
         
+          friendList.innerHTML += '<hr>';
         });
 
         document.getElementById('friends_of_facebook').appendChild(friendList);
@@ -268,6 +269,7 @@
   
               friendList.innerHTML += '<li id=' + (friend.name ? 'noname' : friend.name) + ' onclick="App.Controller.auth.sendMail({ subject:\'Einladungsmail\', from: \'phovec@nucular-bacon.com\', to:\''+friend.email+'\', text:\''+invitationText+'\', html:\'<b>'+invitationText+'</b>\'})">' + (friend.name ? friend.name : friend.email) + '</li>';
               
+              friendList.innerHTML += '<hr>'
             });
 
             document.getElementById('friends_of_google').appendChild(friendList);

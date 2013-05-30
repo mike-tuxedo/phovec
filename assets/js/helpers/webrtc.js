@@ -92,7 +92,7 @@ var WebRTC = {
       switch(data.subject) {
         case "message":
           var output = formatTime(new Date().getTime(), "HH:MM") + " (" + user.name + ") - " + data.content + "&#13;&#10;<br>";
-          $('#' + remoteUserId + ' form .output').append(output);
+          WebRTC.insertDataOutput(remoteUserId,output);
           break;
         case "file":
           frameCollection.push(data.content);
@@ -163,8 +163,8 @@ var WebRTC = {
           $(this).html("");
 
           var output = formatTime(new Date().getTime(), "HH:MM") + " (me) - " + input + "&#13;&#10;<br>";
-          $('#' + remoteUserId + " form .output").append(output);
-
+          WebRTC.insertDataOutput(remoteUserId,output);
+          
           event.preventDefault();
           event.stopPropagation();
           return false;
@@ -318,6 +318,7 @@ var WebRTC = {
     /* set url according to the room-hash */
     /* only if we aren't already at the right url */
     if (window.location.origin + "/#/room/" + data.roomHash !== location.href) {
+      console.log('teste url');
       App.handleURL('room/' + data.roomHash);
       App.Router.router.replaceURL('/room/' + data.roomHash);
     }
@@ -490,6 +491,11 @@ var WebRTC = {
     } else {
       $('#' + remoteId + ' ' + type).hide();
     }
+  },
+  insertDataOutput: function(remoteUserId,data){
+    var outputField = $('#' + remoteUserId + " form .output");
+    outputField.append(data);
+    outputField.scrollTop(outputField[0].scrollHeight);
   },
   firstVideoUnmuteMessage: true
 };
