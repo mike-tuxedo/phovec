@@ -467,13 +467,11 @@ var WebRTC = {
   },
   handleSignalingError: function(event) {
     trace("webrtc", "Handle Error", event);
-
+    
     var data = event.detail;
-
     if (data.subject === 'mail:error') {
       alert('Einladung-Mail zu ' + data.to + ' ist nicht angekommen.');
     }
-
   },
   handleSignalingKicked: function(event) {
     WebRTC.hangup();
@@ -486,9 +484,7 @@ var WebRTC = {
     trace("webrtc", "Reset", "-");
   },
   handleRecordingButtons: function(remoteId, type, show) {
-
     type = type === 'video' ? '.recordRemoteVideo' : '.recordRemoteAudio';
-
     if (show) {
       $('#' + remoteId + ' ' + type).show();
     } else {

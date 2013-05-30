@@ -1,4 +1,4 @@
-var Visualizer = {
+var AudioVisualizer = {
   analyser: null,
   microphone: null,
   audioContext: null,
@@ -22,7 +22,7 @@ var Visualizer = {
       var BTDData = new Uint8Array(this.analyser.fftSize);
       this.analyser.getByteTimeDomainData(BTDData);
 
-      Visualizer.canvasContext.clearRect(0, 0, document.getElementById('canvas').offsetWidth, document.getElementById('canvas').offsetHeight);
+      this.canvasContext.clearRect(0, 0, document.getElementById('canvas').offsetWidth, document.getElementById('canvas').offsetHeight);
       for (var i = 0; i < BTDData.length; i += stepSize) {
         var stepSize = 32;
         var fWidth = document.getElementById('canvas').offsetWidth / 2048;
@@ -31,8 +31,7 @@ var Visualizer = {
         var width = fWidth * stepSize;
         var height = -BTDData[i];
 
-        Visualizer.canvasContext.fillRect(x, y, width, height);
-        //console.log("x:" + x + "\t\ty:" + y + "\twidth:" + width + "\theight:" + height);
+        this.canvasContext.fillRect(x, y, width, height);
       }
     }.bind(this), 40);
   }
@@ -40,4 +39,11 @@ var Visualizer = {
 
 navigator.webkitGetUserMedia({
   audio: true
-}, Visualizer.init.bind(Visualizer));
+}, AudioVisualizer.init.bind(AudioVisualizer));
+
+/**
+ * HTML is needed 
+ * <canvas id="canvas">
+      asdf
+   </canvas>
+ */
