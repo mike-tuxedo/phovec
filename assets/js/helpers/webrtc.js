@@ -156,6 +156,7 @@ var WebRTC = {
         }
         else if (event.which === 13) {
           var input = $(this).html();
+          input = WebRTC.insertFacesIntoHTML(input);
           dataChannel.send(JSON.stringify({
             "subject": "message",
             "content": input
@@ -500,6 +501,13 @@ var WebRTC = {
     var outputField = $('#' + remoteUserId + " form .output");
     outputField.append(data);
     outputField.scrollTop(outputField[0].scrollHeight);
+  },
+  insertFacesIntoHTML: function(html){
+    html = html.replace(/\:\)/g, '<img src="assets/img/smile_face.png" class="chatFaces"/>');
+    html = html.replace(/\:\(/g, '<img src="assets/img/sad_face.png" class="chatFaces"/>');
+    html = html.replace(/\;\)/g, '<img src="assets/img/wink_face.png" class="chatFaces"/>');
+    html = html.replace(/\:d/g, '<img src="assets/img/grin_face.png" class="chatFaces"/>');
+    return html;
   },
   firstVideoUnmuteMessage: true
 };
