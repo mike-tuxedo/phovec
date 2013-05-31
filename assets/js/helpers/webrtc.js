@@ -115,12 +115,33 @@ var WebRTC = {
           WebRTC.insertDataOutput(remoteUserId, output);
           break;
         case "file":
-          if(data.firstFrame === true){
-            transferVisualizer.init({"isSender": false});
-          }          
-          transferVisualizer.update(data.completeDataLength, data.completeSendedDataLength);
+          //initialize the transfervisualizer on first-frame
+          if (data.firstFrame === true) {
+            transferVisualizer.init({
+              "isSender": false
+            });
+          }
 
+          //first check if the local user hasn't canceled the transfer
+          if (transferVisualizer.isCanceled === true) {
+            data.error = "canceled";
+            user.dataChannel.send(JSON.stringify(data));
+            return;
+          }
+
+          //if there is an error from the sender side cancel the transfer complete
+          if (data.error !== undefined) {
+            if (data.error === "canceled") {
+              trace("webrtc", "CANCELED File", "-");
+              transferVisualizer.cancel();
+              frameCollection = [];
+              return;
+            }
+          }
+
+          transferVisualizer.update(data);
           frameCollection.push(data.content);
+          
           if (data.lastFrame === true) {
             var dataURL = frameCollection.join('');
             frameCollection = [];
@@ -131,7 +152,7 @@ var WebRTC = {
             a.click();
 
             transferVisualizer.complete();
-            trace("webrtc", "RECEIVED File", "-")
+            trace("webrtc", "RECEIVED File", "-");
           }
           break;
         default:
@@ -162,7 +183,7 @@ var WebRTC = {
           var type = files[i].type;
           var size = files[i].size;
           var name = files[i].name;
-          
+
           reader.onload = function(event) {
             WebRTC.sendData(remoteUserId, event.target.result, {
               frameLength: frameLength,
@@ -213,7 +234,7 @@ var WebRTC = {
 
     Users.getRemoteUser(remoteUserId).dataChannel = dataChannel;
   },
-  sendData: function(remoteUserId, dataURL, options, data) {   
+  sendData: function(remoteUserId, dataURL, options, data) {
     //initialize data
     if ( typeof data === "undefined") {
       data = {
@@ -229,7 +250,7 @@ var WebRTC = {
         "isSender": true
       });
     }
-    
+
     //User canceled the transfer
     if (transferVisualizer.isCanceled === true) {
       trace("webrtc", "CANCELED File", "-");
@@ -237,11 +258,13 @@ var WebRTC = {
       data.lastFrame = true;
       data.error = "canceled";
       Users.getRemoteUser(remoteUserId).dataChannel.send(JSON.stringify(data));
+
+      transferVisualizer.cancel();
       return;
     }
-    
+
     //User paused the transfer
-    if(transferVisualizer.isPaused === true){
+    if (transferVisualizer.isPaused === true) {
       setTimeout(WebRTC.sendData, 100, remoteUserId, dataURL, options, data);
       return;
     }
@@ -267,23 +290,24 @@ var WebRTC = {
     if (Users.getRemoteUser(remoteUserId).dataChannel.readyState.toLowerCase() == 'open') {
       Users.getRemoteUser(remoteUserId).dataChannel.send(JSON.stringify(data));
     } else {
-      setTimeout(WebRTC.sendData, 250, remoteUserId, dataURL, options, data);
+      setTimeout(WebRTC.sendData, 100, remoteUserId, dataURL, options, data);
       return;
     }
 
     //visualize the progress of the transfer
     data.completeSendedDataLength += options.frameLength;
-    transferVisualizer.update(data.completeDataLength, data.completeSendedDataLength);
+    transferVisualizer.update(data);
 
     //when the last frame got send cancel the recursion function calls
     data.firstFrame = false;
     if (data.lastFrame === true) {
+      transferVisualizer.complete();
       trace("webrtc", "SEND File", "-");
       return;
     }
 
     //call function recursive to send the next frame
-    setTimeout(WebRTC.sendData, 100, remoteUserId, dataURL, options, data);
+    setTimeout(WebRTC.sendData, 200, remoteUserId, dataURL, options, data);
   },
   modifyDescription: function(description) {
     var sdp = description.sdp;

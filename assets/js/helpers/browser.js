@@ -46,10 +46,10 @@ function trace(file, message, object) {
   WebRTCDebugger.update();
 }
 
-/* Format timestamp to HH:MM:ss:SSS or HH:MM */
+/* Format timestamp to HH:MM:ss:SSS or HH:MM or HH:MM:ss */
 function formatTime(timestamp, format) {
   var dateTime = new Date(timestamp);
-  var hours = dateTime.getHours();
+  var hours = dateTime.getHours()-1;
   var minutes = dateTime.getMinutes();
   var seconds = dateTime.getSeconds();
   var miliseconds = dateTime.getMilliseconds();
@@ -70,9 +70,16 @@ function formatTime(timestamp, format) {
     return hours + ":" + minutes;
   } else if (format === "HH:MM:ss:SSS") {
     return hours + ":" + minutes + ":" + seconds + ":" + miliseconds;
+  } else if (format === "HH:MM:ss") {
+    return hours + ":" + minutes + ":" + seconds;
   }
-
 }
+
+function formatBytes(bytes) {
+  var sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
+  var i = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)));
+  return Math.round(bytes / Math.pow(1024, i), 2) + ' ' + sizes[i];
+};
 
 //TURN SERVER TEST
 if (navigator.browser[0] === "Chrome" || navigator.browser[0] === "Firefox") {
@@ -102,8 +109,8 @@ if (navigator.browser[0] === "Chrome" || navigator.browser[0] === "Firefox") {
 if (navigator.browser[0] === "Chrome") {
   RTC_MEDIA_CONSTRAINTS = {
     'optional': [
-    /* Commented this because otherwise renegotiation doesn't work 
-    * {'DtlsSrtpKeyAgreement': true}, */
+    /* Commented this because otherwise renegotiation doesn't work
+     * {'DtlsSrtpKeyAgreement': true}, */
     {
       'RtpDataChannels': true
     }]

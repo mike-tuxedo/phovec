@@ -15,15 +15,20 @@
   <body scrolling="no">
     <script type="text/x-handlebars" data-template-name="application">
       <div class="file-transfer-progress">
-        <div class="info">
-          <div class="state"></div>
-          <div class="buttons">
-            <img src="assets/img/pause.png" class="pause"/>
-            <img src="assets/img/cancel.png" class="cancel"/>
+        <div class="file-transfer-wrapper">
+          <div class="overview">
+            <div class="state"></div>
+            <div class="buttons">
+              <img src="assets/img/pause.png" class="pause"/>
+              <img src="assets/img/cancel.png" class="cancel"/>
+            </div>
+          </div>
+          <div class="overlay"></div>
+          <div class="background">
+            <img src="assets/img/transfer_progressbar_background.png"/>
           </div>
         </div>
-        <div class="overlay"></div>
-        <img class="background" src="assets/img/transfer_progressbar_background.png"/>
+        <div class="info"></div>
       </div>
       <div id="content">
       {{outlet}}
