@@ -504,6 +504,7 @@ var WebRTC = {
   },
   insertFacesIntoHTML: function(html){
     html = html.replace(/\:\)/g, '<img src="assets/img/smile_face.png" class="chatFaces"/>');
+    html = html.replace(/\:-\)/g, '<img src="assets/img/smile_face.png" class="chatFaces"/>');
     html = html.replace(/\:\(/g, '<img src="assets/img/sad_face.png" class="chatFaces"/>');
     html = html.replace(/\;\)/g, '<img src="assets/img/wink_face.png" class="chatFaces"/>');
     html = html.replace(/\:d/g, '<img src="assets/img/grin_face.png" class="chatFaces"/>');
