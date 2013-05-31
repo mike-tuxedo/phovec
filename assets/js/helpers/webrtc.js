@@ -63,11 +63,17 @@ var WebRTC = {
       var userLocal = Users.getLocalUser();
 
       //Check if local stream is already added, if not add it
-      var localStream = userRemote.peerConnection.getLocalStreams()[0];
-      if (localStream !== undefined && userLocal.stream !== undefined) {
-        if (localStream.id !== userLocal.stream.id) {
+      if (userLocal.stream !== undefined) {
+        var localStream = userRemote.peerConnection.getLocalStreams()[0];
+        if (localStream !== undefined) {
+          if (localStream.id !== userLocal.stream.id) {
+            trace("webrtc", "Add local Stream", "-");
+            userRemote.peerConnection.addStream(userLocal.stream);
+            return;
+          }
+        } else {
           trace("webrtc", "Add local Stream", "-");
-          userRemote.peerConnection.addStream(localStream);
+          userRemote.peerConnection.addStream(userLocal.stream);
           return;
         }
       }
@@ -141,7 +147,7 @@ var WebRTC = {
 
           transferVisualizer.update(data);
           frameCollection.push(data.content);
-          
+
           if (data.lastFrame === true) {
             var dataURL = frameCollection.join('');
             frameCollection = [];
