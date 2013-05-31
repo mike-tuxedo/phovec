@@ -2,9 +2,17 @@ App.UserView = Ember.View.extend({
   classNames: ['user', 'local'],
   elementId: 'local',
   didInsertElement: function() {  
+  
     $('#videoboxes')[0].addEventListener('click', App.Controller.room.handleClickEvent, true);
+/*
+    $('.user.local #local_name')[0].addEventListener(
+      'dblclick', 
+      App.Controller.room.showAlterNameField.bind(null,$('.user.local #local_name')), 
+      true);
+      */
     App.Controller.user.setWindowWidth();
     Users.updateLocalUserView();
+    
   },
   controlEffects: function() {
     if ($('#videoEffects').css('display') === 'block') {

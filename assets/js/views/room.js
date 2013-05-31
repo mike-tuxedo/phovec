@@ -138,14 +138,7 @@
               }
             });
           } else if (Users.initLocalUser === true) {// user wants to rename their name
-            SignalingChannel.send({
-              subject: "participant:edit",
-              userHash: localUser.id,
-              roomHash: localUser.roomHash,
-              put: {
-                name: localUser.name,
-              }
-            });
+            App.Controller.room.sendParticipantEditMsg();
           }
 
           document.querySelector("#local_name").innerText = name;

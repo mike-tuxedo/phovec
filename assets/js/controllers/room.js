@@ -208,15 +208,17 @@
 
   },
   handleClickEvent: function(e) {
-
+    
+    var clickedElement = e.target;
+    
     // record video or audio
-    if (e.target.tagName === 'DIV' && e.target.className.indexOf('record') !== -1) {
-      var type = (e.target.className.indexOf('Video') !== -1) ? 'video' : 'audio';
-      App.Controller.room.toggleRecorder.call(App.Controller.room, e.target, type);
+    if ( clickedElement.tagName === 'DIV' && clickedElement.className.indexOf('record') !== -1 ) {
+      var type = (clickedElement.className.indexOf('Video') !== -1) ? 'video' : 'audio';
+      App.Controller.room.toggleRecorder.call(App.Controller.room, clickedElement, type);
     }
     // transform speech to text
-    else if (e.target.tagName === 'INPUT' && e.target.className === 'micro_recorder') {
-      App.Controller.room.toggleSpeechToText.call(App.Controller.room, e.target);
+    else if ( clickedElement.tagName === 'INPUT' && clickedElement.className === 'micro_recorder' ) {
+      App.Controller.room.toggleSpeechToText.call(App.Controller.room, clickedElement);
     }
 
   },
@@ -541,5 +543,19 @@
   isSpeechRecognizerStarted: false,
   updateUser: function(user) {
     $('#' + user.id + ' span').html(user.number + " " + user.name);
+  },
+  showAlterNameField: function(spanElement){
+    spanElement.html('<form id="alterNameForm" onsubmit="Users.getLocalUser().name = this.childNodes[0].value; $(\'.user.local #local_name\').html(this.childNodes[0].value); App.Controller.room.sendParticipantEditMsg()"><input type="text" value="'+(Users.getLocalUser().name)+'" /></form>');
+  },
+  sendParticipantEditMsg: function(){
+    var localUser = Users.getLocalUser();
+    SignalingChannel.send({
+      subject: "participant:edit",
+      userHash: localUser.id,
+      roomHash: localUser.roomHash,
+      put: {
+        name: localUser.name,
+      }
+    });
   }
 });
