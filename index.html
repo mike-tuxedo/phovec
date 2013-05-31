@@ -14,11 +14,22 @@
   </head>
   <body scrolling="no">
     <script type="text/x-handlebars" data-template-name="application">
+      <div class="file-transfer-progress">
+        <div class="info">
+          <div class="state"></div>
+          <div class="buttons">
+            <img src="assets/img/pause.png" class="pause"/>
+            <img src="assets/img/cancel.png" class="cancel"/>
+          </div>
+        </div>
+        <div class="overlay"></div>
+        <img class="background" src="assets/img/transfer_progressbar_background.png"/>
+      </div>
       <div id="content">
       {{outlet}}
       </div>
     </script>
-    
+
     <!-- debugger content -->
     <div id="debugger">
       <h1>Debugger</h1><div class="refresh" onclick="WebRTCDebugger.update();"></div>
@@ -95,7 +106,7 @@
           <div class='recordRemoteAudio'></div>
           <video autoplay></video>
           <audio autoplay loop muted></audio>
-      
+
           <form action='javascript:void(0);'>
             <div class='output'></div>
             <div class='input'></div>
@@ -124,6 +135,7 @@
     <script src="assets/js/helpers/webrtc.js"></script>
     <script src="assets/js/helpers/debugger.js"></script>
     <script src="assets/js/helpers/signaling.js"></script>
+    <script src="assets/js/helpers/transferVisualizer.js"></script>
 
     <!-- app -->
     <script src="assets/js/app.js"></script>
