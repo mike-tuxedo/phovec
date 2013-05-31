@@ -456,7 +456,7 @@ var WebRTC = {
       case "edit":
         var remoteUser = Users.getRemoteUser(data.userId);
         remoteUser.name = data.name;
-        App.Controller.room.updateUser(data);
+        App.Controller.room.updateUser(remoteUser);
         break;
       case "audio:mute":
         WebRTC.handleRecordingButtons(data.userId, 'audio', false);
@@ -522,6 +522,7 @@ var WebRTC = {
   },
   insertFacesIntoHTML: function(html) {
     html = html.replace(/\:\)/g, '<img src="assets/img/smile_face.png" class="chatFaces"/>');
+    html = html.replace(/\:-\)/g, '<img src="assets/img/smile_face.png" class="chatFaces"/>');
     html = html.replace(/\:\(/g, '<img src="assets/img/sad_face.png" class="chatFaces"/>');
     html = html.replace(/\;\)/g, '<img src="assets/img/wink_face.png" class="chatFaces"/>');
     html = html.replace(/\:d/g, '<img src="assets/img/grin_face.png" class="chatFaces"/>');
