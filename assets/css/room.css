@@ -392,6 +392,13 @@
   background-position: 15px 13px;
 }
 
+#alterNameForm{
+  box-sizing: border-box;
+  float: left;
+  width: 120px;
+  margin-left: 23%;
+}
+
 /*------------Options under lokal Video--------------*/
 
 #video_options {

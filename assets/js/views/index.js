@@ -31,5 +31,12 @@
         
       }
     }
+  },
+  keyDown: function(event){
+    if (event.target === document.getElementById("name")) {
+      if (document.getElementById("name").value.length >= 15) {
+        document.getElementById("name").value = App.shortenString(document.getElementById("name").value, 15);
+      }
+    }
   }
 });

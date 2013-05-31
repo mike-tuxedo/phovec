@@ -208,15 +208,17 @@
 
   },
   handleClickEvent: function(e) {
-
+    
+    var clickedElement = e.target;
+    
     // record video or audio
-    if (e.target.tagName === 'DIV' && e.target.className.indexOf('record') !== -1) {
-      var type = (e.target.className.indexOf('Video') !== -1) ? 'video' : 'audio';
-      App.Controller.room.toggleRecorder.call(App.Controller.room, e.target, type);
+    if ( clickedElement.tagName === 'DIV' && clickedElement.className.indexOf('record') !== -1 ) {
+      var type = (clickedElement.className.indexOf('Video') !== -1) ? 'video' : 'audio';
+      App.Controller.room.toggleRecorder.call(App.Controller.room, clickedElement, type);
     }
     // transform speech to text
-    else if (e.target.tagName === 'INPUT' && e.target.className === 'micro_recorder') {
-      App.Controller.room.toggleSpeechToText.call(App.Controller.room, e.target);
+    else if ( clickedElement.tagName === 'INPUT' && clickedElement.className === 'micro_recorder' ) {
+      App.Controller.room.toggleSpeechToText.call(App.Controller.room, clickedElement);
     }
 
   },
@@ -541,5 +543,41 @@
   isSpeechRecognizerStarted: false,
   updateUser: function(user) {
     $('#' + user.id + ' span').html(user.number + " " + user.name);
+  },
+  showAlterNameField: function(spanElement){
+  
+    var nameForm = document.createElement('form');
+    
+    nameForm.onsubmit = function(){
+      var inputField = nameForm.childNodes[0];
+      if(inputField.value.length >= 3){ 
+        Users.getLocalUser().name = inputField.value; 
+        $('.user.local #local_name').html(inputField.value); 
+        App.Controller.room.sendParticipantEditMsg();
+      }
+      else{
+        $('.user.local #local_name').html(Users.getLocalUser().name);
+      }
+      return false;
+    };
+    
+    nameForm.onkeydown = function(){
+      var inputField = nameForm.childNodes[0];
+      inputField.value = App.shortenString(inputField.value,15);
+    };
+    
+    nameForm.innerHTML = '<input type="text" value="'+(Users.getLocalUser().name)+'" />';
+    spanElement.replaceChild(nameForm,spanElement.firstChild);
+  },
+  sendParticipantEditMsg: function(){
+    var localUser = Users.getLocalUser();
+    SignalingChannel.send({
+      subject: "participant:edit",
+      userHash: localUser.id,
+      roomHash: localUser.roomHash,
+      put: {
+        name: localUser.name,
+      }
+    });
   }
 });

@@ -138,14 +138,7 @@
               }
             });
           } else if (Users.initLocalUser === true) {// user wants to rename their name
-            SignalingChannel.send({
-              subject: "participant:edit",
-              userHash: localUser.id,
-              roomHash: localUser.roomHash,
-              put: {
-                name: localUser.name,
-              }
-            });
+            App.Controller.room.sendParticipantEditMsg();
           }
 
           document.querySelector("#local_name").innerText = name;
@@ -157,6 +150,13 @@
         element.onmouseout = null;
         element.onclick = null;
         element.style.backgroundImage = "url('assets/img/startbutton_disabled.png')";
+      }
+    }
+  },
+  keyDown: function(event){
+    if (event.target === document.getElementById("name")) {
+      if (document.getElementById("name").value.length >= 15) {
+        document.getElementById("name").value = App.shortenString(document.getElementById("name").value, 15);
       }
     }
   }
