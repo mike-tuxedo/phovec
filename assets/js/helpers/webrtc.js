@@ -115,6 +115,11 @@ var WebRTC = {
           WebRTC.insertDataOutput(remoteUserId, output);
           break;
         case "file":
+          if(data.firstFrame === true){
+            transferVisualizer.init({"isSender": false});
+          }          
+          transferVisualizer.update(data.completeDataLength, data.completeSendedDataLength);
+
           frameCollection.push(data.content);
           if (data.lastFrame === true) {
             var dataURL = frameCollection.join('');
@@ -125,6 +130,7 @@ var WebRTC = {
             a.setAttribute('href', dataURL);
             a.click();
 
+            transferVisualizer.complete();
             trace("webrtc", "RECEIVED File", "-")
           }
           break;
@@ -156,7 +162,7 @@ var WebRTC = {
           var type = files[i].type;
           var size = files[i].size;
           var name = files[i].name;
-
+          
           reader.onload = function(event) {
             WebRTC.sendData(remoteUserId, event.target.result, {
               frameLength: frameLength,
@@ -207,16 +213,40 @@ var WebRTC = {
 
     Users.getRemoteUser(remoteUserId).dataChannel = dataChannel;
   },
-  sendData: function(remoteUserId, dataURL, options, data) {
+  sendData: function(remoteUserId, dataURL, options, data) {   
+    //initialize data
     if ( typeof data === "undefined") {
-      var data = {
+      data = {
         "subject": "file",
         "content": undefined,
         "lastFrame": false,
-        "firstFrame": true
+        "firstFrame": true,
+        "completeSendedDataLength": 0,
+        "completeDataLength": dataURL.length
       };
+
+      transferVisualizer.init({
+        "isSender": true
+      });
+    }
+    
+    //User canceled the transfer
+    if (transferVisualizer.isCanceled === true) {
+      trace("webrtc", "CANCELED File", "-");
+
+      data.lastFrame = true;
+      data.error = "canceled";
+      Users.getRemoteUser(remoteUserId).dataChannel.send(JSON.stringify(data));
+      return;
+    }
+    
+    //User paused the transfer
+    if(transferVisualizer.isPaused === true){
+      setTimeout(WebRTC.sendData, 100, remoteUserId, dataURL, options, data);
+      return;
     }
 
+    //Slices the data till the last frame
     if (dataURL.length < options.frameLength) {
       data.content = dataURL;
       data.lastFrame = true;
@@ -225,6 +255,7 @@ var WebRTC = {
       dataURL = dataURL.slice(data.content.length);
     }
 
+    //Add Meta-Data to the first frame
     if (data.firstFrame === true) {
       data.name = options.name;
       data.size = options.size;
@@ -232,20 +263,26 @@ var WebRTC = {
       data.timestamp = new Date().getTime();
     }
 
+    //Try to send data through the datachannel otherwise wait and try again
     if (Users.getRemoteUser(remoteUserId).dataChannel.readyState.toLowerCase() == 'open') {
       Users.getRemoteUser(remoteUserId).dataChannel.send(JSON.stringify(data));
     } else {
-      setTimeout(function(remoteUserId, data) {
-        Users.getRemoteUser(remoteUserId).dataChannel.send(JSON.stringify(data));
-      }, 1000, remoteUserId, data);
+      setTimeout(WebRTC.sendData, 250, remoteUserId, dataURL, options, data);
+      return;
     }
 
+    //visualize the progress of the transfer
+    data.completeSendedDataLength += options.frameLength;
+    transferVisualizer.update(data.completeDataLength, data.completeSendedDataLength);
+
+    //when the last frame got send cancel the recursion function calls
     data.firstFrame = false;
     if (data.lastFrame === true) {
       trace("webrtc", "SEND File", "-");
       return;
     }
 
+    //call function recursive to send the next frame
     setTimeout(WebRTC.sendData, 100, remoteUserId, dataURL, options, data);
   },
   modifyDescription: function(description) {
@@ -483,7 +520,7 @@ var WebRTC = {
     outputField.append(data);
     outputField.scrollTop(outputField[0].scrollHeight);
   },
-  insertFacesIntoHTML: function(html){
+  insertFacesIntoHTML: function(html) {
     html = html.replace(/\:\)/g, '<img src="assets/img/smile_face.png" class="chatFaces"/>');
     html = html.replace(/\:-\)/g, '<img src="assets/img/smile_face.png" class="chatFaces"/>');
     html = html.replace(/\:\(/g, '<img src="assets/img/sad_face.png" class="chatFaces"/>');
@@ -498,7 +535,6 @@ var Users = {
 users: [],
 initLocalUser: false,
 createLocalUser: function() {
-
 var user = {
 roomHash: undefined,
 _stream: undefined,
@@ -541,7 +577,6 @@ Users.updateLocalUserView();
 this._country = country;
 }
 };
-
 Users.users.push(user);
 return user;
 }, updateLocalUserView: function() {
