@@ -209,7 +209,7 @@
     }
   },
   send: function(message) {
-    trace("signaling", "SEND", message);
+    //trace("signaling", "SEND", message);
     SignalingChannel.webSocket.send(JSON.stringify(message));
   },
   close: function() {
