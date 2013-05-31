@@ -545,7 +545,29 @@
     $('#' + user.id + ' span').html(user.number + " " + user.name);
   },
   showAlterNameField: function(spanElement){
-    spanElement.html('<form id="alterNameForm" onsubmit="Users.getLocalUser().name = this.childNodes[0].value; $(\'.user.local #local_name\').html(this.childNodes[0].value); App.Controller.room.sendParticipantEditMsg()"><input type="text" value="'+(Users.getLocalUser().name)+'" /></form>');
+  
+    var nameForm = document.createElement('form');
+    
+    nameForm.onsubmit = function(){
+      var inputField = nameForm.childNodes[0];
+      if(inputField.value.length >= 3){ 
+        Users.getLocalUser().name = inputField.value; 
+        $('.user.local #local_name').html(inputField.value); 
+        App.Controller.room.sendParticipantEditMsg();
+      }
+      else{
+        $('.user.local #local_name').html(Users.getLocalUser().name);
+      }
+      return false;
+    };
+    
+    nameForm.onkeydown = function(){
+      var inputField = nameForm.childNodes[0];
+      inputField.value = App.shortenString(inputField.value,15);
+    };
+    
+    nameForm.innerHTML = '<input type="text" value="'+(Users.getLocalUser().name)+'" />';
+    spanElement.replaceChild(nameForm,spanElement.firstChild);
   },
   sendParticipantEditMsg: function(){
     var localUser = Users.getLocalUser();

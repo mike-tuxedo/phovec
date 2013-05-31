@@ -13,5 +13,10 @@ var App = Ember.Application.create({
 
       $('.countdown').text(--sec);
     }, 1000);
+  },
+  shortenString: function(str,length){
+    var reducedString = str.split('');
+    reducedString.length = length;
+    return reducedString.join('');
   }
 }); 
