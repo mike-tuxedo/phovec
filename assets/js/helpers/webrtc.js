@@ -419,7 +419,7 @@ var WebRTC = {
       case "edit":
         var remoteUser = Users.getRemoteUser(data.userId);
         remoteUser.name = data.name;
-        App.Controller.room.updateUser(data);
+        App.Controller.room.updateUser(remoteUser);
         break;
       case "audio:mute":
         WebRTC.handleRecordingButtons(data.userId, 'audio', false);
