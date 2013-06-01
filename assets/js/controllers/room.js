@@ -220,7 +220,12 @@
     else if ( clickedElement.tagName === 'INPUT' && clickedElement.className === 'micro_recorder' ) {
       App.Controller.room.toggleSpeechToText.call(App.Controller.room, clickedElement);
     }
-
+    
+    // if user double clicked on his name and clicks outside without pressing enter
+    if(clickedElement.id !== 'local_name' && clickedElement.tagName !== 'INPUT' && $('#videoboxes form#alterNameForm')[0]){
+      $('#videoboxes form#alterNameForm').submit()
+    }
+    
   },
 
   /* video/audio recording methods */
@@ -547,6 +552,7 @@
   showAlterNameField: function(spanElement){
   
     var nameForm = document.createElement('form');
+    nameForm.id = 'alterNameForm';
     
     nameForm.onsubmit = function(){
       var inputField = nameForm.childNodes[0];
