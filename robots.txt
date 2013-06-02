@@ -1,0 +1,4 @@
+﻿# robots are not allowed to crawl any webside on this URL
+
+User-Agent: *
+Disallow: /
