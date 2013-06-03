@@ -558,11 +558,11 @@
       var inputField = nameForm.childNodes[0];
       if(inputField.value.length >= 3){ 
         Users.getLocalUser().name = inputField.value; 
-        $('.user.local #local_name').html(inputField.value); 
+        spanElement.innerHTML = inputField.value; 
         App.Controller.room.sendParticipantEditMsg();
       }
       else{
-        $('.user.local #local_name').html(Users.getLocalUser().name);
+        spanElement.innerHTML = Users.getLocalUser().name;
       }
       
       e.preventDefault();
