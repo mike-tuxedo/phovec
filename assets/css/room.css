@@ -175,9 +175,13 @@
   background: #444444;
 }
 
+.sidebar_info{
+  padding-top: 20px;
+}
+
 .sidebar_text {
   color: #888;
-  font-size: 16px;
+  font-size: 13px;
   text-shadow: 0px -1px 1px #fff;
 }
 
@@ -216,6 +220,27 @@
   margin-left: 10%;
   margin-bottom: 5px;
   width: 80%;
+  border: 2px solid #66666B;
+  height: 30px;
+  color: #e0dfeb;
+  background: #66666b;
+}
+
+#mailFormButton:hover{
+  background: #99999b;
+  color: #fff;
+}
+
+.confirm_send{
+  display: none;
+  width: 80%;
+  height: 30px;
+  background: rgb(143, 224, 122);
+  color: #000000;
+  border-radius: 15px;
+  margin-left: 10%;
+  margin-bottom: 20px;
+  padding-top: 10px;
 }
 
 #facebook_tab {
@@ -255,7 +280,7 @@
 }
 
 .tab_active {
-  border-bottom: 4px solid #fff;
+  border-bottom: 4px solid #bbb;
   box-shadow: inset 0px 1px 1px #999;
 }
 
@@ -683,6 +708,7 @@
   padding: 3px;
   color: #444;
   font-weight: bold;
+  right: 11.5%;
 }
 /*
  #buttonFullscreen{

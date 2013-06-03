@@ -164,7 +164,8 @@
     FB.ui(msg, function(response) {
 
       if (response && response.success) {
-        alert('Facebook-Message was sent.');
+        $('.confirm_send').fadeIn('slow');
+        setTimeout(function(){ $('.confirm_send').fadeOut('slow');}, 2000);
       } else {
         alert('Facebook-Message was not sent.');
       }
@@ -353,7 +354,6 @@
       }
       
       this.sendMail({ subject:'Einladungsmail', from: 'phovec@nucular-bacon.com', to: addresse, text: descr, html: ('<b>' +descr+'</b>') });
-      
     }
     else{
       alert('Bitte gib eine valide E-Mail Adresse ein.')
@@ -376,6 +376,9 @@
           html: mailSettings.html
         }
       });
+      
+      $('.confirm_send').fadeIn('slow');
+      setTimeout(function(){ $('.confirm_send').fadeOut('slow');}, 2000);
       
       setTimeout(function(){
         $('#mailFormButton').attr('disabled',false);
