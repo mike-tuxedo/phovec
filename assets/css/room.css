@@ -175,9 +175,13 @@
   background: #444444;
 }
 
+.sidebar_info{
+  padding-top: 20px;
+}
+
 .sidebar_text {
   color: #888;
-  font-size: 16px;
+  font-size: 13px;
   text-shadow: 0px -1px 1px #fff;
 }
 

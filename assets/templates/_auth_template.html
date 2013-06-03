@@ -14,12 +14,13 @@
     </p>
   </div>
   <div id="qrcode_box">
-    <h1>INFO</h1>
+    <div id="qrcode_img"></div>
+    <h1 class="sidebar_info">INFO</h1>
     <br />
     <p class="sidebar_text">
       Damit deine Freunde mit dir Chatten können müssen sie nur die selbe URL in die Browseradresszeile eingeben. 
-      Damit du ihnen diese Adresse per SMS schicken kannst musst du nur mit der passenden App auf deinem Smartphone
-      diesen QR-Code scannen und das Ergebnis per SMS verschicken.
+      Damit du ihnen diese Adresse per SMS schicken kannst, scannst du mit einer Barcodescanner-App diesen QR-Code
+       und das Ergebnis verschickst du per SMS.
     </p>
     <br />
   </div>
@@ -27,21 +28,32 @@
     <h1>INFO</h1>
     <br />
     <p class="sidebar_text">
-      Damit wir deine Freunde von Facebook auflisten können, müssen sie sich in dem sich öffnenden neuem Fenster bei Facebook anmelden.
+      Es sollte jetzt gerade ein neues kleines Browserfenster erscheinen, in dem du dich mit deinem Facebook-Namen und Passwort anmelden kannst. 
+      Dadurch können wir dir deine Freunde auflisten, die du dann mit einem Klick einladen kannst. Dadurch wird ihnen eine Facebook-E-Mail oder 
+      Chatnachricht geschickt, mit dem Link zu dieser Seite. Wenn deine Freunde den Link im Browser öffnen, können sie mit dir in diesem Chatraum chatten.
     </p>
   </div>
   <div id="friends_of_google">
     <h1>INFO</h1>
     <br />
     <p class="sidebar_text">
-      Damit wir deine Kontakte von Gmail auflisten können, müssen sie sich in dem sich öffnenden neuem Fenster bei Facebook anmelden.
+      Es sollte jetzt gerade ein neues kleines Browserfenster erscheinen, in dem du dich mit deiner Gmail-Adresse und Passwort anmelden kannst. 
+      Dadurch können wir dir deine Kontakte auflisten, die du dann mit einem Klick einladen kannst. Dadurch wird ihnen eine E-Mail geschickt mit
+      dem Link zu dieser Seite. Wenn deine Freunde den Link im Browser öffnen, können sie mit dir in diesem Chatraum chatten.
     </p>
   </div>
   <div id="friends_of_email">
-    <form id="mail_form">
+    <form id="mail_form" style="display: inline-block;">
       <input type="text" class="email_input" id="mailAddress" placeholder="E-Mail Addresse"/>
       <textarea type="text" class="email_input" id="mailDescription" placeholder="E-Mail Beschreibung"></textarea>
       <input type="button" id="mailFormButton" value="Sende E-Mail" {{action "addMailInfo" target="App.Controller.auth"}} />
     </form>
+    <h1 class="sidebar_info">INFO</h1>
+    <br />
+    <p class="sidebar_text">
+      Hier kannst du deine Freunde per E-Mailnachricht zum Chat einladen. Gib einfach nur die Adresse eines/einer FreundIn an
+      und schreibe ihm/ihr zB eine persönliche Begrüßung. Mit klick auf Senden wird eine E-Mailnachricht versendet, 
+      mit dem Link zu dieser Seite. Wenn deine Freunde den Link im Browser öffnen, können sie mit dir in diesem Chatraum chatten.
+    </p>
   </div>
 </div>

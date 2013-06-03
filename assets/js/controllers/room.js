@@ -187,7 +187,7 @@
   },
   showInvitationQRCode: function() {
 
-    if($('#qrcode_box').html().indexOf('img') !== -1 ){
+    if($('#qrcode_img').html().indexOf('img') !== -1 ){
       return;
     }
     
@@ -204,7 +204,7 @@
 
     var alteredURL = location.href;
     alteredURL = alteredURL.replace('#', '%23');
-    qr.text("qrcode_box", alteredURL);
+    qr.text("qrcode_img", alteredURL);
 
   },
   handleClickEvent: function(e) {
