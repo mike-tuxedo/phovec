@@ -27,16 +27,16 @@ describe("room-controller helper-methods tests", function() {
 
 describe("client-server connection-tests", function() {
   
-  var webSocket = new WebSocket('ws://www.nucular-bacon.com:49152');
+  var hostWebSocket = new WebSocket('ws://www.nucular-bacon.com:49152');
   var hostHash = '';
   var roomHash = '';
   var done = false;
   
   it('should get an init-message by connecting to the server as host', function(){
     
-    webSocket.onopen = function(){
+    hostWebSocket.onopen = function(){
     
-      webSocket.onmessage = function(m) {
+      hostWebSocket.onmessage = function(m) {
         
         var data = JSON.parse(m.data);
         
@@ -46,9 +46,9 @@ describe("client-server connection-tests", function() {
         hostHash = data.userHash;
         roomHash = data.roomHash;
         
-        webSocket.onmessage = null;
+        hostWebSocket.onmessage = null;
         
-        webSocket.send(JSON.stringify({
+        hostWebSocket.send(JSON.stringify({
           subject: "init:user",
           roomHash: roomHash,
           userHash: hostHash,
@@ -59,7 +59,7 @@ describe("client-server connection-tests", function() {
         
       };
       
-      webSocket.send(JSON.stringify({
+      hostWebSocket.send(JSON.stringify({
         subject: "init:room",
         url: 'localhost/#/rooms' // host
       }));
@@ -72,26 +72,38 @@ describe("client-server connection-tests", function() {
   done = false;
   
   it('should get an init-message by connecting to the server as guest', function(){
-  
-    webSocket.onmessage = function(m) {
-      
-      var data = JSON.parse(m.data);
-      
-      if(data.subject !== 'participant:join'){
-      
-        expect(hostHash).toEqual( data.users[0].id );
-        expect(40).toEqual( data.userHash.length );
-        expect(typeof '').toEqual( typeof data.userHash );
-        done = true;
-        
-      }
-      
-    };
     
-    webSocket.send(JSON.stringify({
-      subject: "init:room",
-      url: ('localhost/#/room/'+roomHash) // guest
-    }));
+    var guestWebSocket = new WebSocket('ws://www.nucular-bacon.com:49152');
+    
+    guestWebSocket.onopen = function(){
+    
+      guestWebSocket.onmessage = function(m) {
+          
+        var data = JSON.parse(m.data);
+        
+        if(data.subject !== 'participant:join'){
+        
+          expect(hostHash).toEqual( data.users[0].id );
+          expect(40).toEqual( data.userHash.length );
+          expect(typeof '').toEqual( typeof data.userHash );
+          guestWebSocket.onmessage = null;
+          
+          guestWebSocket.close();
+          
+          setTimeout(function(){ hostWebSocket.close() },500);
+          
+          done = true;
+          
+        }
+        
+      };
+      
+      guestWebSocket.send(JSON.stringify({
+        subject: "init:room",
+        url: ('localhost/#/room/'+roomHash) // guest
+      }));
+    
+    };
     
   });
   
