@@ -1,20 +1,17 @@
-describe("when the test starts", function() {
-  var str = 'hello world';
+describe("room helper methods", function() {
   
-  it('should check hello world', function(){
-    expect(str).toEqual('hello world');
-  });
-});
-
-describe("when app shows startpage", function() {
-  beforeEach(function() {
-    var App = Ember.Application.create({
-      ready: function(){
-        console.log('App is ready!');
-      }
-    });
-    App.initialize();
+  var room = App.RoomController.create();
+  
+  it('should return true when word matches', function(){
+    
+    var speakOrder = 'Sprachbefehl Video an';
+    
+    expect(true).toEqual( room.doesContainWord(speakOrder,'Sprachbefehl') );
+    expect(true).toEqual( room.doesContainWord(speakOrder,'Video') );
+    expect(true).toEqual( room.doesContainWord(speakOrder,'an') );
+    expect(false).toEqual( room.doesContainWord(speakOrder,'aus') );
     
   });
-
+  
 });
+

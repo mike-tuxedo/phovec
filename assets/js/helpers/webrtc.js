@@ -482,6 +482,7 @@ var WebRTC = {
           user.number = index + 1;
           App.Controller.room.updateUser(user);
         });
+        $('#faceDetectorOutput').hide();
         break;
       case "edit":
         var remoteUser = Users.getRemoteUser(data.userId);
