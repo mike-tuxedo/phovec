@@ -185,7 +185,7 @@
 
   },
   showInvitationQRCode: function() {
-    if($('#qrcode_box').html().indexOf('img') !== -1 ){
+    if($('#qrcode_img').html().indexOf('img') !== -1 ){
       return;
     }
     
@@ -203,7 +203,12 @@
 
     var alteredURL = location.href;
     alteredURL = alteredURL.replace('#', '%23');
+<<<<<<< HEAD
     qr.text("qrcode_box", alteredURL);
+=======
+    qr.text("qrcode_img", alteredURL);
+
+>>>>>>> e0608108d4bbb5cc41178f24e843099f2ba223cc
   },
   handleClickEvent: function(e) {
     var clickedElement = e.target;
@@ -551,11 +556,11 @@
       var inputField = nameForm.childNodes[0];
       if(inputField.value.length >= 3){ 
         Users.getLocalUser().name = inputField.value; 
-        $('.user.local #local_name').html(inputField.value); 
+        spanElement.innerHTML = inputField.value; 
         App.Controller.room.sendParticipantEditMsg();
       }
       else{
-        $('.user.local #local_name').html(Users.getLocalUser().name);
+        spanElement.innerHTML = Users.getLocalUser().name;
       }
       
       e.preventDefault();
