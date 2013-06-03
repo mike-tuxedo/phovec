@@ -12,7 +12,6 @@ App.UserView = Ember.View.extend({
       
     App.Controller.user.setWindowWidth();
     Users.updateLocalUserView();
-    
   },
   controlEffects: function() {
     if ($('#videoEffects').css('display') === 'block') {

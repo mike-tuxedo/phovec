@@ -16,7 +16,6 @@
         });
       }
     }
-
   },
   addRemoteUsers: function() {
     var users = Users.getRemoteUsers();
@@ -186,29 +185,27 @@
 
   },
   showInvitationQRCode: function() {
-
     if($('#qrcode_box').html().indexOf('img') !== -1 ){
       return;
     }
     
     var qr = new qrcode({
-      size: 150,
+      size: 180,
+      background:"#888888",
       /*
        * L - [Default] Allows recovery of up to 7% data loss
        * M - Allows recovery of up to 15% data loss
        * Q - Allows recovery of up to 25% data loss
        * H - Allows recovery of up to 30% data loss */
       ec_level: "L",
-      margin: 1
+      margin: 0
     });
 
     var alteredURL = location.href;
     alteredURL = alteredURL.replace('#', '%23');
     qr.text("qrcode_box", alteredURL);
-
   },
   handleClickEvent: function(e) {
-    
     var clickedElement = e.target;
     
     // record video or audio
@@ -227,9 +224,7 @@
     }
     
   },
-
   /* video/audio recording methods */
-
   toggleRecorder: function(element, type) {
     if (!VARecorder.recording) {
       this.startRecording(element, type);
@@ -271,9 +266,7 @@
 
     VARecorder.stopRecording();
   },
-
   /* speech to text methods */
-
   toggleSpeechToText: function(element) {
 
     if (!this.isSpeechRecognizerInitalized) {
