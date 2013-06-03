@@ -148,8 +148,13 @@
 }
 
 .sidebar_content {
+  box-sizing:border-box;
+  -moz-box-sizing:border-box;
   overflow-y: scroll;
-  margin-top: 30px;
+  display: inline-block;
+  color: #888;
+  line-height: 1.4;
+  padding: 40px 20px;
 }
 
 .sidebar_content ul {
@@ -170,19 +175,13 @@
   background: #444444;
 }
 
-#userInfo {
-  display: inline-block;
-  margin: 5px;
-  padding: 25px;
+.sidebar_text {
   color: #888;
-  line-height: 1.5;
-}
-#userInfo p {
   font-size: 16px;
   text-shadow: 0px -1px 1px #fff;
 }
 
-#userInfo img {
+#userInfo img, #friends_of_email, #friends_of_facebook, #friends_of_google, #qrcode_box {
   display: none;
 }
 
@@ -548,13 +547,8 @@
 }
 
 #qrcode_box {
-  display: none;
   height: 100%;
   width: 100%;
-}
-
-#mail_form {
-  display: none;
 }
 
 .recordLocalVideo {
