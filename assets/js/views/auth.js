@@ -13,7 +13,7 @@ App.AuthView = Ember.View.extend({
     //$('#userInfo').html('');
     $('#qrcode_box').show();
     $('#userInfo').hide();
-    $('#mail_form').hide();
+    $('#friends_of_email').hide();
     $('#friends_of_google').hide();
     $('#friends_of_facebook').hide();
     App.Controller.room.showInvitationQRCode();
@@ -27,7 +27,7 @@ App.AuthView = Ember.View.extend({
     
     $('#qrcode_box').hide();
     $('#userInfo').hide();
-    $('#mail_form').show();
+    $('#friends_of_email').show();
     $('#friends_of_google').hide();
     $('#friends_of_facebook').hide();
   },
@@ -40,7 +40,7 @@ App.AuthView = Ember.View.extend({
     
     $('#qrcode_box').hide();
     $('#userInfo').hide();
-    $('#mail_form').hide();
+    $('#friends_of_email').hide();
     $('#friends_of_google').show();
     $('#friends_of_facebook').hide();
     App.Controller.auth.googleLogin();
@@ -54,7 +54,7 @@ App.AuthView = Ember.View.extend({
     
     $('#qrcode_box').hide();
     $('#userInfo').hide();
-    $('#mail_form').hide();
+    $('#friends_of_email').hide();
     $('#friends_of_google').hide();
     $('#friends_of_facebook').show();
     App.Controller.auth.fbLogin();
