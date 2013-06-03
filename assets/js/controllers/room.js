@@ -554,7 +554,7 @@
     var nameForm = document.createElement('form');
     nameForm.id = 'alterNameForm';
     
-    nameForm.onsubmit = function(){
+    nameForm.onsubmit = function(e){
       var inputField = nameForm.childNodes[0];
       if(inputField.value.length >= 3){ 
         Users.getLocalUser().name = inputField.value; 
@@ -564,7 +564,8 @@
       else{
         $('.user.local #local_name').html(Users.getLocalUser().name);
       }
-      return false;
+      
+      e.preventDefault();
     };
     
     nameForm.onkeydown = function(){
