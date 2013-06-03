@@ -522,7 +522,7 @@
         
       case 'rename':
 
-        $('#nameArea').show();
+        controller.showAlterNameField($('.user.local #local_name')[0]);
         break;
 
       case 'hangUp':
