@@ -211,7 +211,8 @@ var WebRTC = {
       setTimeout(function() {
         $("#" + remoteUserId + " form").fadeIn("slow");
         $("#" + remoteUserId + " .connectionInfo").hide();
-      }, 1500);
+        $("#" + remoteUserId + " form .input").focus();
+      }, 1250);
 
       var dragOver = function(event) {
         //stop dragover event is needed, so drop event works in chrome
