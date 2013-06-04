@@ -207,7 +207,6 @@
 }
 
 .email_input {
-  margin-left: 10%;
   margin-bottom: 5px;
   width: 80%;
   border: 2px solid #66666B;
@@ -218,7 +217,6 @@
 }
 
 #mailFormButton {
-  margin-left: 10%;
   margin-bottom: 5px;
   width: 80%;
   border: 2px solid #66666B;
