@@ -65,5 +65,9 @@ App.UserView = Ember.View.extend({
     if (Users.getLocalUser().stream) {
       FaceDetector.getStream(Users.getLocalUser().stream, type);
     }
+  },
+  editName: function(){
+    console.log('edit name');
+    App.Controller.room.showAlterNameField($('.user.local .userName')[0]);
   }
 });
