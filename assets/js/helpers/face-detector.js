@@ -1,4 +1,8 @@
 ﻿var FaceDetector = {
+  _closed: true,
+  get closed(){
+    return this._closed;
+  },
   set closed(val){ 
     if(val === false){
       this.canvas.style.display = 'inline';
@@ -6,6 +10,7 @@
     else{
       this.canvas.style.display = 'none';
     }
+    this._closed = val;
   },
   typeToLoad: null,
 	getStream: function(stream,type) {
@@ -97,7 +102,7 @@
 		var comp = ccv.detect_objects(this.ccv = this.ccv || {
 			canvas: this.backCanvas,
 			cascade: cascade,
-			interval: 4,
+			interval: 20,
 			min_neighbors: 1
 		});
 		
