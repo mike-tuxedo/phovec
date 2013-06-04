@@ -1,6 +1,6 @@
 {{#view App.UserView}} 
 <div class='userHead' id="locaHead">
-  <div class="userName">Phovec-Benutzer</div>
+  <div style="height: 17px;"><div class="userName">Phovec-Benutzer</div> <span {{action editName target="view" }} id="edit_name">edit</span></div>
 </div>
 <div class="videoWrapper">
   <div class="stateMute"></div>
@@ -17,7 +17,6 @@
     <div {{action putGlasses2OnUser target="view" }} class="effectButton" id="classes2" ></div>
     <div {{action putHairOnUser target="view" }} class="effectButton" id="hair" ></div>
     <div {{action controlEffects target="view" }} class="effectButton" id="effect_off" >
-      kein Effekt
     </div>
   </div>
 </div>

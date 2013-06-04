@@ -10,6 +10,22 @@
   background: rgba(255,255,255,0);
 }
 
+.userName{
+  display: inline;
+  vertical-align: middle;
+}
+
+#edit_name{
+  cursor: pointer;
+  border: 1px solid #aaa;
+  border-radius: 5px;
+  color: #888;
+  height: 5px;
+  font-size: 11px;
+  padding-left: 2px;
+  padding-right: 2px;
+}
+
 #arrow {
   float: left;
   width: 100px;
@@ -207,7 +223,6 @@
 }
 
 .email_input {
-  margin-left: 10%;
   margin-bottom: 5px;
   width: 80%;
   border: 2px solid #66666B;
@@ -222,7 +237,6 @@
 }
 
 #mailFormButton {
-  margin-left: 10%;
   margin-bottom: 5px;
   width: 80%;
   border: 2px solid #66666B;
@@ -614,6 +628,10 @@
 
 #effect_off:hover {
   background: #fff;
+  background-image: url(../img/effects/no_effects.png);
+  background-size: 90%;
+  background-position: 10px;
+  background-repeat: no-repeat;
 }
 
 #faceDetectorOutput {
@@ -811,7 +829,7 @@
 #nameArea #startButtonImage {
   margin: 0px 75px 50px 75px;
   width: 350px;
-  background-image: url('../img/startbutton_disabled.png');
+  background-image: url('../img/startbtn_sprite.png');
   background-repeat: no-repeat;
   display: inline-block;
 }
