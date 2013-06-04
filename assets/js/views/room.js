@@ -146,12 +146,12 @@
           document.querySelector(".user.local .userName").innerText = name;
           document.getElementById("nameArea").style.display = "none";
         };
-        element.style.backgroundImage = "url('assets/img/startbutton.png')";
+        element.style.backgroundPositionX = "-352px";
       } else {
         element.onmouseover = null;
         element.onmouseout = null;
         element.onclick = null;
-        element.style.backgroundImage = "url('assets/img/startbutton_disabled.png')";
+        element.style.backgroundPositionX = "0px";
       }
     }
   },

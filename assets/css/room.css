@@ -586,6 +586,10 @@
 
 #effect_off:hover {
   background: #fff;
+  background-image: url(../img/effects/no_effects.png);
+  background-size: 90%;
+  background-position: 10px;
+  background-repeat: no-repeat;
 }
 
 #faceDetectorOutput {
@@ -783,7 +787,7 @@
 #nameArea #startButtonImage {
   margin: 0px 75px 50px 75px;
   width: 350px;
-  background-image: url('../img/startbutton_disabled.png');
+  background-image: url('../img/startbtn_sprite.png');
   background-repeat: no-repeat;
   display: inline-block;
 }
