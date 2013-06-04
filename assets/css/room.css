@@ -11,7 +11,8 @@
 }
 
 .userName{
-  display: inline;  
+  display: inline;
+  vertical-align: middle;
 }
 
 #edit_name{
