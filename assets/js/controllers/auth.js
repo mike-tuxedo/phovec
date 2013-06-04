@@ -35,12 +35,14 @@
   // facebook-auth
   
   FB: null, // FB Instance of facebook-loader
-
+  FBFriendList: null,
   fbLoggedIn: false,
 
   fbLogin: function() {
     
     var controller = this;
+    
+    $('.load_progress_bar_auth').show();
     
     var FB = this.get('FB');
     
@@ -87,33 +89,17 @@
       var userName = response.first_name + ' ' + response.last_name;
       var hello = response.locale === 'de_DE' ? 'Hallo ' : 'Hello ';
 
-      document.getElementById('userInfo').innerHTML = '<img src="https://graph.facebook.com/'+ response.id +'/picture" width="100" height="100" /> ' +
-        '<p>'+ hello + response.first_name + ' ' + response.last_name + '</p>';
+      //document.getElementById('userInfo').innerHTML = '<img src="https://graph.facebook.com/'+ response.id +'/picture" width="100" height="100" /> ' +
+      //  '<p>'+ hello + response.first_name + ' ' + response.last_name + '</p>';
       
+      if( controller.get('FBFriendList') ){ // do not load list again
+        controller.setupFBFriendList( controller.get('FBFriendList') );
+      }
       controller.queryFbAPI('/me/friends', function(response) {
         
-        if($('ul'))
-          $('ul').remove();
+        controller.setupFBFriendList(response);
+        controller.set('FBFriendList',response);
         
-
-        controller.sortFBEntries(response.data);        
-        controller.setFBMailAttributes(response.data);  
-        
-        var friendList = document.createElement('ul');
-        
-        var invitationText = controller.get('emailInvitationText').replace('USER', userName);
-        invitationText = invitationText.replace('URL', location.href);
-        
-        response.data.forEach(function(friend, index) {
-          
-          friendList.innerHTML += '<li class="send_fb_message" onclick="App.Controller.auth.sendFbUserMessage(\''+friend.id+'\')"> Facebook-Nachricht an ' + friend.name + '</li>'
-
-          friendList.innerHTML += '<li class="send_mail" onclick="App.Controller.auth.sendMail({ subject:\'Einladungsmail\', from:\'phovec@nucular-bacon.com\', to:\''+friend.email+'\', cc: \''+friend.id+'@facebook.com\', text:\''+invitationText+'\', html:\'<h3>'+invitationText+'</h3>\'})"> Facebook-E-Mail an ' + friend.name + '</li>';
-        
-          friendList.innerHTML += '<hr>';
-        });
-
-        $('#friends_of_facebook').html(friendList);
       });
 
     });
@@ -180,6 +166,35 @@
     });
   },
   
+  setupFBFriendList: function(response){
+    
+    this.sortFBEntries(response.data);        
+    this.setFBMailAttributes(response.data);  
+    
+    if($('ul')){
+      $('ul').remove();
+    }
+    
+    var userName = response.first_name + ' ' + response.last_name;
+    var friendList = document.createElement('ul');
+    
+    var invitationText = this.get('emailInvitationText').replace('USER', userName);
+    invitationText = invitationText.replace('URL', location.href);
+    
+    response.data.forEach(function(friend, index) {
+      
+      friendList.innerHTML += '<li class="send_fb_message" onclick="App.Controller.auth.sendFbUserMessage(\''+friend.id+'\')"> Facebook-Nachricht an ' + friend.name + '</li>'
+
+      friendList.innerHTML += '<li class="send_mail" onclick="App.Controller.auth.sendMail({ subject:\'Einladungsmail\', from:\'phovec@nucular-bacon.com\', to:\''+friend.email+'\', cc: \''+friend.id+'@facebook.com\', text:\''+invitationText+'\', html:\'<h3>'+invitationText+'</h3>\'})"> Facebook-E-Mail an ' + friend.name + '</li>';
+    
+      friendList.innerHTML += '<hr>';
+    });
+    
+    $('.load_progress_bar_auth').hide();
+    $('#friends_of_facebook').html(friendList);
+    
+  },
+  
   // google-auth
   
   init: function(){
@@ -195,12 +210,15 @@
   googleType : 'token',
   googleRequestURL : null,
   
+  googleFriendList: null,
+  googleUsername: '',
   googleLoggedIn : false,
   
   googleLogin: function(){
     
     var controller = this;
     var win = window.open(this.get('googleRequestURL'), "Google-Login", 'width=400, height=300');
+    $('.load_progress_bar_auth').show();
     
     var timeout = 30000;
     var timePast = 0;
@@ -257,39 +275,34 @@
   
     var controller = this;
     
-    $.ajax({
-        url: 'https://www.googleapis.com/oauth2/v1/userinfo?access_token=' + acToken,
-        data: null,
-        success: function(response) {
-          
-          videoStream = response;
-          
-          controller.getUserContacts(function(entries){
+    if( controller.get('googleFriendList') ){ // do not load list again
+      controller.setupGoogleFriendList( controller.get('googleFriendList'), controller.get('googleUsername') );
+    }
+    else{
+    
+      $.ajax({
+          url: 'https://www.googleapis.com/oauth2/v1/userinfo?access_token=' + acToken,
+          data: null,
+          success: function(response) { // when function is called access-token is valid
             
-            if($('ul'))
-              $('ul').remove();
+            controller.set('googleUsername',response.name);
+            
+            controller.getUserContacts(function(entries){
               
-            var friendList = document.createElement('ul');
-            var invitationText = controller.get('emailInvitationText').replace('USER', response.name);
-            invitationText = invitationText.replace('URL', location.href);
-        
-            entries.forEach(function(friend, index) {
-  
-              friendList.innerHTML += '<li id=' + (friend.name ? 'noname' : friend.name) + ' onclick="App.Controller.auth.sendMail({ subject:\'Einladungsmail\', from: \'phovec@nucular-bacon.com\', to:\''+friend.email+'\', text:\''+invitationText+'\', html:\'<h3>'+invitationText+'</h3>\'})">' + (friend.name ? friend.name : friend.email) + '</li>';
+              controller.set('googleFriendList',entries);
+              controller.setupGoogleFriendList(entries, response.name);
               
-              friendList.innerHTML += '<hr>'
             });
-
-            $('#friends_of_google').html(friendList);            
-          });
-          
-          controller.set('googleLoggedIn',true);
-          
-          $('#userInfo').html('Welcome ' + response.name + '<br /><img src=\''+response.picture+"\'/>");
-          
-        },
-        dataType: "jsonp"
-    });
+            
+            controller.set('googleLoggedIn',true);
+            
+            //$('#userInfo').html('Welcome ' + response.name + '<br /><img src=\''+response.picture+"\'/>");
+            
+          },
+          dataType: "jsonp"
+      });
+    
+    }
     
   },
   
@@ -344,6 +357,30 @@
     else
       return results[1];
   },
+  
+  setupGoogleFriendList: function(entries,username){
+  
+    if($('ul')){
+      $('ul').remove();
+    }
+    
+    var friendList = document.createElement('ul');
+    var invitationText = this.get('emailInvitationText').replace('USER', username);
+    invitationText = invitationText.replace('URL', location.href);
+
+    entries.forEach(function(friend, index) {
+
+      friendList.innerHTML += '<li id=' + (friend.name ? 'noname' : friend.name) + ' onclick="App.Controller.auth.sendMail({ subject:\'Einladungsmail\', from: \'phovec@nucular-bacon.com\', to:\''+friend.email+'\', text:\''+invitationText+'\', html:\'<h3>'+invitationText+'</h3>\'})">' + (friend.name ? friend.name : friend.email) + '</li>';
+      
+      friendList.innerHTML += '<hr>'
+    });
+    
+    $('.load_progress_bar_auth').hide();
+    $('#friends_of_google').html(friendList);
+  
+  },
+  
+  /* mail methods */
   addMailInfo : function(){
     
     $('#mailFormButton').attr('disabled',true);

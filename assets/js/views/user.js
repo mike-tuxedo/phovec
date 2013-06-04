@@ -49,6 +49,12 @@ App.UserView = Ember.View.extend({
   putBeardOnUser: function() {
     this.putUserStreamOnDetector('beard');
   },
+  putGlasses2OnUser: function(){
+    this.putUserStreamOnDetector('glasses2');
+  },
+  putHairOnUser: function(){
+    this.putUserStreamOnDetector('hair');
+  },
   effectOff: function() {
     FaceDetector.closed = true;
   },
