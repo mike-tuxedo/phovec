@@ -150,7 +150,6 @@
   
   sendFbUserMessage: function(id) {
 
-    / ! das morgen nochmal ausprobieren.
     var FB = this.get('FB');
     
     var msg = {};
