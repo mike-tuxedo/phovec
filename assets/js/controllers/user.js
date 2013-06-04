@@ -1,4 +1,11 @@
 App.UserController = Ember.ObjectController.extend({
+  userBoxes: document.getElementsByClassName('user').length,
+  windowWidth: 0,
+  mediaOptions: {
+    audio: false,
+    video: false,
+    isAdmissionMissing: true
+  },
   init: function() {
     window.onresize = function(event) {
       $('.sidebar_content').css('height', $(window).height() - 30 + 'px');
@@ -57,12 +64,12 @@ App.UserController = Ember.ObjectController.extend({
 
     var user = Users.getLocalUser();
     user.stream = stream;
-    
+
     if (this.mediaOptions.video === false) {
       stream.getVideoTracks()[0].enabled = false;
       $('.recordLocalAudio').show();
       $('.local video').css('opacity', '0');
-      
+
       SignalingChannel.send({
         subject: "participant:video:mute",
         roomHash: user.roomHash,
@@ -180,7 +187,7 @@ App.UserController = Ember.ObjectController.extend({
     } else {
       videoStream.enabled = false;
       $('.local video').css('opacity', '0');
-       $('#control_effects').addClass('disabled');
+      $('#control_effects').addClass('disabled');
 
       SignalingChannel.send({
         subject: "participant:video:mute",
@@ -202,12 +209,5 @@ App.UserController = Ember.ObjectController.extend({
       destinationHash: remoteUserId
     });
 
-  },
-  userBoxes: document.getElementsByClassName('user').length,
-  windowWidth: 0,
-  mediaOptions: {
-    audio: false,
-    video: false,
-    isAdmissionMissing: true
   }
 });

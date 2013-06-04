@@ -10,9 +10,14 @@ App.UserView = Ember.View.extend({
     Users.updateLocalUserView();
   },
   controlEffects: function() {
-    if ($('#videoEffects').css('display') === 'block') {
+    if($('#control_effects').hasClass('disabled')){
+      
+      return;
+    }
+    else if ($('#videoEffects').css('display') === 'block') {
       $('#videoEffects').fadeOut('fast');
-    } else {
+    } 
+    else {
       $('#videoEffects').fadeIn('fast');
     }
     this.effectOff();

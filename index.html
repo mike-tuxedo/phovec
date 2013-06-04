@@ -14,22 +14,6 @@
   </head>
   <body scrolling="no">
     <script type="text/x-handlebars" data-template-name="application">
-      <div class="file-transfer-progress">
-        <div class="file-transfer-wrapper">
-          <div class="overview">
-            <div class="state"></div>
-            <div class="buttons">
-              <img src="assets/img/pause.png" class="pause"/>
-              <img src="assets/img/cancel.png" class="cancel"/>
-            </div>
-          </div>
-          <div class="overlay"></div>
-          <div class="background">
-            <img src="assets/img/transfer_progressbar_background.png"/>
-          </div>
-        </div>
-        <div class="info"></div>
-      </div>
       <div id="content">
       {{outlet}}
       </div>
@@ -104,8 +88,12 @@
     <div id="remoteUserTemp" style="display:none;">
       <div class='user' id='{{remoteUserId}}'>
         <div class='userHead' style='background-image: url({{img}})'>
-          <div class="userName">{{remoteUserName}}</div>
-          <div class="userNumber">{{userNumber}}</div>
+          <div class="userName">
+            {{remoteUserName}}
+          </div>
+          <div class="userNumber">
+            {{userNumber}}
+          </div>
         </div>
         <div class='videoWrapper'>
           <div class='stateMute'></div>
@@ -114,13 +102,28 @@
           <div class='recordRemoteAudio'></div>
           <video autoplay></video>
           <audio autoplay loop muted></audio>
-
-          <form action='javascript:void(0);'>
-            <div class='output'></div>
-            <div class='input'></div>
-            <input type='image' class='micro_recorder' src='assets/img/micro_recorder_off.png'/>
-          </form>
+          <div class="file-transfer-progress">
+            <div class="file-transfer-wrapper">
+              <div class="overview">
+                <div class="state"></div>
+                <div class="buttons">
+                  <img src="assets/img/pause.png" class="pause"/>
+                  <img src="assets/img/cancel.png" class="cancel"/>
+                </div>
+              </div>
+              <div class="overlay"></div>
+              <div class="background">
+                <img src="assets/img/transfer_progressbar_background.png"/>
+              </div>
+            </div>
+            <div class="info"></div>
+          </div>
         </div>
+        <form action='javascript:void(0);'>
+          <div class='output'></div>
+          <input type='image' class='micro_recorder' src='assets/img/micro_recorder_off.png'/>
+          <div class='input'></div>
+        </form>
       </div>
     </div>
 
