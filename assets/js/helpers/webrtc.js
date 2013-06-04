@@ -105,6 +105,11 @@ var WebRTC = {
     var frameCollection = [];
     var file = undefined;
 
+    //TODO: When File zur Übertragung bereit, dann kein anderes File übertragbar
+
+    var userRemote = Users.getRemoteUser(remoteUserId);
+    userRemote.transferVisualizer = new TransferVisualizer(userRemote.id);
+
     dataChannel.onmessage = function(event) {
       trace("webrtc", "ON MESSAGE DATACHANNEL", "-");
       var user = Users.getRemoteUser(remoteUserId);
@@ -120,19 +125,22 @@ var WebRTC = {
       switch(data.subject) {
         case "message":
           var output = formatTime(new Date().getTime(), "HH:MM") + " (" + user.name + ") - " + data.content + "&#13;&#10;<br>";
-          WebRTC.insertDataOutput(remoteUserId, output);
+          WebRTC.insertDataOutput(user.id, output);
           break;
         case "transfer:request":
           var outputType = data.name.substr(data.name.lastIndexOf("."));
           var outputName = data.name.length > 10 ? data.name.substr(0, 10) + outputType : data.name;
-          var transferRequest = "<div class='fileDropped'><img src='assets/img/file.png'><span class='fileName'>" + outputName + "</span><span class='fileStatus'><input type='button' onclick=\"WebRTC.acceptFile('remoteUserId');\"/></span></div>";
-          WebRTC.insertDataOutput(remoteUserId, transferRequest);
+          var transferRequest = "<div class='fileDropped'><img src='assets/img/file.png'><span class='fileName'>" + outputName + "</span><span class='fileStatus'><input type='button' onclick=\"WebRTC.acceptTransfer('" + remoteUserId + "');\" value='Annehmen'/></span></div>";
+          WebRTC.insertDataOutput(user.id, transferRequest);
           break;
         case "transfer:response":
           if (data.content === "OK") {
+            var fileDroppedElements = document.getElementById(user.id).getElementsByClassName("fileStatus");
+            fileDroppedElements[fileDroppedElements.length - 1].innerHTML = "Übertragung...";
+
             var reader = new FileReader();
             reader.onload = function(event) {
-              WebRTC.sendData(remoteUserId, event.target.result, {
+              WebRTC.sendData(user.id, event.target.result, {
                 frameLength: 128,
                 type: file.type,
                 size: file.size,
@@ -144,13 +152,13 @@ var WebRTC = {
         case "file":
           //initialize the transfervisualizer on first-frame
           if (data.firstFrame === true) {
-            transferVisualizer.init({
+            user.transferVisualizer.setup({
               "isSender": false
             });
           }
 
           //first check if the local user hasn't canceled the transfer
-          if (transferVisualizer.isCanceled === true) {
+          if (user.transferVisualizer.isCanceled === true) {
             data.error = "canceled";
             user.dataChannel.send(JSON.stringify(data));
             return;
@@ -160,13 +168,13 @@ var WebRTC = {
           if (data.error !== undefined) {
             if (data.error === "canceled") {
               trace("webrtc", "CANCELED File", "-");
-              transferVisualizer.cancel();
+              user.transferVisualizer.cancel();
               frameCollection = [];
               return;
             }
           }
 
-          transferVisualizer.update(data);
+          user.transferVisualizer.update(data);
           frameCollection.push(data.content);
 
           if (data.lastFrame === true) {
@@ -178,7 +186,7 @@ var WebRTC = {
             a.setAttribute('href', dataURL);
             a.click();
 
-            transferVisualizer.complete();
+            user.transferVisualizer.complete();
             trace("webrtc", "RECEIVED File", "-");
           }
           break;
@@ -265,7 +273,7 @@ var WebRTC = {
 
     Users.getRemoteUser(remoteUserId).dataChannel = dataChannel;
   },
-  sendData: function(remoteUserId, dataURL, options, data) {
+  sendData: function(remoteUserId, dataURL, options, data, transferVisualizer) {
     //initialize data
     if ( typeof data === "undefined") {
       data = {
@@ -277,7 +285,9 @@ var WebRTC = {
         "completeDataLength": dataURL.length
       };
 
-      transferVisualizer.init({
+      var userRemote = Users.getRemoteUser(remoteUserId);
+      transferVisualizer = userRemote.transferVisualizer;
+      transferVisualizer.setup({
         "isSender": true
       });
     }
@@ -296,7 +306,7 @@ var WebRTC = {
 
     //User paused the transfer
     if (transferVisualizer.isPaused === true) {
-      setTimeout(WebRTC.sendData, 100, remoteUserId, dataURL, options, data);
+      setTimeout(WebRTC.sendData, 100, remoteUserId, dataURL, options, data, transferVisualizer);
       return;
     }
 
@@ -321,7 +331,7 @@ var WebRTC = {
     if (Users.getRemoteUser(remoteUserId).dataChannel.readyState.toLowerCase() == 'open') {
       Users.getRemoteUser(remoteUserId).dataChannel.send(JSON.stringify(data));
     } else {
-      setTimeout(WebRTC.sendData, 100, remoteUserId, dataURL, options, data);
+      setTimeout(WebRTC.sendData, 100, remoteUserId, dataURL, options, data, transferVisualizer);
       return;
     }
 
@@ -338,7 +348,7 @@ var WebRTC = {
     }
 
     //call function recursive to send the next frame
-    setTimeout(WebRTC.sendData, 200, remoteUserId, dataURL, options, data);
+    setTimeout(WebRTC.sendData, 200, remoteUserId, dataURL, options, data, transferVisualizer);
   },
   modifyDescription: function(description) {
     var sdp = description.sdp;
@@ -402,6 +412,8 @@ var WebRTC = {
       "subject": "transfer:response",
       "content": "OK"
     }));
+    var fileDroppedElements = document.getElementById(user.id).getElementsByClassName("fileStatus");
+    fileDroppedElements[fileDroppedElements.length - 1].innerHTML = "Übertragung...";
   },
   sendTrackInfo: function(userLocal) {
     if (userLocal.stream.getVideoTracks()[0].enabled === false) {
