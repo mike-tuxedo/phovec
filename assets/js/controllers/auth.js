@@ -105,8 +105,7 @@
           friendList.innerHTML += '<hr>';
         });
 
-        document.getElementById('friends_of_facebook').textContent(friendList);
-
+        $('#friends_of_facebook').html(friendList);
       });
 
     });
@@ -164,6 +163,7 @@
     FB.ui(msg, function(response) {
 
       if (response && response.success) {
+        $('.sidebar_content').scrollTop(0);
         $('.confirm_send').fadeIn('slow');
         setTimeout(function(){ $('.confirm_send').fadeOut('slow');}, 2000);
       } else {
@@ -273,8 +273,7 @@
               friendList.innerHTML += '<hr>'
             });
 
-            document.getElementById('friends_of_google').textContent(friendList);
-            
+            $('#friends_of_google').html(friendList);            
           });
           
           controller.set('googleLoggedIn',true);
@@ -377,8 +376,10 @@
         }
       });
       
+      $('.sidebar_content').scrollTop(0);
       $('.confirm_send').fadeIn('slow');
       setTimeout(function(){ $('.confirm_send').fadeOut('slow');}, 2000);
+      $('.email_input').val('');
       
       setTimeout(function(){
         $('#mailFormButton').attr('disabled',false);

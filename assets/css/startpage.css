@@ -7,12 +7,11 @@
 }
 
 #startButtonImage {
-  cursor: pointer;
 	height: 100px;
 	width: 350px;
 	min-width: 350px;
 	margin: 0 auto;
-	background-image: url('../img/startbutton_disabled.png');
+	background-image: url('../img/startbtn_sprite.png');
 	background-repeat: no-repeat;
 }
 
