@@ -207,6 +207,7 @@
     qr.text("qrcode_img", alteredURL);
   },
   handleClickEvent: function(e) {
+  
     var clickedElement = e.target;
     
     // record video or audio
@@ -218,12 +219,14 @@
     else if ( clickedElement.tagName === 'INPUT' && clickedElement.className === 'micro_recorder' ) {
       App.Controller.room.toggleSpeechToText.call(App.Controller.room, clickedElement);
     }
-    
     // if user double clicked on his name and clicks outside without pressing enter
-    if(clickedElement.id !== 'local_name' && clickedElement.tagName !== 'INPUT' && $('#videoboxes form#alterNameForm')[0]){
+    if( App.Controller.room.isNameFormActivated(clickedElement) ){
       $('#videoboxes form#alterNameForm').submit()
     }
     
+  },
+  isNameFormActivated: function(clickedElement){
+    return clickedElement.id !== 'local_name' && clickedElement.tagName !== 'INPUT' && $('#videoboxes form#alterNameForm')[0];
   },
   /* video/audio recording methods */
   toggleRecorder: function(element, type) {
@@ -567,8 +570,13 @@
       inputField.value = App.shortenString(inputField.value,15);
     };
     
-    nameForm.innerHTML = '<input type="text" value="'+(Users.getLocalUser().name)+'" />';
+    var nameField = document.createElement('input');
+    nameField.type = 'text';
+    nameField.value = Users.getLocalUser().name;
+    nameForm.appendChild(nameField);
+    
     spanElement.replaceChild(nameForm,spanElement.firstChild);
+    nameField.focus();
   },
   sendParticipantEditMsg: function(){
     var localUser = Users.getLocalUser();
