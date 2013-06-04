@@ -176,7 +176,7 @@
   background: #444444;
 }
 
-.sidebar_info{
+.sidebar_info {
   padding-top: 20px;
 }
 
@@ -227,12 +227,12 @@
   background: #66666b;
 }
 
-#mailFormButton:hover{
+#mailFormButton:hover {
   background: #99999b;
   color: #fff;
 }
 
-.confirm_send{
+.confirm_send {
   display: none;
   width: 80%;
   height: 30px;
@@ -328,21 +328,24 @@
 }
 
 .videoWrapper .stateMute {
-  width: 64px;
-  height: 64px;
-  background: url(../img/speaker_mute.png);
+  width: 33px;
+  height: 28px;
+  background: url(../img/speaker_mute.png) no-repeat;
   position: absolute;
   z-index: 2;
+  left: 10px;
+  top: 10px;
   display: none;
 }
 
 .videoWrapper .removeParticipant {
-  width: 64px;
-  height: 64px;
-  background: url(../img/hangup.png);
+  width: 32px;
+  height: 32px;
+  background: url(../img/hangup.png) no-repeat;
   position: absolute;
   z-index: 2;
-  right: 0px;
+  right: 4px;
+  top: 4px;
 }
 
 .videoWrapper  .micro_recorder {
@@ -358,7 +361,8 @@
   height: 20px;
 }
 
-#videoboxes .name {
+#videoboxes .userHead {
+  position: relative;
   border-top-left-radius: 5px;
   border-top-right-radius: 5px;
   float: left;
@@ -371,6 +375,21 @@
   background-position: 0px;
   box-shadow: inset 1px 1px 5px #444;
   -webkit-box-shadow: inset 1px 1px 5px #444;
+}
+
+#videoboxes .userHead .userNumber {
+  display:none;
+  position: absolute;
+  top: 5px;
+  right: 3px;
+  background: #66666B;
+  width: 19px;
+  height: 19px;
+  border-radius: 5px;
+  color: white;
+  text-align: center;
+  vertical-align: middle;
+  line-height: 19px;
 }
 
 #videoboxes form, textarea, input {
@@ -417,8 +436,9 @@
   background-position: 15px 13px;
 }
 
-#videoboxes form#alterNameForm{
+#videoboxes form#alterNameForm {
   width: 120px;
+  height: 18px;
   margin-left: 35%;
 }
 
@@ -574,50 +594,26 @@
   width: 100%;
 }
 
-.recordLocalVideo {
+.recordLocalVideo, .recordRemoteVideo {
   width: 32px;
   height: 32px;
   position: absolute;
   background: url(../img/stop_record_video.png);
   z-index: 2;
   background-repeat: no-repeat;
-  top: 60px;
+  top: 48px;
   left: 10px;
   display: none;
 }
 
-.recordRemoteVideo {
-  width: 32px;
-  height: 32px;
-  position: absolute;
-  background: url(../img/stop_record_video.png);
-  z-index: 2;
-  background-repeat: no-repeat;
-  top: 60px;
-  left: 10px;
-  display: none;
-}
-
-.recordLocalAudio {
+.recordLocalAudio, .recordRemoteAudio {
   width: 32px;
   height: 32px;
   position: absolute;
   background: url(../img/stop_record_audio.png);
   z-index: 2;
   background-repeat: no-repeat;
-  top: 90px;
-  left: 10px;
-  display: none;
-}
-
-.recordRemoteAudio {
-  width: 32px;
-  height: 32px;
-  position: absolute;
-  background: url(../img/stop_record_audio.png);
-  z-index: 2;
-  background-repeat: no-repeat;
-  top: 90px;
+  top: 80px;
   left: 10px;
   display: none;
 }
@@ -862,6 +858,6 @@
   z-index: 1;
   line-height: 30px;
   vertical-align: middle;
-  bottom:2px;
-  left:10px;
+  bottom: 2px;
+  left: 10px;
 }

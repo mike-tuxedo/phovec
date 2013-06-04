@@ -143,7 +143,7 @@
             App.Controller.room.sendParticipantEditMsg();
           }
 
-          document.querySelector("#local_name").innerText = name;
+          document.querySelector(".user.local .userName").innerText = name;
           document.getElementById("nameArea").style.display = "none";
         };
         element.style.backgroundImage = "url('assets/img/startbutton.png')";
