@@ -51,7 +51,7 @@ App.RoomRoute = Ember.Route.extend({
     WebRTC.init();
     SignalingChannel.init();
     
-    App.Controller.auth = App.AuthController.create();
+    App.Controller.auth = App.AuthController.create({ emailAddress:'', emailDesc: '' });
     App.Controller.room = App.RoomController.create();
     App.Controller.room.animation();
     App.Controller.user = App.UserController.create();
