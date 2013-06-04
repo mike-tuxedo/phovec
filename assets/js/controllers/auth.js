@@ -150,14 +150,14 @@
   
   sendFbUserMessage: function(id) {
 
+    / ! das morgen nochmal ausprobieren.
     var FB = this.get('FB');
-
+    
     var msg = {};
     msg.to = id;
     msg.method = 'send';
     msg.name = 'Phovec Einladung';
     msg.link = location.href;
-    msg.picture = 'assets/img/favicon.png';
     msg.description = ('Ein Freund möchte dich auf Phovec einladen! Deine Einladungsadresse lautet: ' + location.href);
     msg.caption = 'invisible text';
     
