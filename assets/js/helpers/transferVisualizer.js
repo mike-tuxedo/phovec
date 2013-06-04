@@ -1,23 +1,27 @@
 function TransferVisualizer(userId) {
-  this.userOwnerId = userId;
+  this.userOwnerId = userId.trim();
   this.mainSelector = "#" + userId + " .file-transfer-progress";
   this.currentPercent = 0;
   this.isSender = true;
   this.isCanceled = false;
   this.isPaused = false;
 
-  $(this.mainSelector + ' .overlay').css("width", "100%");
-  $(this.mainSelector + ' .buttons .pause').click(function() {
+  var that = this;
+  $(this.mainSelector + ' .buttons .pause').click(function(event) {
+    var fileDroppedElements = $("#" + that.userOwnerId + " .fileStatus");
     if ($(this).attr('src') === 'assets/img/pause.png') {
       $(this).attr('src', 'assets/img/play.png');
-      transferVisualizer.isPaused = true;
+      that.isPaused = true;
+      fileDroppedElements[fileDroppedElements.length - 1].innerHTML = "Pausiert";
     } else {
       $(this).attr('src', 'assets/img/pause.png');
-      transferVisualizer.isPaused = false;
+      that.isPaused = false;
+      fileDroppedElements[fileDroppedElements.length - 1].innerHTML = "Übertragen...";
     }
   });
   $(this.mainSelector + ' .buttons .cancel').click(function() {
-    transferVisualizer.cancel();
+    console.log("inside click listener", that.isCanceled);
+    that.cancel();
   });
 }
 
@@ -29,6 +33,7 @@ TransferVisualizer.prototype.setup = function(options) {
 
   var state = this.isSender === true ? "Senden " : "Empfangen ";
   $(this.mainSelector + ' .info .state').html(state + "<b>0</b> %");
+  $(this.mainSelector + ' .overlay').css("width", "100%");
 
   if (this.isSender === false) {
     $(this.mainSelector + ' .buttons .pause').hide();
@@ -40,6 +45,10 @@ TransferVisualizer.prototype.setup = function(options) {
 };
 
 TransferVisualizer.prototype.update = function(data) {
+  if (this.isCanceled === true) {
+    return;
+  }
+
   var percent = (data.completeSendedDataLength / data.completeDataLength) * 100;
   var roundedPercent = Math.floor(percent);
 
@@ -68,21 +77,40 @@ TransferVisualizer.prototype.update = function(data) {
   var completeSize = formatBytes(data.size);
 
   var info = data.name + " | " + currentSize + " von " + completeSize + " | 1,25 KB/s | Dauer: " + durationLeft;
-  $(this.mainSelector + ' .info').text(info)
+  $(this.mainSelector + ' .info').text(info);
+
+  var fileDroppedElements = $("#" + this.userOwnerId + " .fileStatus");
+  fileDroppedElements[fileDroppedElements.length - 1].innerHTML = "Übertragung...";
 };
 
 TransferVisualizer.prototype.complete = function() {
   $(this.mainSelector + ' .state').text("Übertragen");
   $(this.mainSelector + ' .buttons').hide();
   $(this.mainSelector + ' .info').text("Übertragung wurde erfolgreich abgeschlossen");
-  $(this.mainSelector).fadeOut(2000);
+  this.fadeOut();
+
+  if (this.isSender) {
+    var fileDroppedElements = $("#" + this.userOwnerId + " .fileStatus");
+    fileDroppedElements[fileDroppedElements.length - 1].innerHTML = "Abgeschlossen";
+  }
 };
 
 TransferVisualizer.prototype.cancel = function() {
   $(this.mainSelector + ' .buttons').hide();
   $(this.mainSelector + ' .state').text("Abgebrochen");
   $(this.mainSelector + ' .overlay').css("width", "0%");
-  transferVisualizer.isCanceled = true;
-
+  this.isCanceled = true;
   $(this.mainSelector + ' .info').text("Übertragung wurde abgebrochen");
+  this.fadeOut();
+
+  var fileDroppedElements = $("#" + this.userOwnerId + " .fileStatus");
+  fileDroppedElements[fileDroppedElements.length - 1].innerHTML = "Abgebrochen";
+};
+
+TransferVisualizer.prototype.fadeOut = function() {
+  var that = this;
+
+  setTimeout(function() {
+    $(that.mainSelector).fadeOut(1500);
+  }, 1500);
 };

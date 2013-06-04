@@ -106,13 +106,10 @@ var WebRTC = {
     var file = undefined;
 
     //TODO: When File zur Übertragung bereit, dann kein anderes File übertragbar
-
-    var userRemote = Users.getRemoteUser(remoteUserId);
-    userRemote.transferVisualizer = new TransferVisualizer(userRemote.id);
-
     dataChannel.onmessage = function(event) {
       trace("webrtc", "ON MESSAGE DATACHANNEL", "-");
       var user = Users.getRemoteUser(remoteUserId);
+      user.transferVisualizer = new TransferVisualizer(remoteUserId);
       var data = {};
 
       try {
@@ -129,15 +126,12 @@ var WebRTC = {
           break;
         case "transfer:request":
           var outputType = data.name.substr(data.name.lastIndexOf("."));
-          var outputName = data.name.length > 10 ? data.name.substr(0, 10) + outputType : data.name;
+          var outputName = data.name.length > 13 ? data.name.substr(0, 10) + outputType : data.name;
           var transferRequest = "<div class='fileDropped'><img src='assets/img/file.png'><span class='fileName'>" + outputName + "</span><span class='fileStatus'><input type='button' onclick=\"WebRTC.acceptTransfer('" + remoteUserId + "');\" value='Annehmen'/></span></div>";
           WebRTC.insertDataOutput(user.id, transferRequest);
           break;
         case "transfer:response":
           if (data.content === "OK") {
-            var fileDroppedElements = document.getElementById(user.id).getElementsByClassName("fileStatus");
-            fileDroppedElements[fileDroppedElements.length - 1].innerHTML = "Übertragung...";
-
             var reader = new FileReader();
             reader.onload = function(event) {
               WebRTC.sendData(user.id, event.target.result, {
@@ -149,29 +143,33 @@ var WebRTC = {
             };
             reader.readAsDataURL(file);
           }
+          break;
         case "file":
-          //initialize the transfervisualizer on first-frame
-          if (data.firstFrame === true) {
-            user.transferVisualizer.setup({
-              "isSender": false
-            });
-          }
-
-          //first check if the local user hasn't canceled the transfer
+          console.log(user.transferVisualizer.isCanceled);
+          //first check if the receiver user hasn't canceled the transfer
           if (user.transferVisualizer.isCanceled === true) {
+            console.log("IS CANCELED! SEND CANCEL!")
             data.error = "canceled";
             user.dataChannel.send(JSON.stringify(data));
             return;
           }
 
-          //if there is an error from the sender side cancel the transfer complete
+          //if there is an error from the sender side cancel the transfer also
           if (data.error !== undefined) {
             if (data.error === "canceled") {
+              console.log("IS FROM OTHER CANCELED!");
               trace("webrtc", "CANCELED File", "-");
               user.transferVisualizer.cancel();
               frameCollection = [];
               return;
             }
+          }
+
+          //initialize the transfervisualizer on first-frame
+          if (data.firstFrame === true) {
+            user.transferVisualizer.setup({
+              "isSender": false
+            });
           }
 
           user.transferVisualizer.update(data);
@@ -181,12 +179,22 @@ var WebRTC = {
             var dataURL = frameCollection.join('');
             frameCollection = [];
 
+            user.transferVisualizer.complete();
+
+            //at the end you give the user a link do download the file
+            var fileDroppedElements = $("#" + user.id + " .fileStatus");
+            var fileStatus = fileDroppedElements[fileDroppedElements.length - 1];
+            fileStatus.innerHTML = "";
+
             var a = document.createElement('a');
             a.download = data.name;
             a.setAttribute('href', dataURL);
-            a.click();
-
-            user.transferVisualizer.complete();
+            a.innerHTML = "Speichern";
+            a.onclick = function() {
+              fileStatus.innerHTML = "Gespeichert";
+            }
+           
+            fileStatus.appendChild(a);
             trace("webrtc", "RECEIVED File", "-");
           }
           break;
@@ -222,7 +230,7 @@ var WebRTC = {
         }));
 
         var outputType = file.name.substr(file.name.lastIndexOf("."));
-        var outputName = file.name.length > 10 ? file.name.substr(0, 10) + outputType : file.name;
+        var outputName = file.name.length > 13 ? file.name.substr(0, 10) + outputType : file.name;
 
         var info = "<div class='fileDropped'><img src='assets/img/file.png'><span class='fileName'>" + outputName + "</span><span class='fileStatus'>Warte auf Annahme...</span></div>";
         WebRTC.insertDataOutput(remoteUserId, info);
@@ -248,7 +256,7 @@ var WebRTC = {
           }));
           $(this).html("");
 
-          var output = formatTime(new Date().getTime(), "HH:MM") + " (me) - " + input + "&#13;&#10;<br>";
+          var output = formatTime(new Date().getTime(), "HH:MM") + " (ich) - " + input + "&#13;&#10;<br>";
           WebRTC.insertDataOutput(remoteUserId, output);
 
           event.preventDefault();
@@ -306,6 +314,9 @@ var WebRTC = {
 
     //User paused the transfer
     if (transferVisualizer.isPaused === true) {
+      var fileDroppedElements = $("#" + remoteUserId + " .fileStatus");
+      fileDroppedElements[fileDroppedElements.length - 1].innerHTML = "Pausiert";
+
       setTimeout(WebRTC.sendData, 100, remoteUserId, dataURL, options, data, transferVisualizer);
       return;
     }
