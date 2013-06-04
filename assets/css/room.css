@@ -310,7 +310,7 @@
 
 #videoboxes {
   display: inline-block;
-  margin: 10px auto 0px auto;
+  margin: 0px auto 0px auto;
 }
 
 #videoboxes .user {
@@ -467,7 +467,10 @@
 #videoboxes form#alterNameForm {
   width: 120px;
   height: 18px;
-  margin-left: 35%;
+  position: absolute;
+  left:50%;
+  margin-left:-60px;
+  top:3px;
 }
 
 /*------------Options under lokal Video--------------*/
@@ -637,12 +640,18 @@
   background-repeat: no-repeat;
 }
 
-#faceDetectorOutput {
+#faceDetectorOutput, #audioVisualizer {
   width: 100%;
   float: left;
   display: none;
   position: absolute;
   z-index: 2;
+}
+
+#audioVisualizer{
+  height:250px;
+  bottom:0px;
+  left:0px;
 }
 
 #progressSnapshotbar {

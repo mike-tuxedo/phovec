@@ -456,8 +456,8 @@ var WebRTC = {
           App.Router.router.replaceURL('/room/full');
           break;
         case "room:unknown":
-          //App.handleURL('/room/unknown');
-          //App.Router.router.replaceURL('/room/unknown');
+          App.handleURL('/room/unknown');
+          App.Router.router.replaceURL('/room/unknown');
           break;
         default:
           App.handleURL('/error');

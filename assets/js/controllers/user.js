@@ -65,16 +65,21 @@ App.UserController = Ember.ObjectController.extend({
     var user = Users.getLocalUser();
     user.stream = stream;
 
+    user.audioVisualizer = new AudioVisualizer();
+    user.audioVisualizer.setup(stream);
+
     if (this.mediaOptions.video === false) {
+      user.audioVisualizer.start();
       stream.getVideoTracks()[0].enabled = false;
-      $('.recordLocalAudio').show();
-      $('.local video').css('opacity', '0');
 
       SignalingChannel.send({
         subject: "participant:video:mute",
         roomHash: user.roomHash,
         userHash: user.id
       });
+      
+      $('.recordLocalAudio').show();
+      $('.local video').css('opacity', '0');
     } else {
       $('.recordLocalVideo').show();
       $('.recordLocalAudio').show();
@@ -171,30 +176,30 @@ App.UserController = Ember.ObjectController.extend({
     }
 
     var videoStream = user.stream.getVideoTracks()[0];
-
     if (videoStream.enabled === false) {
+      user.audioVisualizer.stop();
       videoStream.enabled = true;
-      $('.local video').css('opacity', '1');
-      $('#control_effects').removeClass('disabled');
-
+      
       SignalingChannel.send({
         subject: "participant:video:unmute",
         roomHash: user.roomHash,
         userHash: user.id
       });
 
+      $('.local video').css('opacity', '1');
+      $('#control_effects').removeClass('disabled');
       $('.recordLocalVideo').show();
     } else {
+      user.audioVisualizer.start();
       videoStream.enabled = false;
-      $('.local video').css('opacity', '0');
-      $('#control_effects').addClass('disabled');
-
       SignalingChannel.send({
         subject: "participant:video:mute",
         roomHash: user.roomHash,
         userHash: user.id
       });
-
+      
+      $('.local video').css('opacity', '0');
+      $('#control_effects').addClass('disabled');
       $('.recordLocalVideo').hide();
       $('#faceDetectorOutput').hide();
     }
@@ -208,6 +213,5 @@ App.UserController = Ember.ObjectController.extend({
       userHash: user.id,
       destinationHash: remoteUserId
     });
-
   }
 });

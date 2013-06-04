@@ -1,49 +1,74 @@
-var AudioVisualizer = {
-  analyser: null,
-  microphone: null,
-  audioContext: null,
-  canvasContext: null,
-  init: function(stream) {
-    this.canvasContext = document.getElementById('canvas').getContext('2d');
-    this.canvasContext.width = window.innerWidth;
-    this.canvasContext.height = 255;
-    document.getElementById('canvas').height = 255;
+function AudioVisualizer() {
+  this.analyser = null;
+  this.microphone = null;
+  this.audioContext = null;
+  this.canvasContext = null;
+  this.intervalId = null;
+  this.type = "byte";
+}
 
-    this.audioContext = new webkitAudioContext();
-    this.analyser = this.audioContext.createAnalyser();
+AudioVisualizer.prototype.setup = function(stream) {
+  this.canvasContext = document.getElementById('audioVisualizer').getContext('2d');
+  this.canvasContext.width = 400;
+  this.canvasContext.height = 250;
+  this.canvasContext.canvas.width = 400;
+  this.canvasContext.canvas.height = 250;
 
-    this.microphone = this.audioContext.createMediaStreamSource(stream);
-    this.microphone.connect(this.analyser);
-    this.canvasContext.fillStyle = "rgba(30, 30, 30, 1)";
-    var max = 0;
-    setInterval( function() {
-      // FFTData = new Float32Array(this.analyser.fftSize);
-      // this.analyser.getByteTimeDomainData(FFTData);
-      var BTDData = new Uint8Array(this.analyser.fftSize);
-      this.analyser.getByteTimeDomainData(BTDData);
+  this.audioContext = new webkitAudioContext();
+  this.analyser = this.audioContext.createAnalyser();
 
-      this.canvasContext.clearRect(0, 0, document.getElementById('canvas').offsetWidth, document.getElementById('canvas').offsetHeight);
-      for (var i = 0; i < BTDData.length; i += stepSize) {
-        var stepSize = 32;
-        var fWidth = document.getElementById('canvas').offsetWidth / 2048;
-        var x = i * fWidth;
-        var y = document.getElementById('canvas').offsetHeight;
-        var width = fWidth * stepSize;
-        var height = -BTDData[i];
-
-        this.canvasContext.fillRect(x, y, width, height);
-      }
-    }.bind(this), 40);
-  }
+  this.microphone = this.audioContext.createMediaStreamSource(stream);
+  this.microphone.connect(this.analyser);
+  this.canvasContext.fillStyle = "rgba(255, 255, 255, 1)";
 };
 
-navigator.webkitGetUserMedia({
-  audio: true
-}, AudioVisualizer.init.bind(AudioVisualizer));
+AudioVisualizer.prototype.start = function() {
+  $('#audioVisualizer').show();
+  this.intervalId = setInterval( function() {
+    //clear canvas context at maximum size
+    this.canvasContext.clearRect(0, 0, 1024, 1024);
+    var data = [];
+    var length = 0;
 
-/**
- * HTML is needed 
- * <canvas id="canvas">
-      asdf
-   </canvas>
- */
+    if (this.type === "time") {
+      data = new Uint8Array(this.analyser.fftSize);
+      this.analyser.getByteTimeDomainData(data);
+      length = data.length;
+    } else if (this.type === "fft") {
+      data = new Float32Array(this.analyser.fftSize);
+      this.analyser.getFloatFrequencyData(data);
+      length = data.length;
+    } else if (this.type === "byte") {
+      data = new Uint8Array(this.analyser.fftSize);
+      this.analyser.getByteFrequencyData(data);
+      length = data.length / 4;
+    }
+
+    var stepSize = 16;
+    var fWidth = document.getElementById('audioVisualizer').offsetWidth / length;
+    var y = document.getElementById('audioVisualizer').offsetHeight;
+
+    for (var i = 0; i < data.length; i += stepSize) {
+      var x = i * fWidth;
+      var width = fWidth * stepSize;
+      var height = 0;
+
+      if (this.type === "time") {
+        height = -data[i] / 255 * 100;
+      } else if (this.type === "fft") {
+        height = data[i] / 2;
+      } else if (this.type === "byte") {
+        height = -data[i];
+      }
+
+      this.canvasContext.fillRect(x, y, width, height);
+    }
+  }.bind(this), 40);
+};
+
+AudioVisualizer.prototype.stop = function() {
+  $('#audioVisualizer').hide();
+  this.canvasContext.clearRect(0, 0, 1024, 1024);
+  clearInterval(this.intervalId);
+};
+
