@@ -172,14 +172,14 @@ var WebRTC = {
     dataChannel.onopen = function(event) {
       trace("webrtc", "DataChannel onopen", event);
 
-      var dropArea = $('#' + remoteUserId).get(0);
-      dropArea.addEventListener('dragover', function(event) {
+      var dragOver = function(event) {
         //stop dragover event is needed, so drop event works in chrome
         event.stopPropagation();
         event.preventDefault();
         event.dataTransfer.dropEffect = "copy";
-      }, false);
-      dropArea.addEventListener('drop', function(event) {
+      };
+
+      var drop = function(event) {
         event.stopPropagation();
         event.preventDefault();
 
@@ -203,7 +203,14 @@ var WebRTC = {
           };
           reader.readAsDataURL(files[i]);
         }
-      }, false);
+      };
+
+      var dropAreaVideo = $('#' + remoteUserId + " .videoWrapper").get(0);
+      var dropAreaForm = $('#' + remoteUserId + " .videoWrapper form").get(0);
+      dropAreaVideo.addEventListener('dragover', dragOver, false);
+      dropAreaVideo.addEventListener('drop', drop, false);
+      dropAreaForm.addEventListener('dragover', dragOver, false);
+      dropAreaForm.addEventListener('drop', drop, false);
 
       $("#" + remoteUserId + " form .input").keypress(function(event) {
         if ((event.altKey === true || event.ctrlKey === true || event.shiftKey === true) && event.which === 13) {
@@ -632,8 +639,8 @@ return user;
 }, updateLocalUserView: function() {
   var user = Users.getLocalUser();
   var img = (user.country ? user.country : "unknown") + '.png';
-  $('#local_name').text(user.name);
-  $('#local_name').css('background-image', 'url(./assets/img/countries/' + img + ')');
+  $('.user.local .userName').text(user.name);
+  $('.user.local .userHead').css('background-image', 'url(./assets/img/countries/' + img + ')');
   $('#videoboxes #local').attr("id", user.id);
 }, createRemoteUser: function(roomHash, remoteUserId, remoteUserName, remoteUserCountry, peerConnection, callType) {
   var user = {

@@ -103,7 +103,10 @@
     <!-- a fake template for a remoteuser box -->
     <div id="remoteUserTemp" style="display:none;">
       <div class='user' id='{{remoteUserId}}'>
-        <span class='name' style='background-image: url({{img}})'>{{userNumber}}.{{remoteUserName}}</span>
+        <div class='userHead' style='background-image: url({{img}})'>
+          <div class="userName">{{remoteUserName}}</div>
+          <div class="userNumber">{{userNumber}}</div>
+        </div>
         <div class='videoWrapper'>
           <div class='stateMute'></div>
           <div class='removeParticipant' onclick="App.Controller.user.removeParticipant('{{remoteUserId}}')"></div>
