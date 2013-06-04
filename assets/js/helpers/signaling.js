@@ -158,6 +158,7 @@
             }));
             break;
           case "participant:video:unmute":
+                console.log("receive", new Date().getTime());
             window.dispatchEvent(new CustomEvent("signalingchannel:participant", {
               detail: {
                 message: "video:unmute",
@@ -208,6 +209,8 @@
       trace("signaling", "Server offline", "-");
     }
   },
+  //sending messages over server takes ca. 80 ms
+  //depening of course on current bandwidth
   send: function(message) {
     //trace("signaling", "SEND", message);
     SignalingChannel.webSocket.send(JSON.stringify(message));

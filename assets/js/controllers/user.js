@@ -1,71 +1,76 @@
 App.UserController = Ember.ObjectController.extend({
-  init: function(){
+  init: function() {
     window.onresize = function(event) {
-        $('.sidebar_content').css('height', $(window).height() - 30 + 'px');
-        this.setWindowWidth();
+      $('.sidebar_content').css('height', $(window).height() - 30 + 'px');
+      this.setWindowWidth();
     }.bind(this);
 
     this.addObserver('userBoxes', this.computeSize);
   },
-  setWindowWidth: function(){
+  setWindowWidth: function() {
     this.set('windowWidth', window.document.width);
     this.computeSize();
   },
-  computeSize: function(){
+  computeSize: function() {
     if (this.userBoxes === 1 || this.userBoxes === 0) {
-      var boxWidth = this.windowWidth/2.4;
+      var boxWidth = this.windowWidth / 2.4;
       var videoWidth = boxWidth;
       $('#videoboxes').css('width', boxWidth + 'px');
-      
+
     } else if (this.userBoxes === 2) {
-      var boxWidth =  this.windowWidth/1.2;
-      var videoWidth = boxWidth/2 - 20;
+      var boxWidth = this.windowWidth / 1.2;
+      var videoWidth = boxWidth / 2 - 20;
       $('#videoboxes').css('width', boxWidth + 'px');
-      
+
     } else if (this.userBoxes === 3) {
-      var boxWidth =  this.windowWidth/1.1;
-      var videoWidth = boxWidth/3 - 20;
+      var boxWidth = this.windowWidth / 1.1;
+      var videoWidth = boxWidth / 3 - 20;
       $('#videoboxes').css('width', boxWidth + 'px');
-      
+
     } else if (this.userBoxes === 4) {
-      var boxWidth =  this.windowWidth/2;
-      var videoWidth = boxWidth/2 - 20;
+      var boxWidth = this.windowWidth / 2;
+      var videoWidth = boxWidth / 2 - 20;
       $('#videoboxes').css('width', boxWidth + 'px');
-      
+
     } else if (this.userBoxes >= 5) {
-      var boxWidth =  this.windowWidth/1.5;
-      var videoWidth = boxWidth/3 - 20;
+      var boxWidth = this.windowWidth / 1.5;
+      var videoWidth = boxWidth / 3 - 20;
       $('#videoboxes').css('width', boxWidth + 'px');
     }
-    
+
     this.setVideoSize(videoWidth);
   },
-  setVideoSize:function(videoWidth){
+  setVideoSize: function(videoWidth) {
     //generell videosize
-    var videoHeight = videoWidth/1.3333;
+    var videoHeight = videoWidth / 1.3333;
     var videoWrapperHeight = videoHeight;
     $('.user, #videoEffects').css('width', videoWidth + 'px');
     $('.user, #videoEffects').css('height', videoHeight + 'px');
     $('.videoWrapper').css('height', videoWrapperHeight + 'px');
-    
+
     //Video buttons for local user
-    var buttonWidth = videoWidth/3;
+    var buttonWidth = videoWidth / 3;
     $('.video_options_buttons').css('width', buttonWidth + 'px');
     $('#control_video').css('margin-left', buttonWidth + 'px');
-    $('#control_effects').css('margin-left', buttonWidth*2-1 + 'px');
+    $('#control_effects').css('margin-left', buttonWidth * 2 - 1 + 'px');
 
   },
   onGetMediaSuccess: function(stream) {
-    var user = Users.getLocalUser();
-    user.stream = stream;
-
     this.mediaOptions.isAdmissionMissing = false;
 
+    var user = Users.getLocalUser();
+    user.stream = stream;
+    
     if (this.mediaOptions.video === false) {
       stream.getVideoTracks()[0].enabled = false;
       $('.recordLocalAudio').show();
-
       $('.local video').css('opacity', '0');
+      
+      SignalingChannel.send({
+        subject: "participant:video:mute",
+        roomHash: user.roomHash,
+        userHash: user.id
+      });
     } else {
       $('.recordLocalVideo').show();
       $('.recordLocalAudio').show();
@@ -81,13 +86,6 @@ App.UserController = Ember.ObjectController.extend({
     }
 
     document.getElementById('videoboxes').getElementsByTagName('div')[0].getElementsByTagName('video')[0].play();
-
-    var user = Users.getLocalUser();
-    SignalingChannel.send({
-      subject: "participant:video:unmute",
-      roomHash: user.roomHash,
-      userHash: user.id
-    });
   },
   onGetMediaError: function(error) {
     console.log("LocalMedia: ERROR");
@@ -185,7 +183,7 @@ App.UserController = Ember.ObjectController.extend({
     } else {
       videoStream.enabled = false;
       $('.local video').css('opacity', '0');
-      $('#control_effects').addClass('disabled');
+       $('#control_effects').addClass('disabled');
 
       SignalingChannel.send({
         subject: "participant:video:mute",
@@ -206,8 +204,7 @@ App.UserController = Ember.ObjectController.extend({
       userHash: user.id,
       destinationHash: remoteUserId
     });
-    
-    
+
   },
   userBoxes: document.getElementsByClassName('user').length,
   windowWidth: 0,

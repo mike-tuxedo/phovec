@@ -3,6 +3,7 @@
   classNames: ['room-wrapper'],
   sidebar: false,
   showSidebar: function() {
+    window.App.Controller.room.stopAnimation();
     if (this.sidebar === false) {
       $('#scrollbar_fix').css('width', '310px');
       $('#social_sidebar_container').animate({
@@ -65,7 +66,14 @@
     if (Users.getLocalUser().name === "Phovec-Benutzer" || Users.getLocalUser().name === undefined) {
       $('#nameArea').show();
     }
+
     window.App.Controller.room.addRemoteUsers();
+
+    document.addEventListener("keydown", function(event) {
+      if (event.which === 27 && $('#help').is(":visible")) {
+        $('#help').fadeOut('fast');
+      }
+    }, false);
   },
   toggleFullscreen: function() {
     var documentElement = document.getElementsByTagName("body")[0];
@@ -93,18 +101,12 @@
   toggleSpeechOrder: function() {
 
     if (App.Controller.room.isSpeechRecognizerStarted) {
-      $('#speechButton').css('background', 'url(assets/img/micro_recorder_off.png)')
-      .css('background-repeat', 'no-repeat')
-      .css('background-size', '45%')
-      .css('background-position', '15px 13px');
-      
+      $('#speechButton').css('background', 'url(assets/img/micro_recorder_off.png)').css('background-repeat', 'no-repeat').css('background-size', '45%').css('background-position', '15px 13px');
+
       App.Controller.room.speechRecognizer.stop();
     } else {
-      $('#speechButton').css('background', 'url(assets/img/micro_recorder_on.png)')
-      .css('background-repeat', 'no-repeat')
-      .css('background-size', '45%')
-      .css('background-position', '15px 13px');
-      
+      $('#speechButton').css('background', 'url(assets/img/micro_recorder_on.png)').css('background-repeat', 'no-repeat').css('background-size', '45%').css('background-position', '15px 13px');
+
       if (!this.isSpeechRecognizerInitalized) {
         App.Controller.room.initializeSpeechRecognizer();
       }
@@ -153,7 +155,7 @@
       }
     }
   },
-  keyDown: function(event){
+  keyDown: function(event) {
     if (event.target === document.getElementById("name")) {
       if (document.getElementById("name").value.length >= 15) {
         document.getElementById("name").value = App.shortenString(document.getElementById("name").value, 15);
