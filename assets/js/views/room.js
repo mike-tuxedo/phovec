@@ -101,12 +101,16 @@
   toggleSpeechOrder: function() {
 
     if (App.Controller.room.isSpeechRecognizerStarted) {
+    
       $('#speechButton').css('background', 'url(assets/img/micro_recorder_off.png)').css('background-repeat', 'no-repeat').css('background-size', '45%').css('background-position', '15px 13px');
-
+      $('.userNumber').hide();
       App.Controller.room.speechRecognizer.stop();
+      
     } else {
+    
       $('#speechButton').css('background', 'url(assets/img/micro_recorder_on.png)').css('background-repeat', 'no-repeat').css('background-size', '45%').css('background-position', '15px 13px');
-
+      $('.userNumber').show();
+      
       if (!this.isSpeechRecognizerInitalized) {
         App.Controller.room.initializeSpeechRecognizer();
       }
