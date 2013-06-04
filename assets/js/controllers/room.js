@@ -330,7 +330,8 @@
 
         inputField.html((inputField.html() + speechText));
         inputField.scrollTop(inputField[0].scrollHeight);
-
+        controller.setEndOfContenteditable(inputField[0]);
+        
       };
 
       if (!controller.isSpeechRecognizerStarted) {
@@ -349,6 +350,23 @@
     setTimeout(function() {
       controller.speechRecognizer.onresult = reference
     }, 1800);
+  },
+  setEndOfContenteditable: function(contentEditableElement){
+    var range,selection;
+    if(document.createRange){
+        range = document.createRange();
+        range.selectNodeContents(contentEditableElement);
+        range.collapse(false);
+        selection = window.getSelection();
+        selection.removeAllRanges();
+        selection.addRange(range);
+    }
+    else if(document.selection){ 
+        range = document.body.createTextRange();
+        range.moveToElementText(contentEditableElement);
+        range.collapse(false);
+        range.select();
+    }
   },
   enableSpeechButtons: function() {
     setTimeout(function() {
