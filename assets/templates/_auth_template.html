@@ -45,8 +45,8 @@
   </div>
   <div id="friends_of_email">
     <form id="mail_form" style="display: inline-block;">
-      <input type="text" class="email_input" id="mailAddress" placeholder="E-Mail Addresse"/>
-      <textarea type="text" class="email_input" id="mailDescription" placeholder="E-Mail Beschreibung"></textarea>
+      {{view Ember.TextField valueBinding="App.Controller.auth.emailAddress" class="email_input" id="mailAddress" placeholder="Adresse" }}
+      {{view Ember.TextArea valueBinding="App.Controller.auth.emailDesc" class="email_input" id="mailDescription" placeholder="Beschreibung" }}
       <input type="button" id="mailFormButton" value="Sende E-Mail" {{action "addMailInfo" target="App.Controller.auth"}} />
     </form>
     <h1 class="sidebar_info">INFO</h1>
@@ -54,7 +54,8 @@
     <p class="sidebar_text">
       Hier kannst du deine Freunde per E-Mailnachricht zum Chat einladen. Gib einfach nur die Adresse eines/einer FreundIn an
       und schreibe ihm/ihr zB eine persönliche Begrüßung. Mit klick auf Senden wird eine E-Mailnachricht versendet, 
-      mit dem Link zu dieser Seite. Wenn deine Freunde den Link im Browser öffnen, können sie mit dir in diesem Chatraum chatten.
+      mit dem Link zu dieser Seite. Wenn deine Freunde den Link im Browser öffnen, können sie mit dir in diesem Chatraum chatten. Bitte beachte, dass
+      du nur maximal 160 Zeichen in der Beschreibung mitschicken kannst.
     </p>
   </div>
 </div>

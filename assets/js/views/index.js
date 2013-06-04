@@ -16,7 +16,9 @@
           App.Router.router.replaceURL('/rooms');
         };
         if(this.activeStartImage === false){
-          document.getElementById("startButtonImage").style.backgroundImage = "url('assets/img/startbutton.png')";
+          var startbtn = document.getElementById("startButtonImage");
+          startbtn.style.backgroundPositionX = "-352px";
+          startbtn.style.cursor = "pointer";
           this.activeStartImage = true;       
         }
 
@@ -25,7 +27,7 @@
         document.getElementById("startButtonImage").onmouseout = null;
         document.getElementById("startButtonImage").onclick = null;
         if(this.activeStartImage === true){
-          document.getElementById("startButtonImage").style.backgroundImage = "url('assets/img/startbutton_disabled.png')";
+          document.getElementById("startButtonImage").style.backgroundPositionX = "0px";
           this.activeStartImage = false;
         }
         

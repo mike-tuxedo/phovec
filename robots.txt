@@ -1,4 +1,6 @@
-﻿# robots are not allowed to crawl any webside on this URL
+﻿# robots are not allowed to crawl any webside on this URL except of google's engines
 
-User-Agent: *
+User-agent: *
 Disallow: /
+User-agent: Googlebot
+Allow: /

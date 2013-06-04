@@ -2,7 +2,15 @@
   
   hiddenFieldCreated: false,
   
-  // Honeypot Captcha
+  shortEmailDesc: function(){
+    var shortDesc = this.get('emailDesc');
+    shortDesc = App.shortenString(shortDesc,160);
+    this.set('emailAddress','');
+    this.set('emailDesc','');
+    return shortDesc;
+  }.property('emailDesc'),
+  
+  // Honeypot Captcha to avoid bad-robots
   createHiddenTextInput: function(){
     
     if( this.get('hiddenFieldCreated') ){
@@ -22,7 +30,7 @@
   },
   
   // do not change reserved words: USER, URL
-  emailInvitationText: 'USER möchte dich auf Phovec einladen, die Adresse lautet URL.',
+  emailInvitationText: 'USER möchte dich auf Phovec einladen, die Adresse lautet URL',
   
   // facebook-auth
   
@@ -100,13 +108,12 @@
           
           friendList.innerHTML += '<li class="send_fb_message" onclick="App.Controller.auth.sendFbUserMessage(\''+friend.id+'\')"> Facebook-Nachricht an ' + friend.name + '</li>'
 
-          friendList.innerHTML += '<li class="send_mail" onclick="App.Controller.auth.sendMail({ subject:\'Einladungsmail\', from:\'phovec@nucular-bacon.com\', to:\''+friend.email+'\', cc: \''+friend.id+'@facebook.com\', text:\''+invitationText+'\', html:\'<b>'+invitationText+'</b>\'})"> Facebook-E-Mail an ' + friend.name + '</li>';
+          friendList.innerHTML += '<li class="send_mail" onclick="App.Controller.auth.sendMail({ subject:\'Einladungsmail\', from:\'phovec@nucular-bacon.com\', to:\''+friend.email+'\', cc: \''+friend.id+'@facebook.com\', text:\''+invitationText+'\', html:\'<h3>'+invitationText+'</h3>\'})"> Facebook-E-Mail an ' + friend.name + '</li>';
         
           friendList.innerHTML += '<hr>';
         });
 
-        document.getElementById('friends_of_facebook').appendChild(friendList);
-
+        $('#friends_of_facebook').html(friendList);
       });
 
     });
@@ -151,19 +158,19 @@
   sendFbUserMessage: function(id) {
 
     var FB = this.get('FB');
-
+    
     var msg = {};
     msg.to = id;
     msg.method = 'send';
     msg.name = 'Phovec Einladung';
     msg.link = location.href;
-    msg.picture = 'assets/img/favicon.png';
     msg.description = ('Ein Freund möchte dich auf Phovec einladen! Deine Einladungsadresse lautet: ' + location.href);
     msg.caption = 'invisible text';
     
     FB.ui(msg, function(response) {
 
       if (response && response.success) {
+        $('.sidebar_content').scrollTop(0);
         $('.confirm_send').fadeIn('slow');
         setTimeout(function(){ $('.confirm_send').fadeOut('slow');}, 2000);
       } else {
@@ -268,13 +275,12 @@
         
             entries.forEach(function(friend, index) {
   
-              friendList.innerHTML += '<li id=' + (friend.name ? 'noname' : friend.name) + ' onclick="App.Controller.auth.sendMail({ subject:\'Einladungsmail\', from: \'phovec@nucular-bacon.com\', to:\''+friend.email+'\', text:\''+invitationText+'\', html:\'<b>'+invitationText+'</b>\'})">' + (friend.name ? friend.name : friend.email) + '</li>';
+              friendList.innerHTML += '<li id=' + (friend.name ? 'noname' : friend.name) + ' onclick="App.Controller.auth.sendMail({ subject:\'Einladungsmail\', from: \'phovec@nucular-bacon.com\', to:\''+friend.email+'\', text:\''+invitationText+'\', html:\'<h3>'+invitationText+'</h3>\'})">' + (friend.name ? friend.name : friend.email) + '</li>';
               
               friendList.innerHTML += '<hr>'
             });
 
-            document.getElementById('friends_of_google').appendChild(friendList);
-            
+            $('#friends_of_google').html(friendList);            
           });
           
           controller.set('googleLoggedIn',true);
@@ -342,18 +348,22 @@
     
     $('#mailFormButton').attr('disabled',true);
     
-    var addresse = $('#mailAddress').val();
+    var addresse = this.get('emailAddress');
     
-    if(addresse.indexOf('@') !== -1 && $('#humanField').val().length === 0 ){ // avoid wrong mail-addresses and bot-attacks
+    if(addresse.indexOf('@') !== -1 && $('#humanField').val().length === 0 ){ // avoid wrong mail-addresses and robot-attacks
       
       var descr = this.get('emailInvitationText').replace('USER', Users.getLocalUser().name);
       descr = descr.replace('URL', location.href);
       
-      if($('#mailDescription').val().length){
-        descr += ' ' + $('#mailDescription').val();
+      var htmlDescr = '<h3>' + descr + '</h3>';
+      var textDescr = '\n' + descr;
+      
+      if(this.get('shortEmailDesc').length){
+        htmlDescr += '<p>Nachricht: ' + this.get('shortEmailDesc') + '</p>';
+        textDescr += '\nNachricht: ' + this.get('shortEmailDesc');
       }
       
-      this.sendMail({ subject:'Einladungsmail', from: 'phovec@nucular-bacon.com', to: addresse, text: descr, html: ('<b>' +descr+'</b>') });
+      this.sendMail({ subject:'Einladungsmail', from: 'phovec@nucular-bacon.com', to: addresse, text: textDescr, html: htmlDescr });
     }
     else{
       alert('Bitte gib eine valide E-Mail Adresse ein.')
@@ -377,8 +387,10 @@
         }
       });
       
+      $('.sidebar_content').scrollTop(0);
       $('.confirm_send').fadeIn('slow');
       setTimeout(function(){ $('.confirm_send').fadeOut('slow');}, 2000);
+      $('.email_input').val('');
       
       setTimeout(function(){
         $('#mailFormButton').attr('disabled',false);

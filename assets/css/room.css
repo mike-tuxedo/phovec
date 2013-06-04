@@ -148,13 +148,14 @@
 }
 
 .sidebar_content {
-  box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  overflow-y: scroll;
+  box-sizing:border-box;
+  -moz-box-sizing:border-box;
+  overflow-y: auto;
   display: inline-block;
   color: #888;
   line-height: 1.4;
   padding: 40px 20px;
+  width: 100%;
 }
 
 .sidebar_content ul {
@@ -437,6 +438,7 @@
 
 #videoboxes form#alterNameForm {
   width: 120px;
+  height: 18px;
   margin-left: 35%;
 }
 
@@ -625,6 +627,8 @@
 }
 
 .disabled {
+  background: #888;
+  color: #bbb;
   z-index: -1;
 }
 

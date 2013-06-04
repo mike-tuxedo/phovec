@@ -183,7 +183,7 @@ App.UserController = Ember.ObjectController.extend({
     } else {
       videoStream.enabled = false;
       $('.local video').css('opacity', '0');
-      $('#control_effects').addClass('disabled');
+       $('#control_effects').addClass('disabled');
 
       SignalingChannel.send({
         subject: "participant:video:mute",

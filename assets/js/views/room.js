@@ -3,6 +3,7 @@
   classNames: ['room-wrapper'],
   sidebar: false,
   showSidebar: function() {
+    window.App.Controller.room.stopAnimation();
     if (this.sidebar === false) {
       $('#scrollbar_fix').css('width', '310px');
       $('#social_sidebar_container').animate({

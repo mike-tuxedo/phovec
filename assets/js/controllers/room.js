@@ -1,23 +1,23 @@
 ﻿App.RoomController = Ember.ObjectController.extend({
   init: function() {
   },
+  interval: null,
   animation: function() {
-    var interval = setInterval(function() {
+    this.interval = setInterval(function() {
       animate($('#glow'));
     }, 3000);
 
     function animate(item) {
-      if (parseInt($('#social_sidebar_container').css('right')) === 0) {
-        clearInterval(interval);
-      } else {
-        item.animate({
-          boxShadow: '0 0 200px rgba(255,0,0,0.5)'
-        }, 3000, function() {
-          item.css('box-shadow', '0 0 0px rgba(255,0,0,1)')
-        });
-      }
+      item.animate({
+        boxShadow: '0 0 200px rgba(255,0,0,0.5)'
+      }, 3000, function() {
+        item.css('box-shadow', '0 0 0px rgba(255,0,0,1)')
+      });
     }
 
+  },
+  stopAnimation: function() {
+    clearInterval(this.interval);
   },
   addRemoteUsers: function() {
     var users = Users.getRemoteUsers();
@@ -207,6 +207,7 @@
     qr.text("qrcode_img", alteredURL);
   },
   handleClickEvent: function(e) {
+
     var clickedElement = e.target;
 
     // record video or audio
@@ -220,10 +221,12 @@
     }
 
     // if user double clicked on his name and clicks outside without pressing enter
-    if (clickedElement.id !== 'localHead' && clickedElement.tagName !== 'INPUT' && $('#videoboxes form#alterNameForm')[0]) {
+    if (App.Controller.room.isNameFormActivated(clickedElement)) {
       $('#videoboxes form#alterNameForm').submit()
     }
-
+  },
+  isNameFormActivated: function(clickedElement) {
+    return clickedElement.id !== 'local_name' && clickedElement.tagName !== 'INPUT' && $('#videoboxes form#alterNameForm')[0];
   },
   /* video/audio recording methods */
   toggleRecorder: function(element, type) {
@@ -565,8 +568,13 @@
       inputField.value = App.shortenString(inputField.value, 15);
     };
 
-    nameForm.innerHTML = '<input type="text" value="' + (Users.getLocalUser().name) + '" />';
+    var nameField = document.createElement('input');
+    nameField.type = 'text';
+    nameField.value = Users.getLocalUser().name;
+    nameForm.appendChild(nameField);
+
     element.replaceChild(nameForm, element.firstChild);
+    nameField.focus();
   },
   sendParticipantEditMsg: function() {
     var localUser = Users.getLocalUser();
