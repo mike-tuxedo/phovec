@@ -1,5 +1,6 @@
 ﻿App.RoomController = Ember.ObjectController.extend({
-  init: function() {},
+  init: function() {
+  },
   interval: null,
   animation: function() {
     this.interval = setInterval(function() {
@@ -7,14 +8,15 @@
     }, 3000);
 
     function animate(item) {
-        item.animate({
-          boxShadow: '0 0 200px rgba(255,0,0,0.5)'
-        }, 3000, function() {
-          item.css('box-shadow', '0 0 0px rgba(255,0,0,1)')
-        });
+      item.animate({
+        boxShadow: '0 0 200px rgba(255,0,0,0.5)'
+      }, 3000, function() {
+        item.css('box-shadow', '0 0 0px rgba(255,0,0,1)')
+      });
     }
+
   },
-  stopAnimation: function(){
+  stopAnimation: function() {
     clearInterval(this.interval);
   },
   addRemoteUsers: function() {
@@ -44,7 +46,7 @@
     }
 
     var boxes = document.getElementsByClassName('user').length;
-    window.App.Controller.user.set('userBoxes', boxes-1);
+    window.App.Controller.user.set('userBoxes', boxes - 1);
   },
   takeScreenShotFromChatroom: function() {
 
@@ -185,13 +187,12 @@
 
   },
   showInvitationQRCode: function() {
-    if($('#qrcode_img').html().indexOf('img') !== -1 ){
+    if ($('#qrcode_img').html().indexOf('img') !== -1) {
       return;
     }
-    
+
     var qr = new qrcode({
       size: 180,
-      background:"#888888",
       /*
        * L - [Default] Allows recovery of up to 7% data loss
        * M - Allows recovery of up to 15% data loss
@@ -203,29 +204,28 @@
 
     var alteredURL = location.href;
     alteredURL = alteredURL.replace('#', '%23');
-
     qr.text("qrcode_img", alteredURL);
   },
   handleClickEvent: function(e) {
-  
+
     var clickedElement = e.target;
-    
+
     // record video or audio
-    if ( clickedElement.tagName === 'DIV' && clickedElement.className.indexOf('record') !== -1 ) {
+    if (clickedElement.tagName === 'DIV' && clickedElement.className.indexOf('record') !== -1) {
       var type = (clickedElement.className.indexOf('Video') !== -1) ? 'video' : 'audio';
       App.Controller.room.toggleRecorder.call(App.Controller.room, clickedElement, type);
     }
     // transform speech to text
-    else if ( clickedElement.tagName === 'INPUT' && clickedElement.className === 'micro_recorder' ) {
+    else if (clickedElement.tagName === 'INPUT' && clickedElement.className === 'micro_recorder') {
       App.Controller.room.toggleSpeechToText.call(App.Controller.room, clickedElement);
     }
+
     // if user double clicked on his name and clicks outside without pressing enter
-    if( App.Controller.room.isNameFormActivated(clickedElement) ){
+    if (App.Controller.room.isNameFormActivated(clickedElement)) {
       $('#videoboxes form#alterNameForm').submit()
     }
-    
   },
-  isNameFormActivated: function(clickedElement){
+  isNameFormActivated: function(clickedElement) {
     return clickedElement.id !== 'local_name' && clickedElement.tagName !== 'INPUT' && $('#videoboxes form#alterNameForm')[0];
   },
   /* video/audio recording methods */
@@ -410,22 +410,22 @@
 
         // video/audio recording of myself or remote users
         if (controller.doesContainWord(spokeOrder, 'video') || controller.doesContainWord(spokeOrder, 'audio')) {
-          
-          if(controller.doesContainWord(spokeOrder, 'aufnahme')){
+
+          if (controller.doesContainWord(spokeOrder, 'aufnahme')) {
             if (controller.doesContainWord(spokeOrder, 'start')) {
               controller.executeSpeechOrder('recordUser', spokeOrder);
             } else if (controller.doesContainWord(spokeOrder, 'stop')) {
               controller.executeSpeechOrder('stopRecordingUser', spokeOrder);
             }
-            
+
             // switch on/off local-video or local-audio
-          } else if (controller.doesContainWord(spokeOrder, 'an') || controller.doesContainWord(spokeOrder, 'aus') ) {
-              controller.executeSpeechOrder('switchLocalMedia', spokeOrder);
-          } 
-          
+          } else if (controller.doesContainWord(spokeOrder, 'an') || controller.doesContainWord(spokeOrder, 'aus')) {
+            controller.executeSpeechOrder('switchLocalMedia', spokeOrder);
+          }
+
         }
         // show help pop-up-window
-        else if ( controller.doesContainWord(spokeOrder, 'hilfe') ) {
+        else if (controller.doesContainWord(spokeOrder, 'hilfe')) {
           controller.executeSpeechOrder('help', spokeOrder);
         }
         // hang up
@@ -493,51 +493,50 @@
         VARecorder.stopRecording();
 
         break;
-      
+
       case 'switchLocalMedia':
-        
+
         var medium = controller.doesContainWord(sentence, 'video') ? 'video' : 'audio';
         var switchMode = controller.doesContainWord(sentence, 'an') ? 'on' : 'off';
-        
-        if( medium === 'video' ){
-        
-          if(!FaceDetector.closed){
+
+        if (medium === 'video') {
+
+          if (!FaceDetector.closed) {
             $('#faceDetectorOutput').toggle();
           }
-          
-          var localUserVideoStream = Users.getLocalUser().stream ? Users.getLocalUser().stream.getVideoTracks()[0] : { enabled: false };
-          
-          if( switchMode === 'on' && !localUserVideoStream.enabled ){
+
+          var localUserVideoStream = Users.getLocalUser().stream ? Users.getLocalUser().stream.getVideoTracks()[0] : {
+            enabled: false
+          };
+
+          if (switchMode === 'on' && !localUserVideoStream.enabled) {
+            App.Controller.user.controlVideo();
+          } else if (switchMode === 'off' && localUserVideoStream.enabled) {
             App.Controller.user.controlVideo();
           }
-          else if( switchMode === 'off' && localUserVideoStream.enabled ){
-            App.Controller.user.controlVideo();
-          }
-          
-        }
-        else{
-        
+
+        } else {
+
           var localUserAudioStream = Users.getLocalUser().stream.getAudioTracks()[0];
-          
-          if( switchMode === 'on' && !localUserAudioStream.enabled ){
+
+          if (switchMode === 'on' && !localUserAudioStream.enabled) {
+            App.Controller.user.controlAudio();
+          } else if (switchMode === 'off' && localUserAudioStream.enabled) {
             App.Controller.user.controlAudio();
           }
-          else if( switchMode === 'off' && localUserAudioStream.enabled ){
-            App.Controller.user.controlAudio();
-          }
-          
+
         }
-        
+
         break;
-      
+
       case 'help':
-      
+
         $('#help').fadeIn('fast');
         break;
-        
+
       case 'rename':
 
-        controller.showAlterNameField($('.user.local #local_name')[0]);
+        controller.showAlterNameField($('.user.local .userName')[0]);
         break;
 
       case 'hangUp':
@@ -562,41 +561,40 @@
   isSpeechRecognizerInitalized: null,
   isSpeechRecognizerStarted: false,
   updateUser: function(user) {
-    $('#' + user.id + ' span').html(user.number + " " + user.name);
+    $('#' + user.id + ' .userHead .userName').html(user.name);
+    $('#' + user.id + ' .userHead .userNumber').html(user.number);
   },
-  showAlterNameField: function(spanElement){
-  
+  showAlterNameField: function(element) {
     var nameForm = document.createElement('form');
     nameForm.id = 'alterNameForm';
-    
-    nameForm.onsubmit = function(e){
+
+    nameForm.onsubmit = function(e) {
       var inputField = nameForm.childNodes[0];
-      if(inputField.value.length >= 3){ 
-        Users.getLocalUser().name = inputField.value; 
-        spanElement.innerHTML = inputField.value; 
+      if (inputField.value.length >= 3) {
+        Users.getLocalUser().name = inputField.value;
+        element.innerHTML = inputField.value;
         App.Controller.room.sendParticipantEditMsg();
+      } else {
+        element.innerHTML = Users.getLocalUser().name;
       }
-      else{
-        spanElement.innerHTML = Users.getLocalUser().name;
-      }
-      
+
       e.preventDefault();
     };
-    
-    nameForm.onkeydown = function(){
+
+    nameForm.onkeydown = function() {
       var inputField = nameForm.childNodes[0];
-      inputField.value = App.shortenString(inputField.value,15);
+      inputField.value = App.shortenString(inputField.value, 15);
     };
-    
+
     var nameField = document.createElement('input');
     nameField.type = 'text';
     nameField.value = Users.getLocalUser().name;
     nameForm.appendChild(nameField);
-    
-    spanElement.replaceChild(nameForm,spanElement.firstChild);
+
+    element.replaceChild(nameForm, element.firstChild);
     nameField.focus();
   },
-  sendParticipantEditMsg: function(){
+  sendParticipantEditMsg: function() {
     var localUser = Users.getLocalUser();
     SignalingChannel.send({
       subject: "participant:edit",
