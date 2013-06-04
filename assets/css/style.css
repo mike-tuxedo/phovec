@@ -144,6 +144,8 @@ body {
   background-image: url('../img/background.jpg');
   background-repeat: no-repeat;
   background-size: 100%;
+  min-width: 720px;
+  min-height: 576px;
 }
 
 .wrapper{

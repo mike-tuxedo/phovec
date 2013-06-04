@@ -3,6 +3,7 @@
   },
   interval: null,
   animation: function() {
+    console.log('starte blureffekt');
     this.interval = setInterval(function() {
       animate($('#glow'));
     }, 3000);
