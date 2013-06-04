@@ -105,7 +105,7 @@
           friendList.innerHTML += '<hr>';
         });
 
-        document.getElementById('friends_of_facebook').appendChild(friendList);
+        document.getElementById('friends_of_facebook').textContent(friendList);
 
       });
 
@@ -273,7 +273,7 @@
               friendList.innerHTML += '<hr>'
             });
 
-            document.getElementById('friends_of_google').appendChild(friendList);
+            document.getElementById('friends_of_google').textContent(friendList);
             
           });
           
