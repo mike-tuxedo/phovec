@@ -206,7 +206,7 @@ var WebRTC = {
       };
 
       var dropAreaVideo = $('#' + remoteUserId + " .videoWrapper").get(0);
-      var dropAreaForm = $('#' + remoteUserId + " .videoWrapper form").get(0);
+      var dropAreaForm = $('#' + remoteUserId + " form").get(0);
       dropAreaVideo.addEventListener('dragover', dragOver, false);
       dropAreaVideo.addEventListener('drop', drop, false);
       dropAreaForm.addEventListener('dragover', dragOver, false);
@@ -411,8 +411,8 @@ var WebRTC = {
           App.Router.router.replaceURL('/room/full');
           break;
         case "room:unknown":
-          App.handleURL('/room/unknown');
-          App.Router.router.replaceURL('/room/unknown');
+          //App.handleURL('/room/unknown');
+          //App.Router.router.replaceURL('/room/unknown');
           break;
         default:
           App.handleURL('/error');

@@ -4,12 +4,26 @@
 </div>
 <div class="videoWrapper">
   <div class="stateMute"></div>
-  <img class='defaultAvatar' src="assets/img/avatar.jpg"/>
   <div class="recordLocalVideo"></div>
   <div class="recordLocalAudio"></div>
-  <video autoplay></video>
+  <img class='defaultAvatar' src="assets/img/avatar.jpg"/>
+  <video autoplay muted></video>
   <audio autoplay loop muted></audio>
   <canvas id="faceDetectorOutput"></canvas>
+  <div id="videoEffects">
+    <div {{action putGlassesOnUser target="view" }} class="effectButton" id="glasses" ></div>
+    <div {{action putHatOnUser target="view" }} class="effectButton" id="hat" ></div>
+    <div {{action putBeardOnUser target="view" }} class="effectButton" id="beard" ></div>
+    <div {{action controlEffects target="view" }} class="effectButton" id="effect_off" >
+      kein Effekt
+    </div>
+    <div {{action controlEffects target="view" }} class="effectButton" id="effect_off" >
+      kein Effekt
+    </div>
+    <div {{action controlEffects target="view" }} class="effectButton" id="effect_off" >
+      kein Effekt
+    </div>
+  </div>
 </div>
 
 <div id="video_options">
@@ -21,20 +35,6 @@
   </div>
   <div class="video_options_buttons disabled" id="control_effects" {{ action controlEffects target="view" }}>
     Effekte an/aus
-  </div>
-</div>
-<div id="videoEffects">
-  <div {{action putGlassesOnUser target="view" }} class="effectButton" id="glasses" ></div>
-  <div {{action putHatOnUser target="view" }} class="effectButton" id="hat" ></div>
-  <div {{action putBeardOnUser target="view" }} class="effectButton" id="beard" ></div>
-  <div {{action controlEffects target="view" }} class="effectButton" id="effect_off" >
-    kein Effekt
-  </div>
-  <div {{action controlEffects target="view" }} class="effectButton" id="effect_off" >
-    kein Effekt
-  </div>
-  <div {{action controlEffects target="view" }} class="effectButton" id="effect_off" >
-    kein Effekt
   </div>
 </div>
 {{/view}}
