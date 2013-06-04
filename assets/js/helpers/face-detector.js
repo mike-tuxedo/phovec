@@ -106,7 +106,6 @@
       else if(type === 'beard')
         ctx.drawImage(FaceDetector.beard, (this.comp[i].x - width / 2) * m, (this.comp[i].y - width / 2) * m, (this.comp[i].width + width) * m, (this.comp[i].height + width) * m);
     }
-    
 	}
 };
 
