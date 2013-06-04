@@ -10,13 +10,13 @@
   background: rgba(255,255,255,0);
 }
 
-.userName{
+.userName {
   display: inline;
   vertical-align: middle;
   margin-left: 25px;
 }
 
-#edit_name{
+#edit_name {
   cursor: pointer;
   border: 1px solid #aaa;
   border-radius: 5px;
@@ -229,7 +229,7 @@
   border: 2px solid #66666B;
 }
 
-.load_progress_bar_auth{
+.load_progress_bar_auth {
   display: none;
 }
 
@@ -311,7 +311,7 @@
 
 #videoboxes {
   display: inline-block;
-  margin: 0px auto 0px auto;
+  margin: 10px auto 0px auto;
 }
 
 #videoboxes .user {
@@ -423,6 +423,7 @@
 }
 
 .user .input {
+  font-size: 11px;
   background-color: #ffffff;
   -moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;
@@ -438,6 +439,7 @@
 }
 
 .user .output {
+  font-size: 11px;
   background-color: #ffffff;
   -moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;
@@ -446,6 +448,7 @@
   height: 45px;
   border: 2px solid #a6afb6;
   overflow-y: auto;
+  overflow-x: hidden;
   margin-top: -1px;
 }
 
@@ -851,7 +854,7 @@
 .file-transfer-progress {
   display: none;
   position: absolute;
-  bottom:0px;
+  bottom: 0px;
   z-index: 5;
   bottom: 0px;
   width: 100%;
@@ -872,7 +875,7 @@
   z-index: 1;
   height: 30px;
   width: 100%;
-  overflow:hidden;
+  overflow: hidden;
 }
 
 .file-transfer-progress .overlay {
@@ -934,15 +937,55 @@
 }
 
 .file-transfer-progress .info {
-  font-size: 13px;
+  font-size: 9px;
   color: #000;
   width: 100%;
   height: 14px;
   position: absolute;
   z-index: 1;
-  line-height: 30px;
+  line-height: 14px;
   vertical-align: middle;
   bottom: 2px;
   left: 3px;
-  
+}
+
+.fileDropped {
+  padding: 1px 1px 1px 3px;
+  height: 19px;
+  width: 100%;
+  float: left;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+.fileDropped img {
+  float: left;
+  margin-top: 1px;
+}
+
+.fileDropped a {
+  text-decoration: underline;
+}
+
+.fileDropped .fileName {
+  float: left;
+  margin-left: 5px;
+  height: 19px;
+  line-height: 19px;
+  vertical-align: middle;
+}
+
+.fileDropped .fileStatus {
+  float: right;
+  line-height: 19px;
+  vertical-align: middle;
+  height: 19px;
+  margin-right: 3px;
+}
+
+.fileDropped .fileStatus input {
+  width: 50px;
+  height: 18px;
+  font-size: 8px;
 }

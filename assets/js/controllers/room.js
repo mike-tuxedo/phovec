@@ -486,10 +486,10 @@
 
       case 'stopRecordingUser':
 
-        $('.recordLocalVideo').css('background', 'url(./assets/img/stop_record_video.png)');
-        $('.recordLocalAudio').css('background', 'url(./assets/img/stop_record_audio.png)');
-        $('.recordRemoteVideo').css('background', 'url(./assets/img/stop_record_video.png)');
-        $('.recordRemoteAudio').css('background', 'url(./assets/img/stop_record_audio.png)');
+        $('.recordLocalVideo').css('background', 'url(./assets/img/stop_record_video.png)').css('background-repeat','no-repeat');
+        $('.recordLocalAudio').css('background', 'url(./assets/img/stop_record_audio.png)').css('background-repeat','no-repeat');
+        $('.recordRemoteVideo').css('background', 'url(./assets/img/stop_record_video.png)').css('background-repeat','no-repeat');
+        $('.recordRemoteAudio').css('background', 'url(./assets/img/stop_record_audio.png)').css('background-repeat','no-repeat');
 
         VARecorder.stopRecording();
 
