@@ -462,6 +462,7 @@
   background: #66666b;
   color: white;
   font-weight: bold;
+  font-size: 10pt;
 }
 
 .video_options_buttons:hover {
@@ -639,6 +640,12 @@
   z-index: -1;
 }
 
+.disabled:hover {
+  background: #888 !important;
+  color: #bbb !important;
+  z-index: -1 !important;
+}
+
 /*----------HELP---------*/
 #help h1 {
   margin-bottom: 10px;
@@ -699,6 +706,7 @@
   border-bottom-right-radius: 70px;
   box-shadow: 0px 0px 15px #444;
   -webkit-box-shadow: 0px 0px 15px #444;
+  margin-top: -8px;
 }
 
 #show_help:hover {
