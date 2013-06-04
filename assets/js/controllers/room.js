@@ -1,22 +1,21 @@
 ﻿App.RoomController = Ember.ObjectController.extend({
   init: function() {},
+  interval: null,
   animation: function() {
-    var interval = setInterval(function() {
+    this.interval = setInterval(function() {
       animate($('#glow'));
     }, 3000);
 
     function animate(item) {
-      if (parseInt($('#social_sidebar_container').css('right')) === 0) {
-        clearInterval(interval);
-      } else {
         item.animate({
           boxShadow: '0 0 200px rgba(255,0,0,0.5)'
         }, 3000, function() {
           item.css('box-shadow', '0 0 0px rgba(255,0,0,1)')
         });
-      }
     }
-
+  },
+  stopAnimation: function(){
+    clearInterval(this.interval);
   },
   addRemoteUsers: function() {
     var users = Users.getRemoteUsers();
