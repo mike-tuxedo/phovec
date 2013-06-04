@@ -204,7 +204,7 @@
     var alteredURL = location.href;
     alteredURL = alteredURL.replace('#', '%23');
 
-    qr.text("qrcode_box", alteredURL);
+    qr.text("qrcode_img", alteredURL);
   },
   handleClickEvent: function(e) {
     var clickedElement = e.target;
