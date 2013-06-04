@@ -37,7 +37,7 @@
   FB: null, // FB Instance of facebook-loader
   FBFriendList: null,
   fbLoggedIn: false,
-
+  
   fbLogin: function() {
     
     var controller = this;
@@ -59,7 +59,7 @@
           if (response.authResponse) {
             controller.setupFBInfo();
           } else {
-            console.log('login in failed due to: ', response);
+            trace('AuthController FBLogin: login in failed due to: ', response);
           }
         });
       }
@@ -87,18 +87,14 @@
     controller.queryFbAPI('/me', function(response) {
       
       var userName = response.first_name + ' ' + response.last_name;
-      var hello = response.locale === 'de_DE' ? 'Hallo ' : 'Hello ';
-
-      //document.getElementById('userInfo').innerHTML = '<img src="https://graph.facebook.com/'+ response.id +'/picture" width="100" height="100" /> ' +
-      //  '<p>'+ hello + response.first_name + ' ' + response.last_name + '</p>';
       
       if( controller.get('FBFriendList') ){ // do not load list again
         controller.setupFBFriendList( controller.get('FBFriendList') );
       }
       controller.queryFbAPI('/me/friends', function(response) {
         
-        controller.setupFBFriendList(response);
         controller.set('FBFriendList',response);
+        controller.setupFBFriendList(response);
         
       });
 
@@ -220,7 +216,7 @@
     var win = window.open(this.get('googleRequestURL'), "Google-Login", 'width=400, height=300');
     $('.load_progress_bar_auth').show();
     
-    var timeout = 30000;
+    var timeout = 30000; 
     var timePast = 0;
     
     var pollTimer = setInterval(function() {
@@ -238,10 +234,8 @@
         controller.checkValidateToken(acToken);
         
       }
-      else
-        console.log('AuthController GoogleLogin: error happend');
-      
-      if(timePast > timeout){
+      else if(timePast > timeout){
+        trace('AuthController GoogleLogin: error happend: timeout');
         clearInterval(pollTimer);
         win.close();
       }
@@ -435,10 +429,10 @@
       
     }
     else{
-      console.log('Auth-Controller sendMail: not enough arguments: ', mailSettings);
+      trace('Auth-Controller sendMail: not enough arguments: ', mailSettings);
     }
   },
   getQrCode: function(){
-    console.log('show qrcode');
+    trace('show qrcode');
   }
 });
