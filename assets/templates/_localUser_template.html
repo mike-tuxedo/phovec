@@ -4,7 +4,7 @@
 </div>
 <div class="videoWrapper">
   <div class="stateMute"></div>
-  <img class='bgAvatar' src="assets/img/avatar.jpg"/>
+  <img class='defaultAvatar' src="assets/img/avatar.jpg"/>
   <div class="recordLocalVideo"></div>
   <div class="recordLocalAudio"></div>
   <video autoplay></video>
@@ -14,10 +14,10 @@
 
 <div id="video_options">
   <div class="video_options_buttons" id="control_audio" {{ action controlAudio target="view" }}>
-    on/off Audio
+    Ein/Aus Audio
   </div>
   <div class="video_options_buttons" id="control_video" {{ action controlVideo target="view" }}>
-    on/off Video
+    Ein/Aus Video
   </div>
   <div class="video_options_buttons disabled" id="control_effects" {{ action controlEffects target="view" }}>
     Effekte
