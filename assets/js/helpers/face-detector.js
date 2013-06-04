@@ -114,13 +114,13 @@
         ctx.drawImage(FaceDetector.glasses2, (this.comp[i].x - width / 2) * m, (this.comp[i].y - width / 2) * m, (this.comp[i].width + width) * m, (this.comp[i].height + width) * m);
       }
       else if(type === 'hat'){
-        ctx.drawImage(FaceDetector.hat, ((this.comp[i].x - width / 2) * m) /1.8, (-130 * m) /2, (this.comp[i].width + width) * m * 2, (this.comp[i].height + width) * m * 2);
+        ctx.drawImage(FaceDetector.hat, ((this.comp[i].x - width / 2) * m) /1.8, (this.comp[i].y - width / 2) * m * -5, (this.comp[i].width + width) * m * 2, (this.comp[i].height + width) * m * 2);
       }
       else if(type === 'beard'){
         ctx.drawImage(FaceDetector.beard, (this.comp[i].x - width / 2) * m, (this.comp[i].y - width / 2) * m, (this.comp[i].width + width) * m, (this.comp[i].height + width) * m);
       }
       else if(type === 'hair'){
-        ctx.drawImage(FaceDetector.hair, (this.comp[i].x - width / 2) * m, (this.comp[i].y - width / 2) * m, (this.comp[i].width + width) * m, (this.comp[i].height + width) * m);
+        ctx.drawImage(FaceDetector.hair, (this.comp[i].x - width / 2) * m * 0.7, ((this.comp[i].y - width / 2) * m * 0.02), (this.comp[i].width + width) * m * 1.5, (this.comp[i].height + width) * m * 1.5);
       }
     }
     

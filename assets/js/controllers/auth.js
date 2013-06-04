@@ -168,16 +168,17 @@
   
   setupFBFriendList: function(response){
     
-    controller.sortFBEntries(response.data);        
-    controller.setFBMailAttributes(response.data);  
+    this.sortFBEntries(response.data);        
+    this.setFBMailAttributes(response.data);  
     
     if($('ul')){
       $('ul').remove();
     }
     
+    var userName = response.first_name + ' ' + response.last_name;
     var friendList = document.createElement('ul');
     
-    var invitationText = controller.get('emailInvitationText').replace('USER', userName);
+    var invitationText = this.get('emailInvitationText').replace('USER', userName);
     invitationText = invitationText.replace('URL', location.href);
     
     response.data.forEach(function(friend, index) {
@@ -210,6 +211,7 @@
   googleRequestURL : null,
   
   googleFriendList: null,
+  googleUsername: '',
   googleLoggedIn : false,
   
   googleLogin: function(){
@@ -274,7 +276,7 @@
     var controller = this;
     
     if( controller.get('googleFriendList') ){ // do not load list again
-      controller.setupGoogleFriendList( controller.get('googleFriendList') );
+      controller.setupGoogleFriendList( controller.get('googleFriendList'), controller.get('googleUsername') );
     }
     else{
     
@@ -283,10 +285,12 @@
           data: null,
           success: function(response) { // when function is called access-token is valid
             
+            controller.set('googleUsername',response.name);
+            
             controller.getUserContacts(function(entries){
               
               controller.set('googleFriendList',entries);
-              controller.setupGoogleFriendList(entries);
+              controller.setupGoogleFriendList(entries, response.name);
               
             });
             
@@ -354,14 +358,14 @@
       return results[1];
   },
   
-  setupGoogleFriendList: function(entries){
+  setupGoogleFriendList: function(entries,username){
   
     if($('ul')){
       $('ul').remove();
     }
     
     var friendList = document.createElement('ul');
-    var invitationText = controller.get('emailInvitationText').replace('USER', response.name);
+    var invitationText = this.get('emailInvitationText').replace('USER', username);
     invitationText = invitationText.replace('URL', location.href);
 
     entries.forEach(function(friend, index) {

@@ -582,6 +582,28 @@
   background-size: 100% 100%;
 }
 
+#classes2 {
+  background-image: url(../img/effects/glasses2.png);
+  background-size: 100% 100%;
+}
+
+#classes2:hover {
+  background: #fff;
+  background-image: url(../img/effects/glasses2.png);
+  background-size: 100% 100%;
+}
+
+#hair {
+  background-image: url(../img/effects/hair.png);
+  background-size: 100% 100%;
+}
+
+#hair:hover {
+  background: #fff;
+  background-image: url(../img/effects/hair.png);
+  background-size: 100% 100%;
+}
+
 #effect_off {
   background-image: url(../img/effects/no_effects.png);
   background-size: 90%;
