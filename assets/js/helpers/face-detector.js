@@ -8,7 +8,10 @@
       this.canvas.style.display = 'inline';
     }
     else{
-      this.canvas.style.display = 'none';
+      //Bug-Fix made by Lukas
+      if(this.canvas !== undefined){
+        this.canvas.style.display = 'none';
+      }
     }
     this._closed = val;
   },

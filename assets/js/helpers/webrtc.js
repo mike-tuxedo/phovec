@@ -193,7 +193,7 @@ var WebRTC = {
             a.onclick = function() {
               fileStatus.innerHTML = "Gespeichert";
             }
-           
+
             fileStatus.appendChild(a);
             trace("webrtc", "RECEIVED File", "-");
           }
@@ -205,6 +205,13 @@ var WebRTC = {
     };
     dataChannel.onopen = function(event) {
       trace("webrtc", "DataChannel onopen", event);
+
+      $("#" + remoteUserId + " .connectionInfo").text("Verbindung aufgebaut");
+      $("#" + remoteUserId + " .connectionInfo").css("background", "#36ba3c");
+      setTimeout(function() {
+        $("#" + remoteUserId + " form").fadeIn("slow");
+        $("#" + remoteUserId + " .connectionInfo").hide();
+      }, 1500);
 
       var dragOver = function(event) {
         //stop dragover event is needed, so drop event works in chrome
