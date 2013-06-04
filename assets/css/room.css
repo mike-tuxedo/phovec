@@ -665,7 +665,7 @@
   height: 32px;
   position: absolute;
   background: url(../img/stop_record_video.png);
-  z-index: 2;
+  z-index: 10;
   background-repeat: no-repeat;
   top: 48px;
   left: 10px;
@@ -684,7 +684,7 @@
   height: 32px;
   position: absolute;
   background: url(../img/stop_record_audio.png);
-  z-index: 2;
+  z-index: 10;
   background-repeat: no-repeat;
   top: 80px;
   left: 10px;
