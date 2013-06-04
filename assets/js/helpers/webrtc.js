@@ -38,20 +38,19 @@ var WebRTC = {
       var user = Users.getRemoteUser(remoteUserId);
       user.stream = event.stream;
 
-      if (user.stream.getVideoTracks()[0].enabled === false) {
-        $('#' + remoteUserId + ' video').css('opacity', '1');
+      console.log(user, new Date().getTime());
+
+      if (user.isAudioEnabled !== false) {
+        WebRTC.handleRecordingButtons(user.id, 'audio', true);
       }
-      if (user.stream.getAudioTracks()[0].enabled === false) {
-        $('#' + remoteUserId + ' .stateMute').show();
+      if (user.isVideoEnabled !== false) {
+        WebRTC.handleRecordingButtons(user.id, 'video', true);
       }
 
       $('#' + remoteUserId + ' video').attr('src', URL.createObjectURL(event.stream));
       if (navigator.browser[0] === "Firefox") {
         $('#' + remoteUserId + ' video').get(0).play();
       }
-
-      WebRTC.handleRecordingButtons(remoteUserId, 'video', true);
-      WebRTC.handleRecordingButtons(remoteUserId, 'audio', true);
     };
     peerConnection.onremovestream = function(event) {
       trace("webrtc", "Remote Stream removed", event);
@@ -65,14 +64,18 @@ var WebRTC = {
       //Check if local stream is already added, if not add it
       if (userLocal.stream !== undefined) {
         var localStream = userRemote.peerConnection.getLocalStreams()[0];
+        //When there is already a added stream
         if (localStream !== undefined) {
+          //When the stream isn't already the added one
           if (localStream.id !== userLocal.stream.id) {
-            trace("webrtc", "Add local Stream", "-");
+            trace("webrtc", "Add local Stream", userLocal.stream);
+            WebRTC.sendTrackInfo(userLocal);
             userRemote.peerConnection.addStream(userLocal.stream);
             return;
           }
         } else {
           trace("webrtc", "Add local Stream", "-");
+          WebRTC.sendTrackInfo(userLocal);
           userRemote.peerConnection.addStream(userLocal.stream);
           return;
         }
@@ -169,7 +172,7 @@ var WebRTC = {
     dataChannel.onopen = function(event) {
       trace("webrtc", "DataChannel onopen", event);
 
-      var dropArea = $('#' + remoteUserId + " form div").get(0);
+      var dropArea = $('#' + remoteUserId).get(0);
       dropArea.addEventListener('dragover', function(event) {
         //stop dragover event is needed, so drop event works in chrome
         event.stopPropagation();
@@ -371,6 +374,22 @@ var WebRTC = {
       trace("webrtc", "Failure calling createOffer", event);
     }, MEDIA_CONSTRAINTS_OFFER);
   },
+  sendTrackInfo: function(userLocal) {
+    if (userLocal.stream.getVideoTracks()[0].enabled === false) {
+      SignalingChannel.send({
+        subject: "participant:video:mute",
+        roomHash: userLocal.roomHash,
+        userHash: userLocal.id
+      });
+    }
+    if (userLocal.stream.getAudioTracks()[0].enabled === false) {
+      SignalingChannel.send({
+        subject: "participant:audio:mute",
+        roomHash: userLocal.roomHash,
+        userHash: userLocal.id
+      });
+    }
+  },
   handleSignalingInit: function(event) {
     trace("webrtc", "Signaling Init", event);
     var data = event.detail;
@@ -493,6 +512,8 @@ var WebRTC = {
         WebRTC.handleRecordingButtons(data.userId, 'audio', false);
         var userRemote = Users.getRemoteUser(data.userId);
         $('#' + userRemote.id + ' .stateMute').show();
+        //for setting buttons visible when the stream arrives
+        userRemote.isAudioEnabled = false;
         break;
       case "audio:unmute":
         WebRTC.handleRecordingButtons(data.userId, 'audio', true);
@@ -503,15 +524,11 @@ var WebRTC = {
         WebRTC.handleRecordingButtons(data.userId, 'video', false);
         var userRemote = Users.getRemoteUser(data.userId);
         $('#' + userRemote.id + ' video').css('opacity', '0');
+        //for setting buttons visible when the stream arrives
+        userRemote.isVideoEnabled = false;
         break;
       case "video:unmute":
-        if (WebRTC.firstVideoUnmuteMessage) {
-          WebRTC.firstVideoUnmuteMessage = false;
-          WebRTC.handleRecordingButtons(data.userId, 'video', true);
-          WebRTC.handleRecordingButtons(data.userId, 'audio', true);
-        } else {
-          WebRTC.handleRecordingButtons(data.userId, 'video', true);
-        }
+        WebRTC.handleRecordingButtons(data.userId, 'video', true);
         var userRemote = Users.getRemoteUser(data.userId);
         $('#' + userRemote.id + ' video').css('opacity', '1');
         break;
@@ -574,6 +591,8 @@ type: "local",
 _name: undefined,
 _id: undefined,
 _country: undefined,
+// adding stream to user and his peerConnection
+// event "onaddstream" gets called 500ms after adding
 set stream(stream) {
 this._stream = stream;
 
@@ -709,4 +728,3 @@ return user;
   this.removeLocalUser();
 }
 };
-
