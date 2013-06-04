@@ -51,9 +51,6 @@ App.UserController = Ember.ObjectController.extend({
     //Video buttons for local user
     var buttonWidth = videoWidth / 3;
     $('.video_options_buttons').css('width', buttonWidth + 'px');
-    $('#control_video').css('margin-left', buttonWidth + 'px');
-    $('#control_effects').css('margin-left', buttonWidth * 2 - 1 + 'px');
-
   },
   onGetMediaSuccess: function(stream) {
     this.mediaOptions.isAdmissionMissing = false;

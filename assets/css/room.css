@@ -432,7 +432,6 @@
 }
 
 .video_options_buttons {
-  position: absolute;
   cursor: pointer;
   width: 194px;
   height: 25px;
@@ -450,21 +449,19 @@
 }
 
 #control_audio {
-  border-left: 1px solid #444444;
   border-bottom: 1px solid #444444;
   border-bottom-left-radius: 5px;
 }
 
 #control_effects {
-  border-right: 1px solid #444444;
   border-bottom: 1px solid #444444;
   border-bottom-right-radius: 5px;
-  margin-left: 400px;
+  float: left;
 }
 
 #control_video {
   border-bottom: 1px solid #444444;
-  margin-left: 200px;
+  float: left;
 }
 
 #hangupButton {
