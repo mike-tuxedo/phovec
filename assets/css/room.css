@@ -352,9 +352,9 @@
 .user .micro_recorder {
   position: absolute;
   right: 20px;
-  top: 35px;
+  top: 42px;
   z-index: 10;
-  width: 21px;
+  width: 18px;
 }
 
 .chatFaces {
@@ -409,7 +409,7 @@
   -webkit-box-sizing: border-box;
   box-sizing: border-box;
   width: 100%;
-  height: 35px;
+  height: 25px;
   border: 2px solid #a6afb6;
   border-bottom-left-radius: 5px;
   border-bottom-right-radius: 5px;
@@ -424,7 +424,7 @@
   -webkit-box-sizing: border-box;
   box-sizing: border-box;
   width: 100%;
-  height: 35px;
+  height: 45px;
   border: 2px solid #a6afb6;
   overflow-y: auto;
   margin-top: -1px;
