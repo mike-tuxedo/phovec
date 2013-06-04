@@ -40,6 +40,10 @@
         imageWidth = this.glasses.width;
         imageHeight = this.glasses.height;
       }  
+      else if(type === 'glasses2'){
+        imageWidth = this.glasses2.width;
+        imageHeight = this.glasses2.height;
+      } 
       else if(type === 'hat'){
         imageWidth = this.hat.width;
         imageHeight = this.hat.height;
@@ -47,6 +51,10 @@
       else if(type === 'beard'){
         imageWidth = this.beard.width;
         imageHeight = this.beard.height;
+      }
+      else if(type === 'hair'){
+        imageWidth = this.hair.width;
+        imageHeight = this.hair.height;
       }
       
       var width = imageWidth / 4 * 0.8;
@@ -99,12 +107,21 @@
 		
 		for(var i = this.comp.length; i--; ) {
       // drawImage(img,x,y,width,height);
-      if(type === 'glasses')
+      if(type === 'glasses'){
         ctx.drawImage(FaceDetector.glasses, (this.comp[i].x - width / 2) * m, (this.comp[i].y - width / 2) * m, (this.comp[i].width + width) * m, (this.comp[i].height + width) * m);
-      else if(type === 'hat')
-        ctx.drawImage(FaceDetector.hat, ((this.comp[i].x - width / 2) * m) /1.8, (-130 * m) /2, (this.comp[i].width + width) * m * 2, (this.comp[i].height + width) * m * 2);
-      else if(type === 'beard')
+      }
+      else if(type === 'glasses2'){
+        ctx.drawImage(FaceDetector.glasses2, (this.comp[i].x - width / 2) * m, (this.comp[i].y - width / 2) * m, (this.comp[i].width + width) * m, (this.comp[i].height + width) * m);
+      }
+      else if(type === 'hat'){
+        ctx.drawImage(FaceDetector.hat, ((this.comp[i].x - width / 2) * m) /1.8, (this.comp[i].y - width / 2) * m * -5, (this.comp[i].width + width) * m * 2, (this.comp[i].height + width) * m * 2);
+      }
+      else if(type === 'beard'){
         ctx.drawImage(FaceDetector.beard, (this.comp[i].x - width / 2) * m, (this.comp[i].y - width / 2) * m, (this.comp[i].width + width) * m, (this.comp[i].height + width) * m);
+      }
+      else if(type === 'hair'){
+        ctx.drawImage(FaceDetector.hair, (this.comp[i].x - width / 2) * m * 0.7, ((this.comp[i].y - width / 2) * m * 0.02), (this.comp[i].width + width) * m * 1.5, (this.comp[i].height + width) * m * 1.5);
+      }
     }
     
 	}
@@ -113,11 +130,17 @@
 FaceDetector.glasses = new Image();
 FaceDetector.glasses.src = 'assets/img/effects/glasses.png';
 
+FaceDetector.glasses2 = new Image();
+FaceDetector.glasses2.src = 'assets/img/effects/glasses2.png';
+
 FaceDetector.hat = new Image();
 FaceDetector.hat.src = 'assets/img/effects/hat.png';
 
 FaceDetector.beard = new Image();
 FaceDetector.beard.src = 'assets/img/effects/beard.png';
+
+FaceDetector.hair = new Image();
+FaceDetector.hair.src = 'assets/img/effects/hair.png';
 
 // source_id must be a <video>-tag
 // output_id must be a <canvas>-tag
