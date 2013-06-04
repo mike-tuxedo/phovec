@@ -397,7 +397,8 @@
       this.sendMail({ subject:'Einladungsmail', from: 'phovec@nucular-bacon.com', to: addresse, text: textDescr, html: htmlDescr });
     }
     else{
-      alert('Bitte gib eine valide E-Mail Adresse ein.')
+      $('#mailFormButton').attr('disabled',false);
+      alert('Bitte gib eine valide E-Mail Adresse ein.');
     }
   },
   
