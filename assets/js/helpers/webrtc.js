@@ -145,10 +145,11 @@ var WebRTC = {
           }
           break;
         case "file":
-          console.log(user.transferVisualizer.isCanceled);
+          //TODO: Debugging when receiver has canceled file transfer
+          //console.log(user.transferVisualizer.isCanceled);
           //first check if the receiver user hasn't canceled the transfer
           if (user.transferVisualizer.isCanceled === true) {
-            console.log("IS CANCELED! SEND CANCEL!")
+            //console.log("IS CANCELED! SEND CANCEL!")
             data.error = "canceled";
             user.dataChannel.send(JSON.stringify(data));
             return;
@@ -157,7 +158,7 @@ var WebRTC = {
           //if there is an error from the sender side cancel the transfer also
           if (data.error !== undefined) {
             if (data.error === "canceled") {
-              console.log("IS FROM OTHER CANCELED!");
+              //console.log("IS FROM OTHER CANCELED!");
               trace("webrtc", "CANCELED File", "-");
               user.transferVisualizer.cancel();
               frameCollection = [];

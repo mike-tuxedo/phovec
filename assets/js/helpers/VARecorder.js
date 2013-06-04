@@ -41,7 +41,7 @@
       });
     }
     else{
-      console.log('VARecorder stopRecording: attribute recordedType not set')
+      //console.log('VARecorder stopRecording: attribute recordedType not set')
     }
     VARecorder.recording = false;
   }

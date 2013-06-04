@@ -227,6 +227,8 @@
   margin-bottom: 5px;
   width: 80%;
   border: 2px solid #66666B;
+  padding-left: 2px;
+  padding-right: 2px;
 }
 
 .load_progress_bar_auth {
@@ -239,7 +241,7 @@
 
 #mailFormButton {
   margin-bottom: 5px;
-  width: 80%;
+  width: 83%;
   border: 2px solid #66666B;
   height: 30px;
   color: #e0dfeb;
@@ -426,9 +428,9 @@
 .user .connectionInfo {
   font-size: 11px;
   background-color: #c04e58;
-  color:white;
-  line-height:20px;
-  vertical-align:middle;
+  color: white;
+  line-height: 20px;
+  vertical-align: middle;
   -moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;
   box-sizing: border-box;
@@ -821,27 +823,6 @@
   font-weight: bold;
   right: 11.5%;
 }
-/*
- #buttonFullscreen{
- cursor: pointer;
- position: absolute;
- width: 70px;
- height: 30px;
-
- margin-left:-35px;
- left:50%;
- top: 0px;
-
- background: #66666B;
- color:  #e0dfeb;
- border-bottom-left-radius: 70px;
- border-bottom-right-radius: 70px;
- box-shadow: 0px 0px 15px #444;
- -webkit-box-shadow: 0px 0px 15px #444;
- background-image: url(../img/fullscreen_start.png);
- background-repeat: no-repeat;
- }
- */
 
 #buttonFullscreen {
   cursor: pointer;
@@ -856,24 +837,30 @@
 }
 
 #nameArea > div {
-  height: 300px;
+  height: 320px;
   width: 500px;
   margin: 0 auto;
   margin-top: 5%;
   border-radius: 5px;
   background: rgba(255,255,255,0.85);
   text-align: center;
+  padding: 30px;
+  font-size: 20px;
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+}
+
+#nameArea h2{
+  margin:10px 0px 10px 0px;
 }
 
 #nameArea input {
-  width: 350px;
-  height: 50px;
-  font-size: 20px;
-  margin: 50px 75px 50px 75px;
+  margin: 30px auto 10px auto;
 }
 
 #nameArea #startButtonImage {
-  margin: 0px 75px 50px 75px;
+  margin: 0 auto;
   width: 350px;
   background-image: url('../img/startbtn_sprite.png');
   background-repeat: no-repeat;

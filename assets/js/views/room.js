@@ -65,6 +65,7 @@
   didInsertElement: function() {
     if (Users.getLocalUser().name === "Phovec-Benutzer" || Users.getLocalUser().name === undefined) {
       $('#nameArea').show();
+      $('#nameArea input').focus();
     }
 
     window.App.Controller.room.addRemoteUsers();
@@ -77,7 +78,6 @@
   },
   toggleFullscreen: function() {
     var documentElement = document.getElementsByTagName("body")[0];
-    console.log("toggle", (!document.fullscreenElement && !document.mozFullScreenElement && !document.webkitFullscreenElement));
     if (!document.fullscreenElement && !document.mozFullScreenElement && !document.webkitFullscreenElement) {// current working methods
       if (documentElement.requestFullscreen) {
         documentElement.requestFullscreen();
@@ -119,9 +119,9 @@
     }
   },
   keyUp: function(event) {
-    if (event.target === document.querySelector("#nameArea #name")) {
+    if (event.target === document.querySelector("#nameArea #startName")) {
       var element = document.querySelector("#nameArea #startButtonImage");
-      if (document.querySelector("#nameArea #name").value.length >= 3) {
+      if (document.querySelector("#nameArea #startName").value.length >= 3) {
         element.onmouseover = function() {
           this.style.opacity = 0.8;
         };
@@ -129,7 +129,7 @@
           this.style.opacity = 1;
         };
         element.onclick = function() {
-          var name = document.querySelector("#nameArea #name").value;
+          var name = document.querySelector("#nameArea #startName").value;
           var localUser = Users.getLocalUser();
           localUser.name = name;
 
@@ -160,9 +160,9 @@
     }
   },
   keyDown: function(event) {
-    if (event.target === document.getElementById("name")) {
-      if (document.getElementById("name").value.length >= 15) {
-        document.getElementById("name").value = App.shortenString(document.getElementById("name").value, 15);
+    if (event.target === document.getElementById("startName")) {
+      if (document.getElementById("startName").value.length >= 15) {
+        document.getElementById("startName").value = App.shortenString(document.getElementById("name").value, 15);
       }
     }
   }

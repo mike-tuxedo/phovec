@@ -2,8 +2,8 @@
   templateName: 'index',
   activeStartImage: false,
   keyUp: function(event) {
-    if (event.target === document.getElementById("name")) {
-      if (document.getElementById("name").value.length >= 3) {
+    if (event.target === document.getElementById("startName")) {
+      if (document.getElementById("startName").value.length >= 3) {
         document.getElementById("startButtonImage").onmouseover = function() {
           this.style.opacity = 0.8;
         };
@@ -11,7 +11,7 @@
           this.style.opacity = 1;
         };
         document.getElementById("startButtonImage").onclick = function() {
-          Users.getLocalUser().name = document.getElementById("name").value;
+          Users.getLocalUser().name = document.getElementById("startName").value;
           App.handleURL('/rooms');
           App.Router.router.replaceURL('/rooms');
         };
@@ -35,9 +35,9 @@
     }
   },
   keyDown: function(event){
-    if (event.target === document.getElementById("name")) {
-      if (document.getElementById("name").value.length >= 15) {
-        document.getElementById("name").value = App.shortenString(document.getElementById("name").value, 15);
+    if (event.target === document.getElementById("startName")) {
+      if (document.getElementById("startName").value.length >= 15) {
+        document.getElementById("startName").value = App.shortenString(document.getElementById("startName").value, 15);
       }
     }
   }

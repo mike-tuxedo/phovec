@@ -158,7 +158,6 @@
             }));
             break;
           case "participant:video:unmute":
-                console.log("receive", new Date().getTime());
             window.dispatchEvent(new CustomEvent("signalingchannel:participant", {
               detail: {
                 message: "video:unmute",

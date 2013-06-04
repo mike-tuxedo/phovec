@@ -20,7 +20,6 @@ function TransferVisualizer(userId) {
     }
   });
   $(this.mainSelector + ' .buttons .cancel').click(function() {
-    console.log("inside click listener", that.isCanceled);
     that.cancel();
   });
 }
@@ -71,7 +70,7 @@ TransferVisualizer.prototype.update = function(data) {
 
   var durationForOnePercent = currentDuration / percent;
   var percentsLeft = 100 - percent;
-  var durationLeft = formatTime(durationForOnePercent * percentsLeft, "HH:MM:ss");
+  var durationLeft = formatTime(durationForOnePercent * percentsLeft, "HH:MM:ss", true);
 
   var currentSize = formatBytes(data.size * (percent / 100));
   var completeSize = formatBytes(data.size);

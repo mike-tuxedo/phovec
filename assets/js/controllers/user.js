@@ -97,9 +97,7 @@ App.UserController = Ember.ObjectController.extend({
     document.getElementById('videoboxes').getElementsByTagName('div')[0].getElementsByTagName('video')[0].play();
   },
   onGetMediaError: function(error) {
-    console.log("LocalMedia: ERROR");
-    console.log(error);
-    alert('Zugriff verweigert!');
+    //TODO: Info Area
   },
   startGetMedia: function() {
     //request audio and video from your own hardware
