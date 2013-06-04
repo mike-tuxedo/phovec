@@ -13,6 +13,7 @@
 .userName{
   display: inline;
   vertical-align: middle;
+  margin-left: 25px;
 }
 
 #edit_name{
@@ -657,7 +658,7 @@
 }
 
 .recordLocalVideo, .recordRemoteVideo {
-  width: 32px;
+  width: 74px;
   height: 32px;
   position: absolute;
   background: url(../img/stop_record_video.png);
@@ -666,10 +667,17 @@
   top: 48px;
   left: 10px;
   display: none;
+  opacity: 0.8;
 }
 
+.recordLocalVideo:hover, .recordRemoteVideo:hover {
+  cursor: pointer;
+  opacity: 1;
+}
+
+
 .recordLocalAudio, .recordRemoteAudio {
-  width: 32px;
+  width: 74px;
   height: 32px;
   position: absolute;
   background: url(../img/stop_record_audio.png);
@@ -678,6 +686,12 @@
   top: 80px;
   left: 10px;
   display: none;
+  opacity: 0.8;
+}
+
+.recordLocalAudio:hover, .recordRemoteAudio:hover {
+  cursor: pointer;
+  opacity: 1;
 }
 
 .countryLocation {
