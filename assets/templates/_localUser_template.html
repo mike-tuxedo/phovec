@@ -1,15 +1,16 @@
 {{#view App.UserView}} 
 <div class='userHead' id="locaHead">
-  <div style="height: 17px;"><div class="userName">Phovec-Benutzer</div> <span {{action editName target="view" }} id="edit_name">edit</span></div>
+  <div style="height: 17px;"><div class="userName">Phovec-Benutzer</div> <span {{action editName target="view" }} id="edit_name" title="ändere deinen Namen">edit</span></div>
 </div>
 <div class="videoWrapper">
   <div class="stateMute"></div>
-  <div class="recordLocalVideo"></div>
-  <div class="recordLocalAudio"></div>
+  <div class="recordLocalVideo" title="Video aufnehmen"></div>
+  <div class="recordLocalAudio" title="Audio aufnehmen"></div>
   <img class='defaultAvatar' src="assets/img/avatar.jpg"/>
   <video autoplay muted></video>
   <audio autoplay loop muted></audio>
   <canvas id="faceDetectorOutput"></canvas>
+  <canvas id="audioVisualizer"></canvas>
   <div id="videoEffects">
     <div {{action putGlassesOnUser target="view" }} class="effectButton" id="glasses" ></div>
     <div {{action putHatOnUser target="view" }} class="effectButton" id="hat" ></div>
@@ -22,13 +23,13 @@
 </div>
 
 <div id="video_options">
-  <div class="video_options_buttons" id="control_audio" {{ action controlAudio target="view" }}>
+  <div class="video_options_buttons" id="control_audio" {{ action controlAudio target="view" }} title="schaltet das Mikrofon ein und aus">
     Audio an/aus
   </div>
-  <div class="video_options_buttons" id="control_video" {{ action controlVideo target="view" }}>
+  <div class="video_options_buttons" id="control_video" {{ action controlVideo target="view" }} title="schaltet das Video ein und aus">
     Video an/aus
   </div>
-  <div class="video_options_buttons disabled" id="control_effects" {{ action controlEffects target="view" }}>
+  <div class="video_options_buttons disabled" id="control_effects" {{ action controlEffects target="view" }} title="Zeigt Effekte an">
     Effekte an/aus
   </div>
 </div>

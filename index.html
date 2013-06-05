@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="assets/css/rooms.css">
     <link rel="stylesheet" href="assets/css/hangup.css">
     <link rel="stylesheet" href="assets/css/development.css">
+    <link href='http://fonts.googleapis.com/css?family=Finger+Paint' rel='stylesheet' type='text/css'>
   </head>
   <body scrolling="no">
     <script type="text/x-handlebars" data-template-name="application">
@@ -119,6 +120,9 @@
             <div class="info"></div>
           </div>
         </div>
+        <div class="connectionInfo">
+          Verbindung wird aufgebaut...
+        </div>
         <form action='javascript:void(0);'>
           <div class='output'></div>
           <input type='image' class='micro_recorder' src='assets/img/micro_recorder_off.png'/>
@@ -147,6 +151,7 @@
     <script src="assets/js/helpers/debugger.js"></script>
     <script src="assets/js/helpers/signaling.js"></script>
     <script src="assets/js/helpers/transferVisualizer.js"></script>
+    <script src="assets/js/helpers/audioVisualizer.js"></script>
 
     <!-- app -->
     <script src="assets/js/app.js"></script>

@@ -47,9 +47,10 @@ function trace(file, message, object) {
 }
 
 /* Format timestamp to HH:MM:ss:SSS or HH:MM or HH:MM:ss */
-function formatTime(timestamp, format) {
+function formatTime(timestamp, format, difference) {
+  timestamp = difference ? timestamp - 1*60*60*1000 : timestamp;
   var dateTime = new Date(timestamp);
-  var hours = dateTime.getHours()-1;
+  var hours = dateTime.getHours();
   var minutes = dateTime.getMinutes();
   var seconds = dateTime.getSeconds();
   var miliseconds = dateTime.getMilliseconds();

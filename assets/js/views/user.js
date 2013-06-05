@@ -29,7 +29,6 @@ App.UserView = Ember.View.extend({
   controlVideo: function() {
     if (!FaceDetector.closed) {
       $('#faceDetectorOutput').toggle();
-      console.log('toggle facedetector');
     }
     App.Controller.user.controlVideo();
   },

@@ -8,7 +8,10 @@
       this.canvas.style.display = 'inline';
     }
     else{
-      this.canvas.style.display = 'none';
+      //Bug-Fix made by Lukas
+      if(this.canvas !== undefined){
+        this.canvas.style.display = 'none';
+      }
     }
     this._closed = val;
   },
@@ -128,7 +131,6 @@
         ctx.drawImage(FaceDetector.hair, (this.comp[i].x - width / 2) * m * 0.7, ((this.comp[i].y - width / 2) * m * 0.02), (this.comp[i].width + width) * m * 1.5, (this.comp[i].height + width) * m * 1.5);
       }
     }
-    
 	}
 };
 

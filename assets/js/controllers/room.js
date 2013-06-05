@@ -3,7 +3,6 @@
   },
   interval: null,
   animation: function() {
-    console.log('starte blureffekt');
     this.interval = setInterval(function() {
       animate($('#glow'));
     }, 3000);
@@ -15,7 +14,6 @@
         item.css('box-shadow', '0 0 0px rgba(255,0,0,1)')
       });
     }
-
   },
   stopAnimation: function() {
     clearInterval(this.interval);
@@ -597,7 +595,6 @@
     element.replaceChild(nameForm, element.firstChild);
     nameField.focus();
     nameField.select();
-    $('#alterNameForm').show();
   },
   sendParticipantEditMsg: function() {
     

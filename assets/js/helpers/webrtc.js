@@ -38,8 +38,6 @@ var WebRTC = {
       var user = Users.getRemoteUser(remoteUserId);
       user.stream = event.stream;
 
-      console.log(user, new Date().getTime());
-
       if (user.isAudioEnabled !== false) {
         WebRTC.handleRecordingButtons(user.id, 'audio', true);
       }
@@ -105,10 +103,13 @@ var WebRTC = {
      */
     var dataChannel = peerConnection.createDataChannel('RTCDataChannel', DATACHANNEL_OPTIONS);
     var frameCollection = [];
+    var file = undefined;
 
+    //TODO: When File zur Übertragung bereit, dann kein anderes File übertragbar
     dataChannel.onmessage = function(event) {
       trace("webrtc", "ON MESSAGE DATACHANNEL", "-");
       var user = Users.getRemoteUser(remoteUserId);
+      user.transferVisualizer = new TransferVisualizer(remoteUserId);
       var data = {};
 
       try {
@@ -121,46 +122,80 @@ var WebRTC = {
       switch(data.subject) {
         case "message":
           var output = formatTime(new Date().getTime(), "HH:MM") + " (" + user.name + ") - " + data.content + "&#13;&#10;<br>";
-          WebRTC.insertDataOutput(remoteUserId, output);
+          WebRTC.insertDataOutput(user.id, output);
+          break;
+        case "transfer:request":
+          var outputType = data.name.substr(data.name.lastIndexOf("."));
+          var outputName = data.name.length > 13 ? data.name.substr(0, 10) + outputType : data.name;
+          var transferRequest = "<div class='fileDropped'><img src='assets/img/file.png'><span class='fileName'>" + outputName + "</span><span class='fileStatus'><input type='button' onclick=\"WebRTC.acceptTransfer('" + remoteUserId + "');\" value='Annehmen'/></span></div>";
+          WebRTC.insertDataOutput(user.id, transferRequest);
+          break;
+        case "transfer:response":
+          if (data.content === "OK") {
+            var reader = new FileReader();
+            reader.onload = function(event) {
+              WebRTC.sendData(user.id, event.target.result, {
+                frameLength: 128,
+                type: file.type,
+                size: file.size,
+                name: file.name
+              });
+            };
+            reader.readAsDataURL(file);
+          }
           break;
         case "file":
-          //initialize the transfervisualizer on first-frame
-          if (data.firstFrame === true) {
-            transferVisualizer.init({
-              "isSender": false
-            });
-          }
-
-          //first check if the local user hasn't canceled the transfer
-          if (transferVisualizer.isCanceled === true) {
+          //TODO: Debugging when receiver has canceled file transfer
+          //console.log(user.transferVisualizer.isCanceled);
+          //first check if the receiver user hasn't canceled the transfer
+          if (user.transferVisualizer.isCanceled === true) {
+            //console.log("IS CANCELED! SEND CANCEL!")
             data.error = "canceled";
             user.dataChannel.send(JSON.stringify(data));
             return;
           }
 
-          //if there is an error from the sender side cancel the transfer complete
+          //if there is an error from the sender side cancel the transfer also
           if (data.error !== undefined) {
             if (data.error === "canceled") {
+              //console.log("IS FROM OTHER CANCELED!");
               trace("webrtc", "CANCELED File", "-");
-              transferVisualizer.cancel();
+              user.transferVisualizer.cancel();
               frameCollection = [];
               return;
             }
           }
 
-          transferVisualizer.update(data);
+          //initialize the transfervisualizer on first-frame
+          if (data.firstFrame === true) {
+            user.transferVisualizer.setup({
+              "isSender": false
+            });
+          }
+
+          user.transferVisualizer.update(data);
           frameCollection.push(data.content);
 
           if (data.lastFrame === true) {
             var dataURL = frameCollection.join('');
             frameCollection = [];
 
+            user.transferVisualizer.complete();
+
+            //at the end you give the user a link do download the file
+            var fileDroppedElements = $("#" + user.id + " .fileStatus");
+            var fileStatus = fileDroppedElements[fileDroppedElements.length - 1];
+            fileStatus.innerHTML = "";
+
             var a = document.createElement('a');
             a.download = data.name;
             a.setAttribute('href', dataURL);
-            a.click();
+            a.innerHTML = "Speichern";
+            a.onclick = function() {
+              fileStatus.innerHTML = "Gespeichert";
+            }
 
-            transferVisualizer.complete();
+            fileStatus.appendChild(a);
             trace("webrtc", "RECEIVED File", "-");
           }
           break;
@@ -171,6 +206,14 @@ var WebRTC = {
     };
     dataChannel.onopen = function(event) {
       trace("webrtc", "DataChannel onopen", event);
+
+      $("#" + remoteUserId + " .connectionInfo").text("Verbindung aufgebaut");
+      $("#" + remoteUserId + " .connectionInfo").css("background", "#36ba3c");
+      setTimeout(function() {
+        $("#" + remoteUserId + " form").fadeIn("slow");
+        $("#" + remoteUserId + " .connectionInfo").hide();
+        $("#" + remoteUserId + " form .input").focus();
+      }, 1250);
 
       var dragOver = function(event) {
         //stop dragover event is needed, so drop event works in chrome
@@ -183,26 +226,23 @@ var WebRTC = {
         event.stopPropagation();
         event.preventDefault();
 
-        var reader = new FileReader();
         var files = event.dataTransfer.files;
-        var frameLength = 128;
-        //Max. amount of bytes to send via DataChannel
+        //Currently only one file can be submitted
+        file = files[0];
 
-        for (var i = 0; i < files.length; i++) {
-          var type = files[i].type;
-          var size = files[i].size;
-          var name = files[i].name;
+        dataChannel.send(JSON.stringify({
+          "subject": "transfer:request",
+          "content": "file",
+          "name": file.name,
+          "size": file.size,
+          "type": file.type
+        }));
 
-          reader.onload = function(event) {
-            WebRTC.sendData(remoteUserId, event.target.result, {
-              frameLength: frameLength,
-              type: type,
-              size: size,
-              name: name
-            });
-          };
-          reader.readAsDataURL(files[i]);
-        }
+        var outputType = file.name.substr(file.name.lastIndexOf("."));
+        var outputName = file.name.length > 13 ? file.name.substr(0, 10) + outputType : file.name;
+
+        var info = "<div class='fileDropped'><img src='assets/img/file.png'><span class='fileName'>" + outputName + "</span><span class='fileStatus'>Warte auf Annahme...</span></div>";
+        WebRTC.insertDataOutput(remoteUserId, info);
       };
 
       var dropAreaVideo = $('#' + remoteUserId + " .videoWrapper").get(0);
@@ -225,7 +265,7 @@ var WebRTC = {
           }));
           $(this).html("");
 
-          var output = formatTime(new Date().getTime(), "HH:MM") + " (me) - " + input + "&#13;&#10;<br>";
+          var output = formatTime(new Date().getTime(), "HH:MM") + " (ich) - " + input + "&#13;&#10;<br>";
           WebRTC.insertDataOutput(remoteUserId, output);
 
           event.preventDefault();
@@ -250,7 +290,7 @@ var WebRTC = {
 
     Users.getRemoteUser(remoteUserId).dataChannel = dataChannel;
   },
-  sendData: function(remoteUserId, dataURL, options, data) {
+  sendData: function(remoteUserId, dataURL, options, data, transferVisualizer) {
     //initialize data
     if ( typeof data === "undefined") {
       data = {
@@ -262,7 +302,9 @@ var WebRTC = {
         "completeDataLength": dataURL.length
       };
 
-      transferVisualizer.init({
+      var userRemote = Users.getRemoteUser(remoteUserId);
+      transferVisualizer = userRemote.transferVisualizer;
+      transferVisualizer.setup({
         "isSender": true
       });
     }
@@ -281,7 +323,10 @@ var WebRTC = {
 
     //User paused the transfer
     if (transferVisualizer.isPaused === true) {
-      setTimeout(WebRTC.sendData, 100, remoteUserId, dataURL, options, data);
+      var fileDroppedElements = $("#" + remoteUserId + " .fileStatus");
+      fileDroppedElements[fileDroppedElements.length - 1].innerHTML = "Pausiert";
+
+      setTimeout(WebRTC.sendData, 100, remoteUserId, dataURL, options, data, transferVisualizer);
       return;
     }
 
@@ -306,7 +351,7 @@ var WebRTC = {
     if (Users.getRemoteUser(remoteUserId).dataChannel.readyState.toLowerCase() == 'open') {
       Users.getRemoteUser(remoteUserId).dataChannel.send(JSON.stringify(data));
     } else {
-      setTimeout(WebRTC.sendData, 100, remoteUserId, dataURL, options, data);
+      setTimeout(WebRTC.sendData, 100, remoteUserId, dataURL, options, data, transferVisualizer);
       return;
     }
 
@@ -323,7 +368,7 @@ var WebRTC = {
     }
 
     //call function recursive to send the next frame
-    setTimeout(WebRTC.sendData, 200, remoteUserId, dataURL, options, data);
+    setTimeout(WebRTC.sendData, 200, remoteUserId, dataURL, options, data, transferVisualizer);
   },
   modifyDescription: function(description) {
     var sdp = description.sdp;
@@ -381,6 +426,15 @@ var WebRTC = {
       trace("webrtc", "Failure calling createOffer", event);
     }, MEDIA_CONSTRAINTS_OFFER);
   },
+  acceptTransfer: function(remoteUserId) {
+    var user = Users.getRemoteUser(remoteUserId);
+    user.dataChannel.send(JSON.stringify({
+      "subject": "transfer:response",
+      "content": "OK"
+    }));
+    var fileDroppedElements = document.getElementById(user.id).getElementsByClassName("fileStatus");
+    fileDroppedElements[fileDroppedElements.length - 1].innerHTML = "Übertragung...";
+  },
   sendTrackInfo: function(userLocal) {
     if (userLocal.stream.getVideoTracks()[0].enabled === false) {
       SignalingChannel.send({
@@ -411,8 +465,8 @@ var WebRTC = {
           App.Router.router.replaceURL('/room/full');
           break;
         case "room:unknown":
-          //App.handleURL('/room/unknown');
-          //App.Router.router.replaceURL('/room/unknown');
+          App.handleURL('/room/unknown');
+          App.Router.router.replaceURL('/room/unknown');
           break;
         default:
           App.handleURL('/error');
