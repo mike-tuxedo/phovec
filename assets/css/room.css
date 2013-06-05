@@ -430,7 +430,11 @@
   width: 100%;
   position: relative;
   text-align: left;
-  display: none;
+  display:none;
+}
+
+#videoboxes .userHead form {
+  display:block !important;
 }
 
 .user .connectionInfo {
