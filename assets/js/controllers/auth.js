@@ -178,11 +178,8 @@
     invitationText = invitationText.replace('URL', location.href);
     
     response.data.forEach(function(friend, index) {
-      
       friendList.innerHTML += '<li class="send_fb_message" onclick="App.Controller.auth.sendFbUserMessage(\''+friend.id+'\')"> Nachricht an ' + friend.name + '</li>'
-
-      friendList.innerHTML += '<li class="send_mail" onclick="App.Controller.auth.sendMail({ subject:\'Einladungsmail\', from:\'phovec@nucular-bacon.com\', to:\''+friend.email+'\', cc: \''+friend.id+'@facebook.com\', text:\''+invitationText+'\', html:\'<h3>'+invitationText+'</h3>\'})"> E-Mail an ' + friend.name + '</li>';
-    
+      //friendList.innerHTML += '<li class="send_mail" onclick="App.Controller.auth.sendMail({ subject:\'Einladungsmail\', from:\'phovec@nucular-bacon.com\', to:\''+friend.email+'\', cc: \''+friend.id+'@facebook.com\', text:\''+invitationText+'\', html:\'<h3>'+invitationText+'</h3>\'})"> E-Mail an ' + friend.name + '</li>';
       friendList.innerHTML += '<hr>';
     });
     
