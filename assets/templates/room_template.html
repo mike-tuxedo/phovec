@@ -1,9 +1,9 @@
 <header>
   <div id="toolButtons">
-    <div id="buttonFullscreen" {{action "toggleFullscreen" target="view"}}></div>
-    <div id="speechButton" {{action "toggleSpeechOrder" on="click" target="view"}}></div>
+    <div id="buttonFullscreen" {{action "toggleFullscreen" target="view"}} title="schaltet den Vollbildmodus ein und aus"></div>
+    <div id="speechButton" {{action "toggleSpeechOrder" on="click" target="view"}} title="ermöglicht Sprachbefehle. Befehlsübersicht befindet sich in der Hilfe"></div>
   </div>
-  {{#linkTo "room-hangup" id="hangupButton"}}{{/linkTo}}
+  {{#linkTo "room-hangup" id="hangupButton" title="beendet den Chat für dich"}}{{/linkTo}}
 </header>
 
 <div id="videoboxes">
@@ -13,7 +13,7 @@
 <!-- to hide the scrollbar, we need a div whos position is not outside the site -->
 <div id="scrollbar_fix">
   <div id="social_sidebar_container">
-    <input type="button" id="show_sidebar" class="sidebar_close" value="" {{ action showSidebar target="view" }}/>
+    <input type="button" id="show_sidebar" class="sidebar_close" value="" {{ action showSidebar target="view" }} title="öffnet und schließt die Sidebar"/>
     <div id="show_sidebar_shadow"></div>
     <div id="social_sidebar">
       {{ partial 'auth' }}
@@ -30,12 +30,12 @@
   </div>
 </div>
 
-<div id="show_help" {{action "openHelp" target="view"}}>
+<div id="show_help" {{action "openHelp" target="view"}} title="zeigt die Hilfe">
   Hilfe
 </div>
 <div id="help">
   <div id="help_window">
-    <div id="close_help" {{action "closeHelp" target="view"}}>
+    <div id="close_help" {{action "closeHelp" target="view"}} title="schließt die Hilfe">
       x
     </div>
     <div id="help_content">
