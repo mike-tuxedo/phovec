@@ -77,7 +77,7 @@ App.UserController = Ember.ObjectController.extend({
         roomHash: user.roomHash,
         userHash: user.id
       });
-      
+
       $('.recordLocalAudio').show();
       $('.local video').css('opacity', '0');
     } else {
@@ -120,6 +120,7 @@ App.UserController = Ember.ObjectController.extend({
     } else if (user.stream === undefined && this.mediaOptions.isAdmissionMissing) {
       //show here maybe advice img?
       //how to allow the media request
+      
       this.mediaOptions.audio = true;
       this.startGetMedia();
       return;
@@ -128,7 +129,7 @@ App.UserController = Ember.ObjectController.extend({
     var audioStream = user.stream.getAudioTracks()[0];
     if (audioStream.enabled === false) {
       audioStream.enabled = true;
-      $('.local .stateMute').hide();
+      user.audioVisualizer.start();
 
       SignalingChannel.send({
         subject: "participant:audio:unmute",
@@ -136,11 +137,11 @@ App.UserController = Ember.ObjectController.extend({
         userHash: user.id
       });
 
+      $('.local .stateMute').hide();
       $('.recordLocalAudio').show();
-
     } else {
+      user.audioVisualizer.stop();
       audioStream.enabled = false;
-      $('.local .stateMute').show();
 
       SignalingChannel.send({
         subject: "participant:audio:mute",
@@ -149,6 +150,7 @@ App.UserController = Ember.ObjectController.extend({
       });
 
       $('.recordLocalAudio').hide();
+      $('.local .stateMute').show();
     }
   },
   controlVideo: function() {
@@ -177,7 +179,7 @@ App.UserController = Ember.ObjectController.extend({
     if (videoStream.enabled === false) {
       user.audioVisualizer.stop();
       videoStream.enabled = true;
-      
+
       SignalingChannel.send({
         subject: "participant:video:unmute",
         roomHash: user.roomHash,
@@ -195,7 +197,7 @@ App.UserController = Ember.ObjectController.extend({
         roomHash: user.roomHash,
         userHash: user.id
       });
-      
+
       $('.local video').css('opacity', '0');
       $('#control_effects').addClass('disabled');
       $('.recordLocalVideo').hide();
