@@ -566,6 +566,7 @@
     $('#' + user.id + ' .userHead .userNumber').html(user.number);
   },
   showAlterNameField: function(element) {
+  
     $('#edit_name').hide();
     var nameForm = document.createElement('form');
     nameForm.id = 'alterNameForm';
@@ -595,8 +596,11 @@
 
     element.replaceChild(nameForm, element.firstChild);
     nameField.focus();
+    nameField.select();
+    $('#alterNameForm').show();
   },
   sendParticipantEditMsg: function() {
+    
     $('#edit_name').show();
     var localUser = Users.getLocalUser();
     SignalingChannel.send({
@@ -607,5 +611,6 @@
         name: localUser.name,
       }
     });
+    
   }
 });

@@ -67,7 +67,6 @@ App.UserView = Ember.View.extend({
     }
   },
   editName: function(){
-    console.log('edit name');
     App.Controller.room.showAlterNameField($('.user.local .userName')[0]);
   }
 });
