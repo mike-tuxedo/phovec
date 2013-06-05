@@ -39,6 +39,10 @@
       if (document.getElementById("startName").value.length >= 15) {
         document.getElementById("startName").value = App.shortenString(document.getElementById("startName").value, 15);
       }
+      
+      if(event.which === 13){
+        document.getElementById("startButtonImage").click();
+      }
     }
   }
 });

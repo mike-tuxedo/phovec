@@ -101,16 +101,16 @@
   toggleSpeechOrder: function() {
 
     if (App.Controller.room.isSpeechRecognizerStarted) {
-    
+
       $('#speechButton').css('background', 'url(assets/img/micro_recorder_off.png)').css('background-repeat', 'no-repeat').css('background-size', '45%').css('background-position', '15px 13px');
       $('.userNumber').hide();
       App.Controller.room.speechRecognizer.stop();
-      
+
     } else {
-    
+
       $('#speechButton').css('background', 'url(assets/img/micro_recorder_on.png)').css('background-repeat', 'no-repeat').css('background-size', '45%').css('background-position', '15px 13px');
       $('.userNumber').show();
-      
+
       if (!this.isSpeechRecognizerInitalized) {
         App.Controller.room.initializeSpeechRecognizer();
       }
@@ -163,6 +163,10 @@
     if (event.target === document.getElementById("startName")) {
       if (document.getElementById("startName").value.length >= 15) {
         document.getElementById("startName").value = App.shortenString(document.getElementById("name").value, 15);
+      }
+
+      if (event.which === 13) {
+        document.getElementById("startButtonImage").click();
       }
     }
   }
