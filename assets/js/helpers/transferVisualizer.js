@@ -78,8 +78,11 @@ TransferVisualizer.prototype.update = function(data) {
 
   var currentSize = formatBytes(data.size * (percent / 100));
   var completeSize = formatBytes(data.size);
+  
+  var outputType = data.name.substr(data.name.lastIndexOf("."));
+  var outputName = data.name.length > 13 ? data.name.substr(0, 10) + outputType : data.name;
 
-  var info = data.name + " | " + currentSize + " von " + completeSize + " | 1,25 KB/s | Dauer: " + durationLeft;
+  var info = outputName + " | " + currentSize + " von " + completeSize + " | 1,25 KB/s | Dauer: " + durationLeft;
   $(this.mainSelector + ' .info').text(info);
 
   var fileDroppedElements = $("#" + this.userOwnerId + " .fileStatus");
