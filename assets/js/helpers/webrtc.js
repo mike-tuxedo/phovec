@@ -103,9 +103,7 @@ var WebRTC = {
      */
     var dataChannel = peerConnection.createDataChannel('RTCDataChannel', DATACHANNEL_OPTIONS);
     var frameCollection = [];
-    var file = undefined;
-
-    //TODO: When File zur Übertragung bereit, dann kein anderes File übertragbar
+    
     dataChannel.onmessage = function(event) {
       trace("webrtc", "ON MESSAGE DATACHANNEL", "-");
       var user = Users.getRemoteUser(remoteUserId);
@@ -129,6 +127,7 @@ var WebRTC = {
           var outputName = data.name.length > 13 ? data.name.substr(0, 10) + outputType : data.name;
           var transferRequest = "<div class='fileDropped'><img src='assets/img/file.png'><span class='fileName'>" + outputName + "</span><span class='fileStatus'><input type='button' onclick=\"WebRTC.acceptTransfer('" + remoteUserId + "');\" value='Annehmen'/></span></div>";
           WebRTC.insertDataOutput(user.id, transferRequest);
+          user.file = "receiving";
           break;
         case "transfer:response":
           if (data.content === "OK") {
@@ -136,12 +135,12 @@ var WebRTC = {
             reader.onload = function(event) {
               WebRTC.sendData(user.id, event.target.result, {
                 frameLength: 128,
-                type: file.type,
-                size: file.size,
-                name: file.name
+                type: user.file.type,
+                size: user.file.size,
+                name: user.file.name
               });
             };
-            reader.readAsDataURL(file);
+            reader.readAsDataURL(user.file);
           }
           break;
         case "file":
@@ -179,6 +178,7 @@ var WebRTC = {
           if (data.lastFrame === true) {
             var dataURL = frameCollection.join('');
             frameCollection = [];
+            user.file = null;
 
             user.transferVisualizer.complete();
 
@@ -226,20 +226,25 @@ var WebRTC = {
         event.stopPropagation();
         event.preventDefault();
 
+        if (Users.getRemoteUser(remoteUserId).file != null) {
+          trace("webrtc", "FILE only one file can be send at the same time", "-")
+          return;
+        }
+
         var files = event.dataTransfer.files;
         //Currently only one file can be submitted
-        file = files[0];
+        Users.getRemoteUser(remoteUserId).file = files[0];
 
         dataChannel.send(JSON.stringify({
           "subject": "transfer:request",
           "content": "file",
-          "name": file.name,
-          "size": file.size,
-          "type": file.type
+          "name": files[0].name,
+          "size": files[0].size,
+          "type": files[0].type
         }));
 
-        var outputType = file.name.substr(file.name.lastIndexOf("."));
-        var outputName = file.name.length > 13 ? file.name.substr(0, 10) + outputType : file.name;
+        var outputType = files[0].name.substr(files[0].name.lastIndexOf("."));
+        var outputName = files[0].name.length > 13 ? files[0].name.substr(0, 10) + outputType : files[0].name;
 
         var info = "<div class='fileDropped'><img src='assets/img/file.png'><span class='fileName'>" + outputName + "</span><span class='fileStatus'>Warte auf Annahme...</span></div>";
         WebRTC.insertDataOutput(remoteUserId, info);
@@ -362,6 +367,7 @@ var WebRTC = {
     //when the last frame got send cancel the recursion function calls
     data.firstFrame = false;
     if (data.lastFrame === true) {
+      Users.getRemoteUser(remoteUserId).file = null;
       transferVisualizer.complete();
       trace("webrtc", "SEND File", "-");
       return;
@@ -649,6 +655,7 @@ roomHash: undefined,
 _stream: undefined,
 admin: false,
 type: "local",
+file: null,
 _name: undefined,
 _id: undefined,
 _country: undefined,
@@ -719,8 +726,7 @@ return user;
     }
   }
 
-  alert("There is no local user!");
-  return null;
+  return this.createLocalUser();
 }, getRemoteUser: function(id) {
   for (var i = 0; i < Users.users.length; i++) {
     if (Users.users[i].id === id && Users.users[i].type === "remote") {
@@ -741,9 +747,21 @@ return user;
 }, removeLocalUser: function() {
   for (var i = 0; i < Users.users.length; i++) {
     if (Users.users[i].type === "local") {
+      if (Users.users[i].audioVisualizer !== undefined) {
+        Users.users[i].audioVisualizer.stop();
+      }
+
       if (Users.users[i].stream !== undefined) {
         Users.users[i].stream.stop();
+        delete Users.users[i].stream;
       }
+
+      //reseting the video and audio tags
+      var elements = $("video, audio");
+      for (var i = 0; i < elements.length; i++) {
+        elements[i].src = "";
+        elements[i] = null;
+      };
 
       Users.users.splice(i, 1);
       return true;
@@ -781,6 +799,7 @@ return user;
       if (Users.users[i].dataChannel !== undefined) {
         //Users.users[i].dataChannel.close();
       }
+      Users.users[i] = null;
     }
   }
 }, reset: function() {

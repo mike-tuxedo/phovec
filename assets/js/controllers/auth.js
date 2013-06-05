@@ -185,7 +185,6 @@
     
     $('.load_progress_bar_auth').hide();
     $('#friends_of_facebook').html(friendList);
-    
   },
   
   // google-auth

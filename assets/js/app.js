@@ -4,19 +4,19 @@ var App = Ember.Application.create({
   },
   redirectUrlSec: function(route, seconds) {
     var sec = seconds;
-    var countdownInterval = setInterval(function() {     
+    var countdownInterval = setInterval(function() {
       if (sec === 0) {
         clearInterval(countdownInterval);
-        App.handleURL(route);
-        App.Router.router.replaceURL(route);
+        window.location.href = window.location.origin;
+        return;
       }
 
       $('.countdown').text(--sec);
     }, 1000);
   },
-  shortenString: function(str,length){
+  shortenString: function(str, length) {
     var reducedString = str.split('');
     reducedString.length = length;
     return reducedString.join('');
   }
-}); 
+});

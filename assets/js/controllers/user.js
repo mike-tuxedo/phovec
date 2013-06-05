@@ -58,15 +58,16 @@ App.UserController = Ember.ObjectController.extend({
     //Video buttons for local user
     var buttonWidth = videoWidth / 3;
     $('.video_options_buttons').css('width', buttonWidth + 'px');
-    
+
     //change fontsize in depency to the buttonwidth itself
-    var font_factor = $('.video_options_buttons').width()/8;
-    if(font_factor > 15){
+    var font_factor = $('.video_options_buttons').width() / 8;
+    if (font_factor > 15) {
       font_factor = 15;
     }
     $('#control_audio, #control_video, #control_effects').css('font-size', font_factor + 'px');
   },
   onGetMediaSuccess: function(stream) {
+
     this.mediaOptions.isAdmissionMissing = false;
 
     var user = Users.getLocalUser();
@@ -104,7 +105,10 @@ App.UserController = Ember.ObjectController.extend({
     document.getElementById('videoboxes').getElementsByTagName('div')[0].getElementsByTagName('video')[0].play();
   },
   onGetMediaError: function(error) {
-    //TODO: Info Area
+    $('#headerInfo').show();
+    setTimeout(function(){
+      $('#headerInfo').fadeOut('slow');
+    }, 3000);
   },
   startGetMedia: function() {
     //request audio and video from your own hardware
@@ -127,7 +131,7 @@ App.UserController = Ember.ObjectController.extend({
     } else if (user.stream === undefined && this.mediaOptions.isAdmissionMissing) {
       //show here maybe advice img?
       //how to allow the media request
-      
+
       this.mediaOptions.audio = true;
       this.startGetMedia();
       return;
@@ -183,6 +187,7 @@ App.UserController = Ember.ObjectController.extend({
     }
 
     var videoStream = user.stream.getVideoTracks()[0];
+    var audioStream = user.stream.getAudioTracks()[0];
     if (videoStream.enabled === false) {
       user.audioVisualizer.stop();
       videoStream.enabled = true;
@@ -197,7 +202,10 @@ App.UserController = Ember.ObjectController.extend({
       $('#control_effects').removeClass('disabled');
       $('.recordLocalVideo').show();
     } else {
-      user.audioVisualizer.start();
+      if (audioStream.enabled === true) {
+        user.audioVisualizer.start();
+      }
+
       videoStream.enabled = false;
       SignalingChannel.send({
         subject: "participant:video:mute",

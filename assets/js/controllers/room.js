@@ -539,11 +539,9 @@
         break;
 
       case 'hangUp':
-
         controller.speechRecognizer.stop();
         App.handleURL('/room/hangup');
         App.Router.router.replaceURL('/room/hangup');
-
         break;
 
     };

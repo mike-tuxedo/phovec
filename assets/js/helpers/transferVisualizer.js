@@ -36,8 +36,12 @@ TransferVisualizer.prototype.setup = function(options) {
 
   if (this.isSender === false) {
     $(this.mainSelector + ' .buttons .pause').hide();
+
+    //bugfix because of last todo in project
+    $(this.mainSelector + ' .buttons .cancel').hide();
   } else {
     $(this.mainSelector + ' .buttons .pause').show();
+    $(this.mainSelector + ' .buttons .cancel').show();
   }
 
   $(this.mainSelector + ', ' + this.mainSelector + '  .buttons').show();
