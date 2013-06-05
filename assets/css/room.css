@@ -27,6 +27,12 @@
   padding-right: 2px;
 }
 
+#screencast{
+  display: block;
+  width: 640px;
+  margin: 0px auto;
+}
+
 #arrow {
   float: left;
   width: 100px;
