@@ -508,9 +508,9 @@
 .video_options_buttons {
   cursor: pointer;
   width: 194px;
-  height: 25px;
   float: left;
   padding-top: 5px;
+  padding-bottom: 5px;
   background: #66666b;
   color: white;
   font-weight: bold;

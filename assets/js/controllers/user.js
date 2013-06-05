@@ -58,6 +58,13 @@ App.UserController = Ember.ObjectController.extend({
     //Video buttons for local user
     var buttonWidth = videoWidth / 3;
     $('.video_options_buttons').css('width', buttonWidth + 'px');
+    
+    //change fontsize in depency to the buttonwidth itself
+    var font_factor = $('.video_options_buttons').width()/8;
+    if(font_factor > 15){
+      font_factor = 15;
+    }
+    $('#control_audio, #control_video, #control_effects').css('font-size', font_factor + 'px');
   },
   onGetMediaSuccess: function(stream) {
     this.mediaOptions.isAdmissionMissing = false;
