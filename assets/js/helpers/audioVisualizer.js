@@ -8,6 +8,8 @@ function AudioVisualizer() {
 }
 
 AudioVisualizer.prototype.setup = function(stream) {
+console.log(stream);
+
   this.canvasContext = document.getElementById('audioVisualizer').getContext('2d');
   this.canvasContext.width = 400;
   this.canvasContext.height = 250;
@@ -63,7 +65,7 @@ AudioVisualizer.prototype.start = function() {
 
       this.canvasContext.fillRect(x, y, width, height);
     }
-  }.bind(this), 40);
+  }.bind(this), 100);
 };
 
 AudioVisualizer.prototype.stop = function() {
