@@ -3,7 +3,8 @@
     <div id="buttonFullscreen" {{action "toggleFullscreen" target="view"}} title="schaltet den Vollbildmodus ein und aus"></div>
     <div id="speechButton" {{action "toggleSpeechOrder" on="click" target="view"}} title="ermöglicht Sprachbefehle. Befehlsübersicht befindet sich in der Hilfe"></div>
   </div>
-  {{#linkTo "room-hangup" id="hangupButton" title="beendet den Chat für dich"}}{{/linkTo}}
+  <div id="headerInfo">Bitte erlauben Sie zuerst den Zugriff auf Ihr Gerät</div>
+  <a href="void:javascript(0)" onclick="window.location.href = window.location.origin + '#/room/hangup';" id="hangupButton" title="Auflegen"></a>
 </header>
 
 <div id="videoboxes">

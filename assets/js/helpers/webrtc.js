@@ -719,8 +719,7 @@ return user;
     }
   }
 
-  alert("There is no local user!");
-  return null;
+  return this.createLocalUser();
 }, getRemoteUser: function(id) {
   for (var i = 0; i < Users.users.length; i++) {
     if (Users.users[i].id === id && Users.users[i].type === "remote") {
@@ -741,9 +740,21 @@ return user;
 }, removeLocalUser: function() {
   for (var i = 0; i < Users.users.length; i++) {
     if (Users.users[i].type === "local") {
+      if (Users.users[i].audioVisualizer !== undefined) {
+        Users.users[i].audioVisualizer.stop();
+      }
+
       if (Users.users[i].stream !== undefined) {
         Users.users[i].stream.stop();
+        delete Users.users[i].stream;
       }
+
+      //reseting the video and audio tags
+      var elements = $("video, audio");
+      for (var i = 0; i < elements.length; i++) {
+        elements[i].src = "";
+        elements[i] = null;
+      };
 
       Users.users.splice(i, 1);
       return true;
@@ -781,6 +792,7 @@ return user;
       if (Users.users[i].dataChannel !== undefined) {
         //Users.users[i].dataChannel.close();
       }
+      Users.users[i] = null;
     }
   }
 }, reset: function() {

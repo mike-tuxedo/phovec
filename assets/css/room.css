@@ -257,12 +257,20 @@
   display: none;
   width: 80%;
   height: 30px;
-  background: rgb(143, 224, 122);
   color: #000000;
   border-radius: 15px;
   margin-left: 10%;
   margin-bottom: 20px;
   padding-top: 10px;
+  
+  background: #add365;
+  background: -moz-linear-gradient(top, #add365 0%, #62a509 100%);
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#add365), color-stop(100%,#62a509));
+  background: -webkit-linear-gradient(top, #add365 0%,#62a509 100%);
+  background: -o-linear-gradient(top, #add365 0%,#62a509 100%);
+  background: -ms-linear-gradient(top, #add365 0%,#62a509 100%);
+  background: linear-gradient(to bottom, #add365 0%,#62a509 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#add365', endColorstr='#62a509',GradientType=0 );
 }
 
 #facebook_tab {
@@ -422,6 +430,7 @@
   width: 100%;
   position: relative;
   text-align: left;
+  display: none;
 }
 
 .user .connectionInfo {
@@ -494,6 +503,10 @@
   left: 50%;
   margin-left: -60px;
   top: 3px;
+}
+
+#videoboxes #alterNameForm input {
+  width: 100%;
 }
 
 /*------------Options under lokal Video--------------*/
@@ -850,8 +863,8 @@
   -webkit-box-sizing: border-box;
 }
 
-#nameArea h2{
-  margin:10px 0px 10px 0px;
+#nameArea h2 {
+  margin: 10px 0px 10px 0px;
 }
 
 #nameArea input {
@@ -1003,4 +1016,29 @@
   width: 50px;
   height: 18px;
   font-size: 8px;
+}
+
+#headerInfo {
+  display: none;
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  margin-left: -150px;
+  width: 300px;
+  height: 30px;
+  line-height: 30px;
+  font-size: 12px;
+  color: white;
+  border-radius: 10px;
+  -moz-box-shadow: 0 0 2px 3px #FFF;
+  -webkit-box-shadow: 0 0 2px 3px #FFF;
+  box-shadow: 0 0 2px 3px #FFF;
+  background: #ff918c;
+  background: -moz-linear-gradient(top, #ff918c 1%, #cc5555 100%);
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(1%,#ff918c), color-stop(100%,#cc5555));
+  background: -webkit-linear-gradient(top, #ff918c 1%,#cc5555 100%);
+  background: -o-linear-gradient(top, #ff918c 1%,#cc5555 100%);
+  background: -ms-linear-gradient(top, #ff918c 1%,#cc5555 100%);
+  background: linear-gradient(to bottom, #ff918c 1%,#cc5555 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ff918c', endColorstr='#cc5555',GradientType=0 );
 }

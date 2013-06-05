@@ -3,7 +3,7 @@ function AudioVisualizer() {
   this.microphone = null;
   this.audioContext = null;
   this.canvasContext = null;
-  this.intervalId = null;
+  this.intervalId = 0;
   this.type = "byte";
 }
 
@@ -67,8 +67,23 @@ AudioVisualizer.prototype.start = function() {
 };
 
 AudioVisualizer.prototype.stop = function() {
+  if (this.analyser != undefined) {
+    this.analyser.disconnect();
+  }
+  if (this.microphone != undefined) {
+    if (this.microphone.mediaStream != undefined) {
+      this.microphone.mediaStream.stop();
+    }
+    this.microphone.disconnect();
+  }
+  if (this.audioContext != undefined) {
+    this.audioContext.destination = null;
+  }
+  if (this.canvasContext != undefined) {
+    this.canvasContext.clearRect(0, 0, 1024, 1024);
+  }
+  
   $('#audioVisualizer').hide();
-  this.canvasContext.clearRect(0, 0, 1024, 1024);
   clearInterval(this.intervalId);
 };
 
